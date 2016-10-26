@@ -1,11 +1,13 @@
+const config = require('./config')
+
 module.exports = {
   asyncworker: {
     client: 'mssql',
     connection: {
-      host: process.env.APVS_DATABASE_SERVER,
-      user: process.env.APVS_ASYNC_WORKER_USERNAME,
-      password: process.env.APVS_ASYNC_WORKER_PASSWORD,
-      database: process.env.APVS_DATABASE,
+      host: config.DATABASE_SERVER,
+      user: config.ASYNC_WORKER_USERNAME,
+      password: config.ASYNC_WORKER_PASSWORD,
+      database: config.DATABASE,
       options: {
         encrypt: true
       }
