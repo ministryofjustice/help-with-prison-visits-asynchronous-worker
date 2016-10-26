@@ -1,0 +1,6 @@
+module.exports = {
+  PENDING: 'PENDING',
+  INPROGRESS: 'IN-PROGRESS',
+  COMPLETE: 'COMPLETE',
+  FAILED: 'FAILED'
+}
