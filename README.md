@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
+The asynchronous worker is a separate node application which runs continously, checking for tasks added to the database by the [External Web](https://github.com/ministryofjustice/apvs-external-web) and [Internal Web](https://github.com/ministryofjustice/apvs-internal-web) to process.
+
+This allows the External/Internal web applications to offload long running or error prone operations to the worker and make it easier to re-run failed processes later.
+
 ## Requirements
 
 * Node 6 (Including NPM) - If running locally

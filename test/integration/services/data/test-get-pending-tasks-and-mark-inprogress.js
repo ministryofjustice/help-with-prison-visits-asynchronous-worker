@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../../../app/constants/status-enum')
+const testHelper = require('../../../test-helper')
 
 const getPendingTasksAndMarkInProgress = require('../../../../app/services/data/get-pending-tasks-and-mark-inprogress')
 
@@ -11,10 +12,10 @@ describe('services/data/getPendingTasksAndMarkInProgress', function () {
 
   before(function (done) {
     knex('ExtSchema.Task').insert([
-      getTaskObject('TEST', '1'),
-      getTaskObject('TEST', '2'),
-      getTaskObject('TEST', '3'),
-      getTaskObject('TEST', '4')
+      testHelper.getTaskObject('TEST', '1'),
+      testHelper.getTaskObject('TEST', '2'),
+      testHelper.getTaskObject('TEST', '3'),
+      testHelper.getTaskObject('TEST', '4')
     ]).returning('TaskId')
     .then(function (taskIds) {
       ids = taskIds
@@ -49,21 +50,3 @@ describe('services/data/getPendingTasksAndMarkInProgress', function () {
     })
   })
 })
-
-function getTaskObject (taskType, additionalData) {
-  var reference = '1234567'
-  var claimId = 123
-  var dateCreated = new Date()
-  var dateProcessed = null
-  var status = 'PENDING'
-
-  return {
-    Task: taskType,
-    Reference: reference,
-    ClaimId: claimId,
-    AdditionalData: additionalData,
-    DateCreated: dateCreated,
-    DateProcessed: dateProcessed,
-    Status: status
-  }
-}
