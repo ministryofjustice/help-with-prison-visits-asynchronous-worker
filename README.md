@@ -36,3 +36,7 @@ npm run-script test-integration # integration tests
 ## Database
 
 The application requires a MS SQL database instance, configured with an async worker user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
+
+## Notify
+
+The application sends email notifications using the Notify service. In order to utilize the Notify Worker you will need Notify credentials. See [here](https://www.gov.uk/government/publications/govuk-notify/govuk-notify) for details on setting up a Notify account, and config.js for the environment variables to set.
