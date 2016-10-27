@@ -9,37 +9,22 @@ var frequency = config.ASYNC_WORKER_FREQUENCY
 throng({ workers: numberOfWorkers }, startWorker)
 
 function startWorker (id) {
-  log.info(`Started worker ${id}!`)
+  log.info(`Started worker ${id}`)
 
   process.on('SIGTERM', () => {
     log.info(`Worker ${id} exiting...`)
     process.exit()
   })
 
-  setIntervalSynchronous(function () {
-    log.info(`worker ${id} run task ${new Date().getTime()}`)
-    processTasks().then(function () {
-      log.info(`worker ${id} completed running task`)
-      return
-    })
-  }, frequency)
+  runProcessTasks(id).then(function () {
+    setInterval(function () {
+      runProcessTasks(id)
+    }, frequency)
+  })
 }
 
-function setIntervalSynchronous (func, delay) {
-  var intervalFunction
-  var timeoutId
-  var clear
-
-  clear = function () {
-    clearTimeout(timeoutId)
-  }
-
-  intervalFunction = function () {
-    func()
-    timeoutId = setTimeout(intervalFunction, delay)
-  }
-
-  timeoutId = setTimeout(intervalFunction, delay)
-
-  return clear
+function runProcessTasks (id) {
+  return processTasks().then(function () {
+    log.info(`worker ${id} completed running task`)
+  })
 }
