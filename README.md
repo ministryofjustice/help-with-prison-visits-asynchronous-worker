@@ -16,6 +16,14 @@ npm install
 npm start
 ```
 
+### With Docker Compose
+This will run the Asynchronous worker in development mode.
+
+```
+docker-compose build
+docker-compose up
+```
+
 ## Test
 
 ```
