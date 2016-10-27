@@ -16,6 +16,9 @@
     "test-integration": "mocha --recursive -u exports test/integration/ --timeout 5000"
   },
   "standard": {
+    "ignore": [
+      "cache_node_modules/*"
+    ],
     "globals": [
       "describe",
       "before",
