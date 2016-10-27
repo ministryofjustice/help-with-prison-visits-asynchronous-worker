@@ -5,6 +5,7 @@
 ## Requirements
 
 * Node 6 (Including NPM) - If running locally
+* Docker (Including Docker Compose) (optional)
 
 ## Run
 
