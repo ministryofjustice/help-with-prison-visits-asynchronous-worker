@@ -1,0 +1,22 @@
+version: '2'
+services:
+
+  node-asynchronous-worker-apvs:
+    build: .
+    volumes:
+      - "./app:/usr/src/app/app"
+      - "./cache_node_modules:/usr/src/app/node_modules"
+      - "./logs:/usr/src/app/logs"
+    environment:
+    - LOGGING_PATH=/usr/src/app/logs/asynchronous-worker.log
+    - APVS_DATABASE_SERVER
+    - APVS_ASYNC_WORKER_USERNAME
+    - APVS_ASYNC_WORKER_PASSWORD
+    - APVS_DATABASE
+    - APVS_ASYNC_WORKER_CONCURRENCY=1
+    - APVS_ASYNC_WORKER_FREQUENCY=10000
+    - APVS_ASYNC_WORKER_BATCH_SIZE=5
+    - APVS_NOTIFY_API_URL
+    - APVS_NOTIFY_API_KEY
+    - APVS_NOTIFY_CLIENT_ID
+    - APVS_NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID

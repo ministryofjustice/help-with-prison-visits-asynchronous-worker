@@ -1,0 +1,7 @@
+{
+  "ignore": [
+    "node_modules/**",
+    "logs/**"
+  ],
+  "ext": "js json"
+}
