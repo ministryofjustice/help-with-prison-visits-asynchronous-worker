@@ -21,6 +21,11 @@ function startWorker (id) {
       runProcessTasks(id)
     }, frequency)
   })
+
+  if (id === 1) {
+    // Start web
+    require('./app/web/bin/www')
+  }
 }
 
 function runProcessTasks (id) {
