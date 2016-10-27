@@ -7,6 +7,8 @@ services:
       - "./app:/usr/src/app/app"
       - "./cache_node_modules:/usr/src/app/node_modules"
       - "./logs:/usr/src/app/logs"
+    ports:
+      - "3999:3999"
     environment:
     - LOGGING_PATH=/usr/src/app/logs/asynchronous-worker.log
     - APVS_DATABASE_SERVER

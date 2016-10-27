@@ -13,6 +13,10 @@ This allows the External/Internal web applications to offload long running or er
 
 ## Run
 
+Running the application will cause it to poll the database for new tasks continously and respond on port 3999 (default, overriden by env `PORT`) at `/status` for a healthcheck.
+
+See `config.js` for the list of configuration environmental variables needed.
+
 ### Locally
 Install dependencies and run
 

@@ -11,5 +11,9 @@ COPY knexfile.js /usr/src/app/
 COPY nodemon.json /usr/src/app/
 COPY app /usr/src/app/app
 
+EXPOSE 3999
+
+HEALTHCHECK CMD curl --fail http://localhost:3999/status || exit 1
+
 # Resolve dependencies at container startup to allow caching
 CMD npm install && node_modules/.bin/nodemon start.js --config="nodemon.json"
