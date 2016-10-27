@@ -18,6 +18,7 @@ describe('processTasks', function () {
 
     processTasks = proxyquire('../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
+      './services/log': { info: function (message) {} },
       './services/data/get-pending-tasks-and-mark-inprogress': getPendingTasksAndMarkInProgress,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask

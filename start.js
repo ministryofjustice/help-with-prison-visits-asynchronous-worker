@@ -1,4 +1,5 @@
 const config = require('./config')
+const log = require('./app/services/log')
 var throng = require('throng')
 var processTasks = require('./app/process-tasks')
 
@@ -8,17 +9,17 @@ var frequency = config.ASYNC_WORKER_FREQUENCY
 throng({ workers: numberOfWorkers }, startWorker)
 
 function startWorker (id) {
-  console.log(`Started worker ${id}!`)
+  log.info(`Started worker ${id}!`)
 
   process.on('SIGTERM', () => {
-    console.log(`Worker ${id} exiting...`)
+    log.info(`Worker ${id} exiting...`)
     process.exit()
   })
 
   setIntervalSynchronous(function () {
-    console.log(`worker ${id} run task ${new Date().getTime()}`)
+    log.info(`worker ${id} run task ${new Date().getTime()}`)
     processTasks().then(function () {
-      console.log(`worker ${id} completed running task`)
+      log.info(`worker ${id} completed running task`)
       return
     })
   }, frequency)

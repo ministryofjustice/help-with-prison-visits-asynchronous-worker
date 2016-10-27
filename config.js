@@ -1,4 +1,5 @@
 module.exports = {
+  LOGGING_PATH: process.env.LOGGING_PATH,
   // DB
   DATABASE_SERVER: process.env.APVS_DATABASE_SERVER,
   ASYNC_WORKER_USERNAME: process.env.APVS_ASYNC_WORKER_USERNAME,
