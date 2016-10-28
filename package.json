@@ -35,7 +35,8 @@
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "sinon-bluebird": "^3.1.0",
-    "standard": "^8.4.0"
+    "standard": "^8.4.0",
+    "supertest": "^2.0.1"
   },
   "dependencies": {
     "bluebird": "^3.4.6",
