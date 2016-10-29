@@ -10,7 +10,7 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/complete-first-time-claim': completeFirstTimeClaim
 })
 
-describe('services/getWorkerForTask', function () {
+describe('services/get-worker-for-task', function () {
   it('should return send-first-time-claim-notification', function (done) {
     var worker = getWorkerForTask(tasksEnum.FIRST_TIME_CLAIM_NOTIFICATION)
     expect(worker.name).to.be.equal('sendFirstTimeClaimNotification')

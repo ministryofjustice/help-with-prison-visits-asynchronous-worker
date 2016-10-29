@@ -10,7 +10,7 @@ var completeTaskWithStatus
 var getWorkerForTask
 const batchSize = 3
 
-describe('processTasks', function () {
+describe('process-tasks', function () {
   beforeEach(function (done) {
     getPendingTasksAndMarkInProgress = sinon.stub()
     completeTaskWithStatus = sinon.stub()

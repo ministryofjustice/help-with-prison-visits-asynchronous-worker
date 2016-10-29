@@ -1,6 +1,6 @@
 const sendFirstTimeClaimNotification = require('../../../../app/services/workers/send-first-time-claim-notification')
 
-describe('services/workers/sendFirstTimeClaimNotification', function () {
+describe('services/workers/send-first-time-claim-notification', function () {
   it('should send an email', function (done) {
     sendFirstTimeClaimNotification.execute({
       reference: '1234567',
