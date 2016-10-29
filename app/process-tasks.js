@@ -20,22 +20,25 @@ module.exports = function () {
         var worker = getWorkerForTask(task.task)
 
         if (worker) {
-          log.info(`started task: ${task.taskId}-${task.task}`)
-
-          promiseArray.push(worker.execute(task)
-            .then(function () {
-              return completeTaskWithStatus(task.taskId, statusEnum.COMPLETE)
-            }).catch(function (error) {
-              log.info(`error running task: ${task.taskId}-${task.task}, error: ${error}`)
-              return completeTaskWithStatus(task.taskId, statusEnum.FAILED)
-            }))
+          promiseArray.push(executeWorkerForTask(worker, task))
         } else {
           log.info(`unable to find worker for task: ${task.task}`)
         }
       }
 
-      return Promise.each(promiseArray, function (result) {
-        log.info(`completed task: ${task.taskId}-${task.task}`)
-      })
+      return Promise.all(promiseArray)
+    })
+}
+
+function executeWorkerForTask (worker, task) {
+  log.info(`started task: ${task.taskId}-${task.task}`)
+
+  return worker.execute(task)
+    .then(function () {
+      log.info(`completed task: ${task.taskId}-${task.task}`)
+      return completeTaskWithStatus(task.taskId, statusEnum.COMPLETE)
+    }).catch(function (error) {
+      log.info(`error running task: ${task.taskId}-${task.task}, error: ${error}`)
+      return completeTaskWithStatus(task.taskId, statusEnum.FAILED)
     })
 }
