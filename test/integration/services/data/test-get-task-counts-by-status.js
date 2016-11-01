@@ -6,10 +6,14 @@ const getTaskCountsByStatus = require('../../../../app/services/data/get-task-co
 describe('services/data/get-task-counts-by-status', function () {
   it('should return task counts', function (done) {
     getTaskCountsByStatus().then(function (statusCounts) {
-      expect(statusCounts[0]).to.contain(statusEnum.PENDING)
-      expect(statusCounts[1]).to.contain(statusEnum.INPROGRESS)
-      expect(statusCounts[2]).to.contain(statusEnum.COMPLETE)
-      expect(statusCounts[3]).to.contain(statusEnum.FAILED)
+      expect(statusCounts[0]).to.contain(`IntSchema-${statusEnum.PENDING}`)
+      expect(statusCounts[1]).to.contain(`IntSchema-${statusEnum.INPROGRESS}`)
+      expect(statusCounts[2]).to.contain(`IntSchema-${statusEnum.COMPLETE}`)
+      expect(statusCounts[3]).to.contain(`IntSchema-${statusEnum.FAILED}`)
+      expect(statusCounts[4]).to.contain(`ExtSchema-${statusEnum.PENDING}`)
+      expect(statusCounts[5]).to.contain(`ExtSchema-${statusEnum.INPROGRESS}`)
+      expect(statusCounts[6]).to.contain(`ExtSchema-${statusEnum.COMPLETE}`)
+      expect(statusCounts[7]).to.contain(`ExtSchema-${statusEnum.FAILED}`)
       done()
     })
   })

@@ -3,8 +3,8 @@ const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
 const Task = require('../domain/task')
 
-module.exports = function (batchSize) {
-  return knex.select().table('ExtSchema.Task').where('Status', statusEnum.PENDING).limit(batchSize)
+module.exports = function (schema, batchSize) {
+  return knex.select().table(`${schema}.Task`).where('Status', statusEnum.PENDING).limit(batchSize)
     .then(function (results) {
       var tasks = []
       var ids = []
@@ -19,12 +19,13 @@ module.exports = function (batchSize) {
             result.AdditionalData,
             result.DateCreated,
             result.DateProcessed,
+            schema,
             statusEnum.INPROGRESS))
         }
       } else {
         return []
       }
-      return knex('ExtSchema.Task').whereIn('TaskId', ids)
+      return knex(`${schema}.Task`).whereIn('TaskId', ids)
         .update('Status', statusEnum.INPROGRESS)
         .then(function () {
           return tasks

@@ -10,9 +10,10 @@ describe('services/domain/task', function () {
     var additionalData = 'additional data'
     var dateCreated = new Date(1980, 1, 2)
     var dateProcessed = new Date(1980, 1, 3)
+    var schema = 'IntSchema'
     var status = 'PENDING'
 
-    var task = new Task(taskId, taskType, reference, claimId, additionalData, dateCreated, dateProcessed, status)
+    var task = new Task(taskId, taskType, reference, claimId, additionalData, dateCreated, dateProcessed, schema, status)
 
     expect(task.taskId).to.equal(taskId)
     expect(task.task).to.equal(taskType)
@@ -21,6 +22,7 @@ describe('services/domain/task', function () {
     expect(task.additionalData).to.equal(additionalData)
     expect(task.dateCreated).to.equal(dateCreated)
     expect(task.dateProcessed).to.equal(dateProcessed)
+    expect(task.schema).to.equal(schema)
     expect(task.status).to.equal(status)
     done()
   })

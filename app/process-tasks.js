@@ -9,9 +9,15 @@ const getWorkerForTask = require('./services/get-worker-for-task')
 module.exports = function () {
   var batchSize = config.ASYNC_WORKER_BATCH_SIZE
 
-  return getPendingTasksAndMarkInProgress(batchSize)
+  return processTasksForSchema('ExtSchema', batchSize).then(function () {
+    return processTasksForSchema('IntSchema', batchSize)
+  })
+}
+
+function processTasksForSchema (schema, batchSize) {
+  return getPendingTasksAndMarkInProgress(schema, batchSize)
     .then(function (tasks) {
-      log.info(`found ${tasks.length} tasks`)
+      log.info(`found ${tasks.length} ${schema} tasks`)
       if (tasks.length === 0) { return }
 
       var promiseArray = []
@@ -20,7 +26,7 @@ module.exports = function () {
         var worker = getWorkerForTask(task.task)
 
         if (worker) {
-          promiseArray.push(executeWorkerForTask(worker, task))
+          promiseArray.push(executeWorkerForTask(schema, worker, task))
         } else {
           log.info(`unable to find worker for task: ${task.task}`)
         }
@@ -30,15 +36,15 @@ module.exports = function () {
     })
 }
 
-function executeWorkerForTask (worker, task) {
-  log.info(`started task: ${task.taskId}-${task.task}`)
+function executeWorkerForTask (schema, worker, task) {
+  log.info(`started task: ${schema}-${task.taskId}-${task.task}`)
 
   return worker.execute(task)
     .then(function () {
-      log.info(`completed task: ${task.taskId}-${task.task}`)
-      return completeTaskWithStatus(task.taskId, statusEnum.COMPLETE)
+      log.info(`completed task: ${schema}-${task.taskId}-${task.task}`)
+      return completeTaskWithStatus(schema, task.taskId, statusEnum.COMPLETE)
     }).catch(function (error) {
-      log.info(`error running task: ${task.taskId}-${task.task}, error: ${error}`)
-      return completeTaskWithStatus(task.taskId, statusEnum.FAILED)
+      log.info(`error running task: ${schema}-${task.taskId}-${task.task}, error: ${error}`)
+      return completeTaskWithStatus(schema, task.taskId, statusEnum.FAILED)
     })
 }
