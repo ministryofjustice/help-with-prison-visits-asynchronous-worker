@@ -15,8 +15,8 @@ const sendRejectedClaimNotification = proxyquire('../../../../app/services/worke
 })
 
 describe('services/send-rejected-claim-notification', function () {
-  it('should call send-notification with correct details', function (done) {
-    sendRejectedClaimNotification.execute({
+  it('should call send-notification with correct details', function () {
+    return sendRejectedClaimNotification.execute({
       reference: reference,
       additionalData: emailAddress
     })
@@ -25,8 +25,6 @@ describe('services/send-rejected-claim-notification', function () {
       expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_REJECTED_CLAIM_EMAIL_TEMPLATE_ID)
       expect(stubSendNotification.firstCall.args[1]).to.be.equal(emailAddress)
       expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(reference)
-
-      done()
     })
   })
 })
