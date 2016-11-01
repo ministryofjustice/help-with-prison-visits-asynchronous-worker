@@ -18,7 +18,7 @@ describe('services/data/complete-task-with-status', function () {
   })
 
   it('should set status and set DateProcessed', function (done) {
-    completeTaskWithStatus(id, newStatus).then(function () {
+    completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
       return knex.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
         var currentDate = new Date()
         expect(result.Status).to.be.equal(newStatus)

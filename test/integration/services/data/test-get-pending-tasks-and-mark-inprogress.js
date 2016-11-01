@@ -24,7 +24,7 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
   })
 
   it('should return pending tasks and update task status to in progress', function (done) {
-    getPendingTasksAndMarkInProgress(batchSize).then(function (tasks) {
+    getPendingTasksAndMarkInProgress('ExtSchema', batchSize).then(function (tasks) {
       var testTasks = []
       tasks.forEach(function (task) {
         if (task.task === taskType) {

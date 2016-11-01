@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
+const statusEnum = require('../../app/constants/status-enum')
 
 var processTasks
 var getPendingTasksAndMarkInProgress
@@ -26,8 +27,8 @@ describe('process-tasks', function () {
     done()
   })
 
-  it('should get pending tasks and call worker to execute', function (done) {
-    getPendingTasksAndMarkInProgress.resolves([{taskId: 1, task: 'task1'}, {taskId: 1, task: 'task2'}])
+  it('should get pending tasks for ExtSchema/IntSchema and call worker to execute', function () {
+    getPendingTasksAndMarkInProgress.resolves([{taskId: 1, task: 'task1'}, {taskId: 2, task: 'task2'}])
     getWorkerForTask.returns({
       execute: function () {
         return new Promise(function (resolve) {
@@ -36,12 +37,17 @@ describe('process-tasks', function () {
       }})
     completeTaskWithStatus.resolves({})
 
-    processTasks().then(function () {
-      expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
+    return processTasks().then(function () {
+      expect(getPendingTasksAndMarkInProgress.calledWith('ExtSchema', batchSize)).to.be.true
       expect(getWorkerForTask.calledWith('task1')).to.be.true
       expect(getWorkerForTask.calledWith('task2')).to.be.true
-      expect(completeTaskWithStatus.calledTwice).to.be.true
-      done()
+
+      expect(getPendingTasksAndMarkInProgress.calledWith('IntSchema', batchSize)).to.be.true
+
+      expect(completeTaskWithStatus.calledWith('ExtSchema', 1, statusEnum.COMPLETE)).to.be.true
+      expect(completeTaskWithStatus.calledWith('ExtSchema', 2, statusEnum.COMPLETE)).to.be.true
+      expect(completeTaskWithStatus.calledWith('IntSchema', 1, statusEnum.COMPLETE)).to.be.true
+      expect(completeTaskWithStatus.calledWith('IntSchema', 2, statusEnum.COMPLETE)).to.be.true
     })
   })
 })
