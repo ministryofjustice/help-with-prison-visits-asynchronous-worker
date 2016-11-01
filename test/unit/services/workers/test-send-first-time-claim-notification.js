@@ -15,8 +15,8 @@ const sendFirstTimeClaimNotification = proxyquire('../../../../app/services/work
 })
 
 describe('services/send-first-time-claim-notification', function () {
-  it('should call send-notification with correct details', function (done) {
-    sendFirstTimeClaimNotification.execute({
+  it('should call send-notification with correct details', function () {
+    return sendFirstTimeClaimNotification.execute({
       reference: reference,
       additionalData: emailAddress
     })
@@ -25,8 +25,6 @@ describe('services/send-first-time-claim-notification', function () {
       expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID)
       expect(stubSendNotification.firstCall.args[1]).to.be.equal(emailAddress)
       expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(reference)
-
-      done()
     })
   })
 })

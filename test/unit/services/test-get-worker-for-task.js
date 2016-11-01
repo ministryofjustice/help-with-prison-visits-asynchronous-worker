@@ -4,12 +4,14 @@ const tasksEnum = require('../../../app/constants/tasks-enum')
 
 const sendAcceptedClaimNotification = { name: 'sendAcceptedClaimNotification' }
 const sendRejectedClaimNotification = { name: 'sendRejectedClaimNotification' }
+const sendRequestInformationClaimNotification = { name: 'sendRequestInformationClaimNotification' }
 const sendFirstTimeClaimNotification = { name: 'sendFirstTimeClaimNotification' }
 const completeFirstTimeClaim = { name: 'completeFirstTimeClaim' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
   './workers/send-rejected-claim-notification': sendRejectedClaimNotification,
+  './workers/send-request-information-claim-notification': sendRequestInformationClaimNotification,
   './workers/send-first-time-claim-notification': sendFirstTimeClaimNotification,
   './workers/complete-first-time-claim': completeFirstTimeClaim
 })
@@ -24,6 +26,12 @@ describe('services/getWorkerForTask', function () {
   it('should return send-rejected-claim-notification', function (done) {
     var worker = getWorkerForTask(tasksEnum.REJECT_CLAIM_NOTIFICATION)
     expect(worker.name).to.be.equal('sendRejectedClaimNotification')
+    done()
+  })
+
+  it('should return send-request-information-claim-notification', function (done) {
+    var worker = getWorkerForTask(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION)
+    expect(worker.name).to.be.equal('sendRequestInformationClaimNotification')
     done()
   })
 
