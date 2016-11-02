@@ -5,6 +5,7 @@ var processTasks = require('./app/process-tasks')
 
 var numberOfWorkers = config.ASYNC_WORKER_CONCURRENCY
 var frequency = config.ASYNC_WORKER_FREQUENCY
+var startWeb = config.ASYNC_START_WEB === 'true'
 
 throng({ workers: numberOfWorkers }, startWorker)
 
@@ -22,7 +23,7 @@ function startWorker (id) {
     }, frequency)
   })
 
-  if (id === 1) {
+  if (startWeb && id === 1) {
     // Start web
     require('./app/web/bin/www')
   }
