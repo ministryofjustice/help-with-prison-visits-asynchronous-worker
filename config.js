@@ -10,6 +10,7 @@ module.exports = {
   ASYNC_WORKER_CONCURRENCY: process.env.APVS_ASYNC_WORKER_CONCURRENCY || 1,
   ASYNC_WORKER_FREQUENCY: process.env.APVS_ASYNC_WORKER_FREQUENCY || 2000,
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || 5,
+  APVS_TEST_EMAIL_ADDRESS: process.env.APVS_TEST_EMAIL_ADDRESS,
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',
   NOTIFY_API_KEY: process.env.APVS_NOTIFY_API_KEY,
