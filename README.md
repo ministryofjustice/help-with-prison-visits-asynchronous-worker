@@ -23,6 +23,9 @@ Install dependencies and run
 ```
 npm install
 npm start
+
+# start Express healthcheck available on http://localhost:3999/status
+npm run-script start-web
 ```
 
 ### With Docker Compose
@@ -31,6 +34,24 @@ This will run the Asynchronous worker in development mode.
 ```
 docker-compose build
 docker-compose up
+```
+
+### Heroku
+
+The application can be deployed to [heroku](https://www.heroku.com/) for quick preview.
+
+Deployment to heroku is automatically performed by [Travis using an encrypted deployment key](https://docs.travis-ci.com/user/deployment/heroku/) in `.travis.yml`.
+
+```
+heroku login
+heroku create
+heroku buildpacks:set heroku/nodejs
+
+# Set config vars for application
+# heroku config:set DB_USERNAME=mydbuser
+# NOTE: APVS_ASYNC_START_WEB=true must be used as heroku will kill applications which do not bind a port
+
+git push heroku master
 ```
 
 ## Test
