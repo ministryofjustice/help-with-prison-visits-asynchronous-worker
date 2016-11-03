@@ -192,7 +192,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        { ClaimExpenseId: 32,
          ClaimId: claimId,
          ExpenseType: 'bus',
-         Cost: 20,
+         Cost: 20.95,
          IsEnabled: true,
          TravelTime: null,
          From: 'Euston',
