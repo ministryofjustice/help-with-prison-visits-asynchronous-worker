@@ -26,6 +26,7 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           expect(results[0].AccountNumber).to.be.equal(firstTimeClaimData.ClaimBankDetail.AccountNumber)
           expect(results.length, 'Should have two ClaimExpense').to.be.equal(2)
           expect(results[0].ExpenseType).to.be.equal('car')
+          expect(results[1].Cost).to.be.equal(20.95)
           expect(results[0].NationalInsuranceNumber).to.be.equal(firstTimeClaimData.Visitor.NationalInsuranceNumber)
           expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
 
