@@ -4,7 +4,10 @@ const statusEnum = require('../../constants/status-enum')
 const Task = require('../domain/task')
 
 module.exports = function (schema, batchSize) {
-  return knex.select().table(`${schema}.Task`).where('Status', statusEnum.PENDING).limit(batchSize)
+  return knex.select().table(`${schema}.Task`)
+    .where('Status', statusEnum.PENDING)
+    .orderBy('DateCreated', 'asc')
+    .limit(batchSize)
     .then(function (results) {
       var tasks = []
       var ids = []
