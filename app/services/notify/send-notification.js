@@ -1,5 +1,6 @@
 const config = require('../../../config')
 const NotifyClient = require('notifications-node-client').NotifyClient
+const Promise = require('bluebird')
 
 module.exports = function (emailTemplateId, emailAddress, personalisation) {
   var notifyClient = new NotifyClient(
@@ -7,5 +8,10 @@ module.exports = function (emailTemplateId, emailAddress, personalisation) {
     config.NOTIFY_CLIENT_ID,
     config.NOTIFY_API_KEY
   )
-  return notifyClient.sendEmail(emailTemplateId, emailAddress, personalisation)
+
+  if (emailAddress !== config.NOTIFY_DO_NOT_SEND_EMAIL) {
+    return notifyClient.sendEmail(emailTemplateId, emailAddress, personalisation)
+  } else {
+    return Promise.resolve('not sent!')
+  }
 }
