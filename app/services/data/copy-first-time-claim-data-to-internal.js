@@ -34,6 +34,7 @@ module.exports = function (data) {
         delete claimExpense.ClaimExpenseId
         delete claimExpense.IsEnabled
         claimExpense.ClaimId = newClaimId
+        claimExpense.Cost = parseFloat(claimExpense.Cost).toFixed(2)
       })
 
       return knex('IntSchema.ClaimExpense').insert(data.ClaimExpenses)

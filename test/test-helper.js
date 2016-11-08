@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
   var claimId = 123
-  var dateCreated = new Date()
+  var dateCreated = new Date('1920-01-01')
   var dateProcessed = null
   var status = taskStatus || 'PENDING'
 
@@ -174,9 +174,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        EmailAddress: 'test@test.com',
        PhoneNumber: '0123456789',
        DateOfBirth: new Date(),
-       Relationship: 'partner',
-       JourneyAssistance: 'no',
-       RequireBenefitUpload: false },
+       Relationship: 'partner' },
     ClaimExpenses:
      [ { ClaimExpenseId: 31,
          ClaimId: claimId,
@@ -192,7 +190,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        { ClaimExpenseId: 32,
          ClaimId: claimId,
          ExpenseType: 'bus',
-         Cost: 20,
+         Cost: 20.95,
          IsEnabled: true,
          TravelTime: null,
          From: 'Euston',
