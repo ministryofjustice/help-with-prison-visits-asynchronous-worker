@@ -174,8 +174,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        EmailAddress: 'test@test.com',
        PhoneNumber: '0123456789',
        DateOfBirth: new Date(),
-       Relationship: 'partner',
-       JourneyAssistance: 'no' },
+       Relationship: 'partner' },
     ClaimExpenses:
      [ { ClaimExpenseId: 31,
          ClaimId: claimId,
