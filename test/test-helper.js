@@ -175,8 +175,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        PhoneNumber: '0123456789',
        DateOfBirth: new Date(),
        Relationship: 'partner',
-       JourneyAssistance: 'no',
-       RequireBenefitUpload: false },
+       JourneyAssistance: 'no' },
     ClaimExpenses:
      [ { ClaimExpenseId: 31,
          ClaimId: claimId,
