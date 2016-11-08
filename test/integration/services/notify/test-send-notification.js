@@ -5,7 +5,7 @@ describe('services/notify/send-notification', function () {
   it('should send an email', function () {
     return sendNotification(
       config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID,
-      process.env.APVS_TEST_EMAIL_ADDRESS,
+      config.APVS_TEST_EMAIL_ADDRESS,
       { reference: '1234567' }
     ) // manual check to see if email was sent
   })
