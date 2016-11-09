@@ -7,6 +7,9 @@ module.exports = function (reference, claimId) {
       return knex('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()
     })
     .then(function () {
+      return knex('ExtSchema.ClaimChild').where('ClaimId', claimId).del()
+    })
+    .then(function () {
       return knex('ExtSchema.Claim').where('ClaimId', claimId).del()
     })
     .then(function () {

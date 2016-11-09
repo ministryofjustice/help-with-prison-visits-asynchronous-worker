@@ -40,6 +40,15 @@ module.exports = function (data) {
       return knex('IntSchema.ClaimExpense').insert(data.ClaimExpenses)
     })
     .then(function () {
+      data.ClaimChildren.forEach(function (claimChild) {
+        delete claimChild.ClaimChildId
+        delete claimChild.IsEnabled
+        claimChild.ClaimId = newClaimId
+      })
+
+      return knex('IntSchema.ClaimChild').insert(data.ClaimChild)
+    })
+    .then(function () {
       delete data.Visitor.VisitorId
       delete data.Visitor.Reference
       data.Visitor.EligibilityId = newEligibilityId
