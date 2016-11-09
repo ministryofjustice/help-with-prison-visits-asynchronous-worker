@@ -11,8 +11,8 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
   var claimId = 123
   var firstTimeClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
 
-  it('should copy the first time claim data to internal', function (done) {
-    copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
+  it('should copy the first time claim data to internal', function () {
+    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
       return knex('IntSchema.Eligibility').where('Reference', reference)
         .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
         .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
@@ -29,15 +29,11 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           expect(results[1].Cost).to.be.equal(20.95)
           expect(results[0].NationalInsuranceNumber).to.be.equal(firstTimeClaimData.Visitor.NationalInsuranceNumber)
           expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
-
-          done()
         })
     })
   })
 
-  after(function (done) {
-    testHelper.deleteAllInternalClaimEligibilityData(reference).then(function () {
-      done()
-    })
+  after(function () {
+    return testHelper.deleteAllInternalClaimEligibilityData(reference)
   })
 })

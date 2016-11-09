@@ -8,7 +8,8 @@ module.exports = function (reference, claimId, status) {
                       getVisitor(reference),
                       getClaim(reference, claimId, status),
                       getClaimExpenses(claimId),
-                      getClaimBankDetail(claimId)
+                      getClaimBankDetail(claimId),
+                      getClaimChildren(claimId)
     ]).then(function (results) {
       return {
         Eligibility: results[0],
@@ -16,7 +17,8 @@ module.exports = function (reference, claimId, status) {
         Visitor: results[2],
         Claim: results[3],
         ClaimExpenses: results[4],
-        ClaimBankDetail: results[5]
+        ClaimBankDetail: results[5],
+        ClaimChildren: results[6]
       }
     })
 }
@@ -59,4 +61,8 @@ function getClaimExpenses (claimId) {
 
 function getClaimBankDetail (claimId) {
   return knex('ExtSchema.ClaimBankDetail').first().where('ClaimId', claimId)
+}
+
+function getClaimChildren (claimId) {
+  return knex('ExtSchema.ClaimChild').select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
