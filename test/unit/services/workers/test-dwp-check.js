@@ -27,7 +27,7 @@ describe('services/workers/dwp-check', function () {
     }).then(function () {
       expect(getVisitorDwpBenefitCheckerData.calledWith(reference, claimId)).to.be.true
       expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true
-      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult)).to.be.true
+      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result)).to.be.true
     })
   })
 })

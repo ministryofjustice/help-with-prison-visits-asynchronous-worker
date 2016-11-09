@@ -8,7 +8,7 @@ module.exports.execute = function (task) {
     .then(function (visitorDwpBenefitCheckerData) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {
-          return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult)
+          return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
         })
     })
 }
