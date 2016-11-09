@@ -3,8 +3,8 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
-var visitorDwpBenefitCheckerData = {'data': '1234'}
-var benefitCheckerResult = {'VisitorId': 1234, 'Result': 'YES'}
+var visitorDwpBenefitCheckerData = {'visitorId': 1234, 'surname': 'YELLOW', 'dateOfBirth': '19681210', 'nino': 'PW556356A'}
+var benefitCheckerResult = {'visitorId': 1234, 'result': 'YES'}
 
 var getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
 var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)

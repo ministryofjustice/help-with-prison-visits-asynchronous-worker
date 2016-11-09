@@ -1,0 +1,80 @@
+<wsdl:definitions targetNamespace="https://lsc.gov.uk/benefitchecker/service/1.0">
+<!--WSDL created by Apache Axis version: 1.4 Built on Apr 22, 2006 (06:55:48 PDT) -->
+	<wsdl:types>
+		<schema elementFormDefault="qualified"
+			targetNamespace="http://lsc.gov.uk/benefitchecker/data/1.0">
+			<complexType name="benefitCheckerRequest">
+				<sequence>
+					<element name="clientOrgId" type="xsd:string" />
+					<element name="clientUserId" type="xsd:string" />
+					<element name="clientReference" type="xsd:string" />
+					<element name="lscServiceName" type="xsd:string" />
+					<element name="nino" type="xsd:string" />
+					<element name="surname" type="xsd:string" />
+					<element name="dateOfBirth" type="xsd:string" />
+					<element name="dateOfAward" nillable="true" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="benefitCheckerResponse">
+				<sequence>
+					<element name="originalClientRef" type="xsd:string" />
+					<element name="benefitCheckerStatus" type="xsd:string" />
+					<element name="confirmationRef" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="benefitCheckerFaultException">
+				<sequence>
+					<element name="MessageCode" nillable="true" type="xsd:string" />
+					<element name="MessageText" nillable="true" type="xsd:string" />
+				</sequence>
+			</complexType>
+		</schema>
+		<schema elementFormDefault="qualified"
+			targetNamespace="https://lsc.gov.uk/benefitchecker/service/1.0/API_1.0_Check">
+			<import namespace="http://lsc.gov.uk/benefitchecker/data/1.0" />
+			<element name="benefitCheckerRequest" type="tns1:benefitCheckerRequest" />
+			<element name="benefitCheckerResponse" type="tns1:benefitCheckerResponse" />
+			<element name="benefitCheckerFaultException" type="tns1:benefitCheckerFaultException" />
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="BenefitCheckerFaultException">
+		<wsdl:part element="tns2:benefitCheckerFaultException" name="benefitCheckerFaultException" />
+	</wsdl:message>
+	<wsdl:message name="checkRequest">
+		<wsdl:part element="tns2:benefitCheckerRequest" name="benefitCheckerRequest" />
+	</wsdl:message>
+	<wsdl:message name="checkResponse">
+		<wsdl:part element="tns2:benefitCheckerResponse" name="benefitCheckerResponse" />
+	</wsdl:message>
+	<wsdl:portType name="benefitChecker">
+		<wsdl:operation name="check" parameterOrder="benefitCheckerRequest">
+			<wsdl:input message="impl:checkRequest" name="checkRequest" />
+			<wsdl:output message="impl:checkResponse" name="checkResponse" />
+			<wsdl:fault message="impl:BenefitCheckerFaultException"
+				name="BenefitCheckerFaultException" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="benefitCheckerSoapBinding" type="impl:benefitChecker">
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="check">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="checkRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="checkResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="BenefitCheckerFaultException">
+				<wsdlsoap:fault name="BenefitCheckerFaultException"
+					use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="benefitCheckerWS">
+		<wsdl:port binding="impl:benefitCheckerSoapBinding" name="benefitChecker">
+			<wsdlsoap:address
+				location="http://cc2d3ext10-e02:38085/lsx/lsc-services/benefitChecker" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

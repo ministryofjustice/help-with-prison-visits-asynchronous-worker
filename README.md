@@ -62,10 +62,21 @@ npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
 ```
 
-## Database
+## Integration points
+
+### Database
 
 The application requires a MS SQL database instance, configured with an async worker user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
 
-## Notify
+### Notify
 
-The application sends email notifications using the Notify service. In order to utilize the Notify Worker you will need Notify credentials. See [here](https://www.gov.uk/government/publications/govuk-notify/govuk-notify) for details on setting up a Notify account, and config.js for the environment variables to set.
+The application sends email notifications using the Notify service. In order to utilize the Notify Worker you will need Notify credentials. See [here](https://www.gov.uk/government/publications/govuk-notify/govuk-notify) for details on setting up a Notify account, and `config.js` for the environment variables to set.
+
+See [send-notification.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/notify/send-notification.js) for implementation.
+
+### DWP benefit checker
+
+The `DWP-CHECK` task requires making a call to the DWP Benefit Checker service. This is a IP whitelisted SOAP service only available to approved government services to validate that given details (surname, dob, nino) a person is recorded with DWP as receiving benefits (Yes/No/Undetermined). Calling the service requires a number of environment variables set, see `config.js`.
+
+See [call-dwp-benefit-checker-soap-service.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/call-dwp-benefit-checker-soap-service.js) for implementation, [here](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/BenefitChecker.wsdl) for the SOAP service WSDL.
+
