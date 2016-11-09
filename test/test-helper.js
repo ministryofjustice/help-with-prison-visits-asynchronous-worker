@@ -34,6 +34,9 @@ module.exports.deleteAllExternalClaimEligibilityData = function (reference) {
       return knex('ExtSchema.ClaimExpense').whereIn('ClaimId', claimIds).del()
     })
     .then(function () {
+      return knex('ExtSchema.ClaimChild').where('ClaimId', claimIds).del()
+    })
+    .then(function () {
       return knex('ExtSchema.Claim').whereIn('ClaimId', claimIds).del()
     })
     .then(function () {
@@ -64,6 +67,9 @@ module.exports.deleteAllInternalClaimEligibilityData = function (reference) {
     })
     .then(function () {
       return knex('IntSchema.ClaimExpense').whereIn('ClaimId', claimIds).del()
+    })
+    .then(function () {
+      return knex('IntSchema.ClaimChild').where('ClaimId', claimIds).del()
     })
     .then(function () {
       return knex('IntSchema.Claim').whereIn('ClaimId', claimIds).del()
@@ -120,6 +126,13 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
       return knex(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })
     .then(function () {
+      delete data.ClaimChildren[0].ClaimChildId
+      delete data.ClaimChildren[1].ClaimChildId
+      data.ClaimChildren[0].ClaimId = newClaimId
+      data.ClaimChildren[1].ClaimId = newClaimId
+      return knex(`${schema}.ClaimChild`).insert(data.ClaimChildren)
+    })
+    .then(function () {
       if (isIntSchema) {
         delete data.Visitor.Reference
         data.Visitor.EligibilityId = newEligibilityId
@@ -141,7 +154,8 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
 }
 
 module.exports.getFirstTimeClaimData = function (reference, claimId) {
-  return { Eligibility:
+  return {
+    Eligibility:
      { Reference: reference,
        DateCreated: new Date(),
        DateSubmitted: new Date(),
@@ -175,6 +189,20 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
        PhoneNumber: '0123456789',
        DateOfBirth: new Date(),
        Relationship: 'partner' },
+    ClaimChildren:
+    [ { ClaimChildId: 50,
+        ClaimId: claimId,
+        Name: 'Sam Bloggs',
+        DateOfBirth: new Date(),
+        Relationship: 'prisoners-child',
+        IsEnabled: true },
+      { ClaimChildId: 51,
+        ClaimId: claimId,
+        Name: 'Mike Bloggs',
+        DateOfBirth: new Date(),
+        Relationship: 'my-child',
+        IsEnabled: true
+      } ],
     ClaimExpenses:
      [ { ClaimExpenseId: 31,
          ClaimId: claimId,
@@ -202,5 +230,6 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
      { ClaimBankDetailId: 31,
        ClaimId: claimId,
        AccountNumber: '00123456',
-       SortCode: '001122' } }
+       SortCode: '001122' }
+  }
 }
