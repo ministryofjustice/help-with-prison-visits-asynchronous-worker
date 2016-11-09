@@ -5,10 +5,11 @@ require('sinon-bluebird')
 
 const reference = '1234567'
 const claimId = 123
+const newClaimId = 321
 var firstTimeClaimData = {}
 
 var getAllFirstTimeClaimData = sinon.stub().resolves(firstTimeClaimData)
-var copyFirstTimeClaimDataToInternal = sinon.stub().resolves()
+var copyFirstTimeClaimDataToInternal = sinon.stub().resolves(newClaimId)
 var deleteFirstTimeClaimFromExternal = sinon.stub().resolves()
 var insertTaskDwpCheck = sinon.stub().resolves()
 
@@ -28,7 +29,7 @@ describe('services/workers/complete-first-time-claim', function () {
       expect(getAllFirstTimeClaimData.calledWith(reference, claimId)).to.be.true
       expect(copyFirstTimeClaimDataToInternal.calledWith(firstTimeClaimData)).to.be.true
       expect(deleteFirstTimeClaimFromExternal.calledOnce).to.be.true
-      expect(insertTaskDwpCheck.calledWith(reference, claimId)).to.be.true
+      expect(insertTaskDwpCheck.calledWith(reference, newClaimId)).to.be.true
     })
   })
 })

@@ -26,7 +26,7 @@ module.exports = function (visitorDwpBenefitCheckerData) {
           if (result && result[0] && result[0]._) {
             var status = result[0]._.toString().toUpperCase()
             return {
-              'visitorId': visitorDwpBenefitCheckerData.VisitorId,
+              'visitorId': visitorDwpBenefitCheckerData.visitorId,
               'result': status
             }
           } else {

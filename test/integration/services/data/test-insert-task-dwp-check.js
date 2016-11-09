@@ -17,7 +17,7 @@ describe('services/data/insert-task-dwp-check', function () {
           .where({'Reference': reference, 'ClaimId': claimId, 'Task': tasksEnum.DWP_CHECK})
           .first()
           .then(function (result) {
-            expect(result.Status).to.be.equal(statusEnum.INPROGRESS)
+            expect(result.Status).to.be.equal(statusEnum.PENDING)
             expect(result.DateCreated).not.to.be.null
           })
       })

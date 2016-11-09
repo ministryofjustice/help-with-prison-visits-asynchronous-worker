@@ -62,4 +62,7 @@ module.exports = function (data) {
 
       return knex('IntSchema.Prisoner').insert(data.Prisoner)
     })
+    .then(function () {
+      return newClaimId
+    })
 }

@@ -9,7 +9,7 @@ module.exports = function (reference, claimId) {
     'Reference': reference,
     'ClaimId': claimId,
     'DateCreated': new Date(),
-    'Status': statusEnum.INPROGRESS
+    'Status': statusEnum.PENDING
   }
 
   return knex('IntSchema.Task').insert(task).returning('TaskId')
