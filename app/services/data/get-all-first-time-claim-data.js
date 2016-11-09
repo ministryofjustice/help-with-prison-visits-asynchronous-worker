@@ -7,18 +7,18 @@ module.exports = function (reference, claimId, status) {
                       getPrisoner(reference),
                       getVisitor(reference),
                       getClaim(reference, claimId, status),
+                      getClaimChildren(claimId),
                       getClaimExpenses(claimId),
-                      getClaimBankDetail(claimId),
-                      getClaimChildren(claimId)
+                      getClaimBankDetail(claimId)
     ]).then(function (results) {
       return {
         Eligibility: results[0],
         Prisoner: results[1],
         Visitor: results[2],
         Claim: results[3],
-        ClaimExpenses: results[4],
-        ClaimBankDetail: results[5],
-        ClaimChildren: results[6]
+        ClaimChildren: results[4],
+        ClaimExpenses: results[5],
+        ClaimBankDetail: results[6]
       }
     })
 }
