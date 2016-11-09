@@ -7,13 +7,15 @@ const sendRejectedClaimNotification = { name: 'sendRejectedClaimNotification' }
 const sendRequestInformationClaimNotification = { name: 'sendRequestInformationClaimNotification' }
 const sendFirstTimeClaimNotification = { name: 'sendFirstTimeClaimNotification' }
 const completeFirstTimeClaim = { name: 'completeFirstTimeClaim' }
+const dwpCheck = { name: 'dwpCheck' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
   './workers/send-rejected-claim-notification': sendRejectedClaimNotification,
   './workers/send-request-information-claim-notification': sendRequestInformationClaimNotification,
   './workers/send-first-time-claim-notification': sendFirstTimeClaimNotification,
-  './workers/complete-first-time-claim': completeFirstTimeClaim
+  './workers/complete-first-time-claim': completeFirstTimeClaim,
+  './workers/dwp-check': dwpCheck
 })
 
 describe('services/getWorkerForTask', function () {
@@ -44,6 +46,12 @@ describe('services/getWorkerForTask', function () {
   it('should return complete-first-time-claim', function (done) {
     var worker = getWorkerForTask(tasksEnum.COMPLETE_FIRST_TIME_CLAIM)
     expect(worker.name).to.be.equal('completeFirstTimeClaim')
+    done()
+  })
+
+  it('should return dwp-check', function (done) {
+    var worker = getWorkerForTask(tasksEnum.DWP_CHECK)
+    expect(worker.name).to.be.equal('dwpCheck')
     done()
   })
 })

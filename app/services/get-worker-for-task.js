@@ -4,6 +4,7 @@ var sendRejectedClaimNotification = require('./workers/send-rejected-claim-notif
 var sendRequestInformationClaimNotification = require('./workers/send-request-information-claim-notification')
 var sendFirstTimeClaimNotification = require('./workers/send-first-time-claim-notification')
 var completeFirstTimeClaim = require('./workers/complete-first-time-claim')
+var dwpCheck = require('./workers/dwp-check')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -17,6 +18,8 @@ module.exports = function (taskType) {
     return sendFirstTimeClaimNotification
   } else if (taskType === tasksEnum.COMPLETE_FIRST_TIME_CLAIM) {
     return completeFirstTimeClaim
+  } else if (taskType === tasksEnum.DWP_CHECK) {
+    return dwpCheck
   }
 
   return null
