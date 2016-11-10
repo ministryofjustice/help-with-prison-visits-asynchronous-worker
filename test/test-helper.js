@@ -124,8 +124,8 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
       data.ClaimExpenses[0].ClaimId = newClaimId
       data.ClaimExpenses[1].ClaimId = newClaimId
       if (isIntSchema) {
-        delete delete data.ClaimExpenses[0].IsEnabled
-        delete delete data.ClaimExpenses[1].IsEnabled
+        delete data.ClaimExpenses[0].IsEnabled
+        delete data.ClaimExpenses[1].IsEnabled
       }
       return knex(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })

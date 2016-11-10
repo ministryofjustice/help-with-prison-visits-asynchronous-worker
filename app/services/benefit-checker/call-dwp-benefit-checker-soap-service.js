@@ -6,6 +6,13 @@ const xpath = require('xml2js-xpath')
 
 // Creating HTTP request rather than using SOAP client as node SOAP clients are unreliable
 module.exports = function (visitorDwpBenefitCheckerData) {
+  if (config.DWP_BENEFIT_CHECKER_ENABLED !== 'true') {
+    return Promise.resolve({
+      'visitorId': visitorDwpBenefitCheckerData.visitorId,
+      'result': 'NOT-RUN'
+    })
+  }
+
   var options = {
     method: 'POST',
     uri: config.DWP_BENEFIT_CHECKER_URL,
