@@ -7,7 +7,7 @@ const statusEnum = require('../../../../app/constants/status-enum')
 const insertTaskDwpCheck = require('../../../../app/services/data/insert-task-dwp-check')
 
 const reference = 'DWPTASK'
-const claimId = 1234
+const claimId = '1234'
 
 describe('services/data/insert-task-dwp-check', function () {
   it('should create Task with Reference, ClaimId, Status', function () {
@@ -24,6 +24,6 @@ describe('services/data/insert-task-dwp-check', function () {
   })
 
   after(function () {
-    knex('IntSchema.Task').where({'Reference': reference, 'ClaimId': claimId}).del()
+    return knex('IntSchema.Task').where({'Reference': reference, 'ClaimId': claimId}).del()
   })
 })
