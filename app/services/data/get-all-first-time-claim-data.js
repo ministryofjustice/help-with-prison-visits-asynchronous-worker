@@ -9,7 +9,7 @@ module.exports = function (reference, claimId, status) {
     getClaim(reference, claimId, status),
     getClaimChildren(claimId),
     getClaimExpenses(claimId),
-    getClaimDocument(claimId),
+    getClaimDocuments(claimId),
     getClaimBankDetail(claimId)
   ]).then(function (results) {
     return {
@@ -69,6 +69,6 @@ function getClaimChildren (claimId) {
   return knex('ExtSchema.ClaimChild').select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
 
-function getClaimDocument (claimId) {
+function getClaimDocuments (claimId) {
   return knex('ExtSchema.ClaimDocument').select().where({'ClaimId': claimId})
 }

@@ -246,7 +246,7 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
     DateSubmitted: new Date()},
       { ClaimDocumentId: 42,
         ClaimId: claimId,
-        DocumentType: 'RECEIPT',
+        DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
         DocumentStatus: 'post-later',
         Filepath: null,
