@@ -46,7 +46,7 @@ module.exports = function (data) {
         claimChild.ClaimId = newClaimId
       })
 
-      return knex('IntSchema.ClaimChild').insert(data.ClaimChild)
+      return knex('IntSchema.ClaimChild').insert(data.ClaimChildren)
     })
     .then(function () {
       delete data.Visitor.VisitorId
