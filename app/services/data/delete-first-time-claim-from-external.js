@@ -4,6 +4,9 @@ const knex = require('knex')(config)
 module.exports = function (reference, claimId) {
   return knex('ExtSchema.ClaimBankDetail').where('ClaimId', claimId).del()
     .then(function () {
+      return knex('ExtSchema.ClaimDocument').where('ClaimId', claimId).del()
+    })
+    .then(function () {
       return knex('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()
     })
     .then(function () {
