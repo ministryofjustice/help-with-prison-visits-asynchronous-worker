@@ -24,6 +24,7 @@ describe('services/data/get-all-first-time-claim-data', function () {
         expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)
         expect(data.ClaimBankDetail.ClaimId).to.be.equal(claimId)
         expect(data.ClaimChildren[0].ClaimId).to.be.equal(claimId)
+        expect(data.ClaimDocument[0].ClaimId).to.be.equal(claimId)
       })
   })
 

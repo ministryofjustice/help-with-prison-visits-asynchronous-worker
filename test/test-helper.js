@@ -31,6 +31,9 @@ module.exports.deleteAllExternalClaimEligibilityData = function (reference) {
       return knex('ExtSchema.ClaimBankDetail').whereIn('ClaimId', claimIds).del()
     })
     .then(function () {
+      return knex('ExtSchema.ClaimDocument').where('ClaimId', claimIds).del()
+    })
+    .then(function () {
       return knex('ExtSchema.ClaimExpense').whereIn('ClaimId', claimIds).del()
     })
     .then(function () {
@@ -64,6 +67,9 @@ module.exports.deleteAllInternalClaimEligibilityData = function (reference) {
       claimIdsResults.forEach(function (result) { claimIds.push(result.ClaimId) })
 
       return knex('IntSchema.ClaimBankDetail').whereIn('ClaimId', claimIds).del()
+    })
+    .then(function () {
+      return knex('IntSchema.ClaimDocument').where('ClaimId', claimIds).del()
     })
     .then(function () {
       return knex('IntSchema.ClaimExpense').whereIn('ClaimId', claimIds).del()
@@ -130,6 +136,13 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
       return knex(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })
     .then(function () {
+      delete data.ClaimDocument[0].ClaimDocumentId
+      delete data.ClaimDocument[1].ClaimDocumentId
+      data.ClaimDocument[0].ClaimId = newClaimId
+      data.ClaimDocument[1].ClaimId = newClaimId
+      return knex(`${schema}.ClaimDocument`).insert(data.ClaimDocument)
+    })
+    .then(function () {
       delete data.ClaimChildren[0].ClaimChildId
       delete data.ClaimChildren[1].ClaimChildId
       data.ClaimChildren[0].ClaimId = newClaimId
@@ -159,47 +172,42 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
 
 module.exports.getFirstTimeClaimData = function (reference, claimId) {
   return {
-    Eligibility:
-     { Reference: reference,
-       DateCreated: new Date(),
-       DateSubmitted: new Date(),
-       Status: 'SUBMITTED' },
-    Claim:
-     { ClaimId: claimId,
-       Reference: reference,
-       DateOfJourney: new Date(),
-       DateCreated: new Date(),
-       DateSubmitted: new Date(),
-       Status: 'SUBMITTED' },
-    Prisoner:
-     { Reference: reference,
-       FirstName: 'Joe',
-       LastName: 'Bloggs',
-       DateOfBirth: new Date(),
-       PrisonNumber: 'A1234BC',
-       NameOfPrison: 'Hewell' },
-    Visitor:
-     { Reference: reference,
-       Title: 'Mr',
-       FirstName: 'Joe',
-       LastName: 'Bloggs',
-       NationalInsuranceNumber: 'AA123456A',
-       HouseNumberAndStreet: '1',
-       Town: 'Town',
-       County: 'County',
-       PostCode: 'AA123AA',
-       Country: 'Northern Ireland',
-       EmailAddress: 'test@test.com',
-       PhoneNumber: '0123456789',
-       DateOfBirth: new Date(),
-       Relationship: 'partner' },
-    ClaimChildren:
-    [ { ClaimChildId: 50,
-        ClaimId: claimId,
-        Name: 'Sam Bloggs',
-        DateOfBirth: new Date(),
-        Relationship: 'prisoners-child',
-        IsEnabled: true },
+    Eligibility: { Reference: reference,
+      DateCreated: new Date(),
+      DateSubmitted: new Date(),
+    Status: 'SUBMITTED' },
+    Claim: { ClaimId: claimId,
+      Reference: reference,
+      DateOfJourney: new Date(),
+      DateCreated: new Date(),
+      DateSubmitted: new Date(),
+    Status: 'SUBMITTED' },
+    Prisoner: { Reference: reference,
+      FirstName: 'Joe',
+      LastName: 'Bloggs',
+      DateOfBirth: new Date(),
+      PrisonNumber: 'A1234BC',
+    NameOfPrison: 'Hewell' },
+    Visitor: { Reference: reference,
+      Title: 'Mr',
+      FirstName: 'Joe',
+      LastName: 'Bloggs',
+      NationalInsuranceNumber: 'AA123456A',
+      HouseNumberAndStreet: '1',
+      Town: 'Town',
+      County: 'County',
+      PostCode: 'AA123AA',
+      Country: 'Northern Ireland',
+      EmailAddress: 'test@test.com',
+      PhoneNumber: '0123456789',
+      DateOfBirth: new Date(),
+    Relationship: 'partner' },
+    ClaimChildren: [ { ClaimChildId: 50,
+      ClaimId: claimId,
+      Name: 'Sam Bloggs',
+      DateOfBirth: new Date(),
+      Relationship: 'prisoners-child',
+    IsEnabled: true },
       { ClaimChildId: 51,
         ClaimId: claimId,
         Name: 'Mike Bloggs',
@@ -207,33 +215,45 @@ module.exports.getFirstTimeClaimData = function (reference, claimId) {
         Relationship: 'my-child',
         IsEnabled: true
       } ],
-    ClaimExpenses:
-     [ { ClaimExpenseId: 31,
-         ClaimId: claimId,
-         ExpenseType: 'car',
-         Cost: 0,
-         IsEnabled: true,
-         TravelTime: null,
-         From: 'London',
-         To: 'Hewell',
-         IsReturn: false,
-         DurationOfTravel: null,
-         TicketType: null },
-       { ClaimExpenseId: 32,
-         ClaimId: claimId,
-         ExpenseType: 'bus',
-         Cost: 20.95,
-         IsEnabled: true,
-         TravelTime: null,
-         From: 'Euston',
-         To: 'Birmingham New Street',
-         IsReturn: false,
-         DurationOfTravel: null,
-         TicketType: null } ],
-    ClaimBankDetail:
-     { ClaimBankDetailId: 31,
-       ClaimId: claimId,
-       AccountNumber: '00123456',
-       SortCode: '001122' }
+    ClaimExpenses: [ { ClaimExpenseId: 31,
+      ClaimId: claimId,
+      ExpenseType: 'car',
+      Cost: 0,
+      IsEnabled: true,
+      TravelTime: null,
+      From: 'London',
+      To: 'Hewell',
+      IsReturn: false,
+      DurationOfTravel: null,
+    TicketType: null },
+      { ClaimExpenseId: 32,
+        ClaimId: claimId,
+        ExpenseType: 'bus',
+        Cost: 20.95,
+        IsEnabled: true,
+        TravelTime: null,
+        From: 'Euston',
+        To: 'Birmingham New Street',
+        IsReturn: false,
+        DurationOfTravel: null,
+      TicketType: null } ],
+    ClaimDocument: [{ClaimDocumentId: 41,
+      ClaimId: claimId,
+      DocumentType: 'VISITOR-CONFIRMATION',
+      ClaimExpenseId: null,
+      DocumentStatus: 'uploaded',
+      Filepath: 'path',
+    DateSubmitted: new Date()},
+      { ClaimDocumentId: 42,
+        ClaimId: claimId,
+        DocumentType: 'BENEFIT',
+        ClaimExpenseId: null,
+        DocumentStatus: 'post-later',
+        Filepath: null,
+      DateSubmitted: new Date()}],
+    ClaimBankDetail: { ClaimBankDetailId: 31,
+      ClaimId: claimId,
+      AccountNumber: '00123456',
+    SortCode: '001122' }
   }
 }
