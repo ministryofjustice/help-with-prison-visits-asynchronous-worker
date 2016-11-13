@@ -18,7 +18,7 @@ describe('services/data/delete-first-time-claim-from-external', function () {
   })
 
   it('should delete the first time claim from external', function () {
-    return deleteFirstTimeClaimFromExternal(reference, eligibilityId, claimId).then(function () {
+    return deleteFirstTimeClaimFromExternal(eligibilityId, claimId).then(function () {
       return knex('ExtSchema.Eligibility')
       .join('ExtSchema.Prisoner', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Prisoner.Reference')
       .join('ExtSchema.Visitor', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Visitor.Reference')

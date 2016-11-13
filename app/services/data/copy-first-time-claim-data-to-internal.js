@@ -31,7 +31,4 @@ module.exports = function (data) {
     .then(function () {
       return knex('IntSchema.Prisoner').insert(data.Prisoner)
     })
-    .then(function () {
-      return data.Claim.ClaimId
-    })
 }
