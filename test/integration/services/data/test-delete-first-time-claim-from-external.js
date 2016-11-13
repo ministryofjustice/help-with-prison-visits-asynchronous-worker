@@ -7,17 +7,18 @@ const deleteFirstTimeClaimFromExternal = require('../../../../app/services/data/
 
 describe('services/data/delete-first-time-claim-from-external', function () {
   var reference = 'DELETE1'
+  var eligibilityId
   var claimId
 
-  before(function (done) {
-    testHelper.insertClaimEligibilityData('ExtSchema', reference).then(function (newClaimId) {
-      claimId = newClaimId
-      done()
+  before(function () {
+    return testHelper.insertClaimEligibilityData('ExtSchema', reference).then(function (ids) {
+      eligibilityId = ids.eligibilityId
+      claimId = ids.claimId
     })
   })
 
-  it('should delete the first time claim from external', function (done) {
-    deleteFirstTimeClaimFromExternal(reference, claimId).then(function () {
+  it('should delete the first time claim from external', function () {
+    return deleteFirstTimeClaimFromExternal(reference, eligibilityId, claimId).then(function () {
       return knex('ExtSchema.Eligibility')
       .join('ExtSchema.Prisoner', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Prisoner.Reference')
       .join('ExtSchema.Visitor', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Visitor.Reference')
@@ -33,16 +34,12 @@ describe('services/data/delete-first-time-claim-from-external', function () {
           .count('ExtSchema.ClaimBankDetail.ClaimId as count')
           .then(function (countResult) {
             expect(countResult[0].count).to.be.equal(0)
-
-            done()
           })
       })
     })
   })
 
-  after(function (done) {
-    testHelper.deleteAllExternalClaimEligibilityData(reference, claimId).then(function () {
-      done()
-    })
+  after(function () {
+    return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

@@ -6,18 +6,20 @@ const getVisitorDwpBenefitCheckerData = require('../../../../app/services/data/g
 
 describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
   var reference = 'GETDWPV'
+  var eligibilityId
   var claimId
   var claimData = testHelper.getFirstTimeClaimData(reference)
 
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function (newClaimId) {
-        claimId = newClaimId
+      .then(function (ids) {
+        claimId = ids.claimId
+        eligibilityId = ids.eligibilityId
       })
   })
 
-  it('should update internal Visitor with DWP benefit checker result ', function () {
-    return getVisitorDwpBenefitCheckerData(reference, claimId)
+  it('should return visitor DWP benefit checker data', function () {
+    return getVisitorDwpBenefitCheckerData(reference, eligibilityId, claimId)
       .then(function (visitorDwpBenefitCheckerData) {
         var dobFormatted = moment(claimData.Visitor.DateOfBirth).format('YYYYMMDD')
 
@@ -28,6 +30,6 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
   })
 
   after(function () {
-    return testHelper.deleteAllInternalClaimEligibilityData(reference)
+    return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

@@ -5,7 +5,8 @@ describe('services/domain/task', function () {
   it('should construct a domain object', function (done) {
     var taskId = 1
     var taskType = 'FIRST-TIME-CLAIM-NOTIFICATION'
-    var reference = '1234567'
+    var reference = 'NEW4567'
+    var eligibilityId = '123'
     var claimId = 123
     var additionalData = 'additional data'
     var dateCreated = new Date(1980, 1, 2)
@@ -13,11 +14,12 @@ describe('services/domain/task', function () {
     var schema = 'IntSchema'
     var status = 'PENDING'
 
-    var task = new Task(taskId, taskType, reference, claimId, additionalData, dateCreated, dateProcessed, schema, status)
+    var task = new Task(taskId, taskType, reference, eligibilityId, claimId, additionalData, dateCreated, dateProcessed, schema, status)
 
     expect(task.taskId).to.equal(taskId)
     expect(task.task).to.equal(taskType)
     expect(task.reference).to.equal(reference)
+    expect(task.eligibilityId).to.equal(eligibilityId)
     expect(task.claimId).to.equal(claimId)
     expect(task.additionalData).to.equal(additionalData)
     expect(task.dateCreated).to.equal(dateCreated)

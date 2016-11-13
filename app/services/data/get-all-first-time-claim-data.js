@@ -2,11 +2,11 @@ const Promise = require('bluebird')
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (reference, claimId, status) {
-  return Promise.all([getEligilibility(reference, claimId, status),
-    getPrisoner(reference),
-    getVisitor(reference),
-    getClaim(reference, claimId, status),
+module.exports = function (reference, eligibilityId, claimId, status) {
+  return Promise.all([getEligilibility(reference, eligibilityId, status),
+    getPrisoner(reference, eligibilityId),
+    getVisitor(reference, eligibilityId),
+    getClaim(claimId, status),
     getClaimChildren(claimId),
     getClaimExpenses(claimId),
     getClaimDocuments(claimId),
@@ -25,10 +25,10 @@ module.exports = function (reference, claimId, status) {
   })
 }
 
-function getEligilibility (reference, claimId, status) {
+function getEligilibility (reference, eligibilityId, status) {
   return knex('ExtSchema.Eligibility')
     .first()
-    .where({'Reference': reference, 'Status': status})
+    .where({'Reference': reference, 'EligibilityId': eligibilityId, 'Status': status})
     .then(function (eligibility) {
       if (!eligibility) {
         throw new Error(`Could not find valid completed Eligibility for reference: ${reference}`)
@@ -37,24 +37,24 @@ function getEligilibility (reference, claimId, status) {
     })
 }
 
-function getClaim (reference, claimId, status) {
+function getClaim (claimId, status) {
   return knex('ExtSchema.Claim')
     .first()
-    .where({'Reference': reference, 'ClaimId': claimId, 'Status': status})
+    .where({'ClaimId': claimId, 'Status': status})
     .then(function (claim) {
       if (!claim) {
-        throw new Error(`Could not find valid completed Claim for reference: ${reference}, claimId: ${claimId}`)
+        throw new Error(`Could not find valid completed Claim for claimId: ${claimId}`)
       }
       return claim
     })
 }
 
-function getPrisoner (reference) {
-  return knex('ExtSchema.Prisoner').first().where('Reference', reference)
+function getPrisoner (reference, eligibilityId) {
+  return knex('ExtSchema.Prisoner').first().where({'Reference': reference, 'EligibilityId': eligibilityId})
 }
 
-function getVisitor (reference) {
-  return knex('ExtSchema.Visitor').first().where('Reference', reference)
+function getVisitor (reference, eligibilityId) {
+  return knex('ExtSchema.Visitor').first().where({'Reference': reference, 'EligibilityId': eligibilityId})
 }
 
 function getClaimExpenses (claimId) {
@@ -70,5 +70,5 @@ function getClaimChildren (claimId) {
 }
 
 function getClaimDocuments (claimId) {
-  return knex('ExtSchema.ClaimDocument').select().where({'ClaimId': claimId})
+  return knex('ExtSchema.ClaimDocument').select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
