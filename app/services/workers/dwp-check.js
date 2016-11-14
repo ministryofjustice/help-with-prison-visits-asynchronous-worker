@@ -4,7 +4,7 @@ const callDwpBenefitCheckerSoapService = require('../benefit-checker/call-dwp-be
 const updateVisitorWithDwpBenefitCheckerResult = require('../data/update-visitor-with-dwp-benefit-checker-result')
 
 module.exports.execute = function (task) {
-  return getVisitorDwpBenefitCheckerData(task.reference, task.claimId)
+  return getVisitorDwpBenefitCheckerData(task.reference, task.eligibilityId, task.claimId)
     .then(function (visitorDwpBenefitCheckerData) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {

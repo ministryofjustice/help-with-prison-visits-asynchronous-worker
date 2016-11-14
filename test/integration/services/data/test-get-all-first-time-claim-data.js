@@ -5,17 +5,19 @@ const getAllFirstTimeClaimData = require('../../../../app/services/data/get-all-
 
 describe('services/data/get-all-first-time-claim-data', function () {
   var reference = 'FIRST12'
+  var eligibilityId
   var claimId
 
   before(function () {
     return testHelper.insertClaimEligibilityData('ExtSchema', reference)
-      .then(function (newClaimId) {
-        claimId = newClaimId
+      .then(function (ids) {
+        eligibilityId = ids.eligibilityId
+        claimId = ids.claimId
       })
   })
 
   it('should return all First time claim data', function () {
-    return getAllFirstTimeClaimData(reference, claimId, 'SUBMITTED')
+    return getAllFirstTimeClaimData(reference, eligibilityId, claimId, 'SUBMITTED')
       .then(function (data) {
         expect(data.Eligibility.Reference).to.be.equal(reference)
         expect(data.Claim.Reference).to.be.equal(reference)
@@ -29,6 +31,6 @@ describe('services/data/get-all-first-time-claim-data', function () {
   })
 
   after(function () {
-    return testHelper.deleteAllExternalClaimEligibilityData(reference, claimId)
+    return testHelper.deleteAll(reference, 'ExtSchema')
   })
 })

@@ -7,6 +7,7 @@ const config = require('../../../../config')
 
 var emailAddress = 'test@test.com'
 var reference = '1234567'
+var eligibilityId = '4321'
 
 var stubSendNotification = sinon.stub().resolves()
 
@@ -18,6 +19,7 @@ describe('services/send-accepted-claim-notification', function () {
   it('should call send-notification with correct details', function () {
     return sendAcceptedClaimNotification.execute({
       reference: reference,
+      eligibilityId: eligibilityId,
       additionalData: emailAddress
     })
     .then(function () {

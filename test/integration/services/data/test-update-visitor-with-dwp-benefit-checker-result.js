@@ -13,19 +13,17 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function () {
-        return knex('IntSchema.Eligibility').where('Reference', reference)
-        .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
-        .first('VisitorId')
-        .then(function (result) {
-          visitorId = result.VisitorId
-        })
+        return knex('IntSchema.Visitor').where('Reference', reference).first('VisitorId')
+          .then(function (visitor) {
+            visitorId = visitor.VisitorId
+          })
       })
   })
 
   it('should update internal Visitor with DWP benefit checker result ', function () {
     return updateVisitorWithDwpBenefitCheckerResult(visitorId, dwpBenefitCheckerResult)
       .then(function () {
-        return knex('IntSchema.Visitor').where('VisitorId', visitorId).first()
+        return knex('IntSchema.Visitor').where('Reference', reference).first('DWPBenefitCheckerResult')
           .then(function (visitor) {
             expect(visitor.DWPBenefitCheckerResult).to.be.equal(dwpBenefitCheckerResult)
           })
@@ -33,6 +31,6 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   })
 
   after(function () {
-    return testHelper.deleteAllInternalClaimEligibilityData(reference)
+    return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

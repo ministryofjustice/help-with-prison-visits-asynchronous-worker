@@ -13,7 +13,7 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
 
   it('should copy the first time claim data to internal', function () {
     return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
-      return knex('IntSchema.Eligibility').where('Reference', reference)
+      return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
         .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
         .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
         .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
@@ -34,6 +34,6 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
   })
 
   after(function () {
-    return testHelper.deleteAllInternalClaimEligibilityData(reference)
+    return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

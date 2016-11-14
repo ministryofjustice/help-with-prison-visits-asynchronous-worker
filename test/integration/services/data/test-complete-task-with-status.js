@@ -9,29 +9,26 @@ describe('services/data/complete-task-with-status', function () {
   const newStatus = 'NEW-STATUS'
   var id
 
-  before(function (done) {
-    knex('ExtSchema.Task').insert(testHelper.getTaskObject('TEST', '1')).returning('TaskId')
+  before(function () {
+    return knex('ExtSchema.Task')
+    .insert(testHelper.getTaskObject('TEST-TASK', null, 'TEST'))
+    .returning('TaskId')
     .then(function (taskId) {
       id = taskId
-      done()
     })
   })
 
-  it('should set status and set DateProcessed', function (done) {
-    completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
+  it('should set status and set DateProcessed', function () {
+    return completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
       return knex.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
         var currentDate = new Date()
         expect(result.Status).to.be.equal(newStatus)
         expect(result.DateProcessed).to.be.within(currentDate.setMinutes(currentDate.getMinutes() - 2), currentDate.setMinutes(currentDate.getMinutes() + 2))
-        done()
       })
     })
   })
 
-  after(function (done) {
-    // Clean up
-    knex('ExtSchema.Task').where('TaskId', id).del().then(function () {
-      done()
-    })
+  after(function () {
+    return knex('ExtSchema.Task').where('Task', 'TEST-TASK').del()
   })
 })

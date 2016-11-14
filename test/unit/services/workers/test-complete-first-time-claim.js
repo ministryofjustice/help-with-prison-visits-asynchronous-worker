@@ -4,12 +4,13 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 
 const reference = '1234567'
+const eligibilityId = '1234'
 const claimId = 123
-const newClaimId = 321
+
 var firstTimeClaimData = {}
 
 var getAllFirstTimeClaimData = sinon.stub().resolves(firstTimeClaimData)
-var copyFirstTimeClaimDataToInternal = sinon.stub().resolves(newClaimId)
+var copyFirstTimeClaimDataToInternal = sinon.stub().resolves()
 var deleteFirstTimeClaimFromExternal = sinon.stub().resolves()
 var insertTaskDwpCheck = sinon.stub().resolves()
 
@@ -24,12 +25,13 @@ describe('services/workers/complete-first-time-claim', function () {
   it('should call to retrieve, copy and delete first time claim, insert DWP check task', function () {
     return completeFirstTimeClaim.execute({
       reference: reference,
+      eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getAllFirstTimeClaimData.calledWith(reference, claimId)).to.be.true
+      expect(getAllFirstTimeClaimData.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(copyFirstTimeClaimDataToInternal.calledWith(firstTimeClaimData)).to.be.true
-      expect(deleteFirstTimeClaimFromExternal.calledOnce).to.be.true
-      expect(insertTaskDwpCheck.calledWith(reference, newClaimId)).to.be.true
+      expect(deleteFirstTimeClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+      expect(insertTaskDwpCheck.calledWith(reference, eligibilityId, claimId)).to.be.true
     })
   })
 })
