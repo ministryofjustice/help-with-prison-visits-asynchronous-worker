@@ -6,7 +6,6 @@ const testHelper = require('../../../test-helper')
 const completeTaskWithStatus = require('../../../../app/services/data/complete-task-with-status')
 
 describe('services/data/complete-task-with-status', function () {
-  const reference = 'COMPTAS'
   const newStatus = 'NEW-STATUS'
   var id
 
@@ -30,6 +29,6 @@ describe('services/data/complete-task-with-status', function () {
   })
 
   after(function () {
-    return knex('ExtSchema.Task').where('Reference', reference).del()
+    return knex('ExtSchema.Task').where('Task', 'TEST-TASK').del()
   })
 })
