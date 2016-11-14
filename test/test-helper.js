@@ -21,24 +21,21 @@ module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   }
 }
 
+function deleteByReference (schemaTable, reference) {
+  return knex(schemaTable).where('Reference', reference).del()
+}
+
 module.exports.deleteAll = function (reference, schema) {
-  return knex(`${schema}.Task`).where('Reference', reference).del().then(function () {
-    return knex(`${schema}.ClaimBankDetail`).where('Reference', reference).del().then(function () {
-      return knex(`${schema}.ClaimDocument`).where('Reference', reference).del().then(function () {
-        return knex(`${schema}.ClaimExpense`).where('Reference', reference).del().then(function () {
-          return knex(`${schema}.ClaimChild`).where('Reference', reference).del().then(function () {
-            return knex(`${schema}.Claim`).where('Reference', reference).del().then(function () {
-              return knex(`${schema}.Visitor`).where('Reference', reference).del().then(function () {
-                return knex(`${schema}.Prisoner`).where('Reference', reference).del().then(function () {
-                  return knex(`${schema}.Eligibility`).where('Reference', reference).del()
-                })
-              })
-            })
-          })
-        })
-      })
-    })
-  })
+  return deleteByReference(`${schema}.Task`, reference)
+    .then(function () { return deleteByReference(`${schema}.Task`, reference) })
+    .then(function () { return deleteByReference(`${schema}.ClaimBankDetail`, reference) })
+    .then(function () { return deleteByReference(`${schema}.ClaimDocument`, reference) })
+    .then(function () { return deleteByReference(`${schema}.ClaimExpense`, reference) })
+    .then(function () { return deleteByReference(`${schema}.ClaimChild`, reference) })
+    .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
+    .then(function () { return deleteByReference(`${schema}.Visitor`, reference) })
+    .then(function () { return deleteByReference(`${schema}.Prisoner`, reference) })
+    .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
 }
 
 module.exports.insertClaimEligibilityData = function (schema, reference) {
