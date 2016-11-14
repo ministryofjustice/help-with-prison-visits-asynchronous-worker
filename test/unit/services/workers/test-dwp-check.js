@@ -17,15 +17,17 @@ const dwpCheck = proxyquire('../../../../app/services/workers/dwp-check', {
 })
 
 const reference = '1234567'
+const eligibilityId = '4321'
 const claimId = 123
 
 describe('services/workers/dwp-check', function () {
   it('should call to retrieve data then make benefit check call', function () {
     return dwpCheck.execute({
       reference: reference,
+      eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, claimId)).to.be.true
+      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true
       expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result)).to.be.true
     })

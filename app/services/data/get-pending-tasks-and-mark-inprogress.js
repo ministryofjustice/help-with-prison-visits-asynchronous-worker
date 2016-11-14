@@ -18,6 +18,7 @@ module.exports = function (schema, batchSize) {
             result.TaskId,
             result.Task,
             result.Reference,
+            result.EligibilityId,
             result.ClaimId,
             result.AdditionalData,
             result.DateCreated,
