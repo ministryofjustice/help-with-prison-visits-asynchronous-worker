@@ -31,6 +31,6 @@ describe('services/data/get-all-first-time-claim-data', function () {
   })
 
   after(function () {
-    return testHelper.deleteAll(reference, 'IntSchema')
+    return testHelper.deleteAll(reference, 'ExtSchema')
   })
 })
