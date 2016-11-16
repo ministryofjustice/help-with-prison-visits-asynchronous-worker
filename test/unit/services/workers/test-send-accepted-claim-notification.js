@@ -11,9 +11,11 @@ var eligibilityId = '4321'
 var claimId = 0
 
 var stubSendNotification = sinon.stub().resolves()
+var stubGetApprovedClaimExpenseData = sinon.stub().resolves()
 
 const sendAcceptedClaimNotification = proxyquire('../../../../app/services/workers/send-accepted-claim-notification', {
-  '../notify/send-notification': stubSendNotification
+  '../notify/send-notification': stubSendNotification,
+  '../data/get-approved-claim-expense-data': stubGetApprovedClaimExpenseData
 })
 
 describe('services/send-accepted-claim-notification', function () {
