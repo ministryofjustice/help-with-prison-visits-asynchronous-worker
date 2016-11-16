@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const testHelper = require('../../../test-helper')
 require('sinon-bluebird')
 
 const config = require('../../../../config')
@@ -16,11 +17,23 @@ const sendAcceptedClaimNotification = proxyquire('../../../../app/services/worke
 })
 
 describe('services/send-accepted-claim-notification', function () {
+  var claimId
+
+  beforeEach(function () {
+    return testHelper.insertClaimEligibilityData('IntSchema', reference)
+      .then(function (ids) {
+        // Get claim ID that we can use for the test
+        claimId = ids.claimId
+      }
+    )
+  })
+
   it('should call send-notification with correct details', function () {
     return sendAcceptedClaimNotification.execute({
       reference: reference,
       eligibilityId: eligibilityId,
-      additionalData: emailAddress
+      additionalData: emailAddress,
+      claimId: claimId
     })
     .then(function () {
       expect(stubSendNotification.called).to.be.true
