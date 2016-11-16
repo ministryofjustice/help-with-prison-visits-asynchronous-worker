@@ -40,3 +40,6 @@ run-unit-tests.sh
 
 # Public directory
 app/public
+
+# Visual Studio Code files
+.vscode/
