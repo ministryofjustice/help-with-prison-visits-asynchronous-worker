@@ -1,7 +1,6 @@
 const config = require('../../../../config')
 const sendNotification = require('../../../../app/services/notify/send-notification')
 
-
 describe('services/notify/send-notification', function () {
   it('should send an email', function () {
     return sendNotification(

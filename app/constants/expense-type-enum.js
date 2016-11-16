@@ -9,5 +9,5 @@ module.exports = {
   'plane': { value: 'plane', displayValue: 'Flight', isJourney: true },
   'ferry': { value: 'ferry', displayValue: 'Ferry', isJourney: true },
   'light refreshment': { displayValue: 'Light Refreshment', isJourney: false },
-  'accommodation': { displayValue: 'Accommodation', isJourney: false },
+  'accommodation': { displayValue: 'Accommodation', isJourney: false }
 }

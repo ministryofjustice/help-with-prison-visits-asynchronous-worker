@@ -34,4 +34,3 @@ function getTotalApprovedAmount (claims) {
   return `£${totalApprovedAmount.toFixed(2)}`
 }
 
-
