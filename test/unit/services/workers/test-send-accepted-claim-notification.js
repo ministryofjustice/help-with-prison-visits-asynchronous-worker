@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-const testHelper = require('../../../test-helper')
 require('sinon-bluebird')
 
 const config = require('../../../../config')
@@ -9,6 +8,7 @@ const config = require('../../../../config')
 var emailAddress = 'test@test.com'
 var reference = '1234567'
 var eligibilityId = '4321'
+var claimId = 0
 
 var stubSendNotification = sinon.stub().resolves()
 

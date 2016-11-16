@@ -21,7 +21,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
           .where('ClaimId', claimId)
           .select('ClaimExpenseId')
       })
-      .then(function(claimExpenses) {
+      .then(function (claimExpenses) {
         claimExpenseId1 = claimExpenses[0].ClaimExpenseId
         claimExpenseId2 = claimExpenses[1].ClaimExpenseId
 
@@ -31,7 +31,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
           .update('Status', 'REJECTED')
       })
       // Set one expense to APPROVED
-      .then(function() {
+      .then(function () {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
           .update({
@@ -50,7 +50,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
           .then(function (claimExpense) {
             expect(claimExpense.Status).to.be.equal('REJECTED')
           })
-          .then(function() {
+          .then(function () {
             return knex('IntSchema.ClaimExpense')
               .where('ClaimExpenseId', claimExpenseId2)
               .first()
@@ -64,4 +64,4 @@ describe('services/data/get-approved-claim-expense-data', function () {
   after(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
-}) 
+})

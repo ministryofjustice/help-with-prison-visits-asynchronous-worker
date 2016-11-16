@@ -6,6 +6,9 @@ const getApprovedClaimDetailsString = require('../../../../../app/services/notif
 
 describe('notify/helpers/get-approved-claim-details-string', function () {
   var reference = 'DWPVISI'
+  var claimId
+  var claimExpenseId1
+  var claimExpenseId2
 
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
@@ -17,7 +20,7 @@ describe('notify/helpers/get-approved-claim-details-string', function () {
           .where('ClaimId', claimId)
           .select('ClaimExpenseId')
       })
-      .then(function(claimExpenses) {
+      .then(function (claimExpenses) {
         claimExpenseId1 = claimExpenses[0].ClaimExpenseId
         claimExpenseId2 = claimExpenses[1].ClaimExpenseId
 
@@ -31,7 +34,7 @@ describe('notify/helpers/get-approved-claim-details-string', function () {
           })
       })
       // Set one expense to APPROVED
-      .then(function() {
+      .then(function () {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
           .update({
@@ -45,26 +48,26 @@ describe('notify/helpers/get-approved-claim-details-string', function () {
   it('should contain journey info if claim expense type is a journey type', function () {
     return knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId2)
-      .then(function(claimExpense) {
-        var claimDetails =  getApprovedClaimDetailsString(claimExpense)
-        expect(claimDetails).to.contain('Bus journey - Euston to Birmingham')  
+      .then(function (claimExpense) {
+        var claimDetails = getApprovedClaimDetailsString(claimExpense)
+        expect(claimDetails).to.contain('Bus journey - Euston to Birmingham')
       })
   })
 
   it('should contain just the expense type if claim expense type is not a journey type', function () {
     return knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId1)
-      .then(function(claimExpense) {
-        var claimDetails =  getApprovedClaimDetailsString(claimExpense)
-        expect(claimDetails).to.contain('Accommodation')  
+      .then(function (claimExpense) {
+        var claimDetails = getApprovedClaimDetailsString(claimExpense)
+        expect(claimDetails).to.contain('Accommodation')
       })
   })
 
   it('should contain the correct claim amount', function () {
     return knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId2)
-      .then(function(claimExpense) {
-        var claimDetails =  getApprovedClaimDetailsString(claimExpense)
+      .then(function (claimExpense) {
+        var claimDetails = getApprovedClaimDetailsString(claimExpense)
         expect(claimDetails).to.contain('Claimed: £30.00')
       })
   })
@@ -72,18 +75,18 @@ describe('notify/helpers/get-approved-claim-details-string', function () {
   it('should contain the correct approved amount', function () {
     return knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId2)
-      .then(function(claimExpense) {
-        var claimDetails =  getApprovedClaimDetailsString(claimExpense)
-        expect(claimDetails).to.contain('Approved: £20.00')  
+      .then(function (claimExpense) {
+        var claimDetails = getApprovedClaimDetailsString(claimExpense)
+        expect(claimDetails).to.contain('Approved: £20.00')
       })
   })
 
   it('should return nothing if no claims expenses exist', function () {
     return knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', '0')
-      .then(function(claimExpense) {
-        var claimDetails =  getApprovedClaimDetailsString(claimExpense)
-        expect(claimDetails).to.equal('')  
+      .then(function (claimExpense) {
+        var claimDetails = getApprovedClaimDetailsString(claimExpense)
+        expect(claimDetails).to.equal('')
       })
   })
 })

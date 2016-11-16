@@ -6,12 +6,9 @@ const buildClaimExpenseDetailsString = require('../notify/helpers/get-approved-c
 module.exports.execute = function (task) {
   var claimId = task.claimId
   var reference = task.reference
-  var claimExpenses
 
-  var emailAddress = task.additionalData
-  var emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
   return getApprovedClaimExpenseData(reference, claimId)
-    .then(function(claimData) {
+    .then(function (claimData) {
       var personalisation = {
         first_name: claimData.claimantData.VisitorFirstName,
         reference: reference,
@@ -27,10 +24,10 @@ module.exports.execute = function (task) {
     })
 }
 
-function getTotalApprovedAmount(claims) {
+function getTotalApprovedAmount (claims) {
   var totalApprovedAmount = 0
 
-  claims.forEach(function(claim) {
+  claims.forEach(function (claim) {
     totalApprovedAmount += claim.ApprovedCost
   })
 
