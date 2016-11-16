@@ -25,12 +25,12 @@ describe('services/data/get-approved-claim-expense-data', function () {
         claimExpenseId1 = claimExpenses[0].ClaimExpenseId
         claimExpenseId2 = claimExpenses[1].ClaimExpenseId
 
-        // Set one expense to APPROVED
+        // Set one expense to REJECTED
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId1)
           .update('Status', 'REJECTED')
       })
-      // Set one expense to REJECTED
+      // Set one expense to APPROVED
       .then(function() {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
@@ -42,31 +42,21 @@ describe('services/data/get-approved-claim-expense-data', function () {
   })
 
   it('should retrieve only claim expenses relating to the claim with the specified reference and claim id', function () {
-    return getApprovedClaimExpenseData.getClaimExpenseData(claimId)
+    return getApprovedClaimExpenseData(reference, claimId)
       .then(function (result) {
-        return knex('IntSchema.ClaimExpense').where('Reference', reference)
-          .then(function (claimExpenses) {
-            claimExpenses.forEach(function(claimExpense) {
-              expect(claimExpense.ClaimId).to.be.equal(claimId)
-              expect(claimExpense.Reference).to.be.equal(reference)
-            })
-          })
-      })
-  })
-
-  it('should retrieve details of the visitor including their first name and last 4 digits of their bank account number', function() {
-    return getApprovedClaimExpenseData.getClaimantData(reference, claimId)
-      .then(function(result) {
-        return knex('IntSchema.Visitor').where('Reference', reference).first()
-          .then(function(visitor) {
-            expect(result.VisitorFirstName).to.be.equal(visitor.FirstName)
+        return knex('IntSchema.ClaimExpense')
+          .where('ClaimExpenseId', claimExpenseId1)
+          .first()
+          .then(function (claimExpense) {
+            expect(claimExpense.Status).to.be.equal('REJECTED')
           })
           .then(function() {
-            return knex('IntSchema.ClaimBankDetail').where('Reference', reference).first()
-              .then(function(bankDetail) {
-                var lastFourDigits = bankDetail.AccountNumber.substr(bankDetail.AccountNumber.length - 4)
-                expect(result.AccountNumberLastFourDigits).to.be.equal(lastFourDigits)
-              })
+            return knex('IntSchema.ClaimExpense')
+              .where('ClaimExpenseId', claimExpenseId2)
+              .first()
+          })
+          .then(function (claimExpense) {
+            expect(claimExpense.Status).to.be.equal('APPROVED')
           })
       })
   })

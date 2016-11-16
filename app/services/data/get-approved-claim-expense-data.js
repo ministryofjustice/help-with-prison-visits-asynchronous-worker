@@ -1,30 +1,34 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports.getClaimExpenseData = function(claimId) {
+module.exports = function(reference, claimId) {
+    var claimExpenses
+
     // Get all Claim expenses from database for specified claim id
     return knex('IntSchema.ClaimExpense')
-    .where('IntSchema.ClaimExpense.ClaimId', claimId)
-    .select('IntSchema.ClaimExpense.ClaimExpenseId',
-        'IntSchema.ClaimExpense.ExpenseType',
-        'IntSchema.ClaimExpense.Cost',
-        'IntSchema.ClaimExpense.From',
-        'IntSchema.ClaimExpense.To',
-        'IntSchema.ClaimExpense.IsReturn',
-        'IntSchema.ClaimExpense.ApprovedCost',
-        'IntSchema.ClaimExpense.Status',
-        'IntSchema.ClaimExpense.EligibilityId'
-    )
+      .where('IntSchema.ClaimExpense.ClaimId', claimId)
+      .then(function(claimExpenseData) {
+        claimExpenses = claimExpenseData
+
+        return getClaimantData(claimId)
+      })
+      .then(function(visitorData) {
+        return {
+          claimantData: visitorData,
+          claimExpenseData: claimExpenses
+        }
+      })
 }
 
-module.exports.getClaimantData = function(reference, claimId) {
+function getClaimantData(claimId) {
     var visitor
     var visitorBankDetails
 
     return knex('IntSchema.Visitor')
-        .where('Reference', reference)
-        .select('FirstName')
-        .first()
+        .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
+        .where('IntSchema.Claim.ClaimId', claimId)
+        .select('FirstName') 
+        .first()  
         .then(function(visitorData) {
             visitor = visitorData
         })
@@ -32,14 +36,18 @@ module.exports.getClaimantData = function(reference, claimId) {
             return knex('IntSchema.ClaimBankDetail')
                 .where('ClaimId', claimId)
                 .first()
-                .then(function(bankDetails) {
-                    visitorBankDetails = bankDetails
-                })
         })
-        .then(function() {
+        .then(function(bankDetails) {
+            var accountNumberLastFourDigits = (bankDetails && bankDetails.AccountNumber 
+                ? bankDetails.AccountNumber.substr(bankDetails.AccountNumber.length - 4)
+                : "")
+            var visitorFirstName = (visitor && visitor.FirstName 
+                ? visitor.FirstName 
+                : "")
+
             return {
-                'VisitorFirstName': visitor.FirstName,
-                'AccountNumberLastFourDigits': visitorBankDetails.AccountNumber.substr(visitorBankDetails.AccountNumber.length - 4)
+                'VisitorFirstName': visitorFirstName,
+                'AccountNumberLastFourDigits': accountNumberLastFourDigits
             }
         })
 }

@@ -5,14 +5,9 @@ const sendNotification = require('../../../../app/services/notify/send-notificat
 describe('services/notify/send-notification', function () {
   it('should send an email', function () {
     return sendNotification(
-      config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID,
+      config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID,
       config.APVS_TEST_EMAIL_ADDRESS,
-      { reference: '1234567',
-        first_name: 'Joe',
-        account_last_four_digits: '5555',
-        claim_details: 'Stuff',
-        approved_amount: "£150.00"
-      }
+      { reference: 'DONOTSEND' }
     ) // manual check to see if email was sent
   })
 

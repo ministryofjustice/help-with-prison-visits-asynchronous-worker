@@ -17,17 +17,6 @@ const sendAcceptedClaimNotification = proxyquire('../../../../app/services/worke
 })
 
 describe('services/send-accepted-claim-notification', function () {
-  var claimId
-
-  beforeEach(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function (ids) {
-        // Get claim ID that we can use for the test
-        claimId = ids.claimId
-      }
-    )
-  })
-
   it('should call send-notification with correct details', function () {
     return sendAcceptedClaimNotification.execute({
       reference: reference,
