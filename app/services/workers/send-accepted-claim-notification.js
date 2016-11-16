@@ -26,7 +26,6 @@ module.exports.execute = function (task) {
         approved_amount: getTotalApprovedAmount(claimExpenses)
       }
 
-  return sendNotification(emailTemplateId, emailAddress, personalisation)
       var emailAddress = task.additionalData
       var emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
 

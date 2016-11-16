@@ -8,7 +8,6 @@ describe('services/notify/send-notification', function () {
       config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID,
       config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID,
       config.APVS_TEST_EMAIL_ADDRESS,
-      { reference: '1234567' }
       { reference: '1234567',
         first_name: 'Gary',
         account_last_four_digits: '5555',

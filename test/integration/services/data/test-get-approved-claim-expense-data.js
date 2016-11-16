@@ -59,7 +59,6 @@ describe('services/data/get-approved-claim-expense-data', function () {
       .then(function(result) {
         return knex('IntSchema.Visitor').where('Reference', reference).first()
           .then(function(visitor) {
-            console.dir(visitor)
             expect(result.VisitorFirstName).to.be.equal(visitor.FirstName)
           })
           .then(function() {
