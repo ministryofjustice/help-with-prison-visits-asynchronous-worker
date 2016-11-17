@@ -1,12 +1,39 @@
 const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
+const getApprovedClaimExpenseData = require('../data/get-approved-claim-expense-data')
+const getApprovedClaimDetailsString = require('../notify/helpers/get-approved-claim-details-string')
 
 module.exports.execute = function (task) {
+  var claimId = task.claimId
   var reference = task.reference
-  var personalisation = {reference: reference} // TODO payment breakdown
 
-  var emailAddress = task.additionalData
-  var emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
+  return getApprovedClaimExpenseData(reference, claimId)
+    .then(function (claimData) {
+      var firstName = claimData.claimantData.VisitorFirstName || ''
+      var accountLastFourDigits = claimData.claimantData.AccountNumberLastFourDigits || ''
 
-  return sendNotification(emailTemplateId, emailAddress, personalisation)
+      var personalisation = {
+        first_name: firstName,
+        reference: reference,
+        claim_details: getApprovedClaimDetailsString(claimData.claimExpenseData),
+        account_last_four_digits: accountLastFourDigits,
+        approved_amount: getTotalApprovedAmount(claimData.claimExpenseData)
+      }
+
+      var emailAddress = task.additionalData
+      var emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
+
+      return sendNotification(emailTemplateId, emailAddress, personalisation)
+    })
 }
+
+function getTotalApprovedAmount (claims) {
+  var totalApprovedAmount = 0
+
+  claims.forEach(function (claim) {
+    totalApprovedAmount += claim.ApprovedCost
+  })
+
+  return `£${totalApprovedAmount.toFixed(2)}`
+}
+

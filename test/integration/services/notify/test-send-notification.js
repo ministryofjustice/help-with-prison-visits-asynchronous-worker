@@ -6,7 +6,7 @@ describe('services/notify/send-notification', function () {
     return sendNotification(
       config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID,
       config.APVS_TEST_EMAIL_ADDRESS,
-      { reference: '1234567' }
+      { reference: 'DONOTSEND' }
     ) // manual check to see if email was sent
   })
 
