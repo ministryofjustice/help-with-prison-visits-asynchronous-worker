@@ -9,11 +9,14 @@ module.exports.execute = function (task) {
 
   return getApprovedClaimExpenseData(reference, claimId)
     .then(function (claimData) {
+      var firstName = claimData.claimantData.VisitorFirstName || ''
+      var accountLastFourDigits = claimData.claimantData.AccountNumberLastFourDigits || ''
+
       var personalisation = {
-        first_name: claimData.claimantData.VisitorFirstName,
+        first_name: firstName,
         reference: reference,
         claim_details: buildClaimExpenseDetailsString(claimData.claimExpenseData),
-        account_last_four_digits: claimData.claimantData.AccountNumberLastFourDigits,
+        account_last_four_digits: accountLastFourDigits,
         approved_amount: getTotalApprovedAmount(claimData.claimExpenseData)
       }
 
