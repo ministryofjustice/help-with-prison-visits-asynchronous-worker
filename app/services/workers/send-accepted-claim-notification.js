@@ -1,7 +1,7 @@
 const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
 const getApprovedClaimExpenseData = require('../data/get-approved-claim-expense-data')
-const buildClaimExpenseDetailsString = require('../notify/helpers/get-approved-claim-details-string')
+const getApprovedClaimDetailsString = require('../notify/helpers/get-approved-claim-details-string')
 
 module.exports.execute = function (task) {
   var claimId = task.claimId
@@ -15,7 +15,7 @@ module.exports.execute = function (task) {
       var personalisation = {
         first_name: firstName,
         reference: reference,
-        claim_details: buildClaimExpenseDetailsString(claimData.claimExpenseData),
+        claim_details: getApprovedClaimDetailsString(claimData.claimExpenseData),
         account_last_four_digits: accountLastFourDigits,
         approved_amount: getTotalApprovedAmount(claimData.claimExpenseData)
       }
