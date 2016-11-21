@@ -43,15 +43,10 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
       }
     })
     return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
-      return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
-        .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
-        .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
-        .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
-        .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
-        .join('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-        .select()
+      return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        .select('Claim.Status')
         .then(function (results) {
-          expect(results[0].Status[1], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
+          expect(results[0].Status, 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
         })
     })
   })
