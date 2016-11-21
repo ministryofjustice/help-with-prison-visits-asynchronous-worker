@@ -8,6 +8,11 @@ module.exports = function (data) {
   return knex('IntSchema.Eligibility').insert(data.Eligibility)
     .then(function () {
       data.Claim.Status = statusEnum.NEW
+      data.ClaimDocument.forEach(function (document) {
+        if (document.DocumentStatus === 'post-later') {
+          data.Claim.Status = statusEnum.PENDING
+        }
+      })
       return knex('IntSchema.Claim').insert(data.Claim)
     })
     .then(function () {

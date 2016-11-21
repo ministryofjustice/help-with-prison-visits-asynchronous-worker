@@ -22,13 +22,31 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
         .select()
         .then(function (results) {
           expect(results[0].Status[0], 'Eligibility.Status should be NEW').to.be.equal(statusEnum.NEW)
-          expect(results[0].Status[1], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
+          expect(results[0].Status[1], 'Claim.Status should be PENDING').to.be.equal(statusEnum.PENDING)
           expect(results[0].AccountNumber).to.be.equal(firstTimeClaimData.ClaimBankDetail.AccountNumber)
           expect(results.length, 'Should have two ClaimExpense').to.be.equal(2)
           expect(results[0].ExpenseType).to.be.equal('car')
           expect(results[1].Cost).to.be.equal(20.95)
           expect(results[0].NationalInsuranceNumber).to.be.equal(firstTimeClaimData.Visitor.NationalInsuranceNumber)
           expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
+        })
+    })
+    .then(function () {
+      return testHelper.deleteAll(reference, 'IntSchema')
+    })
+  })
+
+  it('should copy the first time claim data to internal with claim status NEW if all documents uploaded', function () {
+    firstTimeClaimData.ClaimDocument.forEach(function (document) {
+      if (document.DocumentStatus !== 'uploaded') {
+        document.DocumentStatus = 'uploaded'
+      }
+    })
+    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
+      return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        .select('Claim.Status')
+        .then(function (results) {
+          expect(results[0].Status, 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
         })
     })
   })
