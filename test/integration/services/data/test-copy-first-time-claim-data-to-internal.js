@@ -5,12 +5,11 @@ const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
 
 const copyFirstTimeClaimDataToInternal = require('../../../../app/services/data/copy-first-time-claim-data-to-internal')
+var reference = 'COPY123'
+var claimId = 123
+var firstTimeClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
 
 describe('services/data/copy-first-time-claim-data-to-internal', function () {
-  var reference = 'COPY123'
-  var claimId = 123
-  var firstTimeClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
-
   it('should copy the first time claim data to internal', function () {
     return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
       return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
@@ -31,11 +30,14 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
         })
     })
-    .then(function () {
-      return testHelper.deleteAll(reference, 'IntSchema')
-    })
   })
 
+  after(function () {
+    return testHelper.deleteAll(reference, 'IntSchema')
+  })
+})
+
+describe('services/data/copy-first-time-claim-data-to-internal', function () {
   it('should copy the first time claim data to internal with claim status NEW if all documents uploaded', function () {
     firstTimeClaimData.ClaimDocument.forEach(function (document) {
       if (document.DocumentStatus !== 'uploaded') {
@@ -49,12 +51,15 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           expect(results[0].Status, 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
         })
     })
-    .then(function () {
-      return testHelper.deleteAll(reference, 'IntSchema')
-    })
   })
 
-  it('should change claim status to PENDING if documents will be uploaded later', function () {
+  after(function () {
+    return testHelper.deleteAll(reference, 'IntSchema')
+  })
+})
+
+describe('services/data/copy-first-time-claim-data-to-internal', function () {
+  it('should change claim status to PENDING if documents not uploaded', function () {
     firstTimeClaimData.ClaimDocument.forEach(function (document) {
       if (document.DocumentStatus !== 'upload-later') {
         document.DocumentStatus = 'upload-later'
