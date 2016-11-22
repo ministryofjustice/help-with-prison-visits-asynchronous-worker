@@ -1,9 +1,9 @@
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 
-const getAllFirstTimeClaimData = require('../../../../app/services/data/get-all-first-time-claim-data')
+const getAllClaimData = require('../../../../app/services/data/get-all-claim-data')
 
-describe('services/data/get-all-first-time-claim-data', function () {
+describe('services/data/get-all-claim-data', function () {
   var reference = 'FIRST12'
   var eligibilityId
   var claimId
@@ -17,7 +17,7 @@ describe('services/data/get-all-first-time-claim-data', function () {
   })
 
   it('should return all First time claim data', function () {
-    return getAllFirstTimeClaimData(reference, eligibilityId, claimId, 'SUBMITTED')
+    return getAllClaimData(reference, eligibilityId, claimId, 'SUBMITTED')
       .then(function (data) {
         expect(data.Eligibility.Reference).to.be.equal(reference)
         expect(data.Claim.Reference).to.be.equal(reference)

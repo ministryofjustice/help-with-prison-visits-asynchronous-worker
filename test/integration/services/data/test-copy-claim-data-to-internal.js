@@ -4,15 +4,15 @@ const knex = require('knex')(config)
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
 
-const copyFirstTimeClaimDataToInternal = require('../../../../app/services/data/copy-first-time-claim-data-to-internal')
+const copyClaimDataToInternal = require('../../../../app/services/data/copy-claim-data-to-internal')
 
-describe('services/data/copy-first-time-claim-data-to-internal', function () {
+describe('services/data/copy-claim-data-to-internal', function () {
   var reference = 'COPY123'
   var claimId = 123
   var firstTimeClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
 
   it('should copy the first time claim data to internal', function () {
-    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
+    return copyClaimDataToInternal(firstTimeClaimData).then(function () {
       return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
         .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
         .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
@@ -42,7 +42,7 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
         document.DocumentStatus = 'uploaded'
       }
     })
-    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
+    return copyClaimDataToInternal(firstTimeClaimData).then(function () {
       return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
         .select('Claim.Status')
         .then(function (results) {

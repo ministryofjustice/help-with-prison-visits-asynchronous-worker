@@ -9,15 +9,15 @@ const claimId = 123
 
 var firstTimeClaimData = {}
 
-var getAllFirstTimeClaimData = sinon.stub().resolves(firstTimeClaimData)
-var copyFirstTimeClaimDataToInternal = sinon.stub().resolves()
-var deleteFirstTimeClaimFromExternal = sinon.stub().resolves()
+var getAllClaimData = sinon.stub().resolves(firstTimeClaimData)
+var copyClaimDataToInternal = sinon.stub().resolves()
+var deleteClaimFromExternal = sinon.stub().resolves()
 var insertTaskDwpCheck = sinon.stub().resolves()
 
 const completeClaim = proxyquire('../../../../app/services/workers/complete-claim', {
-  '../data/get-all-first-time-claim-data': getAllFirstTimeClaimData,
-  '../data/copy-first-time-claim-data-to-internal': copyFirstTimeClaimDataToInternal,
-  '../data/delete-first-time-claim-from-external': deleteFirstTimeClaimFromExternal,
+  '../data/get-all-claim-data': getAllClaimData,
+  '../data/copy-claim-data-to-internal': copyClaimDataToInternal,
+  '../data/delete-claim-from-external': deleteClaimFromExternal,
   '../data/insert-task-dwp-check': insertTaskDwpCheck
 })
 
@@ -28,9 +28,9 @@ describe('services/workers/complete-claim', function () {
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getAllFirstTimeClaimData.calledWith(reference, eligibilityId, claimId)).to.be.true
-      expect(copyFirstTimeClaimDataToInternal.calledWith(firstTimeClaimData)).to.be.true
-      expect(deleteFirstTimeClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+      expect(getAllClaimData.calledWith(reference, eligibilityId, claimId)).to.be.true
+      expect(copyClaimDataToInternal.calledWith(firstTimeClaimData)).to.be.true
+      expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
       expect(insertTaskDwpCheck.calledWith(reference, eligibilityId, claimId)).to.be.true
     })
   })

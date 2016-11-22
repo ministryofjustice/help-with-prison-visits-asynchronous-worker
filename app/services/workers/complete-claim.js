@@ -1,8 +1,8 @@
 const statusEnum = require('../../constants/status-enum')
 
-const getAllFirstTimeClaimData = require('../data/get-all-first-time-claim-data')
-const copyFirstTimeClaimDataToInternal = require('../data/copy-first-time-claim-data-to-internal')
-const deleteFirstTimeClaimFromExternal = require('../data/delete-first-time-claim-from-external')
+const getAllClaimData = require('../data/get-all-claim-data')
+const copyClaimDataToInternal = require('../data/copy-claim-data-to-internal')
+const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 const insertTaskDwpCheck = require('../data/insert-task-dwp-check')
 
 module.exports.execute = function (task) {
@@ -10,8 +10,8 @@ module.exports.execute = function (task) {
   var eligibilityId = task.eligibilityId
   var claimId = task.claimId
 
-  return getAllFirstTimeClaimData(reference, eligibilityId, claimId, statusEnum.SUBMITTED)
-          .then(function (firstTimeClaimData) { return copyFirstTimeClaimDataToInternal(firstTimeClaimData) })
-          .then(function () { return deleteFirstTimeClaimFromExternal(eligibilityId, claimId) })
+  return getAllClaimData(reference, eligibilityId, claimId, statusEnum.SUBMITTED)
+          .then(function (firstTimeClaimData) { return copyClaimDataToInternal(firstTimeClaimData) })
+          .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
           .then(function () { return insertTaskDwpCheck(reference, eligibilityId, claimId) })
 }
