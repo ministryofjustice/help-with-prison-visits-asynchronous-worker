@@ -49,6 +49,24 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           expect(results[0].Status, 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
         })
     })
+    .then(function () {
+      return testHelper.deleteAll(reference, 'IntSchema')
+    })
+  })
+
+  it('should change claim status to PENDING if documents will be uploaded later', function () {
+    firstTimeClaimData.ClaimDocument.forEach(function (document) {
+      if (document.DocumentStatus !== 'upload-later') {
+        document.DocumentStatus = 'upload-later'
+      }
+    })
+    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
+      return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        .select('Claim.Status')
+        .then(function (results) {
+          expect(results[0].Status, 'Claim.Status should be PENDING').to.be.equal(statusEnum.PENDING)
+        })
+    })
   })
 
   after(function () {

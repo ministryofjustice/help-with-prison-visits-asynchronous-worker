@@ -9,7 +9,7 @@ module.exports = function (data) {
     .then(function () {
       data.Claim.Status = statusEnum.NEW
       data.ClaimDocument.forEach(function (document) {
-        if (document.DocumentStatus === 'post-later') {
+        if (document.DocumentStatus !== 'uploaded') {
           data.Claim.Status = statusEnum.PENDING
         }
       })
