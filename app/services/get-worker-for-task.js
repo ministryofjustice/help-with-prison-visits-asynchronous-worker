@@ -5,6 +5,7 @@ var sendRequestInformationClaimNotification = require('./workers/send-request-in
 var sendFirstTimeClaimNotification = require('./workers/send-first-time-claim-notification')
 var completeFirstTimeClaim = require('./workers/complete-first-time-claim')
 var dwpCheck = require('./workers/dwp-check')
+var generateDirectPayments = require('./workers/generate-direct-payments')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -15,6 +16,7 @@ module.exports = function (taskType) {
     case tasksEnum.FIRST_TIME_CLAIM_NOTIFICATION: return sendFirstTimeClaimNotification
     case tasksEnum.COMPLETE_FIRST_TIME_CLAIM: return completeFirstTimeClaim
     case tasksEnum.DWP_CHECK: return dwpCheck
+    case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
   }
 
   return null
