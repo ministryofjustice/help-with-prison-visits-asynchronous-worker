@@ -14,16 +14,16 @@ var copyFirstTimeClaimDataToInternal = sinon.stub().resolves()
 var deleteFirstTimeClaimFromExternal = sinon.stub().resolves()
 var insertTaskDwpCheck = sinon.stub().resolves()
 
-const completeFirstTimeClaim = proxyquire('../../../../app/services/workers/complete-first-time-claim', {
+const completeClaim = proxyquire('../../../../app/services/workers/complete-claim', {
   '../data/get-all-first-time-claim-data': getAllFirstTimeClaimData,
   '../data/copy-first-time-claim-data-to-internal': copyFirstTimeClaimDataToInternal,
   '../data/delete-first-time-claim-from-external': deleteFirstTimeClaimFromExternal,
   '../data/insert-task-dwp-check': insertTaskDwpCheck
 })
 
-describe('services/workers/complete-first-time-claim', function () {
+describe('services/workers/complete-claim', function () {
   it('should call to retrieve, copy and delete first time claim, insert DWP check task', function () {
-    return completeFirstTimeClaim.execute({
+    return completeClaim.execute({
       reference: reference,
       eligibilityId: eligibilityId,
       claimId: claimId

@@ -5,8 +5,8 @@ module.exports.execute = function (task) {
   var reference = task.reference
   var personalisation = {reference: reference}
 
-  var emailAddress = task.additionalData
-  var emailTemplateId = config.NOTIFY_FIRST_TIME_CLAIM_EMAIL_TEMPLATE_ID
+  var emailAddress = task.additionalData // TODO get email
+  var emailTemplateId = config.NOTIFY_SUBMIT_CLAIM_EMAIL_TEMPLATE_ID
 
   return sendNotification(emailTemplateId, emailAddress, personalisation)
 }
