@@ -30,9 +30,6 @@ function getEligilibility (reference, eligibilityId, status) {
     .first()
     .where({'Reference': reference, 'EligibilityId': eligibilityId, 'Status': status})
     .then(function (eligibility) {
-      if (!eligibility) {
-        throw new Error(`Could not find valid completed Eligibility for reference: ${reference}`)
-      }
       return eligibility
     })
 }
