@@ -38,22 +38,22 @@ describe('services/data/get-all-claim-data', function () {
 
   describe('get repeat claim data', function () {
     const REFERENCE = 'REPEAT5'
-    const ELIGIBILITYID = '4321'
+    const ELIGIBILITYID = 4321
     var claimId
 
     before(function () {
-      return testHelper.insertClaimData('ExtSchema', REFERENCE, ELIGIBILITYID)
-        .then(function (ids) {
-          claimId = ids.claimId
+      return testHelper.insertClaimData('ExtSchema', REFERENCE, ELIGIBILITYID, testHelper.getFirstTimeClaimData(REFERENCE))
+        .then(function (newClaimId) {
+          claimId = newClaimId
         })
     })
 
     it('should return all repeat claim data', function () {
       return getAllClaimData(REFERENCE, ELIGIBILITYID, claimId, 'SUBMITTED')
         .then(function (data) {
-          expect(data.Eligibility).to.be.null
-          expect(data.Prisoner).to.be.null
-          expect(data.Visitor).to.be.null
+          expect(data.Eligibility).to.be.undefined
+          expect(data.Prisoner).to.be.undefined
+          expect(data.Visitor).to.be.undefined
           expect(data.Claim.Reference).to.be.equal(REFERENCE)
           expect(data.Claim.EligibilityId).to.be.equal(ELIGIBILITYID)
           expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)
