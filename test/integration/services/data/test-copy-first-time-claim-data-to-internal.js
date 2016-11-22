@@ -21,7 +21,7 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
         .select()
         .then(function (results) {
           expect(results[0].Status[0], 'Eligibility.Status should be NEW').to.be.equal(statusEnum.NEW)
-          expect(results[0].Status[1], 'Claim.Status should be PENDING').to.be.equal(statusEnum.PENDING)
+          expect(results[0].Status[1], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
           expect(results[0].AccountNumber).to.be.equal(firstTimeClaimData.ClaimBankDetail.AccountNumber)
           expect(results.length, 'Should have two ClaimExpense').to.be.equal(2)
           expect(results[0].ExpenseType).to.be.equal('car')
@@ -38,33 +38,10 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
 })
 
 describe('services/data/copy-first-time-claim-data-to-internal', function () {
-  it('should copy the first time claim data to internal with claim status NEW if all documents uploaded', function () {
-    firstTimeClaimData.ClaimDocument.forEach(function (document) {
-      if (document.DocumentStatus !== 'uploaded') {
-        document.DocumentStatus = 'uploaded'
-      }
-    })
-    return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
-      return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
-        .select('Claim.Status')
-        .then(function (results) {
-          expect(results[0].Status, 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
-        })
-    })
-  })
-
-  after(function () {
-    return testHelper.deleteAll(reference, 'IntSchema')
-  })
-})
-
-describe('services/data/copy-first-time-claim-data-to-internal', function () {
   it('should change claim status to PENDING if documents not uploaded', function () {
-    firstTimeClaimData.ClaimDocument.forEach(function (document) {
-      if (document.DocumentStatus !== 'upload-later') {
-        document.DocumentStatus = 'upload-later'
-      }
-    })
+    firstTimeClaimData.ClaimDocument[0].DocumentStatus = 'post-later'
+    firstTimeClaimData.ClaimDocument[1].DocumentStatus = 'upload-later'
+
     return copyFirstTimeClaimDataToInternal(firstTimeClaimData).then(function () {
       return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
         .select('Claim.Status')

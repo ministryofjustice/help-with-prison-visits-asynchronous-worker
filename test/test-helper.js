@@ -220,7 +220,7 @@ module.exports.getFirstTimeClaimData = function (reference) {
         ClaimId: uniqueId,
         DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
-        DocumentStatus: 'post-later',
+        DocumentStatus: 'uploaded',
         Filepath: null,
         DateSubmitted: new Date(),
         IsEnabled: true}],
