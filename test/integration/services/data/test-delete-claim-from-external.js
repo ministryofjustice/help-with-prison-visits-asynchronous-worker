@@ -3,9 +3,9 @@ const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
 
-const deleteFirstTimeClaimFromExternal = require('../../../../app/services/data/delete-first-time-claim-from-external')
+const deleteClaimFromExternal = require('../../../../app/services/data/delete-claim-from-external')
 
-describe('services/data/delete-first-time-claim-from-external', function () {
+describe('services/data/delete-claim-from-external', function () {
   var reference = 'DELETE1'
   var eligibilityId
   var claimId
@@ -18,7 +18,7 @@ describe('services/data/delete-first-time-claim-from-external', function () {
   })
 
   it('should delete the first time claim from external', function () {
-    return deleteFirstTimeClaimFromExternal(eligibilityId, claimId).then(function () {
+    return deleteClaimFromExternal(eligibilityId, claimId).then(function () {
       return knex('ExtSchema.Eligibility')
       .join('ExtSchema.Prisoner', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Prisoner.Reference')
       .join('ExtSchema.Visitor', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Visitor.Reference')

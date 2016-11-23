@@ -5,16 +5,16 @@ const tasksEnum = require('../../../app/constants/tasks-enum')
 const sendAcceptedClaimNotification = { name: 'sendAcceptedClaimNotification' }
 const sendRejectedClaimNotification = { name: 'sendRejectedClaimNotification' }
 const sendRequestInformationClaimNotification = { name: 'sendRequestInformationClaimNotification' }
-const sendFirstTimeClaimNotification = { name: 'sendFirstTimeClaimNotification' }
-const completeFirstTimeClaim = { name: 'completeFirstTimeClaim' }
+const sendClaimNotification = { name: 'sendClaimNotification' }
+const completeClaim = { name: 'completeClaim' }
 const dwpCheck = { name: 'dwpCheck' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
   './workers/send-rejected-claim-notification': sendRejectedClaimNotification,
   './workers/send-request-information-claim-notification': sendRequestInformationClaimNotification,
-  './workers/send-first-time-claim-notification': sendFirstTimeClaimNotification,
-  './workers/complete-first-time-claim': completeFirstTimeClaim,
+  './workers/send-claim-notification': sendClaimNotification,
+  './workers/complete-claim': completeClaim,
   './workers/dwp-check': dwpCheck
 })
 
@@ -34,14 +34,14 @@ describe('services/getWorkerForTask', function () {
     expect(worker.name).to.be.equal('sendRequestInformationClaimNotification')
   })
 
-  it('should return send-first-time-claim-notification', function () {
-    var worker = getWorkerForTask(tasksEnum.FIRST_TIME_CLAIM_NOTIFICATION)
-    expect(worker.name).to.be.equal('sendFirstTimeClaimNotification')
+  it('should return send-claim-notification', function () {
+    var worker = getWorkerForTask(tasksEnum.SEND_CLAIM_NOTIFICATION)
+    expect(worker.name).to.be.equal('sendClaimNotification')
   })
 
-  it('should return complete-first-time-claim', function () {
-    var worker = getWorkerForTask(tasksEnum.COMPLETE_FIRST_TIME_CLAIM)
-    expect(worker.name).to.be.equal('completeFirstTimeClaim')
+  it('should return complete-claim', function () {
+    var worker = getWorkerForTask(tasksEnum.COMPLETE_CLAIM)
+    expect(worker.name).to.be.equal('completeClaim')
   })
 
   it('should return dwp-check', function () {
