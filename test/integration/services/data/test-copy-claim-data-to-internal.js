@@ -17,19 +17,37 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
-          .join('IntSchema.ClaimChild', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimChild.ClaimId')
           .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
-          .join('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
           .select()
           .then(function (results) {
             expect(results[0].Status[0], 'Eligibility.Status should be NEW').to.be.equal(statusEnum.NEW)
             expect(results[0].Status[1], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
             expect(results[0].AccountNumber).to.be.equal(firstTimeClaimData.ClaimBankDetail.AccountNumber)
-            expect(results.length, 'Should have four rows, two child and two expense').to.be.equal(4)
-            expect(results[0].ExpenseType).to.be.equal('car')
-            expect(results[2].Cost).to.be.equal(20.95)
             expect(results[0].NationalInsuranceNumber).to.be.equal(firstTimeClaimData.Visitor.NationalInsuranceNumber)
             expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
+          })
+          .then(function () {
+            return knex('IntSchema.ClaimChild').where('IntSchema.ClaimChild.Reference', reference)
+              .select()
+              .then(function (results) {
+                expect(results.length, 'should have two children').to.be.equal(2)
+              })
+          })
+          .then(function () {
+            return knex('IntSchema.ClaimExpense').where('IntSchema.ClaimExpense.Reference', reference)
+              .select()
+              .then(function (results) {
+                expect(results.length, 'should have two expenses').to.be.equal(2)
+                expect(results[0].ExpenseType).to.be.equal('car')
+                expect(results[1].ExpenseType).to.be.equal('bus')
+              })
+          })
+          .then(function () {
+            return knex('IntSchema.ClaimDocument').where('IntSchema.ClaimDocument.Reference', reference)
+              .select()
+              .then(function (results) {
+                expect(results.length, 'should have two documents').to.be.equal(2)
+              })
           })
       })
     })
@@ -54,15 +72,16 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
     repeatClaimData.Visitor = undefined
     repeatClaimData.Prisoner = undefined
 
-    it('should change claim status to PENDING if documents not uploaded', function () {
+    it('should copy repeat claim data without external schema eligibility', function () {
       return copyClaimDataToInternal(repeatClaimData).then(function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .join('IntSchema.ClaimChild', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimChild.ClaimId')
           .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
           .join('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
+          .join('IntSchema.ClaimDocument', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDocument.ClaimId')
           .select()
           .then(function (results) {
-            expect(results.length, 'Should have four rows, two child and two expense').to.be.equal(4)
+            expect(results.length, 'Should have 8 rows, 2x child 2x expense x2 document').to.be.equal(8)
             expect(results[0].Status[0], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
             expect(results[0].Reference[0]).to.be.equal(reference)
           })
