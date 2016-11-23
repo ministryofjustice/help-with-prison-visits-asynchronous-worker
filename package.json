@@ -48,6 +48,7 @@
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "knex": "^0.12.6",
+    "lodash": "^4.17.2",
     "moment": "^2.15.2",
     "mssql": "^3.3.0",
     "notifications-node-client": "2.1.0",
