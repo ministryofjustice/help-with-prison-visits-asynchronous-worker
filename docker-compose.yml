@@ -7,6 +7,7 @@ services:
       - "./app:/usr/src/app/app"
       - "./cache_node_modules:/usr/src/app/node_modules"
       - "./logs:/usr/src/app/logs"
+      -"./payments:/usr/src/app/payments"
     ports:
       - "3999:3999"
     environment:
@@ -29,3 +30,4 @@ services:
     - APVS_DWP_BENEFIT_CHECKER_CLIENTUSERID
     - APVS_DWP_BENEFIT_CHECKER_CLIENTREFERENCE
     - APVS_PAYMENT_GENERATION_CRON
+    - APVS_PAYMENT_FILE_PATH=/usr/src/app/payments/
