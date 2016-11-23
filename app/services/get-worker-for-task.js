@@ -2,8 +2,8 @@ var tasksEnum = require('../constants/tasks-enum')
 var sendAcceptedClaimNotification = require('./workers/send-accepted-claim-notification')
 var sendRejectedClaimNotification = require('./workers/send-rejected-claim-notification')
 var sendRequestInformationClaimNotification = require('./workers/send-request-information-claim-notification')
-var sendFirstTimeClaimNotification = require('./workers/send-first-time-claim-notification')
-var completeFirstTimeClaim = require('./workers/complete-first-time-claim')
+var sendClaimNotification = require('./workers/send-claim-notification')
+var completeClaim = require('./workers/complete-claim')
 var dwpCheck = require('./workers/dwp-check')
 var generateDirectPayments = require('./workers/generate-direct-payments')
 
@@ -13,8 +13,8 @@ module.exports = function (taskType) {
     case tasksEnum.ACCEPT_CLAIM_NOTIFICATION: return sendAcceptedClaimNotification
     case tasksEnum.REJECT_CLAIM_NOTIFICATION: return sendRejectedClaimNotification
     case tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION: return sendRequestInformationClaimNotification
-    case tasksEnum.FIRST_TIME_CLAIM_NOTIFICATION: return sendFirstTimeClaimNotification
-    case tasksEnum.COMPLETE_FIRST_TIME_CLAIM: return completeFirstTimeClaim
+    case tasksEnum.SEND_CLAIM_NOTIFICATION: return sendClaimNotification
+    case tasksEnum.COMPLETE_CLAIM: return completeClaim
     case tasksEnum.DWP_CHECK: return dwpCheck
     case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
   }

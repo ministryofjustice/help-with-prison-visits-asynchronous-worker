@@ -39,8 +39,8 @@ module.exports.deleteAll = function (reference, schema) {
 
 module.exports.insertClaimEligibilityData = function (schema, reference) {
   var data = this.getFirstTimeClaimData(reference)
+  var insertClaimData = this.insertClaimData
   var newEligibilityId
-  var newClaimId
   var isExtSchema = schema === 'ExtSchema'
 
   if (isExtSchema) {
@@ -50,13 +50,39 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
   return knex(`${schema}.Eligibility`).insert(data.Eligibility).returning('EligibilityId')
     .then(function (insertedIds) {
       newEligibilityId = insertedIds[0]
-
-      if (isExtSchema) {
-        delete data.Claim.ClaimId
-        data.Claim.EligibilityId = newEligibilityId
-      }
-      return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     })
+    .then(function () {
+      if (isExtSchema) {
+        delete data.Visitor.VisitorId
+        data.Visitor.EligibilityId = newEligibilityId
+      }
+      return knex(`${schema}.Visitor`).insert(data.Visitor)
+    })
+    .then(function () {
+      if (isExtSchema) {
+        delete data.Prisoner.PrisonerId
+        data.Prisoner.EligibilityId = newEligibilityId
+      }
+      return knex(`${schema}.Prisoner`).insert(data.Prisoner)
+    })
+    .then(function () {
+      return insertClaimData(schema, reference, newEligibilityId, data)
+    })
+    .then(function (newClaimId) {
+      return { eligibilityId: newEligibilityId, claimId: newClaimId }
+    })
+}
+
+module.exports.insertClaimData = function (schema, reference, newEligibilityId, data) {
+  var newClaimId
+  var isExtSchema = schema === 'ExtSchema'
+
+  if (isExtSchema) {
+    delete data.Claim.ClaimId
+    data.Claim.EligibilityId = newEligibilityId
+  }
+
+  return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
 
@@ -101,21 +127,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
       return knex(`${schema}.ClaimChild`).insert(data.ClaimChildren)
     })
     .then(function () {
-      if (isExtSchema) {
-        delete data.Visitor.VisitorId
-        data.Visitor.EligibilityId = newEligibilityId
-      }
-      return knex(`${schema}.Visitor`).insert(data.Visitor)
-    })
-    .then(function () {
-      if (isExtSchema) {
-        delete data.Prisoner.PrisonerId
-        data.Prisoner.EligibilityId = newEligibilityId
-      }
-      return knex(`${schema}.Prisoner`).insert(data.Prisoner)
-    })
-    .then(function () {
-      return { eligibilityId: newEligibilityId, claimId: newClaimId }
+      return newClaimId
     })
 }
 
@@ -220,7 +232,7 @@ module.exports.getFirstTimeClaimData = function (reference) {
         ClaimId: uniqueId,
         DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
-        DocumentStatus: 'post-later',
+        DocumentStatus: 'uploaded',
         Filepath: null,
         DateSubmitted: new Date(),
         IsEnabled: true}],
