@@ -42,7 +42,6 @@ function getLatestManuallyApprovedClaim (previousClaims) {
         latestManuallyApprovedClaim = previousClaim
       }
     })
-
     return latestManuallyApprovedClaim
   } else {
     return null
