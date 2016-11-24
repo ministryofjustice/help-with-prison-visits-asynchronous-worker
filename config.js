@@ -1,5 +1,6 @@
 module.exports = {
   LOGGING_PATH: process.env.LOGGING_PATH,
+  DATA_FILE_PATH: './data',
 
   // DB
   DATABASE_SERVER: process.env.APVS_DATABASE_SERVER,
@@ -36,5 +37,5 @@ module.exports = {
 
   // Payment Generation
   PAYMENT_GENERATION_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '0 5 0 ? * MON,TUE,WED,THU,SUN *',
-  PAYMENT_FILE_PATH: './payments'
+  PAYMENT_FILE_PATH: 'payments'
 }

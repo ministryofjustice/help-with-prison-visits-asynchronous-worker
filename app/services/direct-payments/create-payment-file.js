@@ -1,33 +1,30 @@
-const stringify = require('csv-stringify')
-const logger = require('../log')
+const Promise = require('bluebird')
+const stringify = Promise.promisify(require('csv-stringify'))
+const writeFile = Promise.promisify(require('fs').writeFile)
 const fs = require('fs')
+const path = require('path')
 const moment = require('moment')
 const config = require('../../../config')
 
-const outputPath = config.PAYMENT_FILE_PATH
+const dataPath = config.DATA_FILE_PATH
+const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
 module.exports = function (payments) {
-  const content = getFileContent(payments)
-  const filePath = outputPath + getFileName()
+  const filePath = path.join(outputPath, getFileName())
+  const header = [['sort code', 'account number', 'name', 'amount', 'reference']]
+  const data = header.concat(payments)
+  mkdirIfNotExists(dataPath)
+  mkdirIfNotExists(outputPath)
 
-  fs.writeFile(filePath, content, function (error) {
-    return logger.error(error)
+  return stringify(data).then(function (content) {
+    return writeFile(filePath, content, {})
   })
-
-  return filePath
 }
 
-function getFileContent (payments) {
-  const header = ['sort code', 'account number', 'name', 'amount', 'reference']
-  const data = header.concat(payments)
-
-  stringify(data, function (error, output) {
-    if (error) {
-      logger.error(error)
-    }
-
-    return output
-  })
+function mkdirIfNotExists (dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
 }
 
 function getFileName () {

@@ -8,12 +8,15 @@ module.exports.execute = function (task) {
 
   return getClaimsPendingPayment()
     .then(function (paymentData) {
-      references = _(paymentData).map(p => p.Reference)
-      return createPaymentFile(paymentData)
-        .then(function (filePath) {
-          return updateClaimsProcessedPayment(references)
-            .then(function () {
-            })
-        })
+      if (paymentData.length > 0) {
+        var referenceIndex = 4
+        references = _.map(paymentData, p => { return p[referenceIndex] })
+
+        return createPaymentFile(paymentData)
+          .then(function (result) {
+            return updateClaimsProcessedPayment(references)
+              .then(function () {})
+          })
+      }
     })
 }
