@@ -137,27 +137,34 @@ module.exports.getFirstTimeClaimData = function (reference) {
   var uniqueId2 = uniqueId + 1
 
   return {
-    Eligibility: { EligibilityId: uniqueId,
+    Eligibility: {
+      EligibilityId: uniqueId,
       Reference: reference,
       DateCreated: new Date(),
       DateSubmitted: new Date(),
-    Status: 'SUBMITTED' },
-    Claim: { ClaimId: uniqueId,
+      Status: 'SUBMITTED'
+    },
+    Claim: {
+      ClaimId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
       DateOfJourney: new Date(),
       DateCreated: new Date(),
       DateSubmitted: new Date(),
-    Status: 'SUBMITTED' },
-    Prisoner: { PrisonerId: uniqueId,
+      Status: 'SUBMITTED'
+    },
+    Prisoner: {
+      PrisonerId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
       FirstName: 'Joe',
       LastName: 'Bloggs',
       DateOfBirth: new Date(),
       PrisonNumber: 'A1234BC',
-    NameOfPrison: 'Hewell' },
-    Visitor: { VisitorId: uniqueId,
+      NameOfPrison: 'Hewell'
+    },
+    Visitor: {
+      VisitorId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
       Title: 'Mr',
@@ -172,15 +179,19 @@ module.exports.getFirstTimeClaimData = function (reference) {
       EmailAddress: 'test@test.com',
       PhoneNumber: '0123456789',
       DateOfBirth: new Date(),
-    Relationship: 'partner' },
-    ClaimChildren: [ { ClaimChildId: uniqueId,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      ClaimId: uniqueId,
-      Name: 'Sam Bloggs',
-      DateOfBirth: new Date(),
-      Relationship: 'prisoners-child',
-    IsEnabled: true },
+      Relationship: 'partner'
+    },
+    ClaimChildren: [
+      {
+        ClaimChildId: uniqueId,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ClaimId: uniqueId,
+        Name: 'Sam Bloggs',
+        DateOfBirth: new Date(),
+        Relationship: 'prisoners-child',
+        IsEnabled: true
+      },
       { ClaimChildId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
@@ -189,21 +200,26 @@ module.exports.getFirstTimeClaimData = function (reference) {
         DateOfBirth: new Date(),
         Relationship: 'my-child',
         IsEnabled: true
-      } ],
-    ClaimExpenses: [ { ClaimExpenseId: uniqueId,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      ClaimId: uniqueId,
-      ExpenseType: 'car',
-      Cost: 0,
-      IsEnabled: true,
-      TravelTime: null,
-      From: 'London',
-      To: 'Hewell',
-      IsReturn: false,
-      DurationOfTravel: null,
-    TicketType: null },
-      { ClaimExpenseId: uniqueId2,
+      }
+    ],
+    ClaimExpenses: [
+      {
+        ClaimExpenseId: uniqueId,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ClaimId: uniqueId,
+        ExpenseType: 'car',
+        Cost: 0,
+        IsEnabled: true,
+        TravelTime: null,
+        From: 'London',
+        To: 'Hewell',
+        IsReturn: false,
+        DurationOfTravel: null,
+        TicketType: null
+      },
+      {
+        ClaimExpenseId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
@@ -215,18 +231,24 @@ module.exports.getFirstTimeClaimData = function (reference) {
         To: 'Birmingham New Street',
         IsReturn: false,
         DurationOfTravel: null,
-      TicketType: null } ],
-    ClaimDocument: [{ClaimDocumentId: uniqueId,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      ClaimId: uniqueId,
-      DocumentType: 'VISITOR-CONFIRMATION',
-      ClaimExpenseId: null,
-      DocumentStatus: 'uploaded',
-      Filepath: 'path',
-      DateSubmitted: new Date(),
-      IsEnabled: true},
-      { ClaimDocumentId: uniqueId2,
+        TicketType: null
+      }
+    ],
+    ClaimDocument: [
+      {
+        ClaimDocumentId: uniqueId,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ClaimId: uniqueId,
+        DocumentType: 'VISITOR-CONFIRMATION',
+        ClaimExpenseId: null,
+        DocumentStatus: 'uploaded',
+        Filepath: 'path',
+        DateSubmitted: new Date(),
+        IsEnabled: true
+      },
+      {
+        ClaimDocumentId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
@@ -235,12 +257,16 @@ module.exports.getFirstTimeClaimData = function (reference) {
         DocumentStatus: 'uploaded',
         Filepath: null,
         DateSubmitted: new Date(),
-        IsEnabled: true}],
-    ClaimBankDetail: { ClaimBankDetailId: uniqueId,
+        IsEnabled: true
+      }
+    ],
+    ClaimBankDetail: {
+      ClaimBankDetailId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
       ClaimId: uniqueId,
       AccountNumber: '00123456',
-    SortCode: '001122' }
+      SortCode: '001122'
+    }
   }
 }
