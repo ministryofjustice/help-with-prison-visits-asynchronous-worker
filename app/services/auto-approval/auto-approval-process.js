@@ -1,3 +1,6 @@
+const config = require('../../../knexfile').asyncworker
+const knex = require('knex')(config)
+
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
 const statusEnum = require('../../constants/status-enum')
 
@@ -28,7 +31,15 @@ module.exports = function (claimData) {
         }
       })
 
-      // TODO - update status to indicate auto-approval
-      return result
+      if (result.claimApproved) {
+        return knex('IntSchema.Claim')
+          .where('ClaimId', claimData.Claim.ClaimId)
+          .update('Status', statusEnum.AUTOAPPROVED)
+          .then(function () {
+            return result
+          })
+      } else {
+        return result
+      }
     })
 }
