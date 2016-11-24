@@ -1,5 +1,6 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
+const moment = require('moment')
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -269,4 +270,231 @@ module.exports.getFirstTimeClaimData = function (reference) {
       SortCode: '001122'
     }
   }
+}
+
+module.exports.getValidAutoApprovalData = function (reference) {
+  const uniqueId = Math.floor(Date.now() / 100) - 14000000000
+  const claimId1 = uniqueId + 1
+  const claimId2 = claimId1 + 1
+  const claimId3 = claimId2 + 1
+  const claimId4 = claimId3 + 1
+  const claimExpenseId1 = claimId4 + 1
+  const claimExpenseId2 = claimExpenseId1 + 1
+  const claimExpenseId3 = claimExpenseId2 + 1
+  const claimExpenseId4 = claimExpenseId3 + 1
+
+  return {
+    Claim: {
+      ClaimId: claimId1,
+      EligibilityId: uniqueId,
+      Reference: reference,
+      DateCreated: moment().toDate(),
+      DateOfJourney: moment().subtract(29, 'days').toDate(),
+      DateSubmitted: moment().subtract(2, 'days').toDate(),
+      Status: 'SUBMITTED'
+    },
+    ClaimExpenses: [
+      {
+        ClaimExpenseId: claimExpenseId1,
+        ClaimId: claimId1,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ExpenseType: 'car hire',
+        Cost: 45
+      },
+      {
+        ClaimExpenseId: claimExpenseId2,
+        ClaimId: claimId1,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ExpenseType: 'plane',
+        Cost: 100
+      }
+    ],
+    ClaimDocuments: [
+      {
+        ClaimDocumentId: 1,
+        ClaimId: claimId1,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DocumentType: 'VISIT_CONFIRMATION',
+        DocumentStatus: 'uploaded'
+      }
+    ],
+    ClaimChildren: [
+      {
+        ClaimChildId: 1,
+        ClaimId: claimId1,
+        Name: 'Child A',
+        Relationship: 'my-child',
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateOfBirth: moment().subtract(10, 'years').toDate()
+      },
+      {
+        ClaimChildId: 2,
+        ClaimId: claimId1,
+        Name: 'Child B',
+        Relationship: 'my-child',
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateOfBirth: moment().subtract(15, 'years').toDate()
+      }
+    ],
+    Prisoner: {
+      PrisonerId: 1,
+      EligibilityId: uniqueId,
+      Reference: reference,
+      NameOfPrison: 'Hewell'
+    },
+    previousClaims: [
+      {
+        ClaimId: claimId2,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateCreated: moment().subtract(3, 'months').toDate(),
+        DateOfJourney: moment().subtract(3, 'months').toDate(),
+        DateSubmitted: moment().subtract(3, 'months').add(10, 'days').toDate(),
+        Status: 'APPROVED'
+      },
+      {
+        ClaimId: claimId3,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateCreated: moment().subtract(6, 'months').toDate(),
+        DateOfJourney: moment().subtract(6, 'months').toDate(),
+        DateSubmitted: moment().subtract(6, 'months').add(10, 'days').toDate(),
+        Status: 'APPROVED'
+      },
+      {
+        ClaimId: claimId4,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateCreated: moment().subtract(9, 'months').toDate(),
+        DateOfJourney: moment().subtract(9, 'months').toDate(),
+        DateSubmitted: moment().subtract(9, 'months').add(10, 'days').toDate(),
+        Status: 'APPROVED'
+      }
+    ],
+    latestManuallyApprovedClaim: {
+      ClaimId: claimId2,
+      EligibilityId: uniqueId,
+      Reference: reference,
+      DateCreated: moment().subtract(9, 'months').toDate(),
+      DateOfJourney: moment().subtract(9, 'months').toDate(),
+      DateSubmitted: moment().subtract(9, 'months').add(10, 'days').toDate(),
+      Status: 'APPROVED',
+      claimExpenses: [
+        {
+          ClaimExpenseId: claimExpenseId3,
+          ClaimId: claimId2,
+          EligibilityId: uniqueId,
+          Reference: reference,
+          ExpenseType: 'car hire',
+          Cost: 45
+        },
+        {
+          ClaimExpenseId: claimExpenseId4,
+          ClaimId: claimId2,
+          EligibilityId: uniqueId,
+          Reference: reference,
+          ExpenseType: 'plane',
+          Cost: 110
+        }
+      ]
+    }
+  }
+}
+
+module.exports.getInvalidAutoApprovalData = function (reference) {
+  const uniqueId = Math.floor(Date.now() / 100) - 13000000000
+  const claimId = uniqueId + 1
+  const claimExpenseId1 = claimId + 1
+  const claimExpenseId2 = claimExpenseId1 + 1
+
+  return {
+    Claim: {
+      ClaimId: claimId,
+      EligibilityId: uniqueId,
+      Reference: reference,
+      DateCreated: moment().toDate(),
+      DateOfJourney: moment().subtract(31, 'days').toDate(),
+      DateSubmitted: moment().subtract(2, 'days').toDate(),
+      Status: 'SUBMITTED'
+    },
+    ClaimExpenses: [
+      {
+        ClaimExpenseId: claimExpenseId1,
+        ClaimId: claimId,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ExpenseType: 'car hire',
+        Cost: 55
+      },
+      {
+        ClaimExpenseId: claimExpenseId2,
+        ClaimId: claimId,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        ExpenseType: 'plane',
+        Cost: 100
+      }
+    ],
+    ClaimDocuments: [
+      {
+        ClaimDocumentId: 2,
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DocumentType: 'VISIT-CONFIRMATION',
+        DocumentStatus: 'uploaded'
+      }
+    ],
+    ClaimChildren: [
+      {
+        ClaimChildId: 3,
+        ClaimId: claimId,
+        Name: 'Child A',
+        Relationship: 'my-child',
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateOfBirth: moment().subtract(10, 'years').toDate()
+      },
+      {
+        ClaimChildId: 4,
+        ClaimId: claimId,
+        Name: 'Child B',
+        Relationship: 'my-child',
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateOfBirth: moment().subtract(19, 'years').toDate()
+      }
+    ],
+    Prisoner: {
+      PrisonerId: 2,
+      EligibilityId: uniqueId,
+      Reference: reference,
+      NameOfPrison: 'Hewell'
+    },
+    previousClaims: [],
+    latestManuallyApprovedClaim: null
+  }
+}
+
+module.exports.insertAutoApprovalData = function (schema, autoApprovalData) {
+  return module.exports.insertClaimData(schema, autoApprovalData.Claim.Reference, autoApprovalData.Claim.EligibilityId, autoApprovalData)
+    .then(function () {
+      var promises = []
+
+      autoApprovalData.previousClaims.forEach(function (claim) {
+        promises.push(knex(`${schema}.Claim`).insert(claim))
+      })
+
+      if (autoApprovalData.latestManuallyApprovedClaim) {
+        autoApprovalData.latestManuallyApprovedClaim.claimExpenses.forEach(function (claimExpense) {
+          promises.push(knex(`${schema}.ClaimExpense`).insert(claimExpense))
+        })
+      }
+
+      return Promise.all(promises)
+    })
 }
