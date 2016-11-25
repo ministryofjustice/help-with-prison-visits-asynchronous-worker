@@ -48,7 +48,7 @@ describe('services/data/get-claims-pending-payment', function () {
   it('should retrieve only APPROVED claim records with payment status of PENDING', function () {
     return getClaimsPendingPayment()
       .then(function (results) {
-        expect(results[1].TotalApprovedCost).to.be.equal(25)
+        expect(results[1].TotalApprovedCost).to.be.equal('25')
       })
   })
 
