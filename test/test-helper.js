@@ -284,143 +284,121 @@ module.exports.getAutoApprovalData = function (reference) {
   const claimExpenseId4 = claimExpenseId3 + 1
 
   return {
-    Claim: {
-      ClaimId: claimId1,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      DateCreated: moment().toDate(),
-      DateOfJourney: moment().subtract(29, 'days').toDate(),
-      DateSubmitted: moment().subtract(2, 'days').toDate(),
-      Status: 'SUBMITTED'
-    },
+    Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days')),
     ClaimExpenses: [
-      {
-        ClaimExpenseId: claimExpenseId1,
-        ClaimId: claimId1,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        ExpenseType: 'car hire',
-        Cost: 45
-      },
-      {
-        ClaimExpenseId: claimExpenseId2,
-        ClaimId: claimId1,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        ExpenseType: 'plane',
-        Cost: 100
-      }
+      getClaimExpenseObject(claimExpenseId1, claimId1, uniqueId, reference, 'car hire', 45),
+      getClaimExpenseObject(claimExpenseId2, claimId1, uniqueId, reference, 'plane', 100)
     ],
     ClaimDocuments: [
-      {
-        ClaimDocumentId: 1,
-        ClaimId: claimId1,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DocumentType: 'VISIT_CONFIRMATION',
-        DocumentStatus: 'uploaded'
-      }
+      getClaimDocumentObject(1, claimId1, uniqueId, reference, 'VISIT-CONFIRMATION', 'uploaded')
     ],
     ClaimChildren: [
-      {
-        ClaimChildId: 1,
-        ClaimId: claimId1,
-        Name: 'Child A',
-        Relationship: 'my-child',
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateOfBirth: moment().subtract(10, 'years').toDate()
-      },
-      {
-        ClaimChildId: 2,
-        ClaimId: claimId1,
-        Name: 'Child B',
-        Relationship: 'my-child',
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateOfBirth: moment().subtract(15, 'years').toDate()
-      }
+      getClaimChildObject(1, claimId1, uniqueId, reference, 'Child A', 'my-child', subtractDateFromNow(10, 'years')),
+      getClaimChildObject(2, claimId1, uniqueId, reference, 'Child B', 'my-child', subtractDateFromNow(15, 'years'))
     ],
-    Prisoner: {
-      PrisonerId: 1,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      NameOfPrison: 'Hewell'
-    },
+    Prisoner: getPrisonerObject(1, uniqueId, reference, 'Hewell'),
     previousClaims: [
-      {
-        ClaimId: claimId2,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateCreated: moment().subtract(3, 'months').toDate(),
-        DateOfJourney: moment().subtract(3, 'months').toDate(),
-        DateSubmitted: moment().subtract(3, 'months').add(10, 'days').toDate(),
-        Status: 'APPROVED'
-      },
-      {
-        ClaimId: claimId3,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateCreated: moment().subtract(6, 'months').toDate(),
-        DateOfJourney: moment().subtract(6, 'months').toDate(),
-        DateSubmitted: moment().subtract(6, 'months').add(10, 'days').toDate(),
-        Status: 'APPROVED'
-      },
-      {
-        ClaimId: claimId4,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateCreated: moment().subtract(9, 'months').toDate(),
-        DateOfJourney: moment().subtract(9, 'months').toDate(),
-        DateSubmitted: moment().subtract(9, 'months').add(10, 'days').toDate(),
-        Status: 'APPROVED'
-      }
+      getClaimObject(claimId2,
+        uniqueId,
+        reference,
+        subtractDateFromNow(3, 'months'),
+        subtractDateFromNow(3, 'months'),
+        moment().subtract(3, 'months').add(10, 'days').toDate(),
+        'APPROVED'
+      ),
+      getClaimObject(claimId3,
+        uniqueId,
+        reference,
+        subtractDateFromNow(6, 'months'),
+        subtractDateFromNow(6, 'months'),
+        moment().subtract(6, 'months').add(10, 'days').toDate(),
+        'APPROVED'
+      ),
+      getClaimObject(claimId4,
+        uniqueId,
+        reference,
+        subtractDateFromNow(9, 'months'),
+        subtractDateFromNow(9, 'months'),
+        moment().subtract(9, 'months').add(10, 'days').toDate(),
+        'APPROVED'
+      )
     ],
-    latestManuallyApprovedClaim: {
-      ClaimId: claimId2,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      DateCreated: moment().subtract(9, 'months').toDate(),
-      DateOfJourney: moment().subtract(9, 'months').toDate(),
-      DateSubmitted: moment().subtract(9, 'months').add(10, 'days').toDate(),
-      Status: 'APPROVED',
-      claimExpenses: [
-        {
-          ClaimExpenseId: claimExpenseId3,
-          ClaimId: claimId2,
-          EligibilityId: uniqueId,
-          Reference: reference,
-          ExpenseType: 'car hire',
-          Cost: 45
-        },
-        {
-          ClaimExpenseId: claimExpenseId4,
-          ClaimId: claimId2,
-          EligibilityId: uniqueId,
-          Reference: reference,
-          ExpenseType: 'plane',
-          Cost: 110
-        }
+    latestManuallyApprovedClaim: getClaimObject(claimId2,
+      uniqueId,
+      reference,
+      subtractDateFromNow(9, 'months'),
+      subtractDateFromNow(9, 'months'),
+      moment().subtract(9, 'months').add(10, 'days').toDate(),
+      'APPROVED',
+      [
+        getClaimExpenseObject(claimExpenseId3, claimId2, uniqueId, reference, 'car hire', 45),
+        getClaimExpenseObject(claimExpenseId4, claimId2, uniqueId, reference, 'plane', 110)
       ]
-    }
+    )
   }
 }
 
-// module.exports.insertAutoApprovalData = function (schema, autoApprovalData) {
-//   return module.exports.insertClaimData(schema, autoApprovalData.Claim.Reference, autoApprovalData.Claim.EligibilityId, autoApprovalData)
-//     .then(function () {
-//       var promises = []
+function getClaimObject (claimId, eligibilityId, reference, dateCreated, dateOfJourney, dateSubmitted, status, claimExpenses) {
+  var claimObject = {
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    DateCreated: dateCreated,
+    DateOfJourney: dateOfJourney,
+    DateSubmitted: dateSubmitted,
+    Status: status
+  }
 
-//       autoApprovalData.previousClaims.forEach(function (claim) {
-//         promises.push(knex(`${schema}.Claim`).insert(claim))
-//       })
+  if (claimExpenses) {
+    claimObject.claimExpenses = claimExpenses
+  }
 
-//       if (autoApprovalData.latestManuallyApprovedClaim) {
-//         autoApprovalData.latestManuallyApprovedClaim.claimExpenses.forEach(function (claimExpense) {
-//           promises.push(knex(`${schema}.ClaimExpense`).insert(claimExpense))
-//         })
-//       }
+  return claimObject
+}
 
-//       return Promise.all(promises)
-//     })
-// }
+function getClaimExpenseObject (claimExpenseId, claimId, eligibilityId, reference, expenseType, cost) {
+  return {
+    ClaimExpenseId: claimExpenseId,
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    ExpenseType: expenseType,
+    Cost: cost
+  }
+}
+
+function getClaimDocumentObject (claimDocumentId, claimId, eligibilityId, reference, documentType, documentStatus) {
+  return {
+    ClaimDocumentId: claimDocumentId,
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    DocumentType: documentType,
+    DocumentStatus: documentStatus
+  }
+}
+
+function getClaimChildObject (claimChildId, claimId, eligibilityId, reference, name, relationship, dateOfBirth) {
+  return {
+    ClaimChildId: claimChildId,
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    Name: name,
+    Relationship: relationship,
+    DateOfBirth: dateOfBirth
+  }
+}
+
+function getPrisonerObject (prisonerId, eligibilityId, reference, nameOfPrison) {
+  return {
+    PrisonerId: prisonerId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    NameOfPrison: nameOfPrison
+  }
+}
+
+function subtractDateFromNow (amount, unit) {
+  return moment().subtract(amount, unit).toDate()
+}
