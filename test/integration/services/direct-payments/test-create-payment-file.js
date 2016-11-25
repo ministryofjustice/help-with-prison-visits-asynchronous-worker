@@ -13,7 +13,6 @@ const data = [
 
 describe('services/direct-payments/create-payment-file', function () {
   it('should generate valid AccessPay file with correct header', function () {
-
     return createPaymentFile(data)
       .then(function (filePath) {
         expect(filePath).to.be.not.null
