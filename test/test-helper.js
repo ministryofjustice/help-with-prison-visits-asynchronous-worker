@@ -272,7 +272,7 @@ module.exports.getFirstTimeClaimData = function (reference) {
   }
 }
 
-module.exports.getValidAutoApprovalData = function (reference) {
+module.exports.getAutoApprovalData = function (reference) {
   const uniqueId = Math.floor(Date.now() / 100) - 14000000000
   const claimId1 = uniqueId + 1
   const claimId2 = claimId1 + 1
@@ -406,95 +406,21 @@ module.exports.getValidAutoApprovalData = function (reference) {
   }
 }
 
-module.exports.getInvalidAutoApprovalData = function (reference) {
-  const uniqueId = Math.floor(Date.now() / 100) - 13000000000
-  const claimId = uniqueId + 1
-  const claimExpenseId1 = claimId + 1
-  const claimExpenseId2 = claimExpenseId1 + 1
+// module.exports.insertAutoApprovalData = function (schema, autoApprovalData) {
+//   return module.exports.insertClaimData(schema, autoApprovalData.Claim.Reference, autoApprovalData.Claim.EligibilityId, autoApprovalData)
+//     .then(function () {
+//       var promises = []
 
-  return {
-    Claim: {
-      ClaimId: claimId,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      DateCreated: moment().toDate(),
-      DateOfJourney: moment().subtract(31, 'days').toDate(),
-      DateSubmitted: moment().subtract(2, 'days').toDate(),
-      Status: 'SUBMITTED'
-    },
-    ClaimExpenses: [
-      {
-        ClaimExpenseId: claimExpenseId1,
-        ClaimId: claimId,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        ExpenseType: 'car hire',
-        Cost: 55
-      },
-      {
-        ClaimExpenseId: claimExpenseId2,
-        ClaimId: claimId,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        ExpenseType: 'plane',
-        Cost: 100
-      }
-    ],
-    ClaimDocuments: [
-      {
-        ClaimDocumentId: 2,
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DocumentType: 'VISIT-CONFIRMATION',
-        DocumentStatus: 'uploaded'
-      }
-    ],
-    ClaimChildren: [
-      {
-        ClaimChildId: 3,
-        ClaimId: claimId,
-        Name: 'Child A',
-        Relationship: 'my-child',
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateOfBirth: moment().subtract(10, 'years').toDate()
-      },
-      {
-        ClaimChildId: 4,
-        ClaimId: claimId,
-        Name: 'Child B',
-        Relationship: 'my-child',
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateOfBirth: moment().subtract(19, 'years').toDate()
-      }
-    ],
-    Prisoner: {
-      PrisonerId: 2,
-      EligibilityId: uniqueId,
-      Reference: reference,
-      NameOfPrison: 'Hewell'
-    },
-    previousClaims: [],
-    latestManuallyApprovedClaim: null
-  }
-}
+//       autoApprovalData.previousClaims.forEach(function (claim) {
+//         promises.push(knex(`${schema}.Claim`).insert(claim))
+//       })
 
-module.exports.insertAutoApprovalData = function (schema, autoApprovalData) {
-  return module.exports.insertClaimData(schema, autoApprovalData.Claim.Reference, autoApprovalData.Claim.EligibilityId, autoApprovalData)
-    .then(function () {
-      var promises = []
+//       if (autoApprovalData.latestManuallyApprovedClaim) {
+//         autoApprovalData.latestManuallyApprovedClaim.claimExpenses.forEach(function (claimExpense) {
+//           promises.push(knex(`${schema}.ClaimExpense`).insert(claimExpense))
+//         })
+//       }
 
-      autoApprovalData.previousClaims.forEach(function (claim) {
-        promises.push(knex(`${schema}.Claim`).insert(claim))
-      })
-
-      if (autoApprovalData.latestManuallyApprovedClaim) {
-        autoApprovalData.latestManuallyApprovedClaim.claimExpenses.forEach(function (claimExpense) {
-          promises.push(knex(`${schema}.ClaimExpense`).insert(claimExpense))
-        })
-      }
-
-      return Promise.all(promises)
-    })
-}
+//       return Promise.all(promises)
+//     })
+// }
