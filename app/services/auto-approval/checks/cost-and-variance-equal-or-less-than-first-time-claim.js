@@ -2,7 +2,7 @@ const groupExpensesByType = require('../../notify/helpers/group-expenses-by-type
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'costAndVarianceEqualOrLessThanFirstTimeClaim'
+const CHECK_NAME = 'cost-and-variance-equal-or-less-than-first-time-claim'
 const FAILURE_MESSAGE = 'Claim expense costs are outside of the accepted variance from the last manually approved claim'
 const COST_VARIANCE_PERCENTAGE = 0.1
 

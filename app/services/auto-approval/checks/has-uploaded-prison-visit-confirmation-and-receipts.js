@@ -1,6 +1,6 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'hasUploadedPrisonVisitConfirmationAndReceipts'
+const CHECK_NAME = 'has-uploaded-prison-visit-confirmation-and-receipts'
 const FAILURE_MESSAGE = 'A prison visit confirmation and/or receipts have not been uploaded'
 
 const VISIT_CONFIRMATION_DOC_TYPE = 'VISIT-CONFIRMATION'

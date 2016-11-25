@@ -2,7 +2,7 @@ const moment = require('moment')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'areChildrenUnder18'
+const CHECK_NAME = 'are-children-under-18'
 const FAILURE_MESSAGE = 'One or more children to be claimed are over 18 years old'
 
 module.exports = function (autoApprovalData) {

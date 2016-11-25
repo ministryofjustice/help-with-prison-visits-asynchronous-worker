@@ -1,7 +1,7 @@
 const groupExpensesByType = require('../../notify/helpers/group-expenses-by-type')
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'doExpensesMatchFirstTimeClaim'
+const CHECK_NAME = 'do-expenses-match-first-time-claim'
 const FAILURE_MESSAGE = 'The number or type of expenses for this claim don\'t match the last manually approved claim'
 
 module.exports = function (autoApprovalData) {

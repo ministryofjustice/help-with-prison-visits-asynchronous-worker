@@ -1,6 +1,6 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'isClaimTotalUnderLimit'
+const CHECK_NAME = 'is-claim-total-under-limit'
 const FAILURE_MESSAGE = 'The total claim value is over the maximum permitted amount'
 const MAX_CLAIM_TOTAL = 250
 

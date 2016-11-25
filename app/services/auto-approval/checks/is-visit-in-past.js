@@ -2,7 +2,7 @@ const moment = require('moment')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'isVisitInPast'
+const CHECK_NAME = 'is-visit-in-past'
 const FAILURE_MESSAGE = 'The date of visit for this claim is not in the past at time of processing'
 
 module.exports = function (autoApprovalData) {

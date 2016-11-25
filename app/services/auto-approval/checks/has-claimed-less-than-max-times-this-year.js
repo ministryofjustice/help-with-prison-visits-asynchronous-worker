@@ -2,7 +2,7 @@ const moment = require('moment')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'hasClaimedLessThanMaxTimesThisYear'
+const CHECK_NAME = 'has-claimed-less-than-max-times-this-year'
 const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number of times this year'
 const MAX_NUMBER_OF_CLAIMS_PER_YEAR = 26
 

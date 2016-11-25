@@ -1,6 +1,6 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
-const CHECK_NAME = 'isLatestManualClaimApproved'
+const CHECK_NAME = 'is-latest-manual-claim-approved'
 const FAILURE_MESSAGE = 'The last manually evaluated claim was rejected'
 
 module.exports = function (autoApprovalData) {
