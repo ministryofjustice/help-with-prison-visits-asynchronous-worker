@@ -11,9 +11,10 @@ describe('services/data/insert-task-generate-direct-payments', function () {
     return insertTaskGenerateDirectPayments()
       .then(function () {
         return knex.table('IntSchema.Task')
-          .where({'Task': tasksEnum.GENERATE_DIRECT_PAYMENTS})
+          .where({'Task': tasksEnum.GENERATE_DIRECT_PAYMENTS, 'Status': statusEnum.PENDING})
           .first()
           .then(function (result) {
+            expect(result.Task).to.be.equal(tasksEnum.GENERATE_DIRECT_PAYMENTS)
             expect(result.Status).to.be.equal(statusEnum.PENDING)
             expect(result.DateCreated).not.to.be.null
           })
