@@ -9,15 +9,14 @@ const event = 'TEST'
 
 var claim = {Reference: reference}
 
-before(function () {
-  return testHelper.insertClaimEligibilityData('IntSchema', reference)
-    .then(function (ids) {
-      claim.ClaimId = ids.claimId
-      claim.EligibilityId = ids.eligibilityId
-    })
-})
-
 describe('services/data/insert-claim-event-data', function () {
+  before(function () {
+    return testHelper.insertClaimEligibilityData('IntSchema', reference)
+      .then(function (ids) {
+        claim.ClaimId = ids.claimId
+        claim.EligibilityId = ids.eligibilityId
+      })
+  })
   it('should create a Claim Event', function () {
     return insertClaimEvent(claim, event, null, null, true)
       .then(function () {

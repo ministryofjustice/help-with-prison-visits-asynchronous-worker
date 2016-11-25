@@ -12,7 +12,6 @@ module.exports = function (data, additionalData) {
 function copyEligibilityDataIfPresent (data) {
   if (data.Eligibility) {
     data.Eligibility.Status = statusEnum.NEW
-
     return knex('IntSchema.Eligibility').insert(data.Eligibility)
       .then(function () {
         return knex('IntSchema.Visitor').insert(data.Visitor)

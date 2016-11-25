@@ -12,14 +12,14 @@ var updatedDetails = {
   PhoneNumber: '12334567'
 }
 
-before(function () {
-  return testHelper.insertClaimEligibilityData('IntSchema', reference)
-    .then(function (ids) {
-      updatedDetails.EligibilityId = ids.eligibilityId
-    })
-})
-
 describe('services/data/update-contact-details', function () {
+  before(function () {
+    return testHelper.insertClaimEligibilityData('IntSchema', reference)
+      .then(function (ids) {
+        updatedDetails.EligibilityId = ids.eligibilityId
+      })
+  })
+
   it('should create update visitor to new contact details', function () {
     return updateContactDetails(updatedDetails)
       .then(function () {
