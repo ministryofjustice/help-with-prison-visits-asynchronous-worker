@@ -15,6 +15,5 @@ var directPaymentJob = new CronJob({
   start: false
 })
 
-
 log.info(`Starting direct payment generation on schedule [${paymentCron}]`)
 directPaymentJob.start()
