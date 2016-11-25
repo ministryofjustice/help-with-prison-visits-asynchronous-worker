@@ -1,10 +1,10 @@
-const groupExpensesByType = require('../../notify/helpers/group-expenses-by-type')
+const config = require('../../../../config')
 
+const groupExpensesByType = require('../../notify/helpers/group-expenses-by-type')
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
 const CHECK_NAME = 'cost-and-variance-equal-or-less-than-first-time-claim'
 const FAILURE_MESSAGE = 'Claim expense costs are outside of the accepted variance from the last manually approved claim'
-const COST_VARIANCE_PERCENTAGE = 0.1
 
 module.exports = function (autoApprovalData) {
   var groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
@@ -20,8 +20,8 @@ module.exports = function (autoApprovalData) {
     var firstTimeExpenseTypeTotal = getTotalCost(firstTimeExpenses)
 
     if (currentExpenseTypeTotal !== firstTimeExpenseTypeTotal) {
-      var lowerThreshold = firstTimeExpenseTypeTotal * (1 - COST_VARIANCE_PERCENTAGE)
-      var upperThreshold = firstTimeExpenseTypeTotal * (1 + COST_VARIANCE_PERCENTAGE)
+      var lowerThreshold = firstTimeExpenseTypeTotal * (1 - config.AUTO_APPROVAL_COST_VARIANCE_PERCENTAGE)
+      var upperThreshold = firstTimeExpenseTypeTotal * (1 + config.AUTO_APPROVAL_COST_VARIANCE_PERCENTAGE)
 
       if (currentExpenseTypeTotal < lowerThreshold || currentExpenseTypeTotal > upperThreshold) {
         return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)

@@ -9,4 +9,6 @@ module.exports = function (claimExpenses) {
       result[claimExpense.ExpenseType] = [claimExpense]
     }
   })
+
+  return result
 }
