@@ -31,6 +31,13 @@ module.exports.deleteAll = function (reference, schema) {
     .then(function () { return deleteByReference(`${schema}.ClaimDocument`, reference) })
     .then(function () { return deleteByReference(`${schema}.ClaimExpense`, reference) })
     .then(function () { return deleteByReference(`${schema}.ClaimChild`, reference) })
+    .then(function () {
+      if (schema === 'ExtSchema') {
+        return deleteByReference(`${schema}.EligibilityVisitorUpdateContactDetail`, reference)
+      } else {
+        return deleteByReference(`${schema}.ClaimEvent`, reference)
+      }
+    })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
     .then(function () { return deleteByReference(`${schema}.Visitor`, reference) })
     .then(function () { return deleteByReference(`${schema}.Prisoner`, reference) })
@@ -38,7 +45,7 @@ module.exports.deleteAll = function (reference, schema) {
 }
 
 module.exports.insertClaimEligibilityData = function (schema, reference) {
-  var data = this.getFirstTimeClaimData(reference)
+  var data = this.getClaimData(reference)
   var insertClaimData = this.insertClaimData
   var newEligibilityId
   var isExtSchema = schema === 'ExtSchema'
@@ -95,6 +102,13 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
     })
     .then(function () {
       if (isExtSchema) {
+        delete data.EligibilityVisitorUpdateContactDetail.EligibilityVisitorUpdateContactDetailId
+        data.EligibilityVisitorUpdateContactDetail.EligibilityId = newEligibilityId
+        return knex(`ExtSchema.EligibilityVisitorUpdateContactDetail`).insert(data.EligibilityVisitorUpdateContactDetail)
+      }
+    })
+    .then(function () {
+      if (isExtSchema) {
         delete data.ClaimExpenses[0].ClaimExpenseId
         delete data.ClaimExpenses[1].ClaimExpenseId
         data.ClaimExpenses[0].EligibilityId = newEligibilityId
@@ -131,7 +145,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
     })
 }
 
-module.exports.getFirstTimeClaimData = function (reference) {
+module.exports.getClaimData = function (reference) {
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   var uniqueId = Math.floor(Date.now() / 100) - 14000000000
   var uniqueId2 = uniqueId + 1
@@ -236,11 +250,20 @@ module.exports.getFirstTimeClaimData = function (reference) {
         Filepath: null,
         DateSubmitted: new Date(),
         IsEnabled: true}],
-    ClaimBankDetail: { ClaimBankDetailId: uniqueId,
+    ClaimBankDetail: {
+      ClaimBankDetailId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
       ClaimId: uniqueId,
       AccountNumber: '00123456',
-    SortCode: '001122' }
+      SortCode: '001122'
+    },
+    EligibilityVisitorUpdateContactDetail: {
+      EligibilityId: uniqueId,
+      Reference: reference,
+      EmailAddress: 'newEmail@test.com',
+      PhoneNumber: '0123456789',
+      DateSubmitted: new Date()
+    }
   }
 }

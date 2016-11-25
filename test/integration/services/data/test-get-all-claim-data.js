@@ -42,7 +42,7 @@ describe('services/data/get-all-claim-data', function () {
     var claimId
 
     before(function () {
-      return testHelper.insertClaimData('ExtSchema', REFERENCE, ELIGIBILITYID, testHelper.getFirstTimeClaimData(REFERENCE))
+      return testHelper.insertClaimData('ExtSchema', REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
         .then(function (newClaimId) {
           claimId = newClaimId
         })
@@ -60,6 +60,7 @@ describe('services/data/get-all-claim-data', function () {
           expect(data.ClaimBankDetail.ClaimId).to.be.equal(claimId)
           expect(data.ClaimChildren[0].ClaimId).to.be.equal(claimId)
           expect(data.ClaimDocument[0].ClaimId).to.be.equal(claimId)
+          expect(data.EligibilityVisitorUpdateContactDetail.EligibilityId).to.be.equal(ELIGIBILITYID)
         })
     })
 

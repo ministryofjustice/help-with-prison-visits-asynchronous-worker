@@ -1,10 +1,12 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
+const insertClaimEvent = require('./insert-claim-event-data')
+const updateContactDetails = require('./update-contact-details')
 
-module.exports = function (data) {
+module.exports = function (data, additionalData) {
   return copyEligibilityDataIfPresent(data)
-    .then(function () { return copyClaimData(data) })
+    .then(function () { return copyClaimData(data, additionalData) })
 }
 
 function copyEligibilityDataIfPresent (data) {
@@ -23,7 +25,7 @@ function copyEligibilityDataIfPresent (data) {
   }
 }
 
-function copyClaimData (data) {
+function copyClaimData (data, additionalData) {
   data.Claim.Status = statusEnum.NEW
   data.ClaimDocument.forEach(function (document) {
     if (document.DocumentStatus !== 'uploaded') {
@@ -46,5 +48,16 @@ function copyClaimData (data) {
     })
     .then(function () {
       return knex('IntSchema.ClaimDocument').insert(data.ClaimDocument)
+    })
+    .then(function () {
+      return insertClaimEvent(data.Claim, 'CLAIM-SUBMITTED', additionalData, null, true)
+    })
+    .then(function () {
+      if (data.EligibilityVisitorUpdateContactDetail) {
+        return insertClaimEvent(data.Claim, 'CONTACT-DETAILS-UPDATED', null, null, true)
+          .then(function () {
+            return updateContactDetails(data.EligibilityVisitorUpdateContactDetail)
+          })
+      }
     })
 }

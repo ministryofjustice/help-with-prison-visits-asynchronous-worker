@@ -9,9 +9,8 @@ module.exports.execute = function (task) {
   var reference = task.reference
   var eligibilityId = task.eligibilityId
   var claimId = task.claimId
-
   return getAllClaimData(reference, eligibilityId, claimId, statusEnum.SUBMITTED)
-          .then(function (firstTimeClaimData) { return copyClaimDataToInternal(firstTimeClaimData) })
+          .then(function (claimData) { return copyClaimDataToInternal(claimData, task.additionalData) })
           .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
           .then(function () { return insertTaskDwpCheck(reference, eligibilityId, claimId) })
 }
