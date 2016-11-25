@@ -12,11 +12,13 @@ const autoApprovalChecks = [
 module.exports = function (claimData) {
   var result = {checks: []}
 
-  return getDataForAutoApprovalChecks(claimData.Claim.Reference,
-    claimData.Claim.EligibilityId,
-    claimData.Claim.ClaimId,
-    statusEnum.SUBMITTED
-  )
+  // Fail auto-approval check if status has been set to Pending in the copy-claim-data-to-internal module
+  if (claimData.Claim.Status === statusEnum.PENDING) {
+    result.claimApproved = false
+    return result
+  }
+
+  return getDataForAutoApprovalChecks(claimData.Claim)
     .then(function (autoApprovalData) {
       for (var check in autoApprovalChecks) {
         var checkResult = autoApprovalChecks[check](autoApprovalData)
