@@ -1,5 +1,4 @@
 const config = require('../../../../config')
-
 const groupExpensesByType = require('../../notify/helpers/group-expenses-by-type')
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 

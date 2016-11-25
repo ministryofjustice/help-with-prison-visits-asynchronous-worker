@@ -6,23 +6,10 @@ const areChildrenUnder18 = require('../../../../app/services/auto-approval/check
 var autoApprovalDataClaimChildrenOver18 = {
   claimChildren: [
     {
-      ClaimChildId: 798118115,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      Name: 'Sam Bloggs',
-      DateOfBirth: moment().subtract(17, 'years').toDate(),
-      Relationship: 'prisoners-child',
-      IsEnabled: true
+      DateOfBirth: moment().subtract(17, 'years').toDate()
     },
-    { ClaimChildId: 798118116,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      Name: 'Mike Bloggs',
-      DateOfBirth: moment().subtract(19, 'years').toDate(),
-      Relationship: 'my-child',
-      IsEnabled: true
+    {
+      DateOfBirth: moment().subtract(19, 'years').toDate()
     }
   ]
 }

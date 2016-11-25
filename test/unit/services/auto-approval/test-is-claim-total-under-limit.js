@@ -3,17 +3,10 @@ const isClaimTotalUnderLimit = require('../../../../app/services/auto-approval/c
 
 var validAutoApprovalData = {
   ClaimExpenses: [
-    { ClaimExpenseId: 798118115,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      ExpenseType: 'car',
-      Cost: 0 },
-    { ClaimExpenseId: 798118116,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      ExpenseType: 'bus',
+    {
+      Cost: 0
+    },
+    {
       Cost: 20
     }
   ]
@@ -21,17 +14,10 @@ var validAutoApprovalData = {
 
 var invalidAutoApprovalData = {
   ClaimExpenses: [
-    { ClaimExpenseId: 798118115,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      ExpenseType: 'plane',
-      Cost: 150 },
-    { ClaimExpenseId: 798118116,
-      EligibilityId: 798118115,
-      Reference: 'AUTOAPP',
-      ClaimId: 798118115,
-      ExpenseType: 'train',
+    {
+      Cost: 150
+    },
+    {
       Cost: 150
     }
   ]
