@@ -32,5 +32,3 @@ describe('services/direct-payments/create-payment-file', function () {
     unlink(testFilePath)
   })
 })
-
-
