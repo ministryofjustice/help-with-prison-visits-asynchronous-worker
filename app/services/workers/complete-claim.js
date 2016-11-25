@@ -13,9 +13,9 @@ module.exports.execute = function (task) {
   var claimData
 
   return getAllClaimData(reference, eligibilityId, claimId, statusEnum.SUBMITTED)
-    .then(function (firstTimeClaimData) {
-      claimData = firstTimeClaimData
-      return copyClaimDataToInternal(firstTimeClaimData)
+    .then(function (data) {
+      claimData = data
+      return copyClaimDataToInternal(data, task.additionalData)
     })
     .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
     .then(function () { return autoApprovalProcess(claimData) })

@@ -3,16 +3,27 @@ const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+require('sinon-bluebird')
 
-const copyClaimDataToInternal = require('../../../../app/services/data/copy-claim-data-to-internal')
+var insertClaimEventStub = sinon.stub().resolves()
+var updateContactDetailsStub = sinon.stub().resolves()
+
+const copyClaimDataToInternal = proxyquire('../../../../app/services/data/copy-claim-data-to-internal', {
+  './insert-claim-event-data': insertClaimEventStub,
+  './update-contact-details': updateContactDetailsStub
+})
+
 const reference = 'COPY123'
 const claimId = 123
-describe('services/data/copy-first-time-claim-data-to-internal', function () {
+
+describe('services/data/copy-claim-data-to-internal', function () {
   describe('first time claim', function () {
-    var firstTimeClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
+    var firstTimeClaimData = testHelper.getClaimData(reference)
 
     it('should copy the first time claim data to internal and set status to new', function () {
-      return copyClaimDataToInternal(firstTimeClaimData).then(function () {
+      return copyClaimDataToInternal(firstTimeClaimData, 'first-time').then(function () {
         return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
@@ -50,6 +61,12 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
               })
           })
       })
+      .catch(function (error) {
+        return knex('IntSchema.Eligibility').select().then(function (result) {
+          console.dir(result)
+          throw error
+        })
+      })
     })
 
     it('should change claim status to PENDING if documents not uploaded', function () {
@@ -67,7 +84,7 @@ describe('services/data/copy-first-time-claim-data-to-internal', function () {
   })
 
   describe('repeat claim', function () {
-    const repeatClaimData = testHelper.getFirstTimeClaimData(reference, claimId)
+    const repeatClaimData = testHelper.getClaimData(reference, claimId)
     repeatClaimData.Eligibility = undefined
     repeatClaimData.Visitor = undefined
     repeatClaimData.Prisoner = undefined

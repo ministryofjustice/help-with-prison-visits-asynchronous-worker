@@ -8,7 +8,7 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
   var reference = 'GETDWPV'
   var eligibilityId
   var claimId
-  var claimData = testHelper.getFirstTimeClaimData(reference)
+  var claimData = testHelper.getClaimData(reference)
 
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)

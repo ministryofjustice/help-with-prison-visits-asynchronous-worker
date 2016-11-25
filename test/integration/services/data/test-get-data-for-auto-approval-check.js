@@ -10,7 +10,7 @@ var previousClaims
 describe('services/data/get-data-for-auto-approval-check', function () {
   before(function () {
     var uniqueId = Math.floor(Date.now() / 100) - 13000000000
-    claimData = testHelper.getFirstTimeClaimData(reference)
+    claimData = testHelper.getClaimData(reference)
 
     return testHelper.insertClaimData('IntSchema', reference, claimData.Claim.EligibilityId, claimData).then(function (ids) {
       previousClaims = [
