@@ -1,39 +1,15 @@
 const config = require('./config')
 const log = require('./app/services/log')
-var CronJob = require('cron').CronJob
 var throng = require('throng')
 var processTasks = require('./app/process-tasks')
-var generateDirectPayments = require('./app/services/data/insert-task-generate-direct-payments')
+var scheduleGenerateDirectPayments = require('./app/services/data/insert-task-generate-direct-payments')
 
 var numberOfWorkers = config.ASYNC_WORKER_CONCURRENCY
 var frequency = config.ASYNC_WORKER_FREQUENCY
 var startWeb = config.ASYNC_START_WEB === 'true'
-var paymentCron = config.PAYMENT_GENERATION_CRON
-var directPaymentJob = new CronJob({
-  cronTime: paymentCron,
-  onTick: function () {
-    generateDirectPayments()
-  },
-  start: false
-})
+var runJobs = 'true'
 
-throng({
-  workers: numberOfWorkers,
-  master: startMaster,
-  start: startWorker
-})
-
-function startMaster (id) {
-  log.info(`Started master ${id} for cron schedule`)
-
-  process.on('SIGTERM', () => {
-    log.info(`Master ${id} exiting...`)
-    process.exit()
-  })
-
-  log.info(`Starting direct payment generation on schedule [${paymentCron}]`)
-  directPaymentJob.start()
-}
+throng({ workers: numberOfWorkers }, startWorker)
 
 function startWorker (id) {
   log.info(`Started worker ${id}`)
@@ -42,6 +18,14 @@ function startWorker (id) {
     log.info(`Worker ${id} exiting...`)
     process.exit()
   })
+
+  // Testing - TODO: Schedule on Cron
+  if (runJobs) {
+    runScheduledJobs()
+      .then(function () {
+        runJobs = false
+      })
+  }
 
   runProcessTasks(id).then(function () {
     setInterval(function () {
@@ -53,6 +37,10 @@ function startWorker (id) {
     // Start web
     require('./app/web/bin/www')
   }
+}
+
+function runScheduledJobs (id) {
+  return scheduleGenerateDirectPayments()
 }
 
 function runProcessTasks (id) {

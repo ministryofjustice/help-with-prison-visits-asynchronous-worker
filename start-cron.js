@@ -7,7 +7,10 @@ var paymentCron = config.PAYMENT_GENERATION_CRON
 var directPaymentJob = new CronJob({
   cronTime: paymentCron,
   onTick: function () {
-    generateDirectPayments()
+    log.info('CRON triggered - initiating run of direct payments generation...')
+    generateDirectPayments().then(function () {
+      log.info('Direct Payment Generation task created')
+    })
   },
   start: false
 })
