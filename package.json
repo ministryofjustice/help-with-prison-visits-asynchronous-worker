@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "node start.js",
+    "start-cron": "node start-cron.js"
     "start-web": "node app/web/bin/www",
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
