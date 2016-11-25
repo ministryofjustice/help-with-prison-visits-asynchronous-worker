@@ -5,6 +5,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 
 const CHECK_NAME = 'has-claimed-less-than-max-times-this-year'
 const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number of times this year'
+const AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR = parseInt(config.AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR)
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.previousClaims.length < 1) {
@@ -19,7 +20,7 @@ module.exports = function (autoApprovalData) {
   var startOfClaimableYear = now.subtract(durationSinceFirstClaim.get('years'), 'years')
 
   var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, startOfClaimableYear.toDate())
-  var checkPassed = numberOfClaimsThisYear < config.AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR
+  var checkPassed = numberOfClaimsThisYear < AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? FAILURE_MESSAGE : '')
 }
