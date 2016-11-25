@@ -29,8 +29,4 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         sinon.assert.calledWith(isNoPreviousPendingClaimStub, validAutoApprovalData)
       })
   })
-
-  after(function () {
-    return testHelper.deleteAll(reference1, 'IntSchema')
-  })
 })
