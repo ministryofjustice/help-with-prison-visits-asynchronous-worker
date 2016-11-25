@@ -1,0 +1,4 @@
+module.exports = {
+  ACCESSPAY_FILE: 'ACCESSPAY_FILE',
+  ADI_JOURNAL_FILE: 'ADI_JOURNAL_FILE'
+}

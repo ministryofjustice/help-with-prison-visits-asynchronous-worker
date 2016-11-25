@@ -17,7 +17,8 @@ module.exports = function (payments) {
   mkdirIfNotExists(outputPath)
 
   return stringify(data).then(function (content) {
-    return writeFile(filePath, content, {})
+    writeFile(filePath, content, {})
+    return Promise.resolve(filePath)
   })
 }
 
