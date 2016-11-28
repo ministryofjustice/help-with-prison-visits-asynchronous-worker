@@ -1,11 +1,8 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
-const Promise = require('bluebird')
-
-const insertTask = require('../data/insert-task')
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
-const tasksEnum = require('../../constants/tasks-enum')
+const autoApproveClaim = require('../data/auto-approve-claim')
 const statusEnum = require('../../constants/status-enum')
+const tasksEnum = require('../../constants/tasks-enum')
+const insertTask = require('../data/insert-task')
 
 const autoApprovalChecks = [
   require('./checks/are-children-under-18'),
@@ -46,10 +43,7 @@ module.exports = function (claimData) {
       })
 
       if (result.claimApproved) {
-        // TODO refactor to move this to data function, so this module can be unit tested without DB dependencies
-        return knex('IntSchema.Claim')
-          .where('ClaimId', claimData.Claim.ClaimId)
-          .update('Status', statusEnum.AUTOAPPROVED)
+        return autoApproveClaim(claimData.Claim.ClaimId)
           .then(function () {
             return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
           })
