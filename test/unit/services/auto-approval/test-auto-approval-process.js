@@ -1,5 +1,7 @@
+const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
+const statusEnum = require('../../../../app/constants/status-enum')
 require('sinon-bluebird')
 
 const testHelper = require('../../../test-helper')
@@ -43,6 +45,14 @@ var autoApprovalChecks = {
 var autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalChecks)
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
+  it('should return claimApproved false for PENDING claim', function () {
+    var pendingData = {Claim: {Status: statusEnum.PENDING}}
+    return autoApprovalProcess(pendingData)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject PENDING claims for auto-approval').to.be.false
+      })
+  })
+
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(validAutoApprovalData)
       .then(function (result) {

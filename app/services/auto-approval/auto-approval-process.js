@@ -22,7 +22,7 @@ module.exports = function (claimData) {
   // Fail auto-approval check if status has been set to Pending in the copy-claim-data-to-internal module
   if (claimData.Claim.Status === statusEnum.PENDING) {
     result.claimApproved = false
-    return result
+    return Promise.resolve(result)
   }
 
   return getDataForAutoApprovalChecks(claimData.Claim)
@@ -42,6 +42,9 @@ module.exports = function (claimData) {
 
       if (result.claimApproved) {
         return autoApproveClaim(claimData.Claim.ClaimId)
+          .then(function () {
+            return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+          })
           .then(function () {
             return result
           })
