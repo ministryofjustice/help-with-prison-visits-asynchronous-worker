@@ -78,7 +78,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var invalidAutoApprovalChecks = validAutoApprovalChecks
     var invalidCheckResultStub = sinon.stub.resolves(invalidCheckResult)
 
-    for (var i = 0; i < Object.keys(invalidAutoApprovalChecks); i++) {
+    for (var i = 0; i < Object.keys(invalidAutoApprovalChecks).length; i++) {
       var key = Object.keys(invalidAutoApprovalChecks)[i]
       // Ignore mocked data functions and only set some auto approval checks to true
       if (key.indexOf('data') > -1 || i % 2 === 0) {

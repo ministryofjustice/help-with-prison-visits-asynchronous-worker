@@ -4,7 +4,12 @@ const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
 
 module.exports = function (claim) {
-  var result = {}
+  var result = {
+    previousClaims: [],
+    latestManuallyApprovedClaim: {
+      claimExpenses: []
+    }
+  }
 
   return getPreviousClaims(claim.ClaimId, claim.EligibilityId, claim.DateOfJourney)
     .then(function (previousClaims) {

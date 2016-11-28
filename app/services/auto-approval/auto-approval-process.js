@@ -32,10 +32,14 @@ module.exports = function (claimData) {
 
   return getDataForAutoApprovalChecks(claimData.Claim)
     .then(function (autoApprovalData) {
-      for (var check in autoApprovalChecks) {
-        var checkResult = autoApprovalChecks[check](autoApprovalData)
+      // Attach previous claim data to autoApprovalData variable
+      claimData.previousClaims = autoApprovalData.previousClaims
+      claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
+
+      autoApprovalChecks.forEach(function (check) {
+        var checkResult = check(claimData)
         result.checks.push(checkResult)
-      }
+      })
 
       result.claimApproved = true
       // Loop through result properties, if any are false, then the claim should not be approved
@@ -54,10 +58,13 @@ module.exports = function (claimData) {
             return result
           })
       } else {
-        return insertClaimEventData(claimData.Claim, 'Auto approval failure', null, getAutoApprovalFailureString(result.checks), true)
-          .then(function () {
-            return result
-          })
+        var insertClaimEventDataCalls = []
+        result.checks.forEach(function (check) {
+          if (!check.result) {
+            insertClaimEventDataCalls.push(insertClaimEventData(claimData.Claim, 'AUTO-APPROVAL-FAILURE', check.failureMessage, null, true))
+          }
+        })
+        return Promise.all(insertClaimEventDataCalls)
       }
     })
 }

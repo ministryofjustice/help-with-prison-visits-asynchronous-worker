@@ -1,5 +1,6 @@
 module.exports = function (checks) {
   var output = []
+  var newLine = '\r\n'
 
   checks.forEach(function (check) {
     if (!check.result) {
@@ -7,5 +8,5 @@ module.exports = function (checks) {
     }
   })
 
-  return output
+  return output.join(newLine)
 }
