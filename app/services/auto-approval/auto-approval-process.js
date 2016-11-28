@@ -1,5 +1,6 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
+const Promise = require('bluebird')
 
 const insertTask = require('../data/insert-task')
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
@@ -26,7 +27,7 @@ module.exports = function (claimData) {
   // Fail auto-approval check if status has been set to Pending in the copy-claim-data-to-internal module
   if (claimData.Claim.Status === statusEnum.PENDING) {
     result.claimApproved = false
-    return result
+    return Promise.resolve(result)
   }
 
   return getDataForAutoApprovalChecks(claimData.Claim)
@@ -45,6 +46,7 @@ module.exports = function (claimData) {
       })
 
       if (result.claimApproved) {
+        // TODO refactor to move this to data function, so this module can be unit tested without DB dependencies
         return knex('IntSchema.Claim')
           .where('ClaimId', claimData.Claim.ClaimId)
           .update('Status', statusEnum.AUTOAPPROVED)
