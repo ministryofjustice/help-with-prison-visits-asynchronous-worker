@@ -1,6 +1,8 @@
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
 const autoApproveClaim = require('../data/auto-approve-claim')
 const statusEnum = require('../../constants/status-enum')
+const tasksEnum = require('../../constants/tasks-enum')
+const insertTask = require('../data/insert-task')
 
 const autoApprovalChecks = [
   require('./checks/are-children-under-18'),
