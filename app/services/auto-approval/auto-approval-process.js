@@ -7,8 +7,17 @@ const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
 const autoApprovalChecks = [
+  require('./checks/are-children-under-18'),
+  require('./checks/cost-and-variance-equal-or-less-than-first-time-claim'),
+  require('./checks/do-expenses-match-first-time-claim'),
+  require('./checks/has-claimed-less-than-max-times-this-year'),
+  require('./checks/has-uploaded-prison-visit-confirmation-and-receipts'),
+  require('./checks/is-claim-submitted-within-time-limit'),
+  require('./checks/is-claim-total-under-limit'),
   require('./checks/is-latest-manual-claim-approved'),
-  require('./checks/is-no-previous-pending-claim')
+  require('./checks/is-no-previous-pending-claim'),
+  require('./checks/is-visit-in-past'),
+  require('./checks/visit-date-different-to-previous-claims')
 ]
 
 module.exports = function (claimData) {
