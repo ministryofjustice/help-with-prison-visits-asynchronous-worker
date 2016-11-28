@@ -61,12 +61,6 @@ describe('services/data/copy-claim-data-to-internal', function () {
               })
           })
       })
-      .catch(function (error) {
-        return knex('IntSchema.Eligibility').select().then(function (result) {
-          console.dir(result)
-          throw error
-        })
-      })
     })
 
     it('should change claim status to PENDING if documents not uploaded', function () {

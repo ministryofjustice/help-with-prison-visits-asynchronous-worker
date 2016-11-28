@@ -1,11 +1,10 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
-const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (reference, eligibilityId, claimId) {
+module.exports = function (reference, eligibilityId, claimId, taskType) {
   var task = {
-    'Task': tasksEnum.DWP_CHECK,
+    'Task': taskType,
     'Reference': reference,
     'EligibilityId': eligibilityId,
     'ClaimId': claimId,

@@ -4,7 +4,8 @@ const getAllClaimData = require('../data/get-all-claim-data')
 const copyClaimDataToInternal = require('../data/copy-claim-data-to-internal')
 const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 const autoApprovalProcess = require('../auto-approval/auto-approval-process')
-const insertTaskDwpCheck = require('../data/insert-task-dwp-check')
+const insertTask = require('../data/insert-task')
+const tasksEnum = require('../../constants/tasks-enum')
 
 module.exports.execute = function (task) {
   var reference = task.reference
@@ -19,5 +20,5 @@ module.exports.execute = function (task) {
     })
     .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
     .then(function () { return autoApprovalProcess(claimData) })
-    .then(function () { return insertTaskDwpCheck(reference, eligibilityId, claimId) })
+    .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK) })
 }

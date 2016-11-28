@@ -4,15 +4,15 @@ const knex = require('knex')(config)
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
 
-const insertTaskDwpCheck = require('../../../../app/services/data/insert-task-dwp-check')
+const insertTask = require('../../../../app/services/data/insert-task')
 
 const reference = 'DWPTASK'
 const eligibilityId = '4321'
 const claimId = '1234'
 
-describe('services/data/insert-task-dwp-check', function () {
-  it('should create Task with Reference, ClaimId, Status', function () {
-    return insertTaskDwpCheck(reference, eligibilityId, claimId)
+describe('services/data/insert-task', function () {
+  it('should create Task with Reference, ClaimId, Status and TaskType', function () {
+    return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK)
       .then(function () {
         return knex.table('IntSchema.Task')
           .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'Task': tasksEnum.DWP_CHECK})
