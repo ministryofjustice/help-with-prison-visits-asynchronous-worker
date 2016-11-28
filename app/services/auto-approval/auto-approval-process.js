@@ -14,6 +14,7 @@ const autoApprovalChecks = [
   require('./checks/is-claim-total-under-limit'),
   require('./checks/is-latest-manual-claim-approved'),
   require('./checks/is-no-previous-pending-claim'),
+  require('./checks/is-prison-not-in-guernsey-jersey'),
   require('./checks/is-visit-in-past'),
   require('./checks/visit-date-different-to-previous-claims')
 ]

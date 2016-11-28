@@ -24,6 +24,7 @@ var isClaimSubmittedWithinTimeLimitStub = sinon.stub().resolves(validCheckResult
 var isClaimTotalUnderLimitStub = sinon.stub().resolves(validCheckResult)
 var isLatestManualClaimApprovedStub = sinon.stub().resolves(validCheckResult)
 var isNoPreviousPendingClaimStub = sinon.stub().resolves(validCheckResult)
+var isPrisonNotInGuernseyJerseyStub = sinon.stub().resolves(validCheckResult)
 var isVisitInPastStub = sinon.stub().resolves(validCheckResult)
 var visitDateDifferentToPreviousClaimsStub = sinon.stub().resolves(validCheckResult)
 
@@ -38,6 +39,7 @@ var validAutoApprovalChecks = {
   './checks/is-claim-submitted-within-time-limit': isClaimSubmittedWithinTimeLimitStub,
   './checks/is-claim-total-under-limit': isClaimTotalUnderLimitStub,
   './checks/is-latest-manual-claim-approved': isLatestManualClaimApprovedStub,
+  './checks/is-prison-not-in-guernsey-jersey': isPrisonNotInGuernseyJerseyStub,
   './checks/is-no-previous-pending-claim': isNoPreviousPendingClaimStub,
   './checks/is-visit-in-past': isVisitInPastStub,
   './checks/visit-date-different-to-previous-claims': visitDateDifferentToPreviousClaimsStub
