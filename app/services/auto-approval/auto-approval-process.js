@@ -1,7 +1,9 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
+const insertTask = require('../data/insert-task')
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
+const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
 const autoApprovalChecks = [
@@ -37,6 +39,9 @@ module.exports = function (claimData) {
         return knex('IntSchema.Claim')
           .where('ClaimId', claimData.Claim.ClaimId)
           .update('Status', statusEnum.AUTOAPPROVED)
+          .then(function () {
+            return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+          })
           .then(function () {
             return result
           })
