@@ -15,6 +15,7 @@ var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 
 var getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
 var autoApproveClaimStub = sinon.stub().resolves()
+var insertClaimEventDataStub = sinon.stub().resolves()
 var areChildrenUnder18Stub = sinon.stub().resolves(validCheckResult)
 var costAndVarianceEqualOrLessThanFirstTimeClaimStub = sinon.stub().resolves(validCheckResult)
 var doExpensesMatchFirstTimeClaimStub = sinon.stub().resolves(validCheckResult)
@@ -31,6 +32,7 @@ var visitDateDifferentToPreviousClaimsStub = sinon.stub().resolves(validCheckRes
 var validAutoApprovalChecks = {
   '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
   '../data/auto-approve-claim': autoApproveClaimStub,
+  '../data/insert-claim-event-data': insertClaimEventDataStub,
   './checks/are-children-under-18': areChildrenUnder18Stub,
   './checks/cost-and-variance-equal-or-less-than-first-time-claim': costAndVarianceEqualOrLessThanFirstTimeClaimStub,
   './checks/do-expenses-match-first-time-claim': doExpensesMatchFirstTimeClaimStub,
@@ -62,9 +64,9 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         for (var i = 0; i < Object.keys(validAutoApprovalChecks).length; i++) {
           // skip check for getDataForAutoApproval, this is done above
-          if (i < 2) continue
-
           var key = Object.keys(validAutoApprovalChecks)[i]
+          if (key.indexOf('data') > -1) continue
+
           var stub = validAutoApprovalChecks[key]
 
           sinon.assert.calledWith(stub, validAutoApprovalData)

@@ -1,5 +1,7 @@
+const insertClaimEventData = require('../data/insert-claim-event-data')
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
 const autoApproveClaim = require('../data/auto-approve-claim')
+const getAutoApprovalFailureString = require('./helpers/get-auto-approval-failure-string')
 const statusEnum = require('../../constants/status-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertTask = require('../data/insert-task')
@@ -52,7 +54,10 @@ module.exports = function (claimData) {
             return result
           })
       } else {
-        return result
+        return insertClaimEventData(claimData.Claim, 'Auto approval failure', null, getAutoApprovalFailureString(result.checks), true)
+          .then(function () {
+            return result
+          })
       }
     })
 }
