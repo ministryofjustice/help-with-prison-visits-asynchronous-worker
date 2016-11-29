@@ -5,11 +5,11 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claim) {
+module.exports = function (claim, visitorEmailAddress) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claim.ClaimId)
     .update('Status', statusEnum.AUTOAPPROVED)
     .then(function () {
-      return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+      return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
     })
 }

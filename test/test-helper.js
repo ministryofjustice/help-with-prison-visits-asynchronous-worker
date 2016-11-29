@@ -317,6 +317,9 @@ module.exports.getAutoApprovalData = function (reference) {
       getClaimExpenseObject(claimExpenseId1, claimId1, uniqueId, reference, 'car hire', 45),
       getClaimExpenseObject(claimExpenseId2, claimId1, uniqueId, reference, 'plane', 100)
     ],
+    Visitor: {
+      EmailAddress: 'donotsend@apvs.com'
+    },
     Prisoner: getPrisonerObject(1, uniqueId, reference, 'Hewell'),
     latestManuallyApprovedClaim: getClaimObject(claimId2,
       uniqueId,
