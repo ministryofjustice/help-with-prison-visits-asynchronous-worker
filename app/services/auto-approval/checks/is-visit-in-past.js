@@ -11,5 +11,5 @@ module.exports = function (autoApprovalData) {
 
   var checkPassed = dateOfVisit.isBefore(now)
 
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? FAILURE_MESSAGE : '')
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }

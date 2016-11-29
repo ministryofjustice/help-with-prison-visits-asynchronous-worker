@@ -12,5 +12,5 @@ module.exports = function (autoApprovalData) {
   var claimSubmissionCutOffDate = moment(autoApprovalData.Claim.DateOfJourney).add(AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT, 'days')
 
   var checkPassed = claimSubmissionDateMoment.isSameOrBefore(claimSubmissionCutOffDate)
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? FAILURE_MESSAGE : '')
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }

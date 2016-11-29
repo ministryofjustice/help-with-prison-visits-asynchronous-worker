@@ -10,8 +10,8 @@ module.exports = function (autoApprovalData) {
   var prisonVisitConfirmationUploaded = false
   var allRequiredDocumentsUploaded = true
 
-  for (var i = 0; i < autoApprovalData.ClaimDocuments.length; i++) {
-    var claimDocument = autoApprovalData.ClaimDocuments[i]
+  for (var i = 0; i < autoApprovalData.ClaimDocument.length; i++) {
+    var claimDocument = autoApprovalData.ClaimDocument[i]
 
     if (claimDocument.DocumentType === VISIT_CONFIRMATION_DOC_TYPE) {
       prisonVisitConfirmationUploaded = claimDocument.DocumentStatus === UPLOADED_DOC_STATUS
@@ -22,5 +22,5 @@ module.exports = function (autoApprovalData) {
 
   var checkPassed = prisonVisitConfirmationUploaded && allRequiredDocumentsUploaded
 
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? FAILURE_MESSAGE : '')
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
