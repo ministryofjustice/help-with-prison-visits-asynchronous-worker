@@ -4,7 +4,7 @@ module.exports = function (checks) {
 
   checks.forEach(function (check) {
     if (!check.result) {
-      result.push(check.failureMessage)
+      result.push(`* ${check.failureMessage}`)
     }
   })
 

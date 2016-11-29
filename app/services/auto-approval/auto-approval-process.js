@@ -39,7 +39,7 @@ module.exports = function (claimData) {
   return getDataForAutoApprovalChecks(claimData)
     .then(function (autoApprovalData) {
       // Short-circuit checks if there are no previously approved claims for the claimant
-      if (!claimData.latestManuallyApprovedClaim.ClaimId) {
+      if (!claimData.latestManuallyApprovedClaim && !claimData.latestManuallyApprovedClaim.ClaimId) {
         result.claimApproved = false
         return result
       }
