@@ -16,5 +16,5 @@ module.exports = function (autoApprovalData) {
 
   var checkPassed = claimTotal <= AUTO_APPROVAL_MAX_CLAIM_TOTAL
 
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? FAILURE_MESSAGE : '')
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }

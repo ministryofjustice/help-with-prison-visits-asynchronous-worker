@@ -44,7 +44,8 @@ function executeWorkerForTask (schema, worker, task) {
       log.info(`completed task: ${schema}-${task.taskId}-${task.task}`)
       return completeTaskWithStatus(schema, task.taskId, statusEnum.COMPLETE)
     }).catch(function (error) {
-      log.info(`error running task: ${schema}-${task.taskId}-${task.task}, error: ${error}`)
+      log.error(`error running task: ${schema}-${task.taskId}-${task.task}, error: ${error}`)
+      log.error({error: error})
       return completeTaskWithStatus(schema, task.taskId, statusEnum.FAILED)
     })
 }

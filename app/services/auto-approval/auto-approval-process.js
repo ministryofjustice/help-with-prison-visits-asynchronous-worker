@@ -1,5 +1,6 @@
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
 const autoApproveClaim = require('../data/auto-approve-claim')
+const claimTypeEnum = require('../../constants/claim-type-enum')
 const statusEnum = require('../../constants/status-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertTask = require('../data/insert-task')
@@ -22,18 +23,22 @@ const autoApprovalChecks = [
 module.exports = function (claimData) {
   var result = {checks: []}
 
-  // Fail auto-approval check if status has been set to Pending in the copy-claim-data-to-internal module
-  if (claimData.Claim.Status === statusEnum.PENDING) {
+  // Fail auto-approval check if First time claim or status is PENDING
+  if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+    claimData.Claim.Status === statusEnum.PENDING) {
     result.claimApproved = false
     return Promise.resolve(result)
   }
 
   return getDataForAutoApprovalChecks(claimData.Claim)
     .then(function (autoApprovalData) {
-      for (var check in autoApprovalChecks) {
-        var checkResult = autoApprovalChecks[check](autoApprovalData)
+      claimData.previousClaims = autoApprovalData.previousClaims
+      claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
+
+      autoApprovalChecks.forEach(function (check) {
+        var checkResult = check(claimData)
         result.checks.push(checkResult)
-      }
+      })
 
       result.claimApproved = true
       // Loop through result properties, if any are false, then the claim should not be approved

@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const hasUploadedPrisonVisitConfirmationAndReceipts = require('../../../../app/services/auto-approval/checks/has-uploaded-prison-visit-confirmation-and-receipts')
 
 const withVisitConfirmation = {
-  ClaimDocuments: [
+  ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
@@ -22,7 +22,7 @@ const withVisitConfirmation = {
 }
 
 const withoutVisitConfirmation = {
-  ClaimDocuments: [
+  ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
@@ -47,7 +47,7 @@ const withoutVisitConfirmation = {
 }
 
 const validAutoApprovalData = {
-  ClaimDocuments: [
+  ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
