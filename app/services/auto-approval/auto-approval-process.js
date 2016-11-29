@@ -68,7 +68,7 @@ module.exports = function (claimData) {
             return result
           })
       } else {
-        return insertClaimEventData(claimAndAutoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', null, generateFailureReasonString(result.checks), true)
+        return insertClaimEventData(claimAndAutoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', claimAndAutoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
           .then(function () {
             return result
           })
