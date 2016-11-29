@@ -45,7 +45,6 @@ module.exports = function (claimData) {
       }
 
       var claimAndAutoApprovalData = autoApprovalDataConstructor(claimData, autoApprovalData)
-      console.dir(claimAndAutoApprovalData)
 
       autoApprovalChecks.forEach(function (check) {
         var checkResult = check(claimAndAutoApprovalData)

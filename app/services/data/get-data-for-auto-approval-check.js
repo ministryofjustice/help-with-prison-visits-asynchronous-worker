@@ -9,8 +9,6 @@ module.exports = function (claimData) {
       claimData.previousClaims = previousClaims
       var latestManuallyApprovedClaim = getLatestManuallyApprovedClaim(previousClaims)
 
-      console.dir(claimData)
-
       if (!claimData.Claim.Eligibility || claimData.Claim.Prisoner || claimData.Claim.Visitor) {
         return getDataFromInternal(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.Reference)
           .then(function (internalData) {
