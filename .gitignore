@@ -38,6 +38,9 @@ run-knex-migrations.sh
 run-standard-linter.sh
 run-unit-tests.sh
 
+# CSV output
+data/payments
+
 # Public directory
 app/public
 

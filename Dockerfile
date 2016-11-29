@@ -2,6 +2,7 @@
 FROM node:6.5.0
 
 RUN mkdir -p /usr/src/app/app
+RUN mkdir /usr/src/app/data
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/

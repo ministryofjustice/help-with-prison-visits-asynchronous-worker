@@ -1,0 +1,6 @@
+module.exports = {
+  NEW: 'NEW',
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  AUTOAPPROVED: 'AUTO-APPROVED'
+}
