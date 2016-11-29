@@ -40,7 +40,7 @@ var autoApprovalDataClaimChildrenUnder18 = {
 }
 
 var childlessAutoApprovalClaimData = {
-  ClaimChildren: null
+  ClaimChildren: []
 }
 
 describe('services/auto-approval/checks/are-children-under-18', function () {
