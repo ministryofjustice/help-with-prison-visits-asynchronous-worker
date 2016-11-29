@@ -1,6 +1,11 @@
 module.exports = function (claimExpenses) {
+  if (claimExpenses.length === 0) {
+    return {empty: null}
+  }
+
   var result = { }
-  claimExpenses.forEach(function (claimExpense) {
+  for (var i = 0; i < claimExpenses.length; i++) {
+    var claimExpense = claimExpenses[i]
     var list = result[claimExpense.ExpenseType]
 
     if (list) {
@@ -8,7 +13,7 @@ module.exports = function (claimExpenses) {
     } else {
       result[claimExpense.ExpenseType] = [claimExpense]
     }
-  })
+  }
 
   return result
 }
