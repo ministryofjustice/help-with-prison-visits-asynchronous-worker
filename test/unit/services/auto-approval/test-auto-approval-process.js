@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
+const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
 require('sinon-bluebird')
 
@@ -48,6 +49,14 @@ var validAutoApprovalChecks = {
 var autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', validAutoApprovalChecks)
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
+  it('should return claimApproved false for FIRST_TIME claim', function () {
+    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.FIRST_TIME}}
+    return autoApprovalProcess(firstTimeData)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false
+      })
+  })
+
   it('should return claimApproved false for PENDING claim', function () {
     var pendingData = {Claim: {Status: statusEnum.PENDING}}
     return autoApprovalProcess(pendingData)
