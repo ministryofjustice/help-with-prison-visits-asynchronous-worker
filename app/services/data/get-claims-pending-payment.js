@@ -13,8 +13,8 @@ module.exports = function () {
     .innerJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-    .where({'IntSchema.Claim.Status': claimStatuses.APPROVED,
-      'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED})
+    .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
+    .where({'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED})
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (results) {

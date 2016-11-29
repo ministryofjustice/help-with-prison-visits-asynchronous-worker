@@ -45,13 +45,16 @@ describe('services/data/get-claims-pending-payment', function () {
       })
   })
 
-  it('should retrieve only APPROVED claim records with payment status of PENDING', function () {
+  it('should retrieve only APPROVED claim records with payment status of NULL', function () {
     return getClaimsPendingPayment()
       .then(function (results) {
         expect(results.length === 1)
-        expect(results[0][0].length === 5)
-        expect(results[0][3]).to.be.equal('25')
-        expect(results[0][4]).to.be.equal(reference)
+        expect(results[0][0].length === 5, 'should contain 5 fields')
+        expect(results[0][0], 'should contain the sort code').to.be.equal('001122')
+        expect(results[0][1], 'should contain the account number').to.be.equal('00123456')
+        expect(results[0][2], 'should contain the visitor name').to.be.equal('Joe Bloggs')
+        expect(results[0][3], 'should contain correct amount').to.be.equal('25')
+        expect(results[0][4], 'should contain the reference').to.be.equal(reference)
       })
   })
 
