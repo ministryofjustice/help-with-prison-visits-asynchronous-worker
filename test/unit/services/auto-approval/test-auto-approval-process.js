@@ -17,6 +17,7 @@ var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 var autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
 var getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
 var insertClaimEventDataStub = sinon.stub().resolves()
+var insertTaskStub = sinon.stub().resolves()
 var autoApproveClaimStub = sinon.stub().resolves()
 var areChildrenUnder18Stub = sinon.stub().returns(validCheckResult)
 var costAndVarianceEqualOrLessThanFirstTimeClaimStub = sinon.stub().returns(validCheckResult)
@@ -36,6 +37,7 @@ var validAutoApprovalChecks = {
   '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
   '../data/auto-approve-claim': autoApproveClaimStub,
   '../data/insert-claim-event-data': insertClaimEventDataStub,
+  '../data/insert-task': insertTaskStub,
   './checks/are-children-under-18': areChildrenUnder18Stub,
   './checks/cost-and-variance-equal-or-less-than-first-time-claim': costAndVarianceEqualOrLessThanFirstTimeClaimStub,
   './checks/do-expenses-match-first-time-claim': doExpensesMatchFirstTimeClaimStub,
