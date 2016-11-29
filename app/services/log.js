@@ -15,7 +15,10 @@ prettyStream.pipe(process.stdout)
 // Create a base logger for the application.
 var log = bunyan.createLogger({
   name: 'asynchronous-worker',
-  streams: []
+  streams: [],
+  serializers: {
+    'error': errorSerializer
+  }
 })
 
 // Add stream to push logs to Logstash for aggregation, reattempt connections indefinitely.
@@ -48,5 +51,13 @@ log.addStream({
   period: '1d',
   count: 7
 })
+
+function errorSerializer (error) {
+  return {
+    message: error.message,
+    name: error.name,
+    stack: error.stack
+  }
+}
 
 module.exports = log
