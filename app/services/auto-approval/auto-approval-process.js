@@ -65,9 +65,6 @@ module.exports = function (claimData) {
       if (result.claimApproved) {
         return autoApproveClaim(claimAndAutoApprovalData.Claim)
           .then(function () {
-            return insertTask(claimAndAutoApprovalData.Claim.Reference, claimAndAutoApprovalData.Claim.EligibilityId, claimAndAutoApprovalData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
-          })
-          .then(function () {
             return result
           })
       } else {
