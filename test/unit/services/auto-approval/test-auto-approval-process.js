@@ -14,24 +14,28 @@ var validAutoApprovalData = testHelper.getAutoApprovalData(reference1)
 var validCheckResult = new AutoApprovalCheckResult('', true, '')
 var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 
+var autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
 var getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
+var insertClaimEventDataStub = sinon.stub().resolves()
 var autoApproveClaimStub = sinon.stub().resolves()
-var areChildrenUnder18Stub = sinon.stub().resolves(validCheckResult)
-var costAndVarianceEqualOrLessThanFirstTimeClaimStub = sinon.stub().resolves(validCheckResult)
-var doExpensesMatchFirstTimeClaimStub = sinon.stub().resolves(validCheckResult)
-var hasClaimedLessThanMaxTimesThisYearStub = sinon.stub().resolves(validCheckResult)
-var hasUploadedPrisonVisitConfirmationAndReceiptsStub = sinon.stub().resolves(validCheckResult)
-var isClaimSubmittedWithinTimeLimitStub = sinon.stub().resolves(validCheckResult)
-var isClaimTotalUnderLimitStub = sinon.stub().resolves(validCheckResult)
-var isLatestManualClaimApprovedStub = sinon.stub().resolves(validCheckResult)
-var isNoPreviousPendingClaimStub = sinon.stub().resolves(validCheckResult)
-var isPrisonNotInGuernseyJerseyStub = sinon.stub().resolves(validCheckResult)
-var isVisitInPastStub = sinon.stub().resolves(validCheckResult)
-var visitDateDifferentToPreviousClaimsStub = sinon.stub().resolves(validCheckResult)
+var areChildrenUnder18Stub = sinon.stub().returns(validCheckResult)
+var costAndVarianceEqualOrLessThanFirstTimeClaimStub = sinon.stub().returns(validCheckResult)
+var doExpensesMatchFirstTimeClaimStub = sinon.stub().returns(validCheckResult)
+var hasClaimedLessThanMaxTimesThisYearStub = sinon.stub().returns(validCheckResult)
+var hasUploadedPrisonVisitConfirmationAndReceiptsStub = sinon.stub().returns(validCheckResult)
+var isClaimSubmittedWithinTimeLimitStub = sinon.stub().returns(validCheckResult)
+var isClaimTotalUnderLimitStub = sinon.stub().returns(validCheckResult)
+var isLatestManualClaimApprovedStub = sinon.stub().returns(validCheckResult)
+var isNoPreviousPendingClaimStub = sinon.stub().returns(validCheckResult)
+var isPrisonNotInGuernseyJerseyStub = sinon.stub().returns(validCheckResult)
+var isVisitInPastStub = sinon.stub().returns(validCheckResult)
+var visitDateDifferentToPreviousClaimsStub = sinon.stub().returns(validCheckResult)
 
 var validAutoApprovalChecks = {
+  './auto-approval-data-constructor': autoApprovalDataConstructorStub,
   '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
   '../data/auto-approve-claim': autoApproveClaimStub,
+  '../data/insert-claim-event-data': insertClaimEventDataStub,
   './checks/are-children-under-18': areChildrenUnder18Stub,
   './checks/cost-and-variance-equal-or-less-than-first-time-claim': costAndVarianceEqualOrLessThanFirstTimeClaimStub,
   './checks/do-expenses-match-first-time-claim': doExpensesMatchFirstTimeClaimStub,
@@ -69,11 +73,12 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(validAutoApprovalData)
       .then(function (result) {
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        for (var i = 0; i < Object.keys(validAutoApprovalChecks).length; i++) {
+        var keys = Object.keys(validAutoApprovalChecks)
+        for (var i = 0; i < keys.length; i++) {
+          var key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
-          if (i < 2) continue
+          if (key.indexOf('check') < 0) continue
 
-          var key = Object.keys(validAutoApprovalChecks)[i]
           var stub = validAutoApprovalChecks[key]
 
           sinon.assert.calledWith(stub, validAutoApprovalData)
@@ -83,9 +88,9 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
   it('should return false if any of the auto approval checks fail', function () {
     var invalidAutoApprovalChecks = validAutoApprovalChecks
-    var invalidCheckResultStub = sinon.stub.resolves(invalidCheckResult)
+    var invalidCheckResultStub = sinon.stub().returns(invalidCheckResult)
 
-    for (var i = 0; i < Object.keys(invalidAutoApprovalChecks); i++) {
+    for (var i = 0; i < Object.keys(invalidAutoApprovalChecks).length; i++) {
       var key = Object.keys(invalidAutoApprovalChecks)[i]
       // Ignore mocked data functions and only set some auto approval checks to true
       if (key.indexOf('data') > -1 || i % 2 === 0) {

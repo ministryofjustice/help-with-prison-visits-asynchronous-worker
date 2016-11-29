@@ -4,6 +4,9 @@ const claimTypeEnum = require('../../constants/claim-type-enum')
 const statusEnum = require('../../constants/status-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertTask = require('../data/insert-task')
+const insertClaimEventData = require('../data/insert-claim-event-data')
+const generateFailureReasonString = require('../notify/helpers/generate-failure-reason-string')
+const autoApprovalDataConstructor = require('./auto-approval-data-constructor')
 
 const autoApprovalChecks = [
   require('./checks/are-children-under-18'),
@@ -21,7 +24,10 @@ const autoApprovalChecks = [
 ]
 
 module.exports = function (claimData) {
-  var result = {checks: []}
+  var result = {
+    claimApproved: true,
+    checks: []
+  }
 
   // Fail auto-approval check if First time claim or status is PENDING
   if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
@@ -30,13 +36,22 @@ module.exports = function (claimData) {
     return Promise.resolve(result)
   }
 
-  return getDataForAutoApprovalChecks(claimData.Claim)
+  return getDataForAutoApprovalChecks(claimData)
     .then(function (autoApprovalData) {
-      claimData.previousClaims = autoApprovalData.previousClaims
-      claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
+      // Short-circuit checks if there are no previously approved claims for the claimant
+      if (!claimData.latestManuallyApprovedClaim.ClaimId) {
+        result.claimApproved = false
+        return result
+      }
+
+      var claimAndAutoApprovalData = autoApprovalDataConstructor(claimData, autoApprovalData)
+      console.dir(claimAndAutoApprovalData)
 
       autoApprovalChecks.forEach(function (check) {
-        var checkResult = check(claimData)
+        var checkResult = check(claimAndAutoApprovalData)
+        if (!checkResult.result) {
+          result.claimApproved = false
+        }
         result.checks.push(checkResult)
       })
 
@@ -49,15 +64,18 @@ module.exports = function (claimData) {
       })
 
       if (result.claimApproved) {
-        return autoApproveClaim(claimData.Claim.ClaimId)
+        return autoApproveClaim(claimAndAutoApprovalData.Claim)
           .then(function () {
-            return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+            return insertTask(claimAndAutoApprovalData.Claim.Reference, claimAndAutoApprovalData.Claim.EligibilityId, claimAndAutoApprovalData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
           })
           .then(function () {
             return result
           })
       } else {
-        return result
+        return insertClaimEventData(claimAndAutoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', null, generateFailureReasonString(result.checks), true)
+          .then(function () {
+            return result
+          })
       }
     })
 }

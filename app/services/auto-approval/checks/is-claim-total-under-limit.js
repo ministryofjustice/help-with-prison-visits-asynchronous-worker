@@ -11,7 +11,7 @@ module.exports = function (autoApprovalData) {
   for (var i = 0; i < autoApprovalData.ClaimExpenses.length; i++) {
     var claimExpense = autoApprovalData.ClaimExpenses[i]
 
-    claimTotal += claimExpense.Cost
+    claimTotal += parseFloat(claimExpense.Cost)
   }
 
   var checkPassed = claimTotal <= AUTO_APPROVAL_MAX_CLAIM_TOTAL

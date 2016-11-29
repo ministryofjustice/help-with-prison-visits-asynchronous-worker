@@ -4,13 +4,13 @@ const isPrisonNotInGuernseyJersey = require('../../../../app/services/auto-appro
 
 var validAutoApprovalData = {
   Prisoner: {
-    PrisonName: 'hewell'
+    NameOfPrison: 'hewell'
   }
 }
 
 var invalidAutoApprovalData = {
   Prisoner: {
-    PrisonName: guernseyJerseyPrisonsEnum.LES_NICOLLES.value
+    NameOfPrison: guernseyJerseyPrisonsEnum.LES_NICOLLES.value
   }
 }
 

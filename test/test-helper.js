@@ -306,18 +306,30 @@ module.exports.getAutoApprovalData = function (reference) {
 
   return {
     Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days')),
-    ClaimExpenses: [
-      getClaimExpenseObject(claimExpenseId1, claimId1, uniqueId, reference, 'car hire', 45),
-      getClaimExpenseObject(claimExpenseId2, claimId1, uniqueId, reference, 'plane', 100)
-    ],
-    ClaimDocuments: [
-      getClaimDocumentObject(1, claimId1, uniqueId, reference, 'VISIT-CONFIRMATION', 'uploaded')
-    ],
     ClaimChildren: [
       getClaimChildObject(1, claimId1, uniqueId, reference, 'Child A', 'my-child', subtractDateFromNow(10, 'years')),
       getClaimChildObject(2, claimId1, uniqueId, reference, 'Child B', 'my-child', subtractDateFromNow(15, 'years'))
     ],
+    ClaimDocument: [
+      getClaimDocumentObject(1, claimId1, uniqueId, reference, 'VISIT-CONFIRMATION', 'uploaded')
+    ],
+    ClaimExpenses: [
+      getClaimExpenseObject(claimExpenseId1, claimId1, uniqueId, reference, 'car hire', 45),
+      getClaimExpenseObject(claimExpenseId2, claimId1, uniqueId, reference, 'plane', 100)
+    ],
     Prisoner: getPrisonerObject(1, uniqueId, reference, 'Hewell'),
+    latestManuallyApprovedClaim: getClaimObject(claimId2,
+      uniqueId,
+      reference,
+      subtractDateFromNow(9, 'months'),
+      subtractDateFromNow(9, 'months'),
+      moment().subtract(9, 'months').add(10, 'days').toDate(),
+      'APPROVED',
+      [
+        getClaimExpenseObject(claimExpenseId3, claimId2, uniqueId, reference, 'car hire', 45),
+        getClaimExpenseObject(claimExpenseId4, claimId2, uniqueId, reference, 'plane', 110)
+      ]
+    ),
     previousClaims: [
       getClaimObject(claimId2,
         uniqueId,
@@ -343,19 +355,7 @@ module.exports.getAutoApprovalData = function (reference) {
         moment().subtract(9, 'months').add(10, 'days').toDate(),
         'APPROVED'
       )
-    ],
-    latestManuallyApprovedClaim: getClaimObject(claimId2,
-      uniqueId,
-      reference,
-      subtractDateFromNow(9, 'months'),
-      subtractDateFromNow(9, 'months'),
-      moment().subtract(9, 'months').add(10, 'days').toDate(),
-      'APPROVED',
-      [
-        getClaimExpenseObject(claimExpenseId3, claimId2, uniqueId, reference, 'car hire', 45),
-        getClaimExpenseObject(claimExpenseId4, claimId2, uniqueId, reference, 'plane', 110)
-      ]
-    )
+    ]
   }
 }
 

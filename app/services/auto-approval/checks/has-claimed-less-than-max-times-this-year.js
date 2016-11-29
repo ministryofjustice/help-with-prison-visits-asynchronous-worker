@@ -8,7 +8,7 @@ const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number 
 const AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR = parseInt(config.AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR)
 
 module.exports = function (autoApprovalData) {
-  if (autoApprovalData.previousClaims.length < 1) {
+  if (!autoApprovalData.previousClaims || autoApprovalData.previousClaims.length < 1) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
 
