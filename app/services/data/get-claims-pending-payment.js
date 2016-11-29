@@ -1,10 +1,11 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const _ = require('lodash')
+const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
 
 const selectColumns = ['IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
-  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference']
+  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
 
 module.exports = function () {
   return knex('IntSchema.Claim')
@@ -24,7 +25,7 @@ module.exports = function () {
           record.AccountNumber,
           record.FirstName + ' ' + record.LastName,
           record.TotalApprovedCost.toString(),
-          record.Reference
+          record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
         ]
       })
     })
