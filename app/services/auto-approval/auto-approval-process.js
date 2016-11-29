@@ -61,7 +61,7 @@ module.exports = function (claimData) {
       })
 
       if (result.claimApproved) {
-        return autoApproveClaim(claimAndAutoApprovalData.Claim, claimAndAutoApprovalData.Visitor.EmailAddress)
+        return autoApproveClaim(claimAndAutoApprovalData, claimAndAutoApprovalData.Visitor.EmailAddress)
           .then(function () {
             return result
           })
