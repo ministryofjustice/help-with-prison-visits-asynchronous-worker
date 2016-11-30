@@ -65,5 +65,7 @@ module.exports = function (claimData) {
           return result
         }
       })
+  } else {
+    return Promise.resolve(null)
   }
 }
