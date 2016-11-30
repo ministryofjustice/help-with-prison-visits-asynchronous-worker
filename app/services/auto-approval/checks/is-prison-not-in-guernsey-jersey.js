@@ -6,11 +6,13 @@ const CHECK_NAME = 'is-prison-not-in-guernsey-jersey'
 const FAILURE_MESSAGE = 'The prison being visited by this claimant is located in either Guernsey or Jersey'
 
 module.exports = function (autoApprovalData) {
-  var prisonName = autoApprovalData.Prisoner.NameOfPrison
+  if (autoApprovalData.Prisoner) {
+    var prisonName = autoApprovalData.Prisoner.NameOfPrison
 
-  if (!enumHelper.getKeyByValue(guernseyJerseyPrisonsEnum, prisonName)) {
-    return new AutoApprovalCheckResult(CHECK_NAME, true, '')
-  } else {
-    return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+    if (enumHelper.getKeyByValue(guernseyJerseyPrisonsEnum, prisonName)) {
+      return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+    }
   }
+
+  return new AutoApprovalCheckResult(CHECK_NAME, true, '')
 }

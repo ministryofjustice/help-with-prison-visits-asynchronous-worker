@@ -56,7 +56,7 @@ module.exports = function (claimData) {
         if (result.claimApproved) {
           return autoApproveClaim(claimData.Claim.ClaimId)
             .then(function () {
-              return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+              return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, claimData.Visitor.EmailAddress)
             })
             .then(function () {
               return result
