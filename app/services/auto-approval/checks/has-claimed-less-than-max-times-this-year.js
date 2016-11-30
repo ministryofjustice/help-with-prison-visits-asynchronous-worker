@@ -13,11 +13,16 @@ module.exports = function (autoApprovalData) {
   }
 
   var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
+  console.log(`firstClaimDate: ${firstClaimDate}`)
   var now = moment()
 
   var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
   var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
-  var startOfClaimableYear = now.subtract(durationSinceFirstClaim.get('years'), 'years')
+  var monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
+  var daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
+
+  var startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
+    .subtract(daysSinceStartOfClaimableYear, 'days')
 
   var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, startOfClaimableYear.toDate())
   var checkPassed = numberOfClaimsThisYear < AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR
