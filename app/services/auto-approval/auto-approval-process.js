@@ -1,3 +1,5 @@
+const config = require('../../../config')
+
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
 const autoApproveClaim = require('../data/auto-approve-claim')
 const claimTypeEnum = require('../../constants/claim-type-enum')
@@ -22,54 +24,49 @@ const autoApprovalChecks = [
 ]
 
 module.exports = function (claimData) {
-  var result = {
-    claimApproved: true,
-    checks: []
-  }
+  var autoApprovalEnabled = config.AUTO_APPROVAL_ENABLED === 'true'
 
-  // Fail auto-approval check if First time claim or status is PENDING
-  if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-    claimData.Claim.Status === statusEnum.PENDING) {
-    result.claimApproved = false
-    return Promise.resolve(result)
-  }
+  if (autoApprovalEnabled) {
+    var result = {checks: []}
 
-  return getDataForAutoApprovalChecks(claimData)
-    .then(function (autoApprovalData) {
-      // Short-circuit checks if there are no previously approved claims for the claimant
-      if (!claimData.latestManuallyApprovedClaim) {
-        result.claimApproved = false
-        return result
-      }
+    // Fail auto-approval check if First time claim or status is PENDING
+    if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+      claimData.Claim.Status === statusEnum.PENDING) {
+      result.claimApproved = false
+      return Promise.resolve(result)
+    }
 
-      var claimAndAutoApprovalData = autoApprovalDataConstructor(claimData, autoApprovalData)
+    return getDataForAutoApprovalChecks(claimData.Claim)
+      .then(function (autoApprovalData) {
+        claimData.previousClaims = autoApprovalData.previousClaims
+        claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
 
-      autoApprovalChecks.forEach(function (check) {
-        var checkResult = check(claimAndAutoApprovalData)
-        if (!checkResult.result) {
-          result.claimApproved = false
+        autoApprovalChecks.forEach(function (check) {
+          var checkResult = check(claimData)
+          result.checks.push(checkResult)
+        })
+
+        result.claimApproved = true
+        // Loop through result properties, if any are false, then the claim should not be approved
+        result.checks.forEach(function (check) {
+          if (!check.result) {
+            result.claimApproved = false
+          }
+        })
+
+        if (result.claimApproved) {
+          return autoApproveClaim(claimData.Claim.ClaimId)
+            .then(function () {
+              return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+            })
+            .then(function () {
+              return result
+            })
+        } else {
+          return result
         }
-        result.checks.push(checkResult)
       })
-
-      result.claimApproved = true
-      // Loop through result properties, if any are false, then the claim should not be approved
-      result.checks.forEach(function (check) {
-        if (!check.result) {
-          result.claimApproved = false
-        }
-      })
-
-      if (result.claimApproved) {
-        return autoApproveClaim(claimAndAutoApprovalData.Claim.ClaimId, claimAndAutoApprovalData.Visitor.EmailAddress)
-          .then(function () {
-            return result
-          })
-      } else {
-        return insertClaimEventData(claimAndAutoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', claimAndAutoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
-          .then(function () {
-            return result
-          })
-      }
-    })
+  } else {
+    return Promise.resolve(null)
+  }
 }

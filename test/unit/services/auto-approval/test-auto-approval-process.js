@@ -55,6 +55,29 @@ var validAutoApprovalChecks = {
 var autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', validAutoApprovalChecks)
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
+  it('should not execute auto approval process if config is set to false', function () {
+    var getDataForAutoApprovalCheckUniqueStub = sinon.stub().resolves(validAutoApprovalData)
+    var autoApproveClaimUniqueStub = sinon.stub().resolves()
+    var configStub = {
+      AUTO_APPROVAL_ENABLED: 'false'
+    }
+
+    // Swap stubs for unique ones for this test - otherwise they will be called from other tests
+    var autoApprovalRequires = {
+      '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckUniqueStub,
+      '../data/auto-approve-claim': autoApproveClaimUniqueStub,
+      '../../../config': configStub
+    }
+
+    var disabledAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalRequires)
+    return disabledAutoApprovalProcess(validAutoApprovalData)
+      .then(function (result) {
+        expect(result).to.be.null
+        sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
+        sinon.assert.notCalled(autoApproveClaimStub)
+      })
+  })
+
   it('should return claimApproved false for FIRST_TIME claim', function () {
     var firstTimeData = {Claim: {ClaimType: claimTypeEnum.FIRST_TIME}}
     return autoApprovalProcess(firstTimeData)
