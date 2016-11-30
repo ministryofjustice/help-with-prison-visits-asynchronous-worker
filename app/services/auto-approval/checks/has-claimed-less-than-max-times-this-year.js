@@ -8,7 +8,7 @@ const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number 
 const AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR = parseInt(config.AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR)
 
 module.exports = function (autoApprovalData) {
-  if (autoApprovalData.previousClaims.length < 1) {
+  if (!autoApprovalData.previousClaims || autoApprovalData.previousClaims.length < 1) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
 
@@ -17,7 +17,11 @@ module.exports = function (autoApprovalData) {
 
   var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
   var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
-  var startOfClaimableYear = now.subtract(durationSinceFirstClaim.get('years'), 'years')
+  var monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
+  var daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
+
+  var startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
+    .subtract(daysSinceStartOfClaimableYear, 'days')
 
   var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, startOfClaimableYear.toDate())
   var checkPassed = numberOfClaimsThisYear < AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR

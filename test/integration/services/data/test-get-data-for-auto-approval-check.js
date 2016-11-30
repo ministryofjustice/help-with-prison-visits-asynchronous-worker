@@ -48,7 +48,7 @@ describe('services/data/get-data-for-auto-approval-check', function () {
   })
 
   it('should return all current and previous claim data associated to the claimant', function () {
-    return getDataForAutoApprovalCheck(claimData.Claim)
+    return getDataForAutoApprovalCheck(claimData)
       .then(function (result) {
         expect(result.previousClaims).to.not.be.null
         expect(result.latestManuallyApprovedClaim).to.not.be.null
