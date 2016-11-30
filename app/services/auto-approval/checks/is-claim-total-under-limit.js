@@ -6,7 +6,7 @@ const FAILURE_MESSAGE = 'The total claim value is over the maximum permitted amo
 const AUTO_APPROVAL_MAX_CLAIM_TOTAL = parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL)
 
 module.exports = function (autoApprovalData) {
-  if (autoApprovalData.ClaimExpense) {
+  if (autoApprovalData.ClaimExpenses) {
     var claimTotal = 0
 
     for (var i = 0; i < autoApprovalData.ClaimExpenses.length; i++) {
