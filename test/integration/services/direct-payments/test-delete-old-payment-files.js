@@ -15,7 +15,7 @@ describe('services/direct-payments/delete-old-payment-files', function () {
   it('should delete test payment files', function (done) {
     deleteOldPaymentFiles([PAYMENT_FILE])
     fs.stat(TEST_FILE_PATH, function (err, stat) {
-        // file should not exist
+      // file should not exist
       expect(err.code).to.equal('ENOENT')
       expect(stat).to.be.undefined
       done()
