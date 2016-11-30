@@ -3,30 +3,52 @@ const knex = require('knex')(config)
 
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claim) {
-  var result = {
-    previousClaims: [],
-    latestManuallyApprovedClaim: {
-      claimExpenses: []
-    }
-  }
-
-  return getPreviousClaims(claim.ClaimId, claim.EligibilityId, claim.DateOfJourney)
+module.exports = function (claimData) {
+  return getPreviousClaims(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.DateOfJourney)
     .then(function (previousClaims) {
-      result.previousClaims = previousClaims
-      var latestManuallyApprovedClaim = getLatestManuallyApprovedClaim(previousClaims)
+      claimData.previousClaims = previousClaims
+      return getLatestManuallyApprovedClaim(previousClaims)
+        .then(function (latestManuallyApprovedClaim) {
+          claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
 
-      if (latestManuallyApprovedClaim != null) {
-        result.latestManuallyApprovedClaim = latestManuallyApprovedClaim
+          if (!claimData.Claim.Eligibility || claimData.Claim.Prisoner || claimData.Claim.Visitor) {
+            return getDataFromInternal(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.Reference)
+              .then(function (internalData) {
+                claimData.Eligibility = internalData.Eligibility
+                claimData.Visitor = internalData.Visitor
+                claimData.Prisoner = internalData.Prisoner
 
-        return getClaimExpenses(result.latestManuallyApprovedClaim.ClaimId)
-          .then(function (latestManuallyApprovedClaimExpenses) {
-            result.latestManuallyApprovedClaim.claimExpenses = latestManuallyApprovedClaimExpenses
-            return result
-          })
-      } else {
-        return result
-      }
+                return claimData
+              })
+          } else {
+            return Promise.resolve(claimData)
+          }
+        })
+    })
+}
+
+function getDataFromInternal (claimId, eligibilityId, reference) {
+  var result = {}
+  return knex('IntSchema.Eligibility')
+    .first()
+    .where({'Reference': reference, 'EligibilityId': eligibilityId})
+    .then(function (eligibility) {
+      result.Eligibility = eligibility
+
+      return knex('IntSchema.Prisoner')
+        .first()
+        .where({'Reference': reference, 'EligibilityId': eligibilityId})
+        .then(function (prisoner) {
+          result.Prisoner = prisoner
+
+          return knex('IntSchema.Visitor')
+            .first()
+            .where({'Reference': reference, 'EligibilityId': eligibilityId})
+            .then(function (visitor) {
+              result.Visitor = visitor
+              return result
+            })
+        })
     })
 }
 
@@ -40,6 +62,7 @@ function getPreviousClaims (claimId, eligibilityId, dateOfVisit) {
 
 function getLatestManuallyApprovedClaim (previousClaims) {
   if (previousClaims.length > 0) {
+    var result = {}
     var latestManuallyApprovedClaim = previousClaims[0]
 
     previousClaims.forEach(function (previousClaim) {
@@ -47,9 +70,16 @@ function getLatestManuallyApprovedClaim (previousClaims) {
         latestManuallyApprovedClaim = previousClaim
       }
     })
-    return latestManuallyApprovedClaim
+
+    result = latestManuallyApprovedClaim
+
+    return getClaimExpenses(latestManuallyApprovedClaim.ClaimId)
+      .then(function (latestManuallyApprovedClaimExpenses) {
+        result.claimExpenses = latestManuallyApprovedClaimExpenses
+        return result
+      })
   } else {
-    return null
+    return Promise.resolve(null)
   }
 }
 

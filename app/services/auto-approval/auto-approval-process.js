@@ -4,8 +4,6 @@ const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval
 const autoApproveClaim = require('../data/auto-approve-claim')
 const claimTypeEnum = require('../../constants/claim-type-enum')
 const statusEnum = require('../../constants/status-enum')
-const tasksEnum = require('../../constants/tasks-enum')
-const insertTask = require('../data/insert-task')
 
 const autoApprovalChecks = [
   require('./checks/are-children-under-18'),
@@ -35,7 +33,7 @@ module.exports = function (claimData) {
       return Promise.resolve(result)
     }
 
-    return getDataForAutoApprovalChecks(claimData.Claim)
+    return getDataForAutoApprovalChecks(claimData)
       .then(function (autoApprovalData) {
         claimData.previousClaims = autoApprovalData.previousClaims
         claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
@@ -54,10 +52,7 @@ module.exports = function (claimData) {
         })
 
         if (result.claimApproved) {
-          return autoApproveClaim(claimData.Claim.ClaimId)
-            .then(function () {
-              return insertTask(claimData.Claim.Reference, claimData.Claim.EligibilityId, claimData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
-            })
+          return autoApproveClaim(claimData.Claim.ClaimId, claimData.Visitor.EmailAddress)
             .then(function () {
               return result
             })
