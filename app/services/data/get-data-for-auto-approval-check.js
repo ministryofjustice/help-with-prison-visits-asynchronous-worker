@@ -7,20 +7,23 @@ module.exports = function (claimData) {
   return getPreviousClaims(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.DateOfJourney)
     .then(function (previousClaims) {
       claimData.previousClaims = previousClaims
-      var latestManuallyApprovedClaim = getLatestManuallyApprovedClaim(previousClaims)
+      return getLatestManuallyApprovedClaim(previousClaims)
+        .then(function (latestManuallyApprovedClaim) {
+          claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
 
-      if (!claimData.Claim.Eligibility || claimData.Claim.Prisoner || claimData.Claim.Visitor) {
-        return getDataFromInternal(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.Reference)
-          .then(function (internalData) {
-            claimData.Eligibility = internalData.Eligibility
-            claimData.Visitor = internalData.Visitor
-            claimData.Prisoner = internalData.Prisoner
+          if (!claimData.Claim.Eligibility || claimData.Claim.Prisoner || claimData.Claim.Visitor) {
+            return getDataFromInternal(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.Reference)
+              .then(function (internalData) {
+                claimData.Eligibility = internalData.Eligibility
+                claimData.Visitor = internalData.Visitor
+                claimData.Prisoner = internalData.Prisoner
 
-            return constructResultObject(claimData, latestManuallyApprovedClaim)
-          })
-      } else {
-        return constructResultObject(claimData, latestManuallyApprovedClaim)
-      }
+                return claimData
+              })
+          } else {
+            return Promise.resolve(claimData)
+          }
+        })
     })
 }
 
@@ -49,20 +52,6 @@ function getDataFromInternal (claimId, eligibilityId, reference) {
     })
 }
 
-function constructResultObject (result, latestManuallyApprovedClaim) {
-  if (latestManuallyApprovedClaim != null) {
-    result.latestManuallyApprovedClaim = latestManuallyApprovedClaim
-
-    return getClaimExpenses(result.latestManuallyApprovedClaim.ClaimId)
-      .then(function (latestManuallyApprovedClaimExpenses) {
-        result.latestManuallyApprovedClaim.claimExpenses = latestManuallyApprovedClaimExpenses
-        return result
-      })
-  } else {
-    return Promise.resolve(result)
-  }
-}
-
 function getPreviousClaims (claimId, eligibilityId, dateOfVisit) {
   return knex('IntSchema.Claim')
     .where('EligibilityId', eligibilityId)
@@ -73,6 +62,7 @@ function getPreviousClaims (claimId, eligibilityId, dateOfVisit) {
 
 function getLatestManuallyApprovedClaim (previousClaims) {
   if (previousClaims.length > 0) {
+    var result = {}
     var latestManuallyApprovedClaim = previousClaims[0]
 
     previousClaims.forEach(function (previousClaim) {
@@ -80,9 +70,16 @@ function getLatestManuallyApprovedClaim (previousClaims) {
         latestManuallyApprovedClaim = previousClaim
       }
     })
-    return latestManuallyApprovedClaim
+
+    result = latestManuallyApprovedClaim
+
+    return getClaimExpenses(latestManuallyApprovedClaim.ClaimId)
+      .then(function (latestManuallyApprovedClaimExpenses) {
+        result.claimExpenses = latestManuallyApprovedClaimExpenses
+        return result
+      })
   } else {
-    return null
+    return Promise.resolve(null)
   }
 }
 

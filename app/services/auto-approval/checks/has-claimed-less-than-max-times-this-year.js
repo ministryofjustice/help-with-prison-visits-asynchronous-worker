@@ -13,7 +13,6 @@ module.exports = function (autoApprovalData) {
   }
 
   var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
-  console.log(`firstClaimDate: ${firstClaimDate}`)
   var now = moment()
 
   var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')

@@ -6,14 +6,30 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimAndAutoApprovalData, visitorEmailAddress) {
+module.exports = function (claimId, visitorEmailAddress) {
+  var claim
+
+  return getClaim(claimId)
+    .then(function (result) {
+      claim = result
+      return setClaimStatusToAutoApproved(claim)
+    })
+    .then(function () {
+      return autoApproveClaimExpenses(claimId)
+    })
+    .then(function () {
+      return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
+    })
+}
+
+function getClaim (claimId) {
   return knex('IntSchema.Claim')
-    .where('ClaimId', claimAndAutoApprovalData.Claim.ClaimId)
+    .first()
+    .where('ClaimId', claimId)
+}
+
+function setClaimStatusToAutoApproved (claim) {
+  return knex('IntSchema.Claim')
+    .where('ClaimId', claim.ClaimId)
     .update('Status', statusEnum.AUTOAPPROVED)
-    .then(function () {
-      return autoApproveClaimExpenses(claimAndAutoApprovalData.ClaimExpenses)
-    })
-    .then(function () {
-      return insertTask(claimAndAutoApprovalData.Claim.Reference, claimAndAutoApprovalData.Claim.EligibilityId, claimAndAutoApprovalData.Claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
-    })
 }

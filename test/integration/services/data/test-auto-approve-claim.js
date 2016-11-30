@@ -28,7 +28,7 @@ describe('services/data/auto-approve-claim', function () {
     return testHelper.insertClaimData('IntSchema', reference, claimData.Claim.EligibilityId, claimData)
       .then(function (id) {
         claimId = id
-        return autoApproveClaim(claimData, 'donotsend@apvs.com')
+        return autoApproveClaim(claimData.Claim.ClaimId, 'donotsend@apvs.com')
           .then(function () {
             return knex('IntSchema.Claim')
               .where('ClaimId', claimId)

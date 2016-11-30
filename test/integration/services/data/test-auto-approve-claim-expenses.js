@@ -18,19 +18,15 @@ describe('services/data/auto-approve-claim-expenses', function () {
   })
 
   it('should update the status and approved cost of all specified claim expenses', function () {
-    return knex('IntSchema.ClaimExpense')
-      .where('ClaimId', claimId)
-      .then(function (claimExpenses) {
-        return autoApproveClaimExpenses(claimExpenses)
-          .then(function () {
-            return knex('IntSchema.ClaimExpense')
-              .where('ClaimId', claimId)
-              .then(function (claimExpenses) {
-                claimExpenses.forEach(function (claimExpense) {
-                  expect(claimExpense.Status).to.equal(statusEnum.AUTOAPPROVED)
-                  expect(claimExpense.ApprovedCost).to.equal(claimExpense.Cost)
-                })
-              })
+    return autoApproveClaimExpenses(claimId)
+      .then(function () {
+        return knex('IntSchema.ClaimExpense')
+          .where('ClaimId', claimId)
+          .then(function (claimExpenses) {
+            claimExpenses.forEach(function (claimExpense) {
+              expect(claimExpense.Status).to.equal(statusEnum.APPROVED)
+              expect(claimExpense.ApprovedCost).to.equal(claimExpense.Cost)
+            })
           })
       })
   })

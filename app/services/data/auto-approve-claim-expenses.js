@@ -3,19 +3,31 @@ const knex = require('knex')(config)
 
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimExpenses) {
+module.exports = function (claimId) {
   var updates = []
-  claimExpenses.forEach(function (claimExpense) {
-    var updatedClaimExpense = {
-      Status: statusEnum.AUTOAPPROVED,
-      ApprovedCost: claimExpense.Cost
-    }
+  return getClaimExpenses(claimId)
+    .then(function (claimExpenses) {
+      claimExpenses.forEach(function (claimExpense) {
+        updates.push(updateClaimExpenseToApproved(claimExpense))
+      })
 
-    var update = knex('IntSchema.ClaimExpense')
-      .where('ClaimExpenseId', claimExpense.ClaimExpenseId)
-      .update(updatedClaimExpense)
-    updates.push(update)
-  })
+      return Promise.all(updates)
+    })
+}
 
-  return Promise.all(updates)
+function getClaimExpenses (claimId) {
+  return knex('IntSchema.ClaimExpense')
+    .where('ClaimId', claimId)
+    .select('ClaimExpenseId', 'Cost')
+}
+
+function updateClaimExpenseToApproved (claimExpense) {
+  var updatedClaimExpense = {
+    Status: statusEnum.APPROVED,
+    ApprovedCost: claimExpense.Cost
+  }
+
+  return knex('IntSchema.ClaimExpense')
+    .where('ClaimExpenseId', claimExpense.ClaimExpenseId)
+    .update(updatedClaimExpense)
 }
