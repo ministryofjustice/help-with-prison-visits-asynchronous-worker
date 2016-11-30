@@ -55,6 +55,15 @@ var validAutoApprovalChecks = {
 var autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', validAutoApprovalChecks)
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
+  beforeEach(function () {
+    // Reset call counters for non-check stubs between tests
+    autoApprovalDataConstructorStub.reset()
+    getDataForAutoApprovalCheckStub.reset()
+    autoApproveClaimStub.reset()
+    insertClaimEventDataStub.reset()
+    insertTaskStub.reset()
+  })
+
   it('should not execute auto approval process if config is set to false', function () {
     var getDataForAutoApprovalCheckUniqueStub = sinon.stub().resolves(validAutoApprovalData)
     var autoApproveClaimUniqueStub = sinon.stub().resolves()
@@ -98,6 +107,41 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(validAutoApprovalData)
       .then(function (result) {
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+        sinon.assert.calledOnce(autoApproveClaimStub)
+        var keys = Object.keys(validAutoApprovalChecks)
+        for (var i = 0; i < keys.length; i++) {
+          var key = keys[i]
+          // skip check for getDataForAutoApproval, this is done above
+          if (key.indexOf('check') < 0) continue
+
+          var stub = validAutoApprovalChecks[key]
+
+          sinon.assert.calledWith(stub, validAutoApprovalData)
+        }
+      })
+  })
+
+  it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
+    var invalidAutoApprovalChecks = validAutoApprovalChecks
+    var keys = Object.keys(invalidAutoApprovalChecks)
+
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i]
+      var invalidCheckResultStub = sinon.stub().returns(invalidCheckResult)
+
+      // Ignore mocked data functions and only set some auto approval checks to true
+      if (key.indexOf('data') > -1 || i % 2 === 0) {
+        continue
+      } else {
+        invalidAutoApprovalChecks[key] = invalidCheckResultStub
+      }
+    }
+
+    var invalidAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', invalidAutoApprovalChecks)
+    return invalidAutoApprovalProcess(validAutoApprovalData)
+      .then(function (result) {
+        sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+        sinon.assert.calledOnce(insertClaimEventDataStub)
         var keys = Object.keys(validAutoApprovalChecks)
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
