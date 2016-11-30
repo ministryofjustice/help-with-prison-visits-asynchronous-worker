@@ -15,7 +15,8 @@
     "start-web": "node app/web/bin/www",
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
-    "test-integration": "mocha --recursive -u exports test/integration/ --timeout 5000"
+    "test-integration": "mocha --recursive -u exports test/integration/ --timeout 5000",
+    "test-coverage": "istanbul cover _mocha -- --recursive -u exports test/unit/"
   },
   "standard": {
     "ignore": [
@@ -49,6 +50,7 @@
     "csv": "^1.1.0",
     "debug": "^2.2.0",
     "express": "^4.14.0",
+    "istanbul": "^0.4.5",
     "knex": "^0.12.6",
     "lodash": "^4.17.2",
     "moment": "^2.15.2",
