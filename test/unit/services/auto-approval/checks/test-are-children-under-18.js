@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const moment = require('moment')
 
-const areChildrenUnder18 = require('../../../../app/services/auto-approval/checks/are-children-under-18')
+const areChildrenUnder18 = require('../../../../../app/services/auto-approval/checks/are-children-under-18')
 
 var autoApprovalDataClaimChildrenOver18 = {
   ClaimChildren: [

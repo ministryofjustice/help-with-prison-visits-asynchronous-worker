@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const hasUploadedPrisonVisitConfirmationAndReceipts = require('../../../../app/services/auto-approval/checks/has-uploaded-prison-visit-confirmation-and-receipts')
+const hasUploadedPrisonVisitConfirmationAndReceipts = require('../../../../../app/services/auto-approval/checks/has-uploaded-prison-visit-confirmation-and-receipts')
 
 const withVisitConfirmation = {
   ClaimDocument: [

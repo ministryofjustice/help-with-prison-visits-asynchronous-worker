@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const moment = require('moment')
-const visitDateDifferentToPreviousClaims = require('../../../../app/services/auto-approval/checks/visit-date-different-to-previous-claims')
+const visitDateDifferentToPreviousClaims = require('../../../../../app/services/auto-approval/checks/visit-date-different-to-previous-claims')
 
 const visitDate = new Date(2016, 1, 1)
 const validAutoApprovalData = {

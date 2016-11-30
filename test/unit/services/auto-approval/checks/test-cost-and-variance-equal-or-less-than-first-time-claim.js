@@ -27,7 +27,7 @@ const autoApprovalData = {
   }
 }
 
-const costAndVarianceEqualOrLessThanFirstTimeClaim = require('../../../../app/services/auto-approval/checks/cost-and-variance-equal-or-less-than-first-time-claim')
+const costAndVarianceEqualOrLessThanFirstTimeClaim = require('../../../../../app/services/auto-approval/checks/cost-and-variance-equal-or-less-than-first-time-claim')
 
 describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-first-time-claim', function () {
   it('should return true if the total cost for each expense type is within the accepted variance (10%)', function () {
