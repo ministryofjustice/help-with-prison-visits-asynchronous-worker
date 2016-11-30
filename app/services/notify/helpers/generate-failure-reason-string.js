@@ -1,6 +1,6 @@
 module.exports = function (checks) {
   var result = []
-  var newLine = '\r\n'
+  var newLine = '<br />'
 
   checks.forEach(function (check) {
     if (!check.result) {
