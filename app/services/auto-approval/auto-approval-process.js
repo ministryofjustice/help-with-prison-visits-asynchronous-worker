@@ -52,7 +52,7 @@ module.exports = function (claimData) {
         })
 
         if (result.claimApproved) {
-          return autoApproveClaim(claimData.Claim.ClaimId)
+          return autoApproveClaim(claimData.Claim.ClaimId, claimData.Visitor.EmailAddress)
             .then(function () {
               return result
             })
