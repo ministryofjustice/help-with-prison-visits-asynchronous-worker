@@ -81,11 +81,15 @@ function getLatestManuallyApprovedClaim (previousClaims) {
 
     result = latestManuallyApprovedClaim
 
-    return getClaimExpenses(latestManuallyApprovedClaim.ClaimId)
-      .then(function (latestManuallyApprovedClaimExpenses) {
-        result.claimExpenses = latestManuallyApprovedClaimExpenses
-        return result
-      })
+    if (latestManuallyApprovedClaim) {
+      return getClaimExpenses(latestManuallyApprovedClaim.ClaimId)
+        .then(function (latestManuallyApprovedClaimExpenses) {
+          result.claimExpenses = latestManuallyApprovedClaimExpenses
+          return result
+        })
+    } else {
+      return Promise.resolve(null)
+    }
   } else {
     return Promise.resolve(null)
   }
