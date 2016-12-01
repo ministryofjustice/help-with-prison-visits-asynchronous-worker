@@ -10,9 +10,16 @@ var directPaymentJob = new CronJob({
   cronTime: paymentCron,
   onTick: function () {
     log.info('CRON triggered - initiating run of direct payments generation...')
-    insertTask('', '', '', taskTypes.GENERATE_DIRECT_PAYMENTS).then(function () {
-      log.info('Direct Payment Generation task created')
-    })
+    insertTask('', '', '', taskTypes.GENERATE_DIRECT_PAYMENTS)
+      .then(function () {
+        log.info('Direct Payment Generation task created')
+      })
+      .then(function () {
+        insertTask('', '', '', taskTypes.CLEANUP_OLD_PAYMENT_FILES)
+          .then(function () {
+            log.info('Cleanup Old Payment Files task created')
+          })
+      })
   },
   start: false
 })

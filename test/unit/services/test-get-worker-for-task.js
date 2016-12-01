@@ -8,6 +8,7 @@ const sendRequestInformationClaimNotification = { name: 'sendRequestInformationC
 const sendClaimNotification = { name: 'sendClaimNotification' }
 const completeClaim = { name: 'completeClaim' }
 const dwpCheck = { name: 'dwpCheck' }
+const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -15,7 +16,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-request-information-claim-notification': sendRequestInformationClaimNotification,
   './workers/send-claim-notification': sendClaimNotification,
   './workers/complete-claim': completeClaim,
-  './workers/dwp-check': dwpCheck
+  './workers/dwp-check': dwpCheck,
+  './workers/cleanup-old-payment-files': cleanupOldPaymentFiles
 })
 
 describe('services/getWorkerForTask', function () {
@@ -47,5 +49,10 @@ describe('services/getWorkerForTask', function () {
   it('should return dwp-check', function () {
     var worker = getWorkerForTask(tasksEnum.DWP_CHECK)
     expect(worker.name).to.be.equal('dwpCheck')
+  })
+
+  it('should return cleanup-old-payment-files', function () {
+    var worker = getWorkerForTask(tasksEnum.CLEANUP_OLD_PAYMENT_FILES)
+    expect(worker.name).to.be.equal('cleanupOldPaymentFiles')
   })
 })

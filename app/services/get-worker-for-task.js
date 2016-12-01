@@ -6,6 +6,7 @@ var sendClaimNotification = require('./workers/send-claim-notification')
 var completeClaim = require('./workers/complete-claim')
 var dwpCheck = require('./workers/dwp-check')
 var generateDirectPayments = require('./workers/generate-direct-payments')
+var cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -17,6 +18,7 @@ module.exports = function (taskType) {
     case tasksEnum.COMPLETE_CLAIM: return completeClaim
     case tasksEnum.DWP_CHECK: return dwpCheck
     case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
+    case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
   }
 
   return null
