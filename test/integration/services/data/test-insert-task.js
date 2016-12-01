@@ -26,6 +26,8 @@ describe('services/data/insert-task', function () {
 
   it('should create Generate Direct Payments Task', function () {
     var currentDate = new Date()
+    var twoMinutesAgo = new Date().setMinutes(currentDate.getMinutes() - 2)
+    var twoMinutesAhead = new Date().setMinutes(currentDate.getMinutes() + 2)
     return insertTask(reference, '', '', tasksEnum.GENERATE_DIRECT_PAYMENTS)
       .then(function () {
         return knex.table('IntSchema.Task')
@@ -34,7 +36,7 @@ describe('services/data/insert-task', function () {
           .then(function (result) {
             expect(result.Task).to.be.equal(tasksEnum.GENERATE_DIRECT_PAYMENTS)
             expect(result.Status).to.be.equal(statusEnum.PENDING)
-            expect(result.DateCreated).to.be.within(currentDate.setMinutes(currentDate.getMinutes() - 2), currentDate.setMinutes(currentDate.getMinutes() + 2))
+            expect(result.DateCreated).to.be.within(twoMinutesAgo, twoMinutesAhead)
           })
       })
   })
