@@ -58,6 +58,7 @@ git push heroku master
 npm test                        # checks code against standard JS and runs mocha unit tests.
 npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
+npm run-script test-coverage    # generate code coverage report
 ```
 
 ## Integration points
