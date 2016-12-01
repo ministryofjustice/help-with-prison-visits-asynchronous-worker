@@ -4,7 +4,7 @@ const _ = require('lodash')
 const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
 
-const selectColumns = ['IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
+const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
 
 module.exports = function () {
@@ -21,6 +21,7 @@ module.exports = function () {
     .then(function (results) {
       return _.map(results, record => {
         return [
+          record.ClaimId,
           record.SortCode,
           record.AccountNumber,
           record.FirstName + ' ' + record.LastName,

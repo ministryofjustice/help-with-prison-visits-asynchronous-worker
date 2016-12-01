@@ -5,21 +5,27 @@ const testHelper = require('../../../test-helper')
 
 const updateClaimsProcessedPayment = require('../../../../app/services/data/update-claims-processed-payment')
 const processedStatus = 'PROCESSED'
+const paymentTotal = 20
 
 describe('services/data/update-claims-processed-payment', function () {
   // TODO update to test methods processes multiple claim by ClaimId not Reference
   var referenceA = 'PR123A'
+  var claimId
 
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', referenceA)
+      .then(function (ids) {
+        claimId = ids.claimId
+      })
   })
 
-  it('should update Claim Payment Status to processed for all references', function () {
-    return updateClaimsProcessedPayment([referenceA])
+  it('should update Claim Payment Status to processed and Payment Amount to the total of approved claim expenses for all references', function () {
+    return updateClaimsProcessedPayment(claimId, paymentTotal)
       .then(function () {
-        return knex('IntSchema.Claim').whereIn('Reference', [referenceA])
+        return knex('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
+            expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
           })
       })
   })
