@@ -41,7 +41,7 @@ module.exports = {
   // Payment Generation
   PAYMENT_GENERATION_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '* 10 * * * * *',
   PAYMENT_FILE_PATH: process.env.APVS_PAYMENT_FILE_PATH || 'payments',
-  PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS: process.env.PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS || '28',
+  PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS: process.env.APVS_PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS || '28',
 
   // Auto approval configuration
   AUTO_APPROVAL_ENABLED: process.env.APVS_AUTO_APPROVAL_ENABLED || 'true',
