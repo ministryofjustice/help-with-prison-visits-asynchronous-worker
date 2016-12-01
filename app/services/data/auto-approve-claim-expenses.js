@@ -24,7 +24,7 @@ function getClaimExpenses (claimId) {
 function updateClaimExpenseToApproved (claimExpense) {
   var updatedClaimExpense = {
     Status: statusEnum.APPROVED,
-    ApprovedCost: claimExpense.Cost
+    ApprovedCost: parseFloat(claimExpense.Cost).toFixed(2)
   }
 
   return knex('IntSchema.ClaimExpense')
