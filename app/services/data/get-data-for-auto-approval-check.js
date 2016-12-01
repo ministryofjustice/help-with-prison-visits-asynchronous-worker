@@ -55,9 +55,8 @@ function getDataFromInternal (claimId, eligibilityId, reference) {
 function getPreviousClaims (claimId, eligibilityId, dateOfVisit) {
   return knex('IntSchema.Claim')
     .where('EligibilityId', eligibilityId)
-    .andWhere('DateOfJourney', '<', dateOfVisit)
     .whereNot('ClaimId', claimId)
-    .orderBy('DateOfJourney', 'desc')
+    .orderBy('DateReviewed', 'desc')
 }
 
 function getLatestManuallyApprovedClaim (previousClaims) {
