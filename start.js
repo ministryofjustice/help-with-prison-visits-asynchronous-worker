@@ -18,7 +18,6 @@ var asyncWorkerJob = new CronJob({
 log.info('Started worker')
 asyncWorkerJob.start()
 
-
 function runProcessTasks () {
   return processTasks().then(function () {
     log.info(`worker completed running task`)
