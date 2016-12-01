@@ -22,7 +22,7 @@ var autoApprovalData = {
   }
 }
 
-const doExpensesMatchFirstTimeClaim = require('../../../../app/services/auto-approval/checks/do-expenses-match-first-time-claim')
+const doExpensesMatchFirstTimeClaim = require('../../../../../app/services/auto-approval/checks/do-expenses-match-first-time-claim')
 
 describe('services/auto-approval/checks/do-expenses-match-first-time-claim', function () {
   it('should return false if the number of expenses of the same type exceeds the number of expenses for the same type in the first time claim', function () {

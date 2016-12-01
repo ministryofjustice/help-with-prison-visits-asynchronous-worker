@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const isClaimTotalUnderLimit = require('../../../../app/services/auto-approval/checks/is-claim-total-under-limit')
+const isClaimTotalUnderLimit = require('../../../../../app/services/auto-approval/checks/is-claim-total-under-limit')
 
 var validAutoApprovalData = {
   ClaimExpenses: [

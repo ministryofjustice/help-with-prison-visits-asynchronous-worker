@@ -1,6 +1,6 @@
 const moment = require('moment')
 const expect = require('chai').expect
-const isClaimSubmittedWithinTimeLimit = require('../../../../app/services/auto-approval/checks/is-claim-submitted-within-time-limit')
+const isClaimSubmittedWithinTimeLimit = require('../../../../../app/services/auto-approval/checks/is-claim-submitted-within-time-limit')
 
 const validAutoApprovalData = {
   Claim: {

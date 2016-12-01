@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const moment = require('moment')
 
-const hasClaimedLessThanMaxTimesThisYear = require('../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-year')
+const hasClaimedLessThanMaxTimesThisYear = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-year')
 var initialClaimId = 800000000
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-year', function () {

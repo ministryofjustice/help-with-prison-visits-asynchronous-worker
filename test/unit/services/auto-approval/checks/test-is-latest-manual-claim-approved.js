@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const isLatestManualClaimApproved = require('../../../../app/services/auto-approval/checks/is-latest-manual-claim-approved')
+const isLatestManualClaimApproved = require('../../../../../app/services/auto-approval/checks/is-latest-manual-claim-approved')
 
 const approvedClaim = {
   latestManuallyApprovedClaim: {

@@ -1,6 +1,6 @@
 const expect = require('chai').expect
-const statusEnum = require('../../../../app/constants/status-enum')
-const isNoPreviousPendingClaim = require('../../../../app/services/auto-approval/checks/is-no-previous-pending-claim')
+const statusEnum = require('../../../../../app/constants/status-enum')
+const isNoPreviousPendingClaim = require('../../../../../app/services/auto-approval/checks/is-no-previous-pending-claim')
 
 var previousClaimsWithPending = {
   previousClaims: [

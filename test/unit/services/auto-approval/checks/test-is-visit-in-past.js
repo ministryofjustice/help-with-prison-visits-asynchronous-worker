@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const moment = require('moment')
-const isVisitInPast = require('../../../../app/services/auto-approval/checks/is-visit-in-past')
+const isVisitInPast = require('../../../../../app/services/auto-approval/checks/is-visit-in-past')
 
 var autoApprovalDataWithPastClaim = {
   Claim: {
