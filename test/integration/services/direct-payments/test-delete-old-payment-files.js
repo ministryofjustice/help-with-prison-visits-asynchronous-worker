@@ -9,7 +9,7 @@ const PAYMENT_FILE = { 'Filepath': TEST_FILE_PATH }
 
 describe('services/direct-payments/delete-old-payment-files', function () {
   before(function () {
-    return writeFile(TEST_FILE_PATH, 'test file contents\n')
+    writeFile(TEST_FILE_PATH, 'test file contents\n')
   })
 
   it('should delete test payment files', function (done) {
