@@ -13,7 +13,7 @@ module.exports = {
 
   // Worker
   ASYNC_START_WEB: process.env.APVS_ASYNC_START_WEB || 'false',
-  ASYNC_WORKER_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '*/2 * * * * * *',
+  ASYNC_WORKER_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '* */2 * * * * *',
   ASYNC_WORKER_CONCURRENCY: process.env.APVS_ASYNC_WORKER_CONCURRENCY || 1,
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || 5,
 
