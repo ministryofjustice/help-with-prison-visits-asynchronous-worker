@@ -3,7 +3,7 @@ const testHelper = require('../../../test-helper')
 const moment = require('moment')
 
 const getDataForAutoApprovalCheck = require('../../../../app/services/data/get-data-for-auto-approval-check')
-var reference = 'AUTOAPP'
+var reference = 'AUTOAPD'
 var claimData
 var previousClaims
 

@@ -6,7 +6,7 @@ const testHelper = require('../../../test-helper')
 const completeTaskWithStatus = require('../../../../app/services/data/complete-task-with-status')
 
 describe('services/data/complete-task-with-status', function () {
-  const newStatus = 'NEW-STATUS'
+  const newStatus = 'NEWSTAT'
   var id
 
   before(function () {
@@ -22,8 +22,10 @@ describe('services/data/complete-task-with-status', function () {
     return completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
       return knex.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
         var currentDate = new Date()
+        var twoMinutesAgo = new Date().setMinutes(currentDate.getMinutes() - 2)
+        var twoMinutesAhead = new Date().setMinutes(currentDate.getMinutes() + 2)
         expect(result.Status).to.be.equal(newStatus)
-        expect(result.DateProcessed).to.be.within(currentDate.setMinutes(currentDate.getMinutes() - 2), currentDate.setMinutes(currentDate.getMinutes() + 2))
+        expect(result.DateProcessed).to.be.within(twoMinutesAgo, twoMinutesAhead)
       })
     })
   })
