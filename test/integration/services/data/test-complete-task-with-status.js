@@ -6,7 +6,7 @@ const testHelper = require('../../../test-helper')
 const completeTaskWithStatus = require('../../../../app/services/data/complete-task-with-status')
 
 describe('services/data/complete-task-with-status', function () {
-  const newStatus = 'NEW-STATUS'
+  const newStatus = 'NEWSTAT'
   var id
 
   before(function () {

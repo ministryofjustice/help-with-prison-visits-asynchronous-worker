@@ -9,7 +9,7 @@ const paymentTotal = 20
 
 describe('services/data/update-claims-processed-payment', function () {
   // TODO update to test methods processes multiple claim by ClaimId not Reference
-  var referenceA = 'PR123A'
+  var referenceA = 'PROCESS'
   var claimId
 
   beforeEach(function () {

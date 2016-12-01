@@ -6,7 +6,7 @@ const testHelper = require('../../../test-helper')
 const getClaimsPendingPayment = require('../../../../app/services/data/get-claims-pending-payment')
 
 describe('services/data/get-claims-pending-payment', function () {
-  var reference = 'TS1234G'
+  var reference = 'PAYMENT'
   var claimId
   var claimExpenseId1
   var claimExpenseId2
