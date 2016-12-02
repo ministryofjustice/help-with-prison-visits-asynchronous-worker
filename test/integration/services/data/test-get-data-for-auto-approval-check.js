@@ -3,7 +3,7 @@ const testHelper = require('../../../test-helper')
 const moment = require('moment')
 
 const getDataForAutoApprovalCheck = require('../../../../app/services/data/get-data-for-auto-approval-check')
-var reference = 'AUTOAPP'
+var reference = 'AUTOAPD'
 var claimData
 var previousClaims
 
@@ -19,9 +19,10 @@ describe('services/data/get-data-for-auto-approval-check', function () {
             ClaimId: uniqueId,
             EligibilityId: claimData.Claim.EligibilityId,
             Reference: reference,
-            DateOfJourney: moment().subtract(60, 'days').toDate(),
-            DateCreated: moment().subtract(50, 'days').toDate(),
-            DateSubmitted: moment().subtract(40, 'days').toDate(),
+            DateOfJourney: moment().subtract(80, 'days').toDate(),
+            DateCreated: moment().subtract(70, 'days').toDate(),
+            DateSubmitted: moment().subtract(60, 'days').toDate(),
+            DateReviewed: moment().subtract(50, 'days').toDate(),
             Status: 'APPROVED'
           }
         },
@@ -30,9 +31,22 @@ describe('services/data/get-data-for-auto-approval-check', function () {
             ClaimId: uniqueId + 1,
             EligibilityId: claimData.Claim.EligibilityId,
             Reference: reference,
-            DateOfJourney: moment().subtract(90, 'days').toDate(),
-            DateCreated: moment().subtract(80, 'days').toDate(),
-            DateSubmitted: moment().subtract(70, 'days').toDate(),
+            DateOfJourney: moment().subtract(60, 'days').toDate(),
+            DateCreated: moment().subtract(50, 'days').toDate(),
+            DateSubmitted: moment().subtract(40, 'days').toDate(),
+            DateReviewed: moment().subtract(30, 'days').toDate(),
+            Status: 'REJECTED'
+          }
+        },
+        {
+          Claim: {
+            ClaimId: uniqueId + 2,
+            EligibilityId: claimData.Claim.EligibilityId,
+            Reference: reference,
+            DateOfJourney: moment().subtract(100, 'days').toDate(),
+            DateCreated: moment().subtract(90, 'days').toDate(),
+            DateSubmitted: moment().subtract(80, 'days').toDate(),
+            DateReviewed: moment().subtract(70, 'days').toDate(),
             Status: 'REJECTED'
           }
         }
@@ -52,7 +66,7 @@ describe('services/data/get-data-for-auto-approval-check', function () {
       .then(function (result) {
         expect(result.previousClaims).to.not.be.null
         expect(result.latestManuallyApprovedClaim).to.not.be.null
-        expect(result.latestManuallyApprovedClaim.ClaimId).to.equal(result.previousClaims[0].ClaimId)
+        expect(result.latestManuallyApprovedClaim.ClaimId).to.equal(result.previousClaims[1].ClaimId)
       })
   })
 

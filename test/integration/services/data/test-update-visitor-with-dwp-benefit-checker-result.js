@@ -6,7 +6,7 @@ const testHelper = require('../../../test-helper')
 const updateVisitorWithDwpBenefitCheckerResult = require('../../../../app/services/data/update-visitor-with-dwp-benefit-checker-result')
 
 describe('services/data/update-visitor-with-dwp-benefit-checker-result', function () {
-  var reference = 'DWPVISI'
+  var reference = 'DWPVIST'
   var dwpBenefitCheckerResult = 'YES'
   var visitorId
 

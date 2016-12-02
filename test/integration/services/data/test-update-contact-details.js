@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 const updateContactDetails = require('../../../../app/services/data/update-contact-details')
 const testHelper = require('../../../test-helper')
 
-const reference = 'CONTACT123'
+const reference = 'CONTACT'
 
 var updatedDetails = {
   Reference: reference,

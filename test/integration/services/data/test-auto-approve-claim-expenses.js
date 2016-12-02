@@ -6,7 +6,7 @@ const autoApproveClaimExpenses = require('../../../../app/services/data/auto-app
 const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
 
-const reference = 'AUTOAPP'
+const reference = 'AUTOAPV'
 var claimId
 
 describe('services/data/auto-approve-claim-expenses', function () {

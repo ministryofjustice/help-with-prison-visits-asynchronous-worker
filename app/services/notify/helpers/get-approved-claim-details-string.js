@@ -17,7 +17,7 @@ module.exports = function (claims) {
 
     result.push(claimHeader)
     result.push(`Claimed: £${claim.Cost.toFixed(2)}`)
-    result.push(`Approved: £${(claim.ApprovedCost || 0).toFixed(2)}`)
+    result.push(`Approved: £${(claim.ApprovedCost ? claim.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
     result.push(newLine)
   })
 
