@@ -1,35 +1,25 @@
 const config = require('./config')
 const log = require('./app/services/log')
-var throng = require('throng')
+var CronJob = require('cron').CronJob
 var processTasks = require('./app/process-tasks')
 
-var numberOfWorkers = config.ASYNC_WORKER_CONCURRENCY
-var frequency = config.ASYNC_WORKER_FREQUENCY
-var startWeb = config.ASYNC_START_WEB === 'true'
-throng({ workers: numberOfWorkers }, startWorker)
+var asyncWorkerCron = config.ASYNC_WORKER_CRON
 
-function startWorker (id) {
-  log.info(`Started worker ${id}`)
+var asyncWorkerJob = new CronJob({
+  cronTime: asyncWorkerCron,
+  onTick: function () {
+    runProcessTasks()
+  },
+  onComplete: function () {
+    log.info('worker completed running task')
+  },
+  start: false
+})
+log.info('Started worker')
+asyncWorkerJob.start()
 
-  process.on('SIGTERM', () => {
-    log.info(`Worker ${id} exiting...`)
-    process.exit()
-  })
-
-  runProcessTasks(id).then(function () {
-    setInterval(function () {
-      runProcessTasks(id)
-    }, frequency)
-  })
-
-  if (startWeb && id === 1) {
-    // Start web
-    require('./app/web/bin/www')
-  }
-}
-
-function runProcessTasks (id) {
+function runProcessTasks () {
   return processTasks().then(function () {
-    log.info(`worker ${id} completed running task`)
+    log.info(`worker completed running task`)
   })
 }
