@@ -1,5 +1,6 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
+const moment = require('moment')
 
 const autoApproveClaimExpenses = require('./auto-approve-claim-expenses')
 const insertTask = require('../data/insert-task')
@@ -31,5 +32,5 @@ function getClaim (claimId) {
 function setClaimStatusToAutoApproved (claim) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claim.ClaimId)
-    .update('Status', statusEnum.AUTOAPPROVED)
+    .update({'Status': statusEnum.AUTOAPPROVED, 'DateReviewed': moment().toDate()})
 }
