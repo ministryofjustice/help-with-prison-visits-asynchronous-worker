@@ -12,7 +12,6 @@
   "scripts": {
     "start": "node start.js",
     "start-schedule-payment-run": "node start-schedule-payment-run.js",
-    "start-web": "node app/web/bin/www",
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
     "test-integration": "mocha --recursive -u exports test/integration/ --timeout 5000",
@@ -58,7 +57,6 @@
     "notifications-node-client": "2.1.0",
     "request": "^2.78.0",
     "request-promise": "^4.1.1",
-    "throng": "^4.0.0",
     "xml2js": "^0.4.17",
     "xml2js-xpath": "^0.7.0"
   }
