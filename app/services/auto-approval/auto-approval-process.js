@@ -28,8 +28,9 @@ module.exports = function (claimData) {
   if (autoApprovalEnabled) {
     var result = {checks: []}
 
-    // Fail auto-approval check if First time claim or status is PENDING
+    // Fail auto-approval check if First time claim, advance or status is PENDING
     if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+      claimData.Claim.IsAdvanceClaim ||
       claimData.Claim.Status === statusEnum.PENDING) {
       result.claimApproved = false
       return Promise.resolve(result)

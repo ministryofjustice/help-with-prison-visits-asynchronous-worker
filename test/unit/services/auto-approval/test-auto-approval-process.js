@@ -103,6 +103,14 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
+  it('should return claimApproved false for Advance claim', function () {
+    var pendingData = {Claim: {ClaimType: claimTypeEnum.REPEAT_CLAIM, Status: statusEnum.NEW, IsAdvanceClaim: true}}
+    return autoApprovalProcess(pendingData)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false
+      })
+  })
+
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(validAutoApprovalData)
       .then(function (result) {

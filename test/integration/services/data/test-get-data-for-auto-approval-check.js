@@ -23,6 +23,7 @@ describe('services/data/get-data-for-auto-approval-check', function () {
             DateCreated: moment().subtract(70, 'days').toDate(),
             DateSubmitted: moment().subtract(60, 'days').toDate(),
             DateReviewed: moment().subtract(50, 'days').toDate(),
+            IsAdvanceClaim: false,
             Status: 'APPROVED'
           }
         },
@@ -31,11 +32,12 @@ describe('services/data/get-data-for-auto-approval-check', function () {
             ClaimId: uniqueId + 1,
             EligibilityId: claimData.Claim.EligibilityId,
             Reference: reference,
-            DateOfJourney: moment().subtract(60, 'days').toDate(),
-            DateCreated: moment().subtract(50, 'days').toDate(),
-            DateSubmitted: moment().subtract(40, 'days').toDate(),
-            DateReviewed: moment().subtract(30, 'days').toDate(),
-            Status: 'REJECTED'
+            DateOfJourney: moment().subtract(70, 'days').toDate(),
+            DateCreated: moment().subtract(70, 'days').toDate(),
+            DateSubmitted: moment().subtract(70, 'days').toDate(),
+            DateReviewed: moment().subtract(71, 'days').toDate(),
+            IsAdvanceClaim: true,
+            Status: 'APPROVED'
           }
         },
         {
@@ -43,10 +45,24 @@ describe('services/data/get-data-for-auto-approval-check', function () {
             ClaimId: uniqueId + 2,
             EligibilityId: claimData.Claim.EligibilityId,
             Reference: reference,
+            DateOfJourney: moment().subtract(60, 'days').toDate(),
+            DateCreated: moment().subtract(50, 'days').toDate(),
+            DateSubmitted: moment().subtract(40, 'days').toDate(),
+            DateReviewed: moment().subtract(30, 'days').toDate(),
+            IsAdvanceClaim: false,
+            Status: 'REJECTED'
+          }
+        },
+        {
+          Claim: {
+            ClaimId: uniqueId + 3,
+            EligibilityId: claimData.Claim.EligibilityId,
+            Reference: reference,
             DateOfJourney: moment().subtract(100, 'days').toDate(),
             DateCreated: moment().subtract(90, 'days').toDate(),
             DateSubmitted: moment().subtract(80, 'days').toDate(),
             DateReviewed: moment().subtract(70, 'days').toDate(),
+            IsAdvanceClaim: false,
             Status: 'REJECTED'
           }
         }

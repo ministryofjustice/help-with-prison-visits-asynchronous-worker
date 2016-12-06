@@ -66,7 +66,8 @@ function getLatestManuallyApprovedClaim (previousClaims) {
 
     previousClaims.forEach(function (previousClaim) {
       var previousClaimIsApproved = previousClaim.DateReviewed &&
-        previousClaim.Status === statusEnum.APPROVED
+        previousClaim.Status === statusEnum.APPROVED &&
+        !previousClaim.IsAdvanceClaim
 
       if (previousClaimIsApproved) {
         if (!latestManuallyApprovedClaim) {
