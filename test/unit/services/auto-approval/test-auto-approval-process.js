@@ -8,78 +8,61 @@ require('sinon-bluebird')
 const testHelper = require('../../../test-helper')
 const AutoApprovalCheckResult = require('../../../../app/services/domain/auto-approval-check-result')
 
-const reference1 = 'AUTOAPP'
+const REFERENCE = 'AUTOAPP'
+const ELIGIBILITY_ID = 1234
+const CLAIM_ID = 4321
 
-var validAutoApprovalData = testHelper.getAutoApprovalData(reference1)
+var validAutoApprovalData = testHelper.getAutoApprovalData(REFERENCE)
 var validCheckResult = new AutoApprovalCheckResult('', true, '')
 var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 
-var autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
-var getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
-var insertClaimEventDataStub = sinon.stub().resolves()
-var insertTaskStub = sinon.stub().resolves()
-var autoApproveClaimStub = sinon.stub().resolves()
-var areChildrenUnder18Stub = sinon.stub().returns(validCheckResult)
-var costAndVarianceEqualOrLessThanFirstTimeClaimStub = sinon.stub().returns(validCheckResult)
-var doExpensesMatchFirstTimeClaimStub = sinon.stub().returns(validCheckResult)
-var hasClaimedLessThanMaxTimesThisYearStub = sinon.stub().returns(validCheckResult)
-var hasUploadedPrisonVisitConfirmationAndReceiptsStub = sinon.stub().returns(validCheckResult)
-var isClaimSubmittedWithinTimeLimitStub = sinon.stub().returns(validCheckResult)
-var isClaimTotalUnderLimitStub = sinon.stub().returns(validCheckResult)
-var isLatestManualClaimApprovedStub = sinon.stub().returns(validCheckResult)
-var isNoPreviousPendingClaimStub = sinon.stub().returns(validCheckResult)
-var isPrisonNotInGuernseyJerseyStub = sinon.stub().returns(validCheckResult)
-var isVisitInPastStub = sinon.stub().returns(validCheckResult)
-var visitDateDifferentToPreviousClaimsStub = sinon.stub().returns(validCheckResult)
+var autoApprovalDataConstructorStub
+var getDataForAutoApprovalCheckStub
+var insertClaimEventDataStub
+var insertTaskStub
+var autoApproveClaimStub
+var autoApprovalDependencies
 
-var validAutoApprovalChecks = {
-  './auto-approval-data-constructor': autoApprovalDataConstructorStub,
-  '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
-  '../data/auto-approve-claim': autoApproveClaimStub,
-  '../data/insert-claim-event-data': insertClaimEventDataStub,
-  '../data/insert-task': insertTaskStub,
-  './checks/are-children-under-18': areChildrenUnder18Stub,
-  './checks/cost-and-variance-equal-or-less-than-first-time-claim': costAndVarianceEqualOrLessThanFirstTimeClaimStub,
-  './checks/do-expenses-match-first-time-claim': doExpensesMatchFirstTimeClaimStub,
-  './checks/has-claimed-less-than-max-times-this-year': hasClaimedLessThanMaxTimesThisYearStub,
-  './checks/has-uploaded-prison-visit-confirmation-and-receipts': hasUploadedPrisonVisitConfirmationAndReceiptsStub,
-  './checks/is-claim-submitted-within-time-limit': isClaimSubmittedWithinTimeLimitStub,
-  './checks/is-claim-total-under-limit': isClaimTotalUnderLimitStub,
-  './checks/is-latest-manual-claim-approved': isLatestManualClaimApprovedStub,
-  './checks/is-prison-not-in-guernsey-jersey': isPrisonNotInGuernseyJerseyStub,
-  './checks/is-no-previous-pending-claim': isNoPreviousPendingClaimStub,
-  './checks/is-visit-in-past': isVisitInPastStub,
-  './checks/visit-date-different-to-previous-claims': visitDateDifferentToPreviousClaimsStub
-}
-
-var autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', validAutoApprovalChecks)
+var autoApprovalProcess
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
-    // Reset call counters for non-check stubs between tests
-    autoApprovalDataConstructorStub.reset()
-    getDataForAutoApprovalCheckStub.reset()
-    autoApproveClaimStub.reset()
-    insertClaimEventDataStub.reset()
-    insertTaskStub.reset()
+    autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
+    getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
+    insertClaimEventDataStub = sinon.stub().resolves()
+    insertTaskStub = sinon.stub().resolves()
+    autoApproveClaimStub = sinon.stub().resolves()
+
+    autoApprovalDependencies = {
+      '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
+      './auto-approval-data-constructor': autoApprovalDataConstructorStub,
+      '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
+      '../data/auto-approve-claim': autoApproveClaimStub,
+      '../data/insert-claim-event-data': insertClaimEventDataStub,
+      '../data/insert-task': insertTaskStub,
+      // All checks
+      './checks/are-children-under-18': sinon.stub().returns(validCheckResult),
+      './checks/cost-and-variance-equal-or-less-than-first-time-claim': sinon.stub().returns(validCheckResult),
+      './checks/do-expenses-match-first-time-claim': sinon.stub().returns(validCheckResult),
+      './checks/has-claimed-less-than-max-times-this-year': sinon.stub().returns(validCheckResult),
+      './checks/has-uploaded-prison-visit-confirmation-and-receipts': sinon.stub().returns(validCheckResult),
+      './checks/is-claim-submitted-within-time-limit': sinon.stub().returns(validCheckResult),
+      './checks/is-claim-total-under-limit': sinon.stub().returns(validCheckResult),
+      './checks/is-latest-manual-claim-approved': sinon.stub().returns(validCheckResult),
+      './checks/is-prison-not-in-guernsey-jersey': sinon.stub().returns(validCheckResult),
+      './checks/is-no-previous-pending-claim': sinon.stub().returns(validCheckResult),
+      './checks/is-visit-in-past': sinon.stub().returns(validCheckResult),
+      './checks/visit-date-different-to-previous-claims': sinon.stub().returns(validCheckResult)
+    }
+
+    autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
   })
 
   it('should not execute auto approval process if config is set to false', function () {
-    var getDataForAutoApprovalCheckUniqueStub = sinon.stub().resolves(validAutoApprovalData)
-    var autoApproveClaimUniqueStub = sinon.stub().resolves()
-    var configStub = {
-      AUTO_APPROVAL_ENABLED: 'false'
-    }
+    autoApprovalDependencies['../../../config'] = { AUTO_APPROVAL_ENABLED: 'false' }
+    var disabledConfigAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
 
-    // Swap stubs for unique ones for this test - otherwise they will be called from other tests
-    var autoApprovalRequires = {
-      '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckUniqueStub,
-      '../data/auto-approve-claim': autoApproveClaimUniqueStub,
-      '../../../config': configStub
-    }
-
-    var disabledAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalRequires)
-    return disabledAutoApprovalProcess(validAutoApprovalData)
+    return disabledConfigAutoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result).to.be.null
         sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
@@ -89,7 +72,9 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
   it('should return claimApproved false for FIRST_TIME claim', function () {
     var firstTimeData = {Claim: {ClaimType: claimTypeEnum.FIRST_TIME}}
-    return autoApprovalProcess(firstTimeData)
+    getDataForAutoApprovalCheckStub.resolves(firstTimeData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false
       })
@@ -97,82 +82,56 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
   it('should return claimApproved false for PENDING claim', function () {
     var pendingData = {Claim: {Status: statusEnum.PENDING}}
-    return autoApprovalProcess(pendingData)
+    getDataForAutoApprovalCheckStub.resolves(pendingData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved, 'should reject PENDING claims for auto-approval').to.be.false
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
-    return autoApprovalProcess(validAutoApprovalData)
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
+        expect(result.claimApproved).to.be.true
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         sinon.assert.calledOnce(autoApproveClaimStub)
-        var keys = Object.keys(validAutoApprovalChecks)
+        var keys = Object.keys(autoApprovalDependencies)
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('check') < 0) continue
-
-          var stub = validAutoApprovalChecks[key]
-
-          sinon.assert.calledWith(stub, validAutoApprovalData)
+          sinon.assert.calledOnce(autoApprovalDependencies[key])
         }
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
-    var invalidAutoApprovalChecks = validAutoApprovalChecks
-    var keys = Object.keys(invalidAutoApprovalChecks)
+    var inautoApprovalDependencies = autoApprovalDependencies
+    var keys = Object.keys(inautoApprovalDependencies)
 
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i]
-      var invalidCheckResultStub = sinon.stub().returns(invalidCheckResult)
-
       // Ignore mocked data functions and only set some auto approval checks to true
       if (key.indexOf('data') > -1 || i % 2 === 0) {
         continue
       } else {
-        invalidAutoApprovalChecks[key] = invalidCheckResultStub
+        inautoApprovalDependencies[key].returns(invalidCheckResult)
       }
     }
 
-    var invalidAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', invalidAutoApprovalChecks)
-    return invalidAutoApprovalProcess(validAutoApprovalData)
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
+        expect(result.claimApproved).to.be.false
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         sinon.assert.calledOnce(insertClaimEventDataStub)
-        var keys = Object.keys(validAutoApprovalChecks)
+        var keys = Object.keys(autoApprovalDependencies)
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('check') < 0) continue
-
-          var stub = validAutoApprovalChecks[key]
-
-          sinon.assert.calledWith(stub, validAutoApprovalData)
+          sinon.assert.calledOnce(autoApprovalDependencies[key])
         }
-      })
-  })
-
-  it('should return false if any of the auto approval checks fail', function () {
-    var invalidAutoApprovalChecks = validAutoApprovalChecks
-    var invalidCheckResultStub = sinon.stub().returns(invalidCheckResult)
-
-    for (var i = 0; i < Object.keys(invalidAutoApprovalChecks).length; i++) {
-      var key = Object.keys(invalidAutoApprovalChecks)[i]
-      // Ignore mocked data functions and only set some auto approval checks to true
-      if (key.indexOf('data') > -1 || i % 2 === 0) {
-        continue
-      } else {
-        invalidAutoApprovalChecks[key] = invalidCheckResultStub
-      }
-    }
-
-    var invalidAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', invalidAutoApprovalChecks)
-    return invalidAutoApprovalProcess(validAutoApprovalData)
-      .then(function (result) {
-        expect(result.claimApproved).to.be.false
       })
   })
 })

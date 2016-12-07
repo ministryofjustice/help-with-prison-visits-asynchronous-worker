@@ -1,5 +1,3 @@
-const statusEnum = require('../../constants/status-enum')
-
 const getAllClaimData = require('../data/get-all-claim-data')
 const copyClaimDataToInternal = require('../data/copy-claim-data-to-internal')
 const deleteClaimFromExternal = require('../data/delete-claim-from-external')
@@ -13,12 +11,10 @@ module.exports.execute = function (task) {
   var claimId = task.claimId
   var claimData
 
-  return getAllClaimData(reference, eligibilityId, claimId, statusEnum.SUBMITTED)
-    .then(function (data) {
-      claimData = data
-      return copyClaimDataToInternal(data, task.additionalData)
-    })
+  return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
+    .then(function (data) { claimData = data })
+    .then(function () { return copyClaimDataToInternal(claimData, task.additionalData) })
     .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
-    .then(function () { return autoApprovalProcess(claimData) })
+    .then(function () { return autoApprovalProcess(reference, eligibilityId, claimId) })
     .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK) })
 }
