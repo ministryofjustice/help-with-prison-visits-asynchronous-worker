@@ -90,6 +90,16 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
+  it('should return claimApproved false for Advance claim', function () {
+    var advanceClaimData = {Claim: {ClaimType: claimTypeEnum.REPEAT_CLAIM, Status: statusEnum.NEW, IsAdvanceClaim: true}}
+    getDataForAutoApprovalCheckStub.resolves(advanceClaimData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false
+      })
+  })
+
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {

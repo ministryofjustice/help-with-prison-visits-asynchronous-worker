@@ -30,8 +30,9 @@ module.exports = function (reference, eligibilityId, claimId) {
       .then(function (autoApprovalData) {
         var result = {checks: []}
 
-        // Fail auto-approval check if First time claim or status is PENDING
+        // Fail auto-approval check if First time claim, advance claim or status is PENDING
         if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+          autoApprovalData.Claim.IsAdvanceClaim ||
           autoApprovalData.Claim.Status === statusEnum.PENDING) {
           result.claimApproved = false
           return result
