@@ -1,9 +1,7 @@
-const config = require('../../../../config')
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
 const CHECK_NAME = 'is-claim-total-under-limit'
 const FAILURE_MESSAGE = 'The total claim value is over the maximum permitted amount'
-const AUTO_APPROVAL_MAX_CLAIM_TOTAL = parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL)
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.ClaimExpenses) {
@@ -15,7 +13,7 @@ module.exports = function (autoApprovalData) {
       claimTotal += parseFloat(claimExpense.Cost)
     }
 
-    var checkPassed = claimTotal <= AUTO_APPROVAL_MAX_CLAIM_TOTAL
+    var checkPassed = claimTotal <= autoApprovalData.maxClaimTotal
   }
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)

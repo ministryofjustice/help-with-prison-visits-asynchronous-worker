@@ -32,7 +32,8 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
 
 function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) {
   var result = {
-    previousClaims: []
+    previousClaims: [],
+    maxNumberOfClaimsPerYear: '26'
   }
   var now = moment()
   var durationSinceStartDate = now.diff(startDate, 'days')
