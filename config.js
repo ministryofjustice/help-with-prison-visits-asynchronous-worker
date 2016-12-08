@@ -14,6 +14,7 @@ module.exports = {
   // Worker
   ASYNC_WORKER_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '*/2 * * * * *',
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || 5,
+  DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '30 04 * * * *', // default every day at 0430
 
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',
