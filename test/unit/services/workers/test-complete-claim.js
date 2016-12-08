@@ -9,7 +9,7 @@ const reference = '1234567'
 const eligibilityId = '1234'
 const claimId = 123
 
-var firstTimeClaimData = {
+var claimData = {
   Claim: {
     ClaimId: 1,
     EligibilityId: 1,
@@ -17,7 +17,7 @@ var firstTimeClaimData = {
   }
 }
 
-var getAllClaimData = sinon.stub().resolves(firstTimeClaimData)
+var getAllClaimData = sinon.stub().resolves(claimData)
 var copyClaimDataToInternal = sinon.stub().resolves()
 var deleteClaimFromExternal = sinon.stub().resolves()
 var autoApprovalProcess = sinon.stub().resolves()
@@ -38,10 +38,10 @@ describe('services/workers/complete-claim', function () {
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith(reference, eligibilityId, claimId)).to.be.true
-      expect(copyClaimDataToInternal.calledWith(firstTimeClaimData)).to.be.true
+      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
+      expect(copyClaimDataToInternal.calledWith(claimData)).to.be.true
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
-      expect(autoApprovalProcess.calledWith(firstTimeClaimData)).to.be.true
+      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true
     })
   })

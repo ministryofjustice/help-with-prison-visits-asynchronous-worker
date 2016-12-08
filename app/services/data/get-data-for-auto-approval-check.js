@@ -1,58 +1,21 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
-
+const getAllClaimData = require('./get-all-claim-data')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimData) {
-  return getPreviousClaims(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.DateOfJourney)
-    .then(function (previousClaims) {
-      claimData.previousClaims = previousClaims
-      return getLatestManuallyApprovedClaim(previousClaims)
-        .then(function (latestManuallyApprovedClaim) {
-          claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
+module.exports = function (reference, eligibilityId, claimId) {
+  var claimData
 
-          if (!claimData.Claim.Eligibility || claimData.Claim.Prisoner || claimData.Claim.Visitor) {
-            return getDataFromInternal(claimData.Claim.ClaimId, claimData.Claim.EligibilityId, claimData.Claim.Reference)
-              .then(function (internalData) {
-                claimData.Eligibility = internalData.Eligibility
-                claimData.Visitor = internalData.Visitor
-                claimData.Prisoner = internalData.Prisoner
-
-                return claimData
-              })
-          } else {
-            return Promise.resolve(claimData)
-          }
-        })
-    })
+  return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
+  .then(function (data) { claimData = data })
+  .then(function () { return getPreviousClaims(claimId, eligibilityId) })
+  .then(function (previousClaims) { claimData.previousClaims = previousClaims })
+  .then(function () { return getLatestManuallyApprovedClaim(claimData.previousClaims) })
+  .then(function (latestManuallyApprovedClaim) { claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim })
+  .then(function () { return claimData })
 }
 
-function getDataFromInternal (claimId, eligibilityId, reference) {
-  var result = {}
-  return knex('IntSchema.Eligibility')
-    .first()
-    .where({'Reference': reference, 'EligibilityId': eligibilityId})
-    .then(function (eligibility) {
-      result.Eligibility = eligibility
-
-      return knex('IntSchema.Prisoner')
-        .first()
-        .where({'Reference': reference, 'EligibilityId': eligibilityId})
-        .then(function (prisoner) {
-          result.Prisoner = prisoner
-
-          return knex('IntSchema.Visitor')
-            .first()
-            .where({'Reference': reference, 'EligibilityId': eligibilityId})
-            .then(function (visitor) {
-              result.Visitor = visitor
-              return result
-            })
-        })
-    })
-}
-
-function getPreviousClaims (claimId, eligibilityId, dateOfVisit) {
+function getPreviousClaims (claimId, eligibilityId) {
   return knex('IntSchema.Claim')
     .where('EligibilityId', eligibilityId)
     .whereNot('ClaimId', claimId)

@@ -3,6 +3,8 @@ const testHelper = require('../../../test-helper')
 
 const getAllClaimData = require('../../../../app/services/data/get-all-claim-data')
 
+const EXTSCHEMA = 'ExtSchema'
+
 describe('services/data/get-all-claim-data', function () {
   describe('get first time claim data', function () {
     const REFERENCE = 'FIRST12'
@@ -10,7 +12,7 @@ describe('services/data/get-all-claim-data', function () {
     var claimId
 
     before(function () {
-      return testHelper.insertClaimEligibilityData('ExtSchema', REFERENCE)
+      return testHelper.insertClaimEligibilityData(EXTSCHEMA, REFERENCE)
         .then(function (ids) {
           eligibilityId = ids.eligibilityId
           claimId = ids.claimId
@@ -18,7 +20,7 @@ describe('services/data/get-all-claim-data', function () {
     })
 
     it('should return all first time claim data', function () {
-      return getAllClaimData(REFERENCE, eligibilityId, claimId, 'SUBMITTED')
+      return getAllClaimData(EXTSCHEMA, REFERENCE, eligibilityId, claimId)
         .then(function (data) {
           expect(data.Eligibility.Reference).to.be.equal(REFERENCE)
           expect(data.Claim.Reference).to.be.equal(REFERENCE)
@@ -32,7 +34,7 @@ describe('services/data/get-all-claim-data', function () {
     })
 
     after(function () {
-      return testHelper.deleteAll(REFERENCE, 'ExtSchema')
+      return testHelper.deleteAll(REFERENCE, EXTSCHEMA)
     })
   })
 
@@ -42,14 +44,14 @@ describe('services/data/get-all-claim-data', function () {
     var claimId
 
     before(function () {
-      return testHelper.insertClaimData('ExtSchema', REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
+      return testHelper.insertClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
         .then(function (newClaimId) {
           claimId = newClaimId
         })
     })
 
     it('should return all repeat claim data', function () {
-      return getAllClaimData(REFERENCE, ELIGIBILITYID, claimId, 'SUBMITTED')
+      return getAllClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, claimId)
         .then(function (data) {
           expect(data.Eligibility).to.be.undefined
           expect(data.Prisoner).to.be.undefined
@@ -65,7 +67,7 @@ describe('services/data/get-all-claim-data', function () {
     })
 
     after(function () {
-      return testHelper.deleteAll(REFERENCE, 'ExtSchema')
+      return testHelper.deleteAll(REFERENCE, EXTSCHEMA)
     })
   })
 })

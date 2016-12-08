@@ -22,26 +22,23 @@ const autoApprovalChecks = [
   require('./checks/visit-date-different-to-previous-claims')
 ]
 
-module.exports = function (claimData) {
+module.exports = function (reference, eligibilityId, claimId) {
   var autoApprovalEnabled = config.AUTO_APPROVAL_ENABLED === 'true'
 
   if (autoApprovalEnabled) {
-    var result = {checks: []}
-
-    // Fail auto-approval check if First time claim or status is PENDING
-    if (claimData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-      claimData.Claim.Status === statusEnum.PENDING) {
-      result.claimApproved = false
-      return Promise.resolve(result)
-    }
-
-    return getDataForAutoApprovalChecks(claimData)
+    return getDataForAutoApprovalChecks(reference, eligibilityId, claimId)
       .then(function (autoApprovalData) {
-        claimData.previousClaims = autoApprovalData.previousClaims
-        claimData.latestManuallyApprovedClaim = autoApprovalData.latestManuallyApprovedClaim
+        var result = {checks: []}
+
+        // Fail auto-approval check if First time claim or status is PENDING
+        if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+          autoApprovalData.Claim.Status === statusEnum.PENDING) {
+          result.claimApproved = false
+          return result
+        }
 
         autoApprovalChecks.forEach(function (check) {
-          var checkResult = check(claimData)
+          var checkResult = check(autoApprovalData)
           result.checks.push(checkResult)
         })
 
@@ -54,12 +51,12 @@ module.exports = function (claimData) {
         })
 
         if (result.claimApproved) {
-          return autoApproveClaim(claimData.Claim.ClaimId, claimData.Visitor.EmailAddress)
+          return autoApproveClaim(claimId, autoApprovalData.Visitor.EmailAddress)
             .then(function () {
               return result
             })
         } else {
-          return insertClaimEventData(claimData.Claim, 'AUTO-APPROVAL-FAILURE', claimData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
+          return insertClaimEventData(autoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
           .then(function () {
             return result
           })

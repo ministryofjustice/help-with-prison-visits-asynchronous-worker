@@ -305,7 +305,7 @@ module.exports.getAutoApprovalData = function (reference) {
   const claimExpenseId4 = claimExpenseId3 + 1
 
   return {
-    Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days')),
+    Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
     ClaimChildren: [
       getClaimChildObject(1, claimId1, uniqueId, reference, 'Child A', 'my-child', subtractDateFromNow(10, 'years')),
       getClaimChildObject(2, claimId1, uniqueId, reference, 'Child B', 'my-child', subtractDateFromNow(15, 'years'))
