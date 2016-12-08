@@ -19,11 +19,13 @@ var stubGetApprovedClaimExpenseData = sinon.stub().resolves({
   claimExpenseData: [{ClaimExpenseId: 1}]
 })
 var stubGetApprovedClaimDetailsString = sinon.stub().returns('string with payment breakdown')
+var stubGetEnabledClaimDeductions = sinon.stub().resolves([])
 
 const sendAcceptedClaimNotification = proxyquire('../../../../app/services/workers/send-accepted-claim-notification', {
   '../notify/send-notification': stubSendNotification,
   '../data/get-approved-claim-expense-data': stubGetApprovedClaimExpenseData,
-  '../notify/helpers/get-approved-claim-details-string': stubGetApprovedClaimDetailsString
+  '../notify/helpers/get-approved-claim-details-string': stubGetApprovedClaimDetailsString,
+  '../data/get-enabled-claim-deductions': stubGetEnabledClaimDeductions
 })
 
 describe('services/send-accepted-claim-notification', function () {
@@ -41,6 +43,7 @@ describe('services/send-accepted-claim-notification', function () {
       expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(reference)
       expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true
       expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.true
+      expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true
     })
   })
 })
