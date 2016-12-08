@@ -144,14 +144,10 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
     })
     .then(function () {
       if (isExtSchema) {
-        delete data.ClaimDeduction[0].ClaimDeductionId
-        delete data.ClaimDeduction[1].ClaimDeductionId
-        data.ClaimDeduction[0].EligibilityId = newEligibilityId
-        data.ClaimDeduction[1].EligibilityId = newEligibilityId
-        data.ClaimDeduction[0].ClaimId = newClaimId
-        data.ClaimDeduction[1].ClaimId = newClaimId
+        Promise.resolve(null)
+      } else {
+        return knex(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
       }
-      return knex(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
     })
     .then(function () {
       return newClaimId

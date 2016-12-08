@@ -54,8 +54,6 @@ describe('services/data/get-claims-pending-payment', function () {
           return result[0] === claimId
         })
 
-        console.dir(filteredResults)
-
         expect(filteredResults.length === 1)
         expect(filteredResults[0][0].length === 6, 'should contain 6 fields')
         expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
