@@ -60,6 +60,9 @@ function getClaimDocuments (schema, claimId) {
 }
 
 function getEligibilityVisitorUpdateContactDetail (schema, reference, eligibilityId) {
-  if (schema === 'IntSchema') return Promise.resolve(null)
-  return knex(`${schema}.EligibilityVisitorUpdateContactDetail`).first().where({'Reference': reference, 'EligibilityId': eligibilityId}).orderBy('DateSubmitted', 'desc')
+  if (schema === 'ExtSchema') {
+    return knex(`${schema}.EligibilityVisitorUpdateContactDetail`).first().where({'Reference': reference, 'EligibilityId': eligibilityId}).orderBy('DateSubmitted', 'desc')
+  } else {
+    return Promise.resolve(null)
+  }
 }
