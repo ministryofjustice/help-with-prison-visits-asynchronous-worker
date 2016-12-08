@@ -371,7 +371,8 @@ function getClaimObject (claimId, eligibilityId, reference, dateCreated, dateOfJ
     DateOfJourney: dateOfJourney,
     DateSubmitted: dateSubmitted,
     DateReviewed: status === 'APPROVED' || status === 'AUTO-APPROVED' || status === 'REJECTED' || status === 'REQUEST_INFORMATION' ? moment().toDate() : null,
-    Status: status
+    Status: status,
+    Note: 'test note'
   }
 
   if (claimExpenses) {

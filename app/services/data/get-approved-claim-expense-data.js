@@ -1,7 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (reference, claimId) {
+module.exports = function (claimId) {
   var claimExpenses
 
   // Get all Claim expenses from database for specified claim id
@@ -26,7 +26,7 @@ function getClaimantData (claimId) {
   return knex('IntSchema.Visitor')
     .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
     .where('IntSchema.Claim.ClaimId', claimId)
-    .select('FirstName')
+    .select('FirstName', 'Note')
     .first()
     .then(function (visitorData) {
       visitor = visitorData
@@ -43,10 +43,14 @@ function getClaimantData (claimId) {
       var visitorFirstName = (visitor && visitor.FirstName
         ? visitor.FirstName
         : '')
+      var caseworkerNote = (visitor && visitor.Note
+        ? visitor.Note
+        : '')
 
       return {
         'VisitorFirstName': visitorFirstName,
-        'AccountNumberLastFourDigits': accountNumberLastFourDigits
+        'AccountNumberLastFourDigits': accountNumberLastFourDigits,
+        'CaseworkerNote': caseworkerNote
       }
     })
 }
