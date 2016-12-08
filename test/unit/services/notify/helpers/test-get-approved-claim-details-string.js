@@ -1,5 +1,6 @@
 const expect = require('chai').expect
 const getApprovedClaimDetailsString = require('../../../../../app/services/notify/helpers/get-approved-claim-details-string')
+const deductionTypeEnum = require('../../../../../app/constants/deduction-type-enum')
 
 describe('notify/helpers/get-approved-claim-details-string', function () {
   var claimExpense1 = [{
@@ -40,29 +41,52 @@ describe('notify/helpers/get-approved-claim-details-string', function () {
     Note: null,
     Status: 'APPROVED'
   }]
+  var claimDeduction1 = [{
+    DeductionType: deductionTypeEnum.HC3_DEDUCTION.value,
+    Amount: 5
+  }]
+  var claimDeduction2 = [{
+    DeductionType: deductionTypeEnum.OVERPAYMENT.value,
+    Amount: 10
+  }]
 
   it('should contain journey info if claim expense type is a journey type', function () {
-    var claimDetails = getApprovedClaimDetailsString(claimExpense2)
+    var claimDetails = getApprovedClaimDetailsString(claimExpense2, [])
     expect(claimDetails).to.contain('Bus journey - Euston to Birmingham')
   })
 
   it('should contain just the expense type if claim expense type is not a journey type', function () {
-    var claimDetails = getApprovedClaimDetailsString(claimExpense1)
+    var claimDetails = getApprovedClaimDetailsString(claimExpense1, [])
     expect(claimDetails).to.contain('Accommodation')
   })
 
-  it('should contain the correct claim amount', function () {
-    var claimDetails = getApprovedClaimDetailsString(claimExpense2)
+  it('should contain the correct claim amount without deductions', function () {
+    var claimDetails = getApprovedClaimDetailsString(claimExpense2, [])
     expect(claimDetails).to.contain('Claimed: £30.00')
   })
 
-  it('should contain the correct approved amount', function () {
-    var claimDetails = getApprovedClaimDetailsString(claimExpense2)
+  it('should contain the correct approved amount without deductions', function () {
+    var claimDetails = getApprovedClaimDetailsString(claimExpense2, [])
     expect(claimDetails).to.contain('Approved: £20.00')
   })
 
+  it('should contain the deduction header if there are any claim deductions', function () {
+    var claimDetails = getApprovedClaimDetailsString(claimExpense1, claimDeduction1)
+    expect(claimDetails).to.contain('Deductions')
+  })
+
+  it('should contain the correct deduction type', function () {
+    var claimDetails = getApprovedClaimDetailsString(claimExpense2, claimDeduction2)
+    expect(claimDetails).to.contain('Type: Overpayment')
+  })
+
+  it('should contain the correct deduction amount', function () {
+    var claimDetails = getApprovedClaimDetailsString(claimExpense2, claimDeduction2)
+    expect(claimDetails).to.contain('Amount: £10.00')
+  })
+
   it('should return nothing if no claims expenses exist', function () {
-    var claimDetails = getApprovedClaimDetailsString([])
+    var claimDetails = getApprovedClaimDetailsString([], [])
     expect(claimDetails).to.equal('')
   })
 })

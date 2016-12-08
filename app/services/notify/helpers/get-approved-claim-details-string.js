@@ -1,42 +1,76 @@
 const EXPENSE_TYPE = require('../../../constants/expense-type-enum')
+const DEDUCTION_TYPE = require('../../../constants/deduction-type-enum')
+const enumHelper = require('../../../constants/helpers/enum-helper')
+const newLine = '\r\n'
 
-module.exports = function (claims) {
+module.exports = function (claimExpenses, claimDeductions) {
+  var paymentBreakdownString = buildPaymentBreakdown(claimExpenses)
+  var deductionBreakdownString = buildDeductionBreakdown(claimDeductions)
+
+  return paymentBreakdownString +
+    deductionBreakdownString
+}
+
+function getClaimHeader (claimExpense) {
+  var claimHeader = ''
+  var claimType = EXPENSE_TYPE[claimExpense.ExpenseType]
+
+  if (claimType) {
+    if (claimType.isJourney) {
+      claimHeader = `${claimType.displayValue} - ${claimExpense.From} to ${claimExpense.To} ${(claimExpense.IsReturn ? ' - Return' : '')}`
+    } else {
+      claimHeader = claimType.displayValue
+    }
+  } else {
+    throw new Error(`Invalid Claim Expense Type: ${claimExpense.ExpenseType}`)
+  }
+
+  return claimHeader
+}
+
+function buildPaymentBreakdown (claimExpenses) {
   var result = []
-  var newLine = '\r\n'
 
   // Append "Your claim details" to top of string if there are any claims expenses to show
-  if (claims.length > 0) {
+  if (claimExpenses.length > 0) {
     result.push('Your claim details')
     result.push(newLine)
   } else {
     return ''
   }
 
-  claims.forEach(function (claim) {
-    var claimHeader = getClaimHeader(claim)
+  claimExpenses.forEach(function (claimExpense) {
+    var claimHeader = getClaimHeader(claimExpense)
 
     result.push(claimHeader)
-    result.push(`Claimed: £${claim.Cost.toFixed(2)}`)
-    result.push(`Approved: £${(claim.ApprovedCost ? claim.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
+    result.push(`Claimed: £${claimExpense.Cost.toFixed(2)}`)
+    result.push(`Approved: £${(claimExpense.ApprovedCost ? claimExpense.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
     result.push(newLine)
   })
 
+  result.push(newLine)
   return result.join(newLine)
 }
 
-function getClaimHeader (claim) {
-  var claimHeader = ''
-  var claimType = EXPENSE_TYPE[claim.ExpenseType]
+function buildDeductionBreakdown (claimDeductions) {
+  var result = []
 
-  if (claimType) {
-    if (claimType.isJourney) {
-      claimHeader = `${claimType.displayValue} - ${claim.From} to ${claim.To} ${(claim.IsReturn ? ' - Return' : '')}`
-    } else {
-      claimHeader = claimType.displayValue
-    }
+  if (claimDeductions.length > 0) {
+    result.push(newLine)
+    result.push('Deductions')
+    result.push(newLine)
   } else {
-    throw new Error(`Invalid Claim Expense Type: ${claim.ExpenseType}`)
+    return ''
   }
 
-  return claimHeader
+  claimDeductions.forEach(function (claimDeduction) {
+    var deductionType = enumHelper.getKeyByValue(DEDUCTION_TYPE, claimDeduction.DeductionType)
+
+    result.push(`Type: ${deductionType.displayName}`)
+    result.push(`Amount: £${claimDeduction.Amount.toFixed(2)}`)
+    result.push(newLine)
+  })
+
+  result.push(newLine)
+  return result.join(newLine)
 }

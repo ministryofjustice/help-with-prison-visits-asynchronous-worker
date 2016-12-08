@@ -42,7 +42,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
   })
 
   it('should retrieve only claim expenses relating to the claim with the specified reference and claim id', function () {
-    return getApprovedClaimExpenseData(reference, claimId)
+    return getApprovedClaimExpenseData(claimId)
       .then(function (result) {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId1)
