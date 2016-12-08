@@ -31,12 +31,6 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
   }
 
   return requestPromise(options)
-    .then(function (response) {
-      console.dir(response)
-    })
-    .catch(function (error) {
-      console.dir(error)
-    })
 }
 
 function getId (timestamp) {
