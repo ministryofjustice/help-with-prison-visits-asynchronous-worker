@@ -1,9 +1,10 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
+require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
-require('sinon-bluebird')
+const autoApprovalRulesEnum = require('../../../../app/constants/auto-approval-rules-enum')
 
 const testHelper = require('../../../test-helper')
 const AutoApprovalCheckResult = require('../../../../app/services/domain/auto-approval-check-result')
@@ -15,9 +16,11 @@ const CLAIM_ID = 4321
 var validAutoApprovalData = testHelper.getAutoApprovalData(REFERENCE)
 var validCheckResult = new AutoApprovalCheckResult('', true, '')
 var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
+var validAutoApprovalConfig
 
 var autoApprovalDataConstructorStub
 var getDataForAutoApprovalCheckStub
+var getAutoApprovalConfigStub
 var insertClaimEventDataStub
 var insertTaskStub
 var autoApproveClaimStub
@@ -27,8 +30,22 @@ var autoApprovalProcess
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
+    validAutoApprovalConfig = {
+      AutoApprovalConfigId: 39,
+      Caseworker: 'caseworker1@test.com',
+      DateCreated: '2016-12-08T12:17:58.260Z',
+      AutoApprovalEnabled: true,
+      CostVariancePercentage: 5,
+      MaxClaimTotal: 100,
+      MaxDaysAfterAPVUVisit: 28,
+      MaxNumberOfClaimsPerYear: 10,
+      RulesDisabled: null,
+      IsEnabled: true
+    }
+
     autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
     getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
+    getAutoApprovalConfigStub = sinon.stub().resolves(validAutoApprovalConfig)
     insertClaimEventDataStub = sinon.stub().resolves()
     insertTaskStub = sinon.stub().resolves()
     autoApproveClaimStub = sinon.stub().resolves()
@@ -37,34 +54,26 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
       './auto-approval-data-constructor': autoApprovalDataConstructorStub,
       '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
+      '../data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../data/auto-approve-claim': autoApproveClaimStub,
       '../data/insert-claim-event-data': insertClaimEventDataStub,
-      '../data/insert-task': insertTaskStub,
-      // All checks
-      './checks/are-children-under-18': sinon.stub().returns(validCheckResult),
-      './checks/cost-and-variance-equal-or-less-than-first-time-claim': sinon.stub().returns(validCheckResult),
-      './checks/do-expenses-match-first-time-claim': sinon.stub().returns(validCheckResult),
-      './checks/has-claimed-less-than-max-times-this-year': sinon.stub().returns(validCheckResult),
-      './checks/has-uploaded-prison-visit-confirmation-and-receipts': sinon.stub().returns(validCheckResult),
-      './checks/is-claim-submitted-within-time-limit': sinon.stub().returns(validCheckResult),
-      './checks/is-claim-total-under-limit': sinon.stub().returns(validCheckResult),
-      './checks/is-latest-manual-claim-approved': sinon.stub().returns(validCheckResult),
-      './checks/is-prison-not-in-guernsey-jersey': sinon.stub().returns(validCheckResult),
-      './checks/is-no-previous-pending-claim': sinon.stub().returns(validCheckResult),
-      './checks/is-visit-in-past': sinon.stub().returns(validCheckResult),
-      './checks/visit-date-different-to-previous-claims': sinon.stub().returns(validCheckResult)
+      '../data/insert-task': insertTaskStub
     }
+
+    autoApprovalRulesEnum.forEach(function (check) {
+      autoApprovalDependencies[`./checks/${check}`] = sinon.stub().returns(validCheckResult)
+    })
 
     autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
   })
 
-  it('should not execute auto approval process if config is set to false', function () {
-    autoApprovalDependencies['../../../config'] = { AUTO_APPROVAL_ENABLED: 'false' }
-    var disabledConfigAutoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
+  it('should not execute auto approval process if AutoApprovalEnabled is set to false', function () {
+    getAutoApprovalConfigStub.resolves({AutoApprovalEnabled: false})
 
-    return disabledConfigAutoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result).to.be.null
+        sinon.assert.calledOnce(getAutoApprovalConfigStub)
         sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
         sinon.assert.notCalled(autoApproveClaimStub)
       })
@@ -80,18 +89,35 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
-  it('should return claimApproved false for PENDING claim', function () {
-    var pendingData = {Claim: {Status: statusEnum.PENDING}}
-    getDataForAutoApprovalCheckStub.resolves(pendingData)
+  it('should return claimApproved false for claims with status not equal to NEW', function () {
+    var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
+    getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject PENDING claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false
+      })
+  })
+
+  it('should return claimApproved true for NEW claims', function () {
+    var newClaimData = validAutoApprovalData
+    newClaimData.Claim = { Status: statusEnum.NEW }
+    getDataForAutoApprovalCheckStub.resolves(newClaimData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function (result) {
+        expect(result.claimApproved, 'should auto approve NEW claims').to.be.true
       })
   })
 
   it('should return claimApproved false for Advance claim', function () {
-    var advanceClaimData = {Claim: {ClaimType: claimTypeEnum.REPEAT_CLAIM, Status: statusEnum.NEW, IsAdvanceClaim: true}}
+    var advanceClaimData = validAutoApprovalData
+    advanceClaimData.Claim = {
+      ClaimType: claimTypeEnum.REPEAT_CLAIM,
+      Status: statusEnum.NEW,
+      IsAdvanceClaim: true
+    }
+    autoApprovalDependencies['./checks/is-visit-in-past'].returns(invalidCheckResult)
     getDataForAutoApprovalCheckStub.resolves(advanceClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
@@ -110,8 +136,8 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
-          if (key.indexOf('check') < 0) continue
-          sinon.assert.calledOnce(autoApprovalDependencies[key])
+          if (key.indexOf('/checks/') < 0) continue
+          sinon.assert.called(autoApprovalDependencies[key])
         }
       })
   })
@@ -139,9 +165,23 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
-          if (key.indexOf('check') < 0) continue
+          if (key.indexOf('/checks/') < 0) continue
           sinon.assert.calledOnce(autoApprovalDependencies[key])
         }
       })
+  })
+
+  autoApprovalRulesEnum.forEach(function (check) {
+    it(`should not perform ${check} check when it is disabled`, function () {
+      validAutoApprovalConfig.RulesDisabled = [`${check}`]
+      getAutoApprovalConfigStub.resolves(validAutoApprovalConfig)
+      return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+        .then(function (result) {
+          expect(result.claimApproved).to.be.true
+          sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+          sinon.assert.calledOnce(autoApproveClaimStub)
+          sinon.assert.notCalled(autoApprovalDependencies[`./checks/${check}`])
+        })
+    })
   })
 })

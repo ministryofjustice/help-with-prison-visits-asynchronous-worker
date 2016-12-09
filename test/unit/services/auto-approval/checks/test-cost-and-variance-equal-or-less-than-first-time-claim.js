@@ -24,7 +24,8 @@ const autoApprovalData = {
         Cost: 5
       }
     ]
-  }
+  },
+  costVariancePercentage: '-10'
 }
 
 const costAndVarianceEqualOrLessThanFirstTimeClaim = require('../../../../../app/services/auto-approval/checks/cost-and-variance-equal-or-less-than-first-time-claim')
