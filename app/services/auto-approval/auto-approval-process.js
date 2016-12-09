@@ -26,7 +26,7 @@ module.exports = function (reference, eligibilityId, claimId) {
 
             var disabledRules = config.RulesDisabled || []
 
-            if (failBasedOnPreRequisiteChecks(result, autoApprovalData, disabledRules)) {
+            if (failBasedOnPreRequisiteChecks(result, autoApprovalData)) {
               result.claimApproved = false
               return result
             }
@@ -53,14 +53,9 @@ module.exports = function (reference, eligibilityId, claimId) {
     })
 }
 
-function failBasedOnPreRequisiteChecks (result, autoApprovalData, disabledRules) {
-  var visitConfirmationAndReceiptsRequiredCheckEnabled = disabledRules.indexOf('has-uploaded-prison-visit-confirmation-and-receipts') === -1
-  var advanceClaimCheckEnabled = disabledRules.indexOf('is-visit-in-past') === -1
+function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
   if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-    (autoApprovalData.Claim.IsAdvanceClaim &&
-      advanceClaimCheckEnabled) ||
-    (autoApprovalData.Claim.Status === statusEnum.PENDING &&
-      visitConfirmationAndReceiptsRequiredCheckEnabled)) {
+    (autoApprovalData.Claim.Status === statusEnum.PENDING)) {
     return true
   }
 }
