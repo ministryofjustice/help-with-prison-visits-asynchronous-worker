@@ -23,35 +23,14 @@ module.exports = function (reference, eligibilityId, claimId) {
 
             var disabledRules = config.RulesDisabled || []
 
-            // Fail auto-approval check if First time claim, advance claim or status is PENDING
-            var visitConfirmationAndReceiptsRequiredCheckEnabled = disabledRules.indexOf('has-uploaded-prison-visit-confirmation-and-receipts') === -1
-            var advanceClaimCheckEnabled = disabledRules.indexOf('is-visit-in-past') === -1
-            if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-              (autoApprovalData.Claim.IsAdvanceClaim &&
-                advanceClaimCheckEnabled) ||
-              (autoApprovalData.Claim.Status === statusEnum.PENDING &&
-                visitConfirmationAndReceiptsRequiredCheckEnabled)) {
-              console.dir('fail auto approval check!')
-              console.log(autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME)
-              console.log(autoApprovalData.Claim.IsAdvanceClaim)
-              console.log(autoApprovalData.Claim.Status === statusEnum.PENDING)
-              console.log('advanceClaimCheckDisabled:' + advanceClaimCheckEnabled)
+            if (failBasedOnPreRequisiteChecks(result, autoApprovalData, disabledRules)) {
               result.claimApproved = false
               return result
             }
 
-            // Add AutoApprovalConfig
-            autoApprovalData.costVariancePercentage = config.CostVariancePercentage || '10'
-            autoApprovalData.maxNumberOfClaimsPerYear = config.MaxNumberOfClaimsPerYear || '26'
-            autoApprovalData.maxDaysAfterAPVUVisit = config.MaxDaysAfterAPVUVisit || '28'
-            autoApprovalData.maxClaimTotal = config.MaxClaimTotal || '250'
+            addAutoApprovalConfigToData(autoApprovalData, config)
 
-            autoApprovalRulesEnum.forEach(function (check) {
-              if (disabledRules.indexOf(check) === -1) {
-                var checkResult = autoApprovalChecks[check](autoApprovalData)
-                result.checks.push(checkResult)
-              }
-            })
+            runEnabledChecks(result, autoApprovalData, disabledRules)
 
             result.claimApproved = true
             // Loop through result properties, if any are false, then the claim should not be approved
@@ -77,4 +56,33 @@ module.exports = function (reference, eligibilityId, claimId) {
         return Promise.resolve(null)
       }
     })
+}
+
+
+function failBasedOnPreRequisiteChecks (result, autoApprovalData, disabledRules) {
+  var visitConfirmationAndReceiptsRequiredCheckEnabled = disabledRules.indexOf('has-uploaded-prison-visit-confirmation-and-receipts') === -1
+  var advanceClaimCheckEnabled = disabledRules.indexOf('is-visit-in-past') === -1
+  if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+    (autoApprovalData.Claim.IsAdvanceClaim &&
+      advanceClaimCheckEnabled) ||
+    (autoApprovalData.Claim.Status === statusEnum.PENDING &&
+      visitConfirmationAndReceiptsRequiredCheckEnabled)) {
+    return true
+  }
+}
+
+function addAutoApprovalConfigToData (autoApprovalData, config) {
+  autoApprovalData.costVariancePercentage = config.CostVariancePercentage || '10'
+  autoApprovalData.maxNumberOfClaimsPerYear = config.MaxNumberOfClaimsPerYear || '26'
+  autoApprovalData.maxDaysAfterAPVUVisit = config.MaxDaysAfterAPVUVisit || '28'
+  autoApprovalData.maxClaimTotal = config.MaxClaimTotal || '250'
+}
+
+function runEnabledChecks (result, autoApprovalData, disabledRules) {
+  autoApprovalRulesEnum.forEach(function (check) {
+    if (disabledRules.indexOf(check) === -1) {
+      var checkResult = autoApprovalChecks[check](autoApprovalData)
+      result.checks.push(checkResult)
+    }
+  })
 }
