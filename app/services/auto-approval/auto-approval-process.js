@@ -19,7 +19,10 @@ module.exports = function (reference, eligibilityId, claimId) {
       if (config.AutoApprovalEnabled) {
         return getDataForAutoApprovalChecks(reference, eligibilityId, claimId)
           .then(function (autoApprovalData) {
-            var result = {checks: []}
+            var result = {
+              checks: [],
+              claimApproved: true
+            }
 
             var disabledRules = config.RulesDisabled || []
 
@@ -31,14 +34,6 @@ module.exports = function (reference, eligibilityId, claimId) {
             addAutoApprovalConfigToData(autoApprovalData, config)
 
             runEnabledChecks(result, autoApprovalData, disabledRules)
-
-            result.claimApproved = true
-            // Loop through result properties, if any are false, then the claim should not be approved
-            result.checks.forEach(function (check) {
-              if (!check.result) {
-                result.claimApproved = false
-              }
-            })
 
             if (result.claimApproved) {
               return autoApproveClaim(claimId, autoApprovalData.Visitor.EmailAddress)
@@ -57,7 +52,6 @@ module.exports = function (reference, eligibilityId, claimId) {
       }
     })
 }
-
 
 function failBasedOnPreRequisiteChecks (result, autoApprovalData, disabledRules) {
   var visitConfirmationAndReceiptsRequiredCheckEnabled = disabledRules.indexOf('has-uploaded-prison-visit-confirmation-and-receipts') === -1
@@ -79,10 +73,13 @@ function addAutoApprovalConfigToData (autoApprovalData, config) {
 }
 
 function runEnabledChecks (result, autoApprovalData, disabledRules) {
-  autoApprovalRulesEnum.forEach(function (check) {
-    if (disabledRules.indexOf(check) === -1) {
-      var checkResult = autoApprovalChecks[check](autoApprovalData)
+  autoApprovalRulesEnum.forEach(function (checkName) {
+    if (disabledRules.indexOf(checkName) === -1) {
+      var checkResult = autoApprovalChecks[checkName](autoApprovalData)
       result.checks.push(checkResult)
+      if (!checkResult.result) {
+        result.claimApproved = false
+      }
     }
   })
 }
