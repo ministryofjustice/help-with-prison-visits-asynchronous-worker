@@ -1,7 +1,7 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
 const CHECK_NAME = 'claimant-has-not-been-overpaid'
-const FAILURE_MESSAGE = 'This claimant has not provided all receipts and documentation for a previous advance claim'
+const FAILURE_MESSAGE = 'This claimant has been flagged as being overpaid on a previous claim'
 
 module.exports = function (autoApprovalData) {
   var checkPassed = true
