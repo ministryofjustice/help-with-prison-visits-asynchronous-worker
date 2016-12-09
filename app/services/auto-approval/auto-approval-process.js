@@ -21,15 +21,24 @@ module.exports = function (reference, eligibilityId, claimId) {
           .then(function (autoApprovalData) {
             var result = {checks: []}
 
+            var disabledRules = config.RulesDisabled || []
+
             // Fail auto-approval check if First time claim, advance claim or status is PENDING
+            var visitConfirmationAndReceiptsRequiredCheckEnabled = disabledRules.indexOf('has-uploaded-prison-visit-confirmation-and-receipts') === -1
+            var advanceClaimCheckEnabled = disabledRules.indexOf('is-visit-in-past') === -1
             if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-              autoApprovalData.Claim.IsAdvanceClaim ||
-              autoApprovalData.Claim.Status === statusEnum.PENDING) {
+              (autoApprovalData.Claim.IsAdvanceClaim &&
+                advanceClaimCheckEnabled) ||
+              (autoApprovalData.Claim.Status === statusEnum.PENDING &&
+                visitConfirmationAndReceiptsRequiredCheckEnabled)) {
+              console.dir('fail auto approval check!')
+              console.log(autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME)
+              console.log(autoApprovalData.Claim.IsAdvanceClaim)
+              console.log(autoApprovalData.Claim.Status === statusEnum.PENDING)
+              console.log('advanceClaimCheckDisabled:' + advanceClaimCheckEnabled)
               result.claimApproved = false
               return result
             }
-
-            var disabledRules = config.RulesDisabled || []
 
             // Add AutoApprovalConfig
             autoApprovalData.costVariancePercentage = config.CostVariancePercentage || '10'
