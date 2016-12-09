@@ -1,7 +1,7 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
 const CHECK_NAME = 'is-latest-manual-claim-approved'
-const FAILURE_MESSAGE = 'The last manually evaluated claim was rejected'
+const FAILURE_MESSAGE = 'The last manually evaluated claim was not approved'
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.Status === 'APPROVED') {
