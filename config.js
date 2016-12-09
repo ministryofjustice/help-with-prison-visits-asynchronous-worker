@@ -12,8 +12,9 @@ module.exports = {
   DATABASE: process.env.APVS_DATABASE,
 
   // Worker
-  ASYNC_WORKER_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '*/2 * * * * *',
-  ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || 5,
+  ASYNC_WORKER_CRON: process.env.APVS_ASYNC_WORKER_CRON || '*/2 * * * * *',
+  ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '5',
+  DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '30 04 * * * *', // default every day at 0430
 
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',
@@ -40,5 +41,10 @@ module.exports = {
   // Payment Generation
   PAYMENT_GENERATION_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '10 * * * * *',
   PAYMENT_FILE_PATH: process.env.APVS_PAYMENT_FILE_PATH || 'payments',
-  PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS: process.env.APVS_PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS || '28'
+  PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS: process.env.APVS_PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS || '28',
+
+  // Performance Platform metrics
+  PERFORMANCE_PLATFORM_SEND_ENABLED: process.env.APVS_PERFORMANCE_PLATFORM_SEND_ENABLED || 'false',
+  PERFORMANCE_PLATFORM_URL: process.env.APVS_PERFORMANCE_PLATFORM_URL,
+  PERFORMANCE_PLATFORM_BEARER_TOKEN: process.env.APVS_PERFORMANCE_PLATFORM_BEARER_TOKEN
 }

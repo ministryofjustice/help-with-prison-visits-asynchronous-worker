@@ -37,6 +37,7 @@ module.exports.deleteAll = function (reference, schema) {
         return deleteByReference(`${schema}.EligibilityVisitorUpdateContactDetail`, reference)
       } else {
         return deleteByReference(`${schema}.ClaimEvent`, reference)
+          .then(function () { return deleteByReference(`${schema}.ClaimDeduction`, reference) })
       }
     })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
@@ -140,6 +141,13 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
         data.ClaimChildren[1].ClaimId = newClaimId
       }
       return knex(`${schema}.ClaimChild`).insert(data.ClaimChildren)
+    })
+    .then(function () {
+      if (isExtSchema) {
+        Promise.resolve(null)
+      } else {
+        return knex(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
+      }
     })
     .then(function () {
       return newClaimId
@@ -289,7 +297,25 @@ module.exports.getClaimData = function (reference) {
       EmailAddress: 'newEmail@test.com',
       PhoneNumber: '0123456789',
       DateSubmitted: new Date()
-    }
+    },
+    ClaimDeduction: [
+      {
+        EligibilityId: uniqueId,
+        ClaimId: uniqueId,
+        Reference: reference,
+        DeductionType: 'hc3',
+        Amount: 10,
+        IsEnabled: true
+      },
+      {
+        EligibilityId: uniqueId,
+        ClaimId: uniqueId,
+        Reference: reference,
+        DeductionType: 'overpayment',
+        Amount: 5,
+        IsEnabled: true
+      }
+    ]
   }
 }
 

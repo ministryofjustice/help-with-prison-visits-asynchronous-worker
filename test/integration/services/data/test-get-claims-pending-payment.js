@@ -60,7 +60,7 @@ describe('services/data/get-claims-pending-payment', function () {
         expect(filteredResults[0][1], 'should contain the sort code').to.be.equal('001122')
         expect(filteredResults[0][2], 'should contain the account number').to.be.equal('00123456')
         expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
-        expect(filteredResults[0][4], 'should contain correct amount').to.be.equal('25')
+        expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10')
         expect(filteredResults[0][5], 'should contain the reference and date of journey').to.be.equal(`${reference} ${currentDate}`)
       })
   })
