@@ -1,7 +1,7 @@
 const config = require('../../../config')
 const moment = require('moment')
 const getNumberOfSubmittedClaimsForDateRange = require('../data/get-number-of-submitted-claims-for-date-range')
-const postPerformancePlatformMetricsForDay = require('../performance-platform/post-performance-platform-metrics-for-day')
+const sendPerformancePlatformMetricsForDay = require('../performance-platform/send-performance-platform-metrics-for-day')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
@@ -13,7 +13,7 @@ module.exports.execute = function (task) {
 
     return getNumberOfSubmittedClaimsForDateRange(startOfPreviousDayDateCreated, endOfPreviousDayDateCreated)
       .then(function (submittedClaimCount) {
-        return postPerformancePlatformMetricsForDay(startOfPreviousDayDateCreated, submittedClaimCount)
+        return sendPerformancePlatformMetricsForDay(startOfPreviousDayDateCreated, submittedClaimCount)
       })
   } else {
     return Promise.resolve()
