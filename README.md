@@ -26,6 +26,12 @@ npm start
 
 # start Express healthcheck available on http://localhost:3999/status
 npm run-script start-web
+
+# start schedule script for payment run tasks
+node start-schedule-payment-run
+
+# start schedule script for daily tasks
+node start-schedule-daily-tasks
 ```
 
 ### With Docker Compose
