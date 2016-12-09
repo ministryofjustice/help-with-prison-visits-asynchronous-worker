@@ -12,8 +12,8 @@ module.exports = {
   DATABASE: process.env.APVS_DATABASE,
 
   // Worker
-  ASYNC_WORKER_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '*/2 * * * * *',
-  ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || 5,
+  ASYNC_WORKER_CRON: process.env.APVS_ASYNC_WORKER_CRON || '*/2 * * * * *',
+  ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '5',
   DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '30 04 * * * *', // default every day at 0430
 
   // GOV Notify
