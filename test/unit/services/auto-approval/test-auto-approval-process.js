@@ -89,7 +89,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
-  it('should return claimApproved false for claim with status not equal to NEW', function () {
+  it('should return claimApproved false for claims with status not equal to NEW', function () {
     var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
     getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
 
