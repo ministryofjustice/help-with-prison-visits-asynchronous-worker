@@ -1,3 +1,4 @@
+// NOTE: Keep in sync with apvs-internal-web to ensure all checks can be disabled in admin config
 module.exports = [
   'are-children-under-18',
   'cost-and-variance-equal-or-less-than-first-time-claim',
