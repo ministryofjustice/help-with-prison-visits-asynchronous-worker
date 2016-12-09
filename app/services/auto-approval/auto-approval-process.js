@@ -55,7 +55,7 @@ module.exports = function (reference, eligibilityId, claimId) {
 
 function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
   if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
-    (autoApprovalData.Claim.Status === statusEnum.PENDING)) {
+    (autoApprovalData.Claim.Status !== statusEnum.NEW)) {
     return true
   }
 }

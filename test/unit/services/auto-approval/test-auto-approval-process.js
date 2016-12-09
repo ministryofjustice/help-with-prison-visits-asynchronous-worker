@@ -89,13 +89,24 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
-  it('should return claimApproved false for PENDING claim', function () {
-    var pendingData = {Claim: {Status: statusEnum.PENDING}}
-    getDataForAutoApprovalCheckStub.resolves(pendingData)
+  it('should return claimApproved false for claim with status not equal to NEW', function () {
+    var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
+    getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject PENDING claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false
+      })
+  })
+
+  it('should return claimApproved true for NEW claims', function () {
+    var newClaimData = validAutoApprovalData
+    newClaimData.Claim = { Status: statusEnum.NEW }
+    getDataForAutoApprovalCheckStub.resolves(newClaimData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function (result) {
+        expect(result.claimApproved, 'should auto approve NEW claims').to.be.true
       })
   })
 
