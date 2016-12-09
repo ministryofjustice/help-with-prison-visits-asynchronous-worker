@@ -100,7 +100,13 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should return claimApproved false for Advance claim', function () {
-    var advanceClaimData = {Claim: {ClaimType: claimTypeEnum.REPEAT_CLAIM, Status: statusEnum.NEW, IsAdvanceClaim: true}}
+    var advanceClaimData = validAutoApprovalData
+    advanceClaimData.Claim = {
+      ClaimType: claimTypeEnum.REPEAT_CLAIM,
+      Status: statusEnum.NEW,
+      IsAdvanceClaim: true
+    }
+    autoApprovalDependencies['./checks/is-visit-in-past'].returns(invalidCheckResult)
     getDataForAutoApprovalCheckStub.resolves(advanceClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
