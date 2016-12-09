@@ -7,7 +7,7 @@ const completeTaskWithStatus = require('./services/data/complete-task-with-statu
 const getWorkerForTask = require('./services/get-worker-for-task')
 
 module.exports = function () {
-  var batchSize = config.ASYNC_WORKER_BATCH_SIZE
+  var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE)
 
   return processTasksForSchema('ExtSchema', batchSize).then(function () {
     return processTasksForSchema('IntSchema', batchSize)
