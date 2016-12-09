@@ -10,6 +10,7 @@ const sendClaimNotification = { name: 'sendClaimNotification' }
 const completeClaim = { name: 'completeClaim' }
 const requestInformationResponse = { name: 'requestInformationResponse' }
 const dwpCheck = { name: 'dwpCheck' }
+const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
@@ -21,6 +22,7 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/complete-claim': completeClaim,
   './workers/request-information-response': requestInformationResponse,
   './workers/dwp-check': dwpCheck,
+  './workers/send-performance-platform-metrics-for-day': sendPerformancePlatformMetricsForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles
 })
 
@@ -63,6 +65,11 @@ describe('services/getWorkerForTask', function () {
   it('should return dwp-check', function () {
     var worker = getWorkerForTask(tasksEnum.DWP_CHECK)
     expect(worker.name).to.be.equal('dwpCheck')
+  })
+
+  it('should return send-performance-platform-metrics-for-day', function () {
+    var worker = getWorkerForTask(tasksEnum.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY)
+    expect(worker.name).to.be.equal('sendPerformancePlatformMetricsForDay')
   })
 
   it('should return cleanup-old-payment-files', function () {
