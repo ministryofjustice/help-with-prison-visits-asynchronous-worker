@@ -13,6 +13,8 @@ const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: new Date() } }
 var moveClaimDocumentsToInternal
 var getAllClaimData
 var updateClaimStatus
+var insertClaimEvent
+var generateClaimUpdatedString
 var autoApprovalProcess
 
 var requestInformationResponse
@@ -22,12 +24,16 @@ describe('services/workers/request-information-response', function () {
     moveClaimDocumentsToInternal = sinon.stub().resolves()
     getAllClaimData = sinon.stub().resolves(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
     updateClaimStatus = sinon.stub().resolves()
+    insertClaimEvent = sinon.stub().resolves()
+    generateClaimUpdatedString = sinon.stub().returns('message')
     autoApprovalProcess = sinon.stub().resolves()
 
     requestInformationResponse = proxyquire('../../../../app/services/workers/request-information-response', {
       '../data/move-claim-documents-to-internal': moveClaimDocumentsToInternal,
       '../data/get-all-claim-data': getAllClaimData,
       '../data/update-claim-status': updateClaimStatus,
+      '../data/insert-claim-event': insertClaimEvent,
+      '../notify/helpers/generate-claim-updated-string': generateClaimUpdatedString,
       '../auto-approval/auto-approval-process': autoApprovalProcess
     })
   })
@@ -41,6 +47,8 @@ describe('services/workers/request-information-response', function () {
       expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
       expect(updateClaimStatus.calledWith(claimId, 'NEW')).to.be.true
+      expect(generateClaimUpdatedString.calledOnce).to.be.true
+      expect(insertClaimEvent.calledOnce).to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
     })
   })
@@ -56,6 +64,8 @@ describe('services/workers/request-information-response', function () {
       expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
       expect(updateClaimStatus.calledWith(claimId, 'UPDATED')).to.be.true
+      expect(generateClaimUpdatedString.calledOnce).to.be.true
+      expect(insertClaimEvent.calledOnce).to.be.true
       expect(autoApprovalProcess.called).to.be.false
     })
   })

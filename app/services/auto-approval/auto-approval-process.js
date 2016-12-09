@@ -1,7 +1,7 @@
 const config = require('../../../config')
 
 const getDataForAutoApprovalChecks = require('../data/get-data-for-auto-approval-check')
-const insertClaimEventData = require('../data/insert-claim-event-data')
+const insertClaimEvent = require('../data/insert-claim-event')
 const generateFailureReasonString = require('../notify/helpers/generate-failure-reason-string')
 const autoApproveClaim = require('../data/auto-approve-claim')
 const claimTypeEnum = require('../../constants/claim-type-enum')
@@ -57,7 +57,7 @@ module.exports = function (reference, eligibilityId, claimId) {
               return result
             })
         } else {
-          return insertClaimEventData(autoApprovalData.Claim, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
+          return insertClaimEvent(reference, eligibilityId, claimId, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
           .then(function () {
             return result
           })

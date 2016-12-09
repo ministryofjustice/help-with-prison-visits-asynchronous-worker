@@ -8,6 +8,7 @@ module.exports = function (reference, eligibilityId, claimId) {
     .then(function (documents) { claimDocuments = documents })
     .then(function () { return copyClaimDocumentsToInternal(claimDocuments) })
     .then(function () { return deleteClaimDocumentsFromExternal(reference, eligibilityId, claimId) })
+    .then(function () { return claimDocuments })
 }
 
 function getClaimDocumentsFromExternal (reference, eligibilityId, claimId) {

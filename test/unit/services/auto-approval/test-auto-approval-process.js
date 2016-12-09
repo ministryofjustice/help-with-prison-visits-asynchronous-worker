@@ -18,7 +18,7 @@ var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 
 var autoApprovalDataConstructorStub
 var getDataForAutoApprovalCheckStub
-var insertClaimEventDataStub
+var insertClaimEventStub
 var insertTaskStub
 var autoApproveClaimStub
 var autoApprovalDependencies
@@ -29,7 +29,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
     autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
     getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
-    insertClaimEventDataStub = sinon.stub().resolves()
+    insertClaimEventStub = sinon.stub().resolves()
     insertTaskStub = sinon.stub().resolves()
     autoApproveClaimStub = sinon.stub().resolves()
 
@@ -38,7 +38,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       './auto-approval-data-constructor': autoApprovalDataConstructorStub,
       '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
       '../data/auto-approve-claim': autoApproveClaimStub,
-      '../data/insert-claim-event-data': insertClaimEventDataStub,
+      '../data/insert-claim-event': insertClaimEventStub,
       '../data/insert-task': insertTaskStub,
       // All checks
       './checks/are-children-under-18': sinon.stub().returns(validCheckResult),
@@ -134,7 +134,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       .then(function (result) {
         expect(result.claimApproved).to.be.false
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        sinon.assert.calledOnce(insertClaimEventDataStub)
+        sinon.assert.calledOnce(insertClaimEventStub)
         var keys = Object.keys(autoApprovalDependencies)
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
