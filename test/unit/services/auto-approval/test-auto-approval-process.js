@@ -89,6 +89,16 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
+  it('should return claimApproved false for REPEAT_NEW_ELIGIBILITY claim', function () {
+    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY}}
+    getDataForAutoApprovalCheckStub.resolves(firstTimeData)
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false
+      })
+  })
+
   it('should return claimApproved false for claims with status not equal to NEW', function () {
     var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
     getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
