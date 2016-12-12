@@ -9,7 +9,8 @@ var validAutoApprovalData = {
     {
       Cost: 20
     }
-  ]
+  ],
+  maxClaimTotal: '250'
 }
 
 var invalidAutoApprovalData = {
@@ -20,7 +21,8 @@ var invalidAutoApprovalData = {
     {
       Cost: 150
     }
-  ]
+  ],
+  maxClaimTotal: '250'
 }
 
 describe('services/auto-approval/checks/is-claim-total-under-limit', function () {

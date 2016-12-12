@@ -7,7 +7,8 @@ const validAutoApprovalData = {
     ClaimId: 1,
     DateSubmitted: moment().subtract(2, 'days').toDate(),
     DateOfJourney: moment().subtract(30, 'days').toDate()
-  }
+  },
+  maxDaysAfterAPVUVisit: '28'
 }
 
 const invalidAutoApprovalData = {
@@ -15,7 +16,8 @@ const invalidAutoApprovalData = {
     ClaimId: 2,
     DateSubmitted: moment().subtract(1, 'days').toDate(),
     DateOfJourney: moment().subtract(30, 'days').toDate()
-  }
+  },
+  maxDaysAfterAPVUVisit: '28'
 }
 
 describe('services/auto-approval/checks/is-claim-submitted-within-time-limit', function () {

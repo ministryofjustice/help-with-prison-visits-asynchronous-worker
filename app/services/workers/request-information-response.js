@@ -25,12 +25,9 @@ module.exports.execute = function (task) {
 }
 
 function getStatusForUpdatedClaim (claimData) {
-console.dir(claimData.Claim)
   if (claimData.Claim.DateReviewed) {
-console.log('updated')
     return statusEnum.UPDATED
   } else {
-console.log('new')
     return statusEnum.NEW
   }
 }
