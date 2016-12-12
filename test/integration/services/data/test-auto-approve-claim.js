@@ -11,10 +11,12 @@ const tasksEnum = require('../../../../app/constants/tasks-enum')
 
 const autoApproveClaimExpenseStub = sinon.stub().resolves()
 const insertTaskStub = sinon.stub().resolves()
+const insertClaimEventStub = sinon.stub().resolves()
 
 const autoApproveClaim = proxyquire('../../../../app/services/data/auto-approve-claim', {
   './auto-approve-claim-expenses': autoApproveClaimExpenseStub,
-  '../data/insert-task': insertTaskStub
+  '../data/insert-task': insertTaskStub,
+  '../data/insert-claim-event': insertClaimEventStub
 })
 
 const REFERENCE = 'AUTOAPP'
@@ -31,8 +33,10 @@ describe('services/data/auto-approve-claim', function () {
       })
   })
 
-  it('should update the status of the claim to AUTOAPPROVED, call to update expenses and send accept email', function () {
-    return autoApproveClaim(claimId, EMAIL_ADDRESS)
+  it('should update the status of the claim to AUTOAPPROVED, call to update expenses, send accept email and add claim event', function () {
+    const CLAIM_EVENT = 'CLAIM-APPROVED'
+
+    return autoApproveClaim(REFERENCE, eligibilityId, claimId, EMAIL_ADDRESS)
       .then(function () {
         return knex('IntSchema.Claim')
           .where('ClaimId', claimId)
@@ -41,6 +45,7 @@ describe('services/data/auto-approve-claim', function () {
             expect(claim.Status).to.equal(statusEnum.AUTOAPPROVED)
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
+            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, CLAIM_EVENT, null, null, false)).to.be.true
           })
       })
   })

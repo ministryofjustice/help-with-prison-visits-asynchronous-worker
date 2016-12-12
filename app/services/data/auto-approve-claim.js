@@ -4,33 +4,21 @@ const moment = require('moment')
 
 const autoApproveClaimExpenses = require('./auto-approve-claim-expenses')
 const insertTask = require('../data/insert-task')
+const insertClaimEvent = require('../data/insert-claim-event')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimId, visitorEmailAddress) {
-  var claim
+module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
+  const CLAIM_EVENT = 'CLAIM-APPROVED'
 
-  return getClaim(claimId)
-    .then(function (result) {
-      claim = result
-      return setClaimStatusToAutoApproved(claim)
-    })
-    .then(function () {
-      return autoApproveClaimExpenses(claimId)
-    })
-    .then(function () {
-      return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
-    })
+  return setClaimStatusToAutoApproved(claimId)
+    .then(function () { return autoApproveClaimExpenses(claimId) })
+    .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress) })
+    .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, CLAIM_EVENT, null, null, false) })
 }
 
-function getClaim (claimId) {
+function setClaimStatusToAutoApproved (claimId) {
   return knex('IntSchema.Claim')
-    .first()
     .where('ClaimId', claimId)
-}
-
-function setClaimStatusToAutoApproved (claim) {
-  return knex('IntSchema.Claim')
-    .where('ClaimId', claim.ClaimId)
     .update({'Status': statusEnum.AUTOAPPROVED, 'DateReviewed': moment().toDate()})
 }
