@@ -49,6 +49,7 @@ module.exports.deleteAll = function (reference, schema) {
 module.exports.insertClaimEligibilityData = function (schema, reference) {
   var data = this.getClaimData(reference)
   var insertClaimData = this.insertClaimData
+
   var newEligibilityId
   var isExtSchema = schema === 'ExtSchema'
 
@@ -121,15 +122,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       return knex(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })
     .then(function () {
-      if (isExtSchema) {
-        delete data.ClaimDocument[0].ClaimDocumentId
-        delete data.ClaimDocument[1].ClaimDocumentId
-        data.ClaimDocument[0].EligibilityId = newEligibilityId
-        data.ClaimDocument[1].EligibilityId = newEligibilityId
-        data.ClaimDocument[0].ClaimId = newClaimId
-        data.ClaimDocument[1].ClaimId = newClaimId
-      }
-      return knex(`${schema}.ClaimDocument`).insert(data.ClaimDocument)
+      return insertClaimDocuments(schema, newEligibilityId, newClaimId, data.ClaimDocument)
     })
     .then(function () {
       if (isExtSchema) {
@@ -153,6 +146,8 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       return newClaimId
     })
 }
+
+module.exports.insertClaimDocumentData = insertClaimDocuments
 
 module.exports.getClaimData = function (reference) {
   // Generate unique Integer for Ids using timestamp in tenth of seconds
@@ -453,4 +448,17 @@ function getPrisonerObject (prisonerId, eligibilityId, reference, nameOfPrison) 
 
 function subtractDateFromNow (amount, unit) {
   return moment().subtract(amount, unit).toDate()
+}
+
+function insertClaimDocuments (schema, eligibilityId, claimId, data) {
+  var isExtSchema = schema === 'ExtSchema'
+  if (isExtSchema) {
+    delete data[0].ClaimDocumentId
+    delete data[1].ClaimDocumentId
+    data[0].EligibilityId = eligibilityId
+    data[1].EligibilityId = eligibilityId
+    data[0].ClaimId = claimId
+    data[1].ClaimId = claimId
+  }
+  return knex(`${schema}.ClaimDocument`).insert(data)
 }

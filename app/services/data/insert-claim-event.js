@@ -1,11 +1,11 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (claim, event, additionalData, note, isInternal) {
+module.exports = function (reference, eligibilityId, claimId, event, additionalData, note, isInternal) {
   var claimEvent = {
-    'EligibilityId': claim.EligibilityId,
-    'Reference': claim.Reference,
-    'ClaimId': claim.ClaimId,
+    'EligibilityId': eligibilityId,
+    'Reference': reference,
+    'ClaimId': claimId,
     'DateAdded': new Date(),
     'Event': event,
     'additionalData': additionalData,

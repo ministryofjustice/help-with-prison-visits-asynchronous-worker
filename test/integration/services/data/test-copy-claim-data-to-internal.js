@@ -11,7 +11,7 @@ var insertClaimEventStub = sinon.stub().resolves()
 var updateContactDetailsStub = sinon.stub().resolves()
 
 const copyClaimDataToInternal = proxyquire('../../../../app/services/data/copy-claim-data-to-internal', {
-  './insert-claim-event-data': insertClaimEventStub,
+  './insert-claim-event': insertClaimEventStub,
   './update-contact-details': updateContactDetailsStub
 })
 

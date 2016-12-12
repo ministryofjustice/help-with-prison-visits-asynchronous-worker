@@ -1,7 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
-const insertClaimEvent = require('./insert-claim-event-data')
+const insertClaimEvent = require('./insert-claim-event')
 const updateContactDetails = require('./update-contact-details')
 
 module.exports = function (data, additionalData) {
@@ -49,11 +49,11 @@ function copyClaimData (data, additionalData) {
       return knex('IntSchema.ClaimDocument').insert(data.ClaimDocument)
     })
     .then(function () {
-      return insertClaimEvent(data.Claim, 'CLAIM-SUBMITTED', additionalData, null, true)
+      return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, 'CLAIM-SUBMITTED', additionalData, null, true)
     })
     .then(function () {
       if (data.EligibilityVisitorUpdateContactDetail) {
-        return insertClaimEvent(data.Claim, 'CONTACT-DETAILS-UPDATED', null, null, true)
+        return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, 'CONTACT-DETAILS-UPDATED', null, null, true)
           .then(function () {
             return updateContactDetails(data.EligibilityVisitorUpdateContactDetail)
           })
