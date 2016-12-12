@@ -55,6 +55,7 @@ module.exports = function (reference, eligibilityId, claimId) {
 
 function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
   if (autoApprovalData.Claim.ClaimType === claimTypeEnum.FIRST_TIME ||
+    autoApprovalData.Claim.ClaimType === claimTypeEnum.REPEAT_NEW_ELIGIBILITY ||
     (autoApprovalData.Claim.Status !== statusEnum.NEW)) {
     return true
   }
