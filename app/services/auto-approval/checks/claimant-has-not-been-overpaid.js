@@ -7,7 +7,7 @@ module.exports = function (autoApprovalData) {
   var checkPassed = true
 
   autoApprovalData.previousClaims.forEach(function (previousClaim) {
-    if (previousClaim.IsAdvanceClaim === true && previousClaim.IsOverpaid === true) {
+    if (previousClaim.IsOverpaid === true) {
       checkPassed = false
     }
   })
