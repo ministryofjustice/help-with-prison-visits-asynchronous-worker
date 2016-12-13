@@ -1,6 +1,7 @@
 module.exports = function (note, updatedDocuments) {
   const NEWLINE = '<br />'
   var message = 'Claimant updated claim:'
+console.log(note)
   if (note) {
     message = message + NEWLINE + note
   }

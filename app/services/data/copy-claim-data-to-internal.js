@@ -49,11 +49,11 @@ function copyClaimData (data, additionalData) {
       return knex('IntSchema.ClaimDocument').insert(data.ClaimDocument)
     })
     .then(function () {
-      return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, 'CLAIM-SUBMITTED', additionalData, null, true)
+      return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, null, 'CLAIM-SUBMITTED', additionalData, null, true)
     })
     .then(function () {
       if (data.EligibilityVisitorUpdateContactDetail) {
-        return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, 'CONTACT-DETAILS-UPDATED', null, null, true)
+        return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, null, 'CONTACT-DETAILS-UPDATED', null, null, true)
           .then(function () {
             return updateContactDetails(data.EligibilityVisitorUpdateContactDetail)
           })
