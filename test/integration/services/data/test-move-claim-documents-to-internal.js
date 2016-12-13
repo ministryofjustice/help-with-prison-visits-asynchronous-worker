@@ -6,7 +6,6 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
-var getClaimDocuments
 var disableClaimDocument
 var insertClaimEvent
 
