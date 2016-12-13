@@ -5,7 +5,6 @@ const claimantHasNotBeenOverpaid = require('../../../../../app/services/auto-app
 var autoApprovalDataWithNoOverpaidClaim = {
   previousClaims: [
     {
-      IsAdvanceClaim: true,
       IsOverpaid: false
     }
   ]
@@ -14,11 +13,9 @@ var autoApprovalDataWithNoOverpaidClaim = {
 var autoApprovalDataWithOverpaidClaim = {
   previousClaims: [
     {
-      IsAdvanceClaim: true,
       IsOverpaid: false
     },
     {
-      IsAdvanceClaim: true,
       IsOverpaid: true
     }
   ]
