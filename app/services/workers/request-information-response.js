@@ -11,7 +11,7 @@ module.exports.execute = function (task) {
   var reference = task.reference
   var eligibilityId = task.eligibilityId
   var claimId = task.claimId
-  var note = task.additionalInfo
+  var note = task.additionalData
   var updatedDocuments
   var status
 

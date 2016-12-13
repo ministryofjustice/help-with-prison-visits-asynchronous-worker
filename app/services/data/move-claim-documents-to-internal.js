@@ -62,6 +62,10 @@ function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updated
 }
 
 function insertClaimEventReplacedDocument (reference, eligibilityId, claimId, oldDocumentToDisable) {
-  const note = `Replaced previous document ${oldDocumentToDisable.DocumentType}`
-  return insertClaimEvent(reference, eligibilityId, claimId, oldDocumentToDisable.ClaimDocumentId, 'REPLACED-PREVIOUS-DOCUMENT', null, note, true)
+  if (oldDocumentToDisable.DocumentStatus === 'uploaded') {
+    const note = `Replaced previous document ${oldDocumentToDisable.DocumentType}`
+    return insertClaimEvent(reference, eligibilityId, claimId, oldDocumentToDisable.ClaimDocumentId, 'REPLACED-PREVIOUS-DOCUMENT', null, note, true)
+  } else {
+    return Promise.resolve()
+  }
 }
