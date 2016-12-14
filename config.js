@@ -5,6 +5,10 @@ module.exports = {
   LOGSTASH_HOST: process.env.LOGSTASH_HOST,
   LOGSTASH_PORT: process.env.LOGSTASH_PORT,
 
+  // URL and paths
+  EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://test-apvs-external-web.kainos.com',
+  EXTERNAL_PATH_ALREADY_REGISTERED: process.env.APVS_EXTERNAL_PATH_ALREADY_REGISTERED || '/start-already-registered',
+
   // DB
   DATABASE_SERVER: process.env.APVS_DATABASE_SERVER,
   ASYNC_WORKER_USERNAME: process.env.APVS_ASYNC_WORKER_USERNAME,

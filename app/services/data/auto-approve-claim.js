@@ -14,7 +14,7 @@ module.exports = function (reference, eligibilityId, claimId, visitorEmailAddres
   return setClaimStatusToAutoApproved(claimId)
     .then(function () { return autoApproveClaimExpenses(claimId) })
     .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress) })
-    .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, CLAIM_EVENT, null, null, false) })
+    .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, CLAIM_EVENT, null, null, false) })
 }
 
 function setClaimStatusToAutoApproved (claimId) {

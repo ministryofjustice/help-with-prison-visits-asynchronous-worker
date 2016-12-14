@@ -1,11 +1,9 @@
-module.exports = function (note, updatedDocuments) {
+module.exports = function (updatedDocuments) {
   const NEWLINE = '<br />'
-  var message = 'Claimant updated claim:'
-  if (note) {
-    message = message + NEWLINE + note
-  }
 
   if (updatedDocuments && updatedDocuments.length > 0) {
+    var message = 'Claimant updated claim:'
+
     message = message + NEWLINE
     updatedDocuments.forEach(function (document) {
       message = message + NEWLINE + ` - updated document ${document.DocumentType} with status ${document.DocumentStatus}`
