@@ -3,7 +3,7 @@ const knex = require('knex')(config)
 const _ = require('lodash')
 const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
-const updatePaymentAmountManuallyProcessed = require('./update-payment-amount-manually-processed')
+const updateClaimTotalAmount = require('./update-claim-total-amount')
 
 const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
@@ -42,7 +42,7 @@ module.exports = function () {
       var promises = []
       claimResults.forEach(function (claim) {
         // Store the total claim cost
-        promises.push(updatePaymentAmountManuallyProcessed(claim.ClaimId, claim.TotalApprovedCost))
+        promises.push(updateClaimTotalAmount(claim.ClaimId, claim.TotalApprovedCost))
       })
 
       return Promise.all(promises)

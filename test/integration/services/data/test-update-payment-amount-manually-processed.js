@@ -1,7 +1,7 @@
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
-const updatePaymentAmountManuallyProcessed = require('../../../../app/services/data/update-payment-amount-manually-processed')
+const updateClaimTotalAmount = require('../../../../app/services/data/update-claim-total-amount')
 describe('services/data/update-payment-amount-manually-processed', function () {
   const REFERENCE = 'UPDATE12'
   var claimId
@@ -13,10 +13,10 @@ describe('services/data/update-payment-amount-manually-processed', function () {
   })
 
   it('should update the manually processed column for a particular claim', function () {
-    return updatePaymentAmountManuallyProcessed(claimId, '12')
+    return updateClaimTotalAmount(claimId, '12')
       .then(function () {
         knex('IntSchema.Claim')
-          .select('PaymentAmountManuallyProcessed')
+          .select('TotalAmount')
           .where('ClaimId', claimId)
       })
   })
