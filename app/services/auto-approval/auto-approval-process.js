@@ -41,7 +41,7 @@ module.exports = function (reference, eligibilityId, claimId) {
                   return result
                 })
             } else {
-              return insertClaimEvent(reference, eligibilityId, claimId, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
+              return insertClaimEvent(reference, eligibilityId, claimId, null, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
                 .then(function () {
                   return result
                 })

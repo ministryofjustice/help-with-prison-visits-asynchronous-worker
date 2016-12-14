@@ -19,7 +19,7 @@ describe('services/data/insert-claim-event', function () {
       })
   })
   it('should create a Claim Event', function () {
-    return insertClaimEvent(REFERENCE, eligibilityId, claimId, event, null, null, true)
+    return insertClaimEvent(REFERENCE, eligibilityId, claimId, null, event, null, null, true)
       .then(function () {
         return knex.table('IntSchema.ClaimEvent')
           .where({'Reference': REFERENCE, 'EligibilityId': eligibilityId, 'ClaimId': claimId})

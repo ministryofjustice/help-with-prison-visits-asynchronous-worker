@@ -9,6 +9,7 @@ const claimId = 123
 
 const CLAIM_DATA_FOR_UNREVIEWED_CLAIM = { Claim: { DateReviewed: null } }
 const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: new Date() } }
+const SINGLE_UPLOADED_DOCUMENT = [{ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded'}]
 
 var moveClaimDocumentsToInternal
 var getAllClaimData
@@ -21,7 +22,7 @@ var requestInformationResponse
 
 describe('services/workers/request-information-response', function () {
   beforeEach(function () {
-    moveClaimDocumentsToInternal = sinon.stub().resolves()
+    moveClaimDocumentsToInternal = sinon.stub().resolves(SINGLE_UPLOADED_DOCUMENT)
     getAllClaimData = sinon.stub().resolves(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
     updateClaimStatus = sinon.stub().resolves()
     insertClaimEvent = sinon.stub().resolves()
@@ -48,7 +49,7 @@ describe('services/workers/request-information-response', function () {
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
       expect(updateClaimStatus.calledWith(claimId, 'NEW')).to.be.true
       expect(generateClaimUpdatedString.calledOnce).to.be.true
-      expect(insertClaimEvent.calledOnce).to.be.true
+      expect(insertClaimEvent.calledTwice, 'should have inserted event for note and update').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
     })
   })
@@ -61,11 +62,6 @@ describe('services/workers/request-information-response', function () {
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true
-      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
-      expect(updateClaimStatus.calledWith(claimId, 'UPDATED')).to.be.true
-      expect(generateClaimUpdatedString.calledOnce).to.be.true
-      expect(insertClaimEvent.calledOnce).to.be.true
       expect(autoApprovalProcess.called).to.be.false
     })
   })
