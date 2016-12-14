@@ -8,23 +8,24 @@ const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.Sor
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
 
 module.exports = function () {
+  var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
+    'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
+    'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
+    'AS TotalDeductionAmount'
+
   return knex('IntSchema.Claim')
-    .sumDistinct('IntSchema.ClaimDeduction.Amount AS TotalDeductionAmount')
-    .sumDistinct('IntSchema.ClaimExpense.ApprovedCost as TotalApprovedCost')
+    .column(knex.raw(rawDeductionTotalQuery))
+    .sum('IntSchema.ClaimExpense.ApprovedCost as TotalApprovedCost')
     .select(selectColumns)
     .innerJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-    .leftJoin('IntSchema.ClaimDeduction', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDeduction.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .where({'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED})
-    .andWhere(function () {
-      this.where('IntSchema.ClaimDeduction.IsEnabled', true)
-      .orWhereNull('IntSchema.ClaimDeduction.ClaimDeductionId')
-    })
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (results) {
+      console.dir(results)
       return _.map(results, record => {
         return [
           record.ClaimId,

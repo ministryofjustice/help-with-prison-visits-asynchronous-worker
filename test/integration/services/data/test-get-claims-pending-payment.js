@@ -66,6 +66,6 @@ describe('services/data/get-claims-pending-payment', function () {
   })
 
   after(function () {
-    return testHelper.deleteAll(reference, 'IntSchema')
+    // return testHelper.deleteAll(reference, 'IntSchema')
   })
 })
