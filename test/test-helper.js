@@ -46,8 +46,11 @@ module.exports.deleteAll = function (reference, schema) {
     .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
 }
 
-module.exports.insertClaimEligibilityData = function (schema, reference) {
+module.exports.insertClaimEligibilityData = function (schema, reference, status) {
   var data = this.getClaimData(reference)
+  if (status) {
+    data.Claim.Status = status
+  }
   var insertClaimData = this.insertClaimData
 
   var newEligibilityId
@@ -114,6 +117,8 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       if (isExtSchema) {
         delete data.ClaimExpenses[0].ClaimExpenseId
         delete data.ClaimExpenses[1].ClaimExpenseId
+        delete data.ClaimExpenses[0].ApprovedCost
+        delete data.ClaimExpenses[1].ApprovedCost
         data.ClaimExpenses[0].EligibilityId = newEligibilityId
         data.ClaimExpenses[1].EligibilityId = newEligibilityId
         data.ClaimExpenses[0].ClaimId = newClaimId
@@ -169,7 +174,8 @@ module.exports.getClaimData = function (reference) {
       DateOfJourney: new Date(),
       DateCreated: new Date(),
       DateSubmitted: new Date(),
-      Status: 'SUBMITTED'
+      Status: 'SUBMITTED',
+      IsAdvanceClaim: true
     },
     Prisoner: {
       PrisonerId: uniqueId,
@@ -228,6 +234,7 @@ module.exports.getClaimData = function (reference) {
         ClaimId: uniqueId,
         ExpenseType: 'car',
         Cost: 0,
+        ApprovedCost: 10,
         IsEnabled: true,
         TravelTime: null,
         From: 'London',
@@ -243,6 +250,7 @@ module.exports.getClaimData = function (reference) {
         ClaimId: uniqueId,
         ExpenseType: 'bus',
         Cost: 20.95,
+        ApprovedCost: 20,
         IsEnabled: true,
         TravelTime: null,
         From: 'Euston',
