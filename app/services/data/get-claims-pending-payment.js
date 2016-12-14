@@ -41,13 +41,11 @@ module.exports = function () {
     .then(function (manuallyProcessedExpenses) {
       var promises = []
       claimResults.forEach(function (claim) {
-        // Store the total claim cost
         promises.push(updateClaimTotalAmount(claim.ClaimId, claim.TotalApprovedCost))
       })
 
       return Promise.all(promises)
         .then(function () {
-          // Remove manually processed amount
           claimResults.forEach(function (claim) {
             claim.PaymentAmount = claim.TotalApprovedCost
             manuallyProcessedExpenses.forEach(function (expense) {
