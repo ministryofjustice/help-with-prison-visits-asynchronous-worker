@@ -12,6 +12,7 @@ const completeClaim = { name: 'completeClaim' }
 const requestInformationResponse = { name: 'requestInformationResponse' }
 const dwpCheck = { name: 'dwpCheck' }
 const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
+const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
@@ -25,6 +26,7 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/request-information-response': requestInformationResponse,
   './workers/dwp-check': dwpCheck,
   './workers/send-performance-platform-metrics-for-day': sendPerformancePlatformMetricsForDay,
+  './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles
 })
 
@@ -77,6 +79,11 @@ describe('services/getWorkerForTask', function () {
   it('should return send-performance-platform-metrics-for-day', function () {
     var worker = getWorkerForTask(tasksEnum.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY)
     expect(worker.name).to.be.equal('sendPerformancePlatformMetricsForDay')
+  })
+
+  it('should return send-all-advance-claim-reminders-for-day', function () {
+    var worker = getWorkerForTask(tasksEnum.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY)
+    expect(worker.name).to.be.equal('sendAllAdvanceClaimRemindersForDay')
   })
 
   it('should return cleanup-old-payment-files', function () {

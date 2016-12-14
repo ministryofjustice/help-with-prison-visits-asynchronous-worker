@@ -9,6 +9,7 @@ var completeClaim = require('./workers/complete-claim')
 var requestInformationResponse = require('./workers/request-information-response')
 var dwpCheck = require('./workers/dwp-check')
 var sendPerformancePlatformMetricsForDay = require('./workers/send-performance-platform-metrics-for-day')
+var sendAllAdvanceClaimRemindersForDay = require('./workers/send-all-advance-claim-reminders-for-day')
 var generateDirectPayments = require('./workers/generate-direct-payments')
 var cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
 
@@ -25,6 +26,7 @@ module.exports = function (taskType) {
     case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
     case tasksEnum.DWP_CHECK: return dwpCheck
     case tasksEnum.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY: return sendPerformancePlatformMetricsForDay
+    case tasksEnum.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY: return sendAllAdvanceClaimRemindersForDay
     case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
     case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
   }
