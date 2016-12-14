@@ -53,7 +53,7 @@ function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updated
         return true
       }
     })
-    if (matchingNewDocuments.length > 0) {
+    if (matchingNewDocuments && matchingNewDocuments.length > 0) {
       oldDocuments.push(internalDocument)
     }
   })
