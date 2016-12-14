@@ -41,7 +41,7 @@ module.exports = function () {
     .then(function (manuallyProcessedExpenses) {
       var promises = []
       claimResults.forEach(function (claim) {
-        // Update PaymentAmountManuallyProcessed
+        // Store the total claim cost
         promises.push(updatePaymentAmountManuallyProcessed(claim.ClaimId, claim.TotalApprovedCost))
       })
 
