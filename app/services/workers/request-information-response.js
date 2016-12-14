@@ -20,7 +20,8 @@ module.exports.execute = function (task) {
     .then(function () { return getAllClaimData('IntSchema', reference, eligibilityId, claimId) })
     .then(function (claimData) { status = getStatusForUpdatedClaim(claimData) })
     .then(function () { return updateClaimStatus(claimId, status) })
-    .then(function () { return insertClaimEventsForUpdate(reference, eligibilityId, claimId, updatedDocuments, note) })
+    .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
+    .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
     .then(function () { return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status) })
 }
 
@@ -32,23 +33,16 @@ function getStatusForUpdatedClaim (claimData) {
   }
 }
 
-function insertClaimEventsForUpdate (reference, eligibilityId, claimId, updatedDocuments, note) {
-  return insertClaimEvent(reference, eligibilityId, claimId, null, 'CLAIM-UPDATED', null, generateClaimUpdatedString(note, updatedDocuments), true)
-    .then(function () {
-      var uploadedDocuments = updatedDocuments.filter(function (updatedDocument) { return updatedDocument.DocumentStatus === 'uploaded' })
-      var insertUploadedDocumentEventPromises = []
-
-      uploadedDocuments.forEach(function (uploadedDocument) {
-        insertUploadedDocumentEventPromises.push(insertClaimEventForUploadedDocument(reference, eligibilityId, claimId, uploadedDocument))
-      })
-
-      return Promise.all(insertUploadedDocumentEventPromises)
-    })
+function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
+  return insertClaimEvent(reference, eligibilityId, claimId, null, 'NEW-DOCUMENT-UPLOADED', null, note, false)
 }
 
-function insertClaimEventForUploadedDocument (reference, eligibilityId, claimId, uploadedDocument) {
-  const note = `Uploaded new document ${uploadedDocument.DocumentType}`
-  return insertClaimEvent(reference, eligibilityId, claimId, uploadedDocument.ClaimDocumentId, 'NEW-DOCUMENT-UPLOADED', null, note, true)
+function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDocuments) {
+  if (updatedDocuments && updatedDocuments.length > 0) {
+    return insertClaimEvent(reference, eligibilityId, claimId, null, 'CLAIM-UPDATED', null, generateClaimUpdatedString(updatedDocuments), true)
+  } else {
+    return Promise.resolve()
+  }
 }
 
 function callAutoApprovalIfClaimIsNew (reference, eligibilityId, claimId, status) {

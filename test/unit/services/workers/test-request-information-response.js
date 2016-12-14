@@ -49,7 +49,7 @@ describe('services/workers/request-information-response', function () {
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
       expect(updateClaimStatus.calledWith(claimId, 'NEW')).to.be.true
       expect(generateClaimUpdatedString.calledOnce).to.be.true
-      expect(insertClaimEvent.calledTwice, 'should have inserted event for update and uploaded document').to.be.true
+      expect(insertClaimEvent.calledTwice, 'should have inserted event for note and update').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
     })
   })
