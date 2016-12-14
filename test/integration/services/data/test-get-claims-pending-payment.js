@@ -16,7 +16,7 @@ describe('services/data/get-claims-pending-payment', function () {
   var updateClaimTotalAmountStub = sinon.stub().resolves()
 
   const getClaimsPendingPayment = proxyquire('../../../../app/services/data/get-claims-pending-payment', {
-    './update-payment-amount-manually-processed': updateClaimTotalAmountStub
+    './update-claim-total-amount': updateClaimTotalAmountStub
   })
 
   beforeEach(function () {
@@ -115,7 +115,7 @@ describe('services/data/get-claims-pending-payment', function () {
       .then(function () {
         return getClaimsPendingPayment()
           .then(function () {
-            expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update payment amount manually processed with total claim amount').to.be.true
+            expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
           })
       })
   })
