@@ -44,7 +44,7 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
       })
   })
 
-  it('should return open ', function () {
+  it('should return open advanced claims for the date of journey range', function () {
     return getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(START_DATE, END_DATE)
       .then(function (claims) {
         expect(claims.length).to.equal(2)
