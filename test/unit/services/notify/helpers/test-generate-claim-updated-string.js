@@ -3,12 +3,10 @@ const generateClaimUpdatedString = require('../../../../../app/services/notify/h
 
 describe('notify/helpers/generate-claim-updated-string', function () {
   it('should contain note and document details', function () {
-    const NOTE = 'this is my note'
     const UPDATED_DOCUMENTS = [{DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'post-later'}]
 
-    var message = generateClaimUpdatedString(NOTE, UPDATED_DOCUMENTS)
+    var message = generateClaimUpdatedString(UPDATED_DOCUMENTS)
 
-    expect(message).to.contain(NOTE)
     expect(message).to.contain(UPDATED_DOCUMENTS[0].DocumentType)
     expect(message).to.contain(UPDATED_DOCUMENTS[0].DocumentStatus)
   })

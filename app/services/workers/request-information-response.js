@@ -11,7 +11,7 @@ module.exports.execute = function (task) {
   var reference = task.reference
   var eligibilityId = task.eligibilityId
   var claimId = task.claimId
-  var note = task.additionalInfo
+  var note = task.additionalData
   var updatedDocuments
   var status
 
@@ -20,7 +20,8 @@ module.exports.execute = function (task) {
     .then(function () { return getAllClaimData('IntSchema', reference, eligibilityId, claimId) })
     .then(function (claimData) { status = getStatusForUpdatedClaim(claimData) })
     .then(function () { return updateClaimStatus(claimId, status) })
-    .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments, note) })
+    .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
+    .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
     .then(function () { return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status) })
 }
 
@@ -32,8 +33,16 @@ function getStatusForUpdatedClaim (claimData) {
   }
 }
 
-function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDocuments, note) {
-  return insertClaimEvent(reference, eligibilityId, claimId, 'CLAIM-UPDATED', null, generateClaimUpdatedString(note, updatedDocuments), false)
+function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
+  return insertClaimEvent(reference, eligibilityId, claimId, null, 'NEW-DOCUMENT-UPLOADED', null, note, false)
+}
+
+function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDocuments) {
+  if (updatedDocuments && updatedDocuments.length > 0) {
+    return insertClaimEvent(reference, eligibilityId, claimId, null, 'CLAIM-UPDATED', null, generateClaimUpdatedString(updatedDocuments), true)
+  } else {
+    return Promise.resolve()
+  }
 }
 
 function callAutoApprovalIfClaimIsNew (reference, eligibilityId, claimId, status) {

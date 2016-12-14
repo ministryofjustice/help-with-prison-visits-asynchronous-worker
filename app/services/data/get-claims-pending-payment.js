@@ -13,14 +13,18 @@ const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.Sor
 var claimResults
 
 module.exports = function () {
+  var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
+    'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
+    'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
+    'AS TotalDeductionAmount'
+
   return knex('IntSchema.Claim')
-    .sumDistinct('IntSchema.ClaimDeduction.Amount AS TotalDeductionAmount')
+    .column(knex.raw(rawDeductionTotalQuery))
     .sum('IntSchema.ClaimExpense.ApprovedCost as TotalApprovedCost')
     .select(selectColumns)
     .innerJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-    .leftJoin('IntSchema.ClaimDeduction', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDeduction.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
     .andWhere(function () {
