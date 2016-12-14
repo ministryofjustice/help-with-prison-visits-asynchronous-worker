@@ -3,9 +3,12 @@ const knex = require('knex')(config)
 const _ = require('lodash')
 const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
+const updatePaymentAmountManuallyProcessed = require('./update-payment-amount-manually-processed')
 
 const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
+
+var claimResults
 
 module.exports = function () {
   return knex('IntSchema.Claim')
@@ -17,7 +20,7 @@ module.exports = function () {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .leftJoin('IntSchema.ClaimDeduction', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDeduction.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
-    .where({'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED})
+    .whereIn('IntSchema.ClaimExpense.Status', [claimStatuses.APPROVED, 'APPROVED-DIFF-AMOUNT', 'MANUALLY-PROCESSED'])
     .andWhere(function () {
       this.where('IntSchema.ClaimDeduction.IsEnabled', true)
       .orWhereNull('IntSchema.ClaimDeduction.ClaimDeductionId')
@@ -25,13 +28,45 @@ module.exports = function () {
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (results) {
+      var claimIds = []
+      results.forEach(function (result) { return claimIds.push(result.ClaimId) })
+      claimResults = results
+      return knex('IntSchema.ClaimExpense')
+        .sum('ApprovedCost as ManuallyProcessedCost')
+        .select('ClaimId')
+        .groupBy('ClaimId')
+        .where('Status', 'MANUALLY-PROCESSED')
+        .whereIn('ClaimId', claimIds)
+    })
+    .then(function (manuallyProcessedExpenses) {
+      var promises = []
+      claimResults.forEach(function (claim) {
+        // Update PaymentAmountManuallyProcessed
+        promises.push(updatePaymentAmountManuallyProcessed(claim.ClaimId, claim.TotalApprovedCost))
+      })
+
+      return Promise.all(promises)
+        .then(function () {
+          // Remove manually processed amount
+          claimResults.forEach(function (claim) {
+            claim.PaymentAmount = claim.TotalApprovedCost
+            manuallyProcessedExpenses.forEach(function (expense) {
+              if (claim.ClaimId === expense.ClaimId) {
+                claim.PaymentAmount = (claim.TotalApprovedCost - expense.ManuallyProcessedCost)
+              }
+            })
+          })
+          return claimResults
+        })
+    })
+    .then(function (results) {
       return _.map(results, record => {
         return [
           record.ClaimId,
           record.SortCode,
           record.AccountNumber,
           record.FirstName + ' ' + record.LastName,
-          (record.TotalApprovedCost - (record.TotalDeductionAmount || 0)).toString(),
+          (record.PaymentAmount - (record.TotalDeductionAmount || 0)).toString(),
           record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
         ]
       })
