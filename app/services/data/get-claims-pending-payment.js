@@ -25,7 +25,6 @@ module.exports = function () {
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (results) {
-      console.dir(results)
       return _.map(results, record => {
         return [
           record.ClaimId,
