@@ -14,9 +14,11 @@ describe('services/data/get-claims-pending-payment', function () {
   var claimExpenseId2
 
   var updateClaimTotalAmountStub = sinon.stub().resolves()
+  var updateClaimManuallyApprovedAmountStub = sinon.stub().resolves()
 
   const getClaimsPendingPayment = proxyquire('../../../../app/services/data/get-claims-pending-payment', {
-    './update-claim-total-amount': updateClaimTotalAmountStub
+    './update-claim-total-amount': updateClaimTotalAmountStub,
+    './update-claim-manually-approved-amount': updateClaimManuallyApprovedAmountStub
   })
 
   beforeEach(function () {
@@ -98,7 +100,7 @@ describe('services/data/get-claims-pending-payment', function () {
       })
   })
 
-  it('should call update payment amount manually processed with total claim amount', function () {
+  it('should call update claim total amount with the correct value', function () {
     var update1 = knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId1)
       .update({
@@ -116,6 +118,28 @@ describe('services/data/get-claims-pending-payment', function () {
         return getClaimsPendingPayment()
           .then(function () {
             expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
+          })
+      })
+  })
+
+  it('should call update claim manually processed amount the with correct value', function () {
+    var update1 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId1)
+      .update({
+        ApprovedCost: '10',
+        Status: 'MANUALLY-PROCESSED'
+      })
+    var update2 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId2)
+      .update({
+        ApprovedCost: '15',
+        Status: 'MANUALLY-PROCESSED'
+      })
+    Promise.all([update1, update2])
+      .then(function () {
+        return getClaimsPendingPayment()
+          .then(function () {
+            expect(updateClaimManuallyApprovedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
           })
       })
   })

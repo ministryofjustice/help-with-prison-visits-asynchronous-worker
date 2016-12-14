@@ -19,13 +19,13 @@ describe('services/data/update-claims-processed-payment', function () {
       })
   })
 
-  it('should update Claim Payment Status to processed and Payment Amount to the total of approved claim expenses for all references', function () {
+  it('should update Claim Payment Status to processed and Bank Payment Amount to the total of approved claim expenses for all references', function () {
     return updateClaimsProcessedPayment(claimId, paymentTotal)
       .then(function () {
         return knex('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
-            expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
+            expect(claims[0].BankPaymentAmount).to.be.equal(paymentTotal)
           })
       })
   })
