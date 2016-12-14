@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const _ = require('lodash')
 const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
+const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
 const updateClaimTotalAmount = require('./update-claim-total-amount')
 const updateClaimManuallyProcessedAmount = require('./update-claim-manually-processed-amount')
 
@@ -21,7 +22,7 @@ module.exports = function () {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .leftJoin('IntSchema.ClaimDeduction', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDeduction.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
-    .whereIn('IntSchema.ClaimExpense.Status', [claimStatuses.APPROVED, 'APPROVED-DIFF-AMOUNT', 'MANUALLY-PROCESSED'])
+    .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
     .andWhere(function () {
       this.where('IntSchema.ClaimDeduction.IsEnabled', true)
       .orWhereNull('IntSchema.ClaimDeduction.ClaimDeductionId')
