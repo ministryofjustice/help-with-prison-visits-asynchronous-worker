@@ -6,7 +6,7 @@ require('sinon-bluebird')
 
 const SUBMITTED_CLAIM_COUNT = 100
 
-describe('services/send-request-information-response-submitted-notification', function () {
+describe('services/workers/send-performance-platform-metrics-for-day', function () {
   var sendPerformancePlatformMetricsForDay
 
   var configStub
