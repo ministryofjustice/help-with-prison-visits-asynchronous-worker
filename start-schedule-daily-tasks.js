@@ -12,7 +12,9 @@ var dailyTasksJob = new CronJob({
   cronTime: dailyTasksCron,
   onTick: function () {
     log.info('CRON triggered - initiating run of daily tasks generation...')
-    Promise.all([insertTask(null, null, null, taskTypes.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY)])
+    Promise.all([
+      insertTask(null, null, null, taskTypes.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY),
+      insertTask(null, null, null, taskTypes.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY)])
       .then(function () {
         log.info('daily tasks created')
       })
