@@ -1,42 +1,35 @@
-// const expect = require('chai').expect
-// const proxyquire = require('proxyquire')
-// const sinon = require('sinon')
-// require('sinon-bluebird')
+const expect = require('chai').expect
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+require('sinon-bluebird')
 
-// const claim1 = {ClaimId: 1, Reference: 'MARKING', Amount: 100}
-// const claim2 = {ClaimId: 2, Reference: 'M@RKING', Amount: 104}
-// const claims = [claim1, claim2]
+describe('services/workers/mark-overpayments', function () {
+  var markOverpayments
+  var getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub
+  var updateOverpaymentStatusStub
 
-// const getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub = sinon.stub().resolves(claims)
-// const insertTask = sinon.stub.resolves()
+  var config = { MARK_AS_OVERPAYMENT_DAYS: '10' }
 
-// const addMarkAsOverpaymentTask = proxyquire('../../../../app/services/overpayment/add-mark-as-overpayment-task')
+  const claim1 = {ClaimId: 1, Reference: 'MARKING', Amount: 100}
+  const claim2 = {ClaimId: 2, Reference: 'M@RKING', Amount: 104}
+  const claims = [claim1, claim2]
 
-// describe('services/overpayment/add-mark-as-overpayment-task', function () {
-//   it('find all claims that are should be overpaid, then adds a task to mark them', function () {
-//     var taskId = 1
-//     var taskType = 'FIRST-TIME-CLAIM-NOTIFICATION'
-//     var reference = 'NEW4567'
-//     var eligibilityId = '123'
-//     var claimId = 123
-//     var additionalData = 'additional data'
-//     var dateCreated = new Date(1980, 1, 2)
-//     var dateProcessed = new Date(1980, 1, 3)
-//     var schema = 'IntSchema'
-//     var status = 'PENDING'
+  beforeEach(function () {
+    getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub = sinon.stub().resolves(claims)
+    updateOverpaymentStatusStub = sinon.stub().resolves()
 
-//     var task = new Task(taskId, taskType, reference, eligibilityId, claimId, additionalData, dateCreated, dateProcessed, schema, status)
+    markOverpayments = proxyquire('../../../../app/services/workers/mark-overpayments', {
+      '../../../config': config,
+      '../data/get-advance-claims-over-specified-date-and-claim-expense-amount': getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub,
+      '../data/update-overpayment-status': updateOverpaymentStatusStub
+    })
+  })
 
-//     expect(task.taskId).to.equal(taskId)
-//     expect(task.task).to.equal(taskType)
-//     expect(task.reference).to.equal(reference)
-//     expect(task.eligibilityId).to.equal(eligibilityId)
-//     expect(task.claimId).to.equal(claimId)
-//     expect(task.additionalData).to.equal(additionalData)
-//     expect(task.dateCreated).to.equal(dateCreated)
-//     expect(task.dateProcessed).to.equal(dateProcessed)
-//     expect(task.schema).to.equal(schema)
-//     expect(task.status).to.equal(status)
-//     done()
-//   })
-// })
+  it('find all claims that are should be overpaid, then adds a task to mark them', function () {
+    return markOverpayments()
+      .then(function () {
+        expect(getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub.calledOnce).to.be.true
+        expect(updateOverpaymentStatusStub.calledTwice).to.be.true
+      })
+  })
+})

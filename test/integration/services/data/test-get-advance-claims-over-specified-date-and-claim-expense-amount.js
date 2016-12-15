@@ -7,7 +7,7 @@ const getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount = require('../../..
 describe('services/data/get-advance-claims-over-specified-date-and-claim-expense-amount', function () {
   const REFERENCE = 'AMOUNTO'
   var claimId
-  var date = moment().add(1, 'd').toDate()
+  var date = moment().add('1', 'd').toDate()
   var amount
 
   before(function () {

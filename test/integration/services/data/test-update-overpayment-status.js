@@ -18,7 +18,7 @@ describe('services/data/update-overpayment-status', function () {
   })
 
   it('should update Claim IsOverpaid to true and with the amount added', function () {
-    return updateOverpaymentStatus(claimId, REFERENCE, AMOUNT)
+    return updateOverpaymentStatus(claimId, REFERENCE, AMOUNT, '10')
       .then(function () {
         return knex('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {

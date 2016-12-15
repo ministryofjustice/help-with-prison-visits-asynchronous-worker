@@ -1,10 +1,11 @@
+const config = require('../../../config')
 const moment = require('moment')
 const getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount = require('../data/get-advance-claims-over-specified-date-and-claim-expense-amount')
 const updateOverpaymentStatus = require('../data/update-overpayment-status')
 const Promise = require('bluebird')
 
 module.exports = function () {
-  var date = moment().subtract(10, 'd').toDate()
+  var date = moment().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()
   return getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount(date, 'APPROVED')
     .then(function (claims) {
       return updateAllAdvanceClaimThatAreOverpaid(claims)
@@ -22,5 +23,5 @@ function updateAllAdvanceClaimThatAreOverpaid (claims) {
 }
 
 function updateIndividualStatusToOverpaid (claim) {
-  updateOverpaymentStatus(claim.ClaimId, claim.Reference, claim.Amount)
+  return updateOverpaymentStatus(claim.ClaimId, claim.Reference, claim.Amount, config.MARK_AS_OVERPAYMENT_DAYS)
 }
