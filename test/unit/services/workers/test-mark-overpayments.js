@@ -26,7 +26,7 @@ describe('services/workers/mark-overpayments', function () {
   })
 
   it('find all claims that are should be overpaid, then adds a task to mark them', function () {
-    return markOverpayments()
+    return markOverpayments.execute()
       .then(function () {
         expect(getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub.calledOnce).to.be.true
         expect(updateOverpaymentStatusStub.calledTwice).to.be.true

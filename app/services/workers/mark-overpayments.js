@@ -4,7 +4,7 @@ const getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount = require('../data/
 const updateOverpaymentStatus = require('../data/update-overpayment-status')
 const Promise = require('bluebird')
 
-module.exports = function () {
+module.exports.execute = function () {
   var date = moment().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()
   return getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount(date, 'APPROVED')
     .then(function (claims) {
