@@ -2,9 +2,9 @@ const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 const moment = require('moment')
 
-const getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount = require('../../../../app/services/data/get-advance-claims-over-specified-date-and-claim-expense-amount')
+const getAdvanceClaimsTotalExpenseApprovedCostBeforeDate = require('../../../../app/services/data/get-advance-claims-total-expense-approved-cost-before-date')
 
-describe('services/data/get-advance-claims-over-specified-date-and-claim-expense-amount', function () {
+describe('services/data/get-advance-claims-total-expense-approved-cost-before-date', function () {
   const REFERENCE = 'AMOUNTO'
   var claimId
   var date = moment().add('1', 'd').toDate()
@@ -20,7 +20,7 @@ describe('services/data/get-advance-claims-over-specified-date-and-claim-expense
   })
 
   it('should get all advance claims before specifed date with status', function () {
-    return getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount(date, 'TESTING')
+    return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'TESTING')
       .then(function (claims) {
         expect(claims[0].ClaimId).to.be.equal(claimId)
         expect(claims[0].Reference).to.be.equal(REFERENCE)

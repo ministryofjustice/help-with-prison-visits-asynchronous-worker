@@ -14,7 +14,7 @@ const dwpCheck = { name: 'dwpCheck' }
 const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
 const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
-const markOverpayments = {name: 'markOverpayements'}
+const markOverpayments = {name: 'markOverpayments'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -95,6 +95,6 @@ describe('services/getWorkerForTask', function () {
 
   it('should return mark-overpayments', function () {
     var worker = getWorkerForTask(tasksEnum.MARK_ALL_OVERPAYMENTS)
-    expect(worker.name).to.be.equal('markOverpayements')
+    expect(worker.name).to.be.equal('markOverpayments')
   })
 })

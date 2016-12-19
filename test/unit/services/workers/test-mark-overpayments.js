@@ -20,7 +20,7 @@ describe('services/workers/mark-overpayments', function () {
 
     markOverpayments = proxyquire('../../../../app/services/workers/mark-overpayments', {
       '../../../config': config,
-      '../data/get-advance-claims-over-specified-date-and-claim-expense-amount': getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub,
+      '../data/get-advance-claims-total-expense-approved-cost-before-date': getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub,
       '../data/update-overpayment-status': updateOverpaymentStatusStub
     })
   })

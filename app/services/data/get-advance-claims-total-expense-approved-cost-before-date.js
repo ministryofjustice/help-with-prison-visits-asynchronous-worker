@@ -2,10 +2,10 @@ const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
 module.exports = function (date, status) {
-  // Get all Claims after a certain date or above away with total amount of expenses
+  // Get all Claims before a certain date or above away with total amount of expenses
   return knex('IntSchema.Claim')
     .select('IntSchema.Claim.ClaimId', 'IntSchema.Claim.Reference')
-    .where({'IntSchema.Claim.IsAdvanceClaim': true, 'IntSchema.Claim.Status': status})
+    .where({'IntSchema.Claim.IsAdvanceClaim': true, 'IntSchema.Claim.Status': status, 'IntSchema.ClaimExpense.IsEnabled': true})
     .andWhere(function () {
       this.where('IntSchema.Claim.IsOverpaid', null).orWhere('IntSchema.Claim.IsOverpaid', false)
     })
