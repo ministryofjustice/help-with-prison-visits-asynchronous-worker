@@ -43,6 +43,7 @@ describe('services/data/auto-approve-claim', function () {
           .first()
           .then(function (claim) {
             expect(claim.Status).to.equal(statusEnum.AUTOAPPROVED)
+            expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED)
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
             expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, CLAIM_EVENT, null, null, false)).to.be.true
