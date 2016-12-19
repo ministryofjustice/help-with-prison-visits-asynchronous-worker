@@ -39,6 +39,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       MaxClaimTotal: 100,
       MaxDaysAfterAPVUVisit: 28,
       MaxNumberOfClaimsPerYear: 10,
+      MaxNumberOfClaimsPerMonth: 3,
       RulesDisabled: null,
       IsEnabled: true
     }

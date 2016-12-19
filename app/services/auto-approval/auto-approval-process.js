@@ -66,6 +66,7 @@ function addAutoApprovalConfigToData (autoApprovalData, config) {
   autoApprovalData.maxNumberOfClaimsPerYear = config.MaxNumberOfClaimsPerYear || '26'
   autoApprovalData.maxDaysAfterAPVUVisit = config.MaxDaysAfterAPVUVisit || '28'
   autoApprovalData.maxClaimTotal = config.MaxClaimTotal || '250'
+  autoApprovalData.maxNumberOfClaimsPerMonth = config.MaxNumberOfClaimsPerMonth || '4'
 }
 
 function runEnabledChecks (result, autoApprovalData, disabledRules) {
