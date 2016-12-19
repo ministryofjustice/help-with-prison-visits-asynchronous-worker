@@ -12,6 +12,7 @@ var sendPerformancePlatformMetricsForDay = require('./workers/send-performance-p
 var sendAllAdvanceClaimRemindersForDay = require('./workers/send-all-advance-claim-reminders-for-day')
 var generateDirectPayments = require('./workers/generate-direct-payments')
 var cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
+var markOverpayments = require('./workers/mark-overpayments')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -29,6 +30,7 @@ module.exports = function (taskType) {
     case tasksEnum.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY: return sendAllAdvanceClaimRemindersForDay
     case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
     case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
+    case tasksEnum.MARK_ALL_OVERPAYMENTS: return markOverpayments
   }
 
   return null
