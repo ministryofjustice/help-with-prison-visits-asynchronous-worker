@@ -8,8 +8,7 @@ const MAX_NUMBER_OF_CLAIMS_PER_MONTH = '4'
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-month', function () {
   it(`should return false if the number of claims made for the current month is greater than ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
-    var now = moment()
-    var firstOfCurrentMonth = moment(new Date(now.year(), now.month(), 1))
+    var firstOfCurrentMonth = moment().startOf('month')
     var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(8, firstOfCurrentMonth)
     autoApprovalData.previousClaims = setClaimStatuses(autoApprovalData.previousClaims, 2, 'NEW')
 
@@ -18,8 +17,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
   })
 
   it(`should return true if the number of claims made for the current month is less than ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
-    var now = new Date()
-    var firstOfCurrentMonth = moment(new Date(now.getFullYear(), now.getMonth(), 1))
+    var firstOfCurrentMonth = moment().startOf('month')
     var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(6, firstOfCurrentMonth)
     autoApprovalData = setClaimStatuses(autoApprovalData.previousClaims, 2, 'NEW')
 

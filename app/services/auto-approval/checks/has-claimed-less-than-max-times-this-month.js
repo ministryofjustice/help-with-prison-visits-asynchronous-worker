@@ -1,3 +1,4 @@
+const moment = require('moment')
 const claimStatusEnum = require('../../../constants/claim-status-enum')
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
@@ -9,8 +10,7 @@ module.exports = function (autoApprovalData) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
 
-  var date = new Date()
-  var firstDayOfCurrentMonth = new Date(date.getFullYear(), date.getMonth(), 1)
+  var firstDayOfCurrentMonth = moment().startOf('month').toDate()
 
   var numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(autoApprovalData.previousClaims, firstDayOfCurrentMonth)
   var checkPassed = numberOfClaimsThisMonth < autoApprovalData.maxNumberOfClaimsPerMonth
