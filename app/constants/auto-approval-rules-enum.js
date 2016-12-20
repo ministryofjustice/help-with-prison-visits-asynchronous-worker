@@ -11,5 +11,6 @@ module.exports = [
   'is-no-previous-pending-claim',
   'is-prison-not-in-guernsey-jersey',
   'is-visit-in-past',
-  'visit-date-different-to-previous-claims'
+  'visit-date-different-to-previous-claims',
+  'is-claimant-trusted'
 ]
