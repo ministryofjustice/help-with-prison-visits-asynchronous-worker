@@ -30,12 +30,11 @@ coverage
 
 # Ignore local scripts
 run-docker.sh
-run-end-to-end-tests.sh
-run-end-to-end-tests-ie8.sh
-run-end-to-end-tests-firefox.sh
 run-integration-tests.sh
-run-knex-migrations.sh
+run-node.sh
+run-schedule-payment-run.sh
 run-standard-linter.sh
+run-test-coverage.sh
 run-unit-tests.sh
 
 # CSV output
