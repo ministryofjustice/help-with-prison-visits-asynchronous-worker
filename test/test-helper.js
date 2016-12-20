@@ -191,7 +191,6 @@ module.exports.getClaimData = function (reference) {
       VisitorId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
-      Title: 'Mr',
       FirstName: 'Joe',
       LastName: 'Bloggs',
       NationalInsuranceNumber: 'AA123456A',
