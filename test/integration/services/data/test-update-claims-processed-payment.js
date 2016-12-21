@@ -25,7 +25,7 @@ describe('services/data/update-claims-processed-payment', function () {
         return knex('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
-            expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
+            expect(claims[0].BankPaymentAmount).to.be.equal(paymentTotal)
           })
       })
   })
