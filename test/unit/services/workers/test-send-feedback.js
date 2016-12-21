@@ -4,6 +4,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 
 const config = require('../../../../config')
+const RatingEnum = require('../../../../app/constants/rating-enum')
 
 var rating = 'satisfied'
 var improvements = 'This is a test message'
@@ -22,7 +23,7 @@ describe('services/send-feedback', function () {
         expect(stubSendNotification.called).to.be.true
         expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_SEND_FEEDBACK_EMAIL_TEMPLATE_ID)
         expect(stubSendNotification.firstCall.args[1]).to.be.equal(config.APVS_FEEDBACK_EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].rating).to.be.equal(rating)
+        expect(stubSendNotification.firstCall.args[2].rating).to.be.equal(RatingEnum[rating])
         expect(stubSendNotification.firstCall.args[2].improvements).to.be.equal(improvements)
       })
   })
