@@ -13,6 +13,7 @@ var sendAllAdvanceClaimRemindersForDay = require('./workers/send-all-advance-cla
 var generateDirectPayments = require('./workers/generate-direct-payments')
 var cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
 var markOverpayments = require('./workers/mark-overpayments')
+var sendFeedback = require('./workers/send-feedback')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -31,6 +32,7 @@ module.exports = function (taskType) {
     case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
     case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
     case tasksEnum.MARK_ALL_OVERPAYMENTS: return markOverpayments
+    case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
   }
 
   return null
