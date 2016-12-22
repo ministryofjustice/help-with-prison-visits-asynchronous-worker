@@ -13,6 +13,9 @@ module.exports = function (eligibilityId, claimId) {
       return knex('ExtSchema.ClaimChild').where('ClaimId', claimId).del()
     })
     .then(function () {
+      return knex('ExtSchema.ClaimEscort').where('ClaimId', claimId).del()
+    })
+    .then(function () {
       return knex('ExtSchema.EligibilityVisitorUpdateContactDetail').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
