@@ -1,7 +1,7 @@
 module.exports = {
-  'very-satisfied': 'Very satisfied',
-  'satisfied': 'Satisfied',
-  'neutral': 'Neither satisfied or dissatisfied',
-  'dissatisfied': 'Dissatisfied',
-  'very-dissatisfied': 'Very dissatisfied'
+  'very-satisfied': {displayName: 'Very satisfied', databaseValue: 'very-satisfied'},
+  'satisfied': {displayName: 'Satisfied', databaseValue: 'satisfied'},
+  'neutral': {displayName: 'Neither satisfied or dissatisfied', databaseValue: 'neutral'},
+  'dissatisfied': {displayName: 'Dissatisfied', databaseValue: 'dissatisfied'},
+  'very-dissatisfied': {displayName: 'Very dissatisfied', databaseValue: 'very-dissatisfied'}
 }
