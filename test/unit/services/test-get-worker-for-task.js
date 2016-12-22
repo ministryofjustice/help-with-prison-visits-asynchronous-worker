@@ -15,6 +15,7 @@ const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMet
 const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = {name: 'markOverpayments'}
+const sendFeedback = {name: 'sendFeedback'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -29,7 +30,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-performance-platform-metrics-for-day': sendPerformancePlatformMetricsForDay,
   './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
-  './workers/mark-overpayments': markOverpayments
+  './workers/mark-overpayments': markOverpayments,
+  './workers/send-feedback': sendFeedback
 })
 
 describe('services/getWorkerForTask', function () {
@@ -96,5 +98,10 @@ describe('services/getWorkerForTask', function () {
   it('should return mark-overpayments', function () {
     var worker = getWorkerForTask(tasksEnum.MARK_ALL_OVERPAYMENTS)
     expect(worker.name).to.be.equal('markOverpayments')
+  })
+
+  it('should return send-feedback', function () {
+    var worker = getWorkerForTask(tasksEnum.FEEDBACK_SUBMITTED)
+    expect(worker.name).to.be.equal('sendFeedback')
   })
 })
