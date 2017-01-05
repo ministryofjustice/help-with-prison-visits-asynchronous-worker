@@ -6,5 +6,5 @@ memwatch.on('leak', function (info) {
 })
 
 memwatch.on('stats', function (stats) {
-  logger.trace({ memstats: stats })
+  logger.info({ memstats: stats })
 })
