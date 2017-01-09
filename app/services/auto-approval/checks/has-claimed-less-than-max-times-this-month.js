@@ -30,7 +30,7 @@ function getCountOfApprovedClaimsSubmittedSinceDate (previousClaims, date) {
   for (var i = 0; i < claims.length; i++) {
     var claim = claims[i]
 
-    if (claim.DateSubmitted > date) {
+    if (claim.DateSubmitted >= date) {
       count++
     }
   }
