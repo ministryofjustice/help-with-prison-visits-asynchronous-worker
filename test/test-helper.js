@@ -54,6 +54,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status)
   var insertClaimData = this.insertClaimData
 
   var newEligibilityId
+  var newClaimBankDetailId = data.ClaimBankDetail.ClaimBankDetailId
   var isExtSchema = schema === 'ExtSchema'
 
   if (isExtSchema) {
@@ -82,7 +83,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status)
       return insertClaimData(schema, reference, newEligibilityId, data)
     })
     .then(function (newClaimId) {
-      return { eligibilityId: newEligibilityId, claimId: newClaimId }
+      return { eligibilityId: newEligibilityId, claimId: newClaimId, claimBankDetailId: newClaimBankDetailId }
     })
 }
 

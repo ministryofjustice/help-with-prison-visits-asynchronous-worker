@@ -14,11 +14,18 @@ module.exports.execute = function (task) {
   var note = task.additionalData
   var updatedDocuments
   var status
+  var originalStatus
+  var claimBankDetailId
 
   return moveClaimDocumentsToInternal(reference, eligibilityId, claimId)
     .then(function (newDocuments) { updatedDocuments = newDocuments })
     .then(function () { return getAllClaimData('IntSchema', reference, eligibilityId, claimId) })
-    .then(function (claimData) { status = getStatusForUpdatedClaim(claimData) })
+    .then(function (claimData) {
+      status = getStatusForUpdatedClaim(claimData)
+      originalStatus = claimData.Claim.Status
+      claimBankDetailId = claimData.ClaimBankDetailId
+    })
+    .then(function () { return updateBankDetails(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
     .then(function () { return updateClaimStatus(claimId, status) })
     .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
     .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
@@ -48,6 +55,14 @@ function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDo
 function callAutoApprovalIfClaimIsNew (reference, eligibilityId, claimId, status) {
   if (status === statusEnum.NEW) {
     return autoApprovalProcess(reference, eligibilityId, claimId)
+  } else {
+    return Promise.resolve()
+  }
+}
+
+function updateBankDetails (reference, eligibilityId, claimId, status, claimBankDetailId) {
+  if (status === statusEnum.REQUEST_INFO_PAYMENT) {
+    return Promise.resolve()
   } else {
     return Promise.resolve()
   }
