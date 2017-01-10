@@ -210,7 +210,8 @@ module.exports.getClaimData = function (reference) {
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
-        Name: 'Sam Bloggs',
+        FirstName: 'Sam',
+        LastName: 'Bloggs',
         DateOfBirth: new Date(),
         Relationship: 'prisoners-child',
         IsEnabled: true
@@ -219,7 +220,8 @@ module.exports.getClaimData = function (reference) {
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
-        Name: 'Mike Bloggs',
+        FirstName: 'Mike',
+        LastName: 'Bloggs',
         DateOfBirth: new Date(),
         Relationship: 'my-child',
         IsEnabled: true
@@ -335,8 +337,8 @@ module.exports.getAutoApprovalData = function (reference) {
   return {
     Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
     ClaimChildren: [
-      getClaimChildObject(1, claimId1, uniqueId, reference, 'Child A', 'my-child', subtractDateFromNow(10, 'years')),
-      getClaimChildObject(2, claimId1, uniqueId, reference, 'Child B', 'my-child', subtractDateFromNow(15, 'years'))
+      getClaimChildObject(1, claimId1, uniqueId, reference, 'Child', 'A', 'my-child', subtractDateFromNow(10, 'years')),
+      getClaimChildObject(2, claimId1, uniqueId, reference, 'Child', 'B', 'my-child', subtractDateFromNow(15, 'years'))
     ],
     ClaimDocument: [
       getClaimDocumentObject(1, claimId1, uniqueId, reference, 'VISIT-CONFIRMATION', 'uploaded')
@@ -432,13 +434,14 @@ function getClaimDocumentObject (claimDocumentId, claimId, eligibilityId, refere
   }
 }
 
-function getClaimChildObject (claimChildId, claimId, eligibilityId, reference, name, relationship, dateOfBirth) {
+function getClaimChildObject (claimChildId, claimId, eligibilityId, reference, firstName, lastName, relationship, dateOfBirth) {
   return {
     ClaimChildId: claimChildId,
     ClaimId: claimId,
     EligibilityId: eligibilityId,
     Reference: reference,
-    Name: name,
+    FirstName: firstName,
+    LastName: lastName,
     Relationship: relationship,
     DateOfBirth: dateOfBirth
   }
