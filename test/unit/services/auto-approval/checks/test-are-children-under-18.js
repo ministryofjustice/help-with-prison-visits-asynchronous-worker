@@ -21,7 +21,8 @@ var autoApprovalDataClaimChildrenUnder18 = {
       EligibilityId: 798118115,
       Reference: 'AUTOAPP',
       ClaimId: 798118115,
-      Name: 'Sam Bloggs',
+      FirstName: 'Sam',
+      LastName: 'Bloggs',
       DateOfBirth: moment().subtract(14, 'years').toDate(),
       Relationship: 'prisoners-child',
       IsEnabled: true
@@ -31,7 +32,8 @@ var autoApprovalDataClaimChildrenUnder18 = {
       EligibilityId: 798118115,
       Reference: 'AUTOAPP',
       ClaimId: 798118115,
-      Name: 'Mike Bloggs',
+      FirstName: 'Mike',
+      LastName: 'Bloggs',
       DateOfBirth: moment().subtract(15, 'years').toDate(),
       Relationship: 'my-child',
       IsEnabled: true
