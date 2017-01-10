@@ -2,6 +2,8 @@ const moveClaimDocumentsToInternal = require('../data/move-claim-documents-to-in
 const getAllClaimData = require('../data/get-all-claim-data')
 const updateClaimStatus = require('../data/update-claim-status')
 const insertClaimEvent = require('../data/insert-claim-event')
+const updateBankDetails = require('../data/update-bank-details')
+const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 const generateClaimUpdatedString = require('../notify/helpers/generate-claim-updated-string')
 const autoApprovalProcess = require('../auto-approval/auto-approval-process')
 const statusEnum = require('../../constants/status-enum')
@@ -25,7 +27,7 @@ module.exports.execute = function (task) {
       originalStatus = claimData.Claim.Status
       claimBankDetailId = claimData.ClaimBankDetailId
     })
-    .then(function () { return updateBankDetails(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
+    .then(function () { return updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
     .then(function () { return updateClaimStatus(claimId, status) })
     .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
     .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
@@ -60,9 +62,14 @@ function callAutoApprovalIfClaimIsNew (reference, eligibilityId, claimId, status
   }
 }
 
-function updateBankDetails (reference, eligibilityId, claimId, status, claimBankDetailId) {
+function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, claimId, status, claimBankDetailId) {
   if (status === statusEnum.REQUEST_INFO_PAYMENT) {
-    return Promise.resolve()
+    var newBankDetails
+    return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
+      .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
+      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber) })
+      .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, 'BANK-DETAILS-UPDATED', null, null, true) })
+      .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
   } else {
     return Promise.resolve()
   }
