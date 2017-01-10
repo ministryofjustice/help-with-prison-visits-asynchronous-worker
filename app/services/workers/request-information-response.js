@@ -25,7 +25,7 @@ module.exports.execute = function (task) {
     .then(function (claimData) {
       status = getStatusForUpdatedClaim(claimData)
       originalStatus = claimData.Claim.Status
-      claimBankDetailId = claimData.ClaimBankDetailId
+      claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
     })
     .then(function () { return updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
     .then(function () { return updateClaimStatus(claimId, status) })
