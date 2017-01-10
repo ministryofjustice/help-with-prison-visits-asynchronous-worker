@@ -49,6 +49,9 @@ function copyClaimData (data, additionalData) {
       return knex('IntSchema.ClaimDocument').insert(data.ClaimDocument)
     })
     .then(function () {
+      return knex('IntSchema.ClaimEscort').insert(data.ClaimEscort)
+    })
+    .then(function () {
       return insertClaimEvent(data.Claim.Reference, data.Claim.EligibilityId, data.Claim.ClaimId, null, 'CLAIM-SUBMITTED', additionalData, null, true)
     })
     .then(function () {
