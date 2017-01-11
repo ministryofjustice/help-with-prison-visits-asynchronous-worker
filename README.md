@@ -1,6 +1,6 @@
 # Assisted Prison Visits Scheme (APVS) - Asynchronous worker
 
-[![Build Status](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-asynchronous-worker?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![NSP Status](https://nodesecurity.io/orgs/ministry-of-justice-digital/projects/43b6ef86-4a66-4d58-b63d-e550b42fefc5/badge)](https://nodesecurity.io/orgs/ministry-of-justice-digital/projects/43b6ef86-4a66-4d58-b63d-e550b42fefc5)
 
 The asynchronous worker is a separate node application which runs continously, checking for tasks added to the database by the [External Web](https://github.com/ministryofjustice/apvs-external-web) and [Internal Web](https://github.com/ministryofjustice/apvs-internal-web) to process.
 
