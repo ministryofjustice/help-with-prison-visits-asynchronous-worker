@@ -79,9 +79,14 @@ describe('services/data/copy-claim-data-to-internal', function () {
 
   describe('repeat claim', function () {
     const repeatClaimData = testHelper.getClaimData(reference, claimId)
+    const existingInternalEligibility = repeatClaimData.Eligibility
     repeatClaimData.Eligibility = undefined
     repeatClaimData.Visitor = undefined
     repeatClaimData.Prisoner = undefined
+
+    before(function () {
+      return knex('IntSchema.Eligibility').insert(existingInternalEligibility)
+    })
 
     it('should copy repeat claim data without external schema eligibility', function () {
       return copyClaimDataToInternal(repeatClaimData).then(function () {
