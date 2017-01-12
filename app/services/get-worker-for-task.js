@@ -14,6 +14,7 @@ var generateDirectPayments = require('./workers/generate-direct-payments')
 var cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
 var markOverpayments = require('./workers/mark-overpayments')
 var sendFeedback = require('./workers/send-feedback')
+var cleanupOldEligibilityData = require('./workers/cleanup-old-eligibility-data')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -33,6 +34,7 @@ module.exports = function (taskType) {
     case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
     case tasksEnum.MARK_ALL_OVERPAYMENTS: return markOverpayments
     case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
+    case tasksEnum.CLEANUP_OLD_ELIGIBILITY_DATA: return cleanupOldEligibilityData
   }
 
   return null
