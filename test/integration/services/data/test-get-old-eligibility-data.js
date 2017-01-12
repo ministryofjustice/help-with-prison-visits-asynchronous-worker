@@ -8,7 +8,7 @@ const testHelper = require('../../../test-helper')
 const getOldEligibilityData = require('../../../../app/services/data/get-old-eligibility-data')
 
 describe('services/data/delete-old-eligibility-data', function () {
-  var maxAgeInHours = parseInt(config.EXTERNAL_MAX_HOURS_BEFORE_DELETE_OLD_DATA)
+  var maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
   var reference1 = 'GETELIG1'
   var reference2 = 'GETELIG2'
   var reference3 = 'GETELIG3'
@@ -18,9 +18,9 @@ describe('services/data/delete-old-eligibility-data', function () {
   var eligibilityId3
   var eligibilityId4
 
-  var dateThreshold = moment().subtract(maxAgeInHours, 'hours').toDate()
-  var olderThanMaxAge = moment().subtract(maxAgeInHours + 1, 'hours').toDate()
-  var lessThanMaxAge = moment().subtract(maxAgeInHours - 1, 'hours').toDate()
+  var dateThreshold = moment().subtract(maxAgeInDays, 'days').toDate()
+  var olderThanMaxAge = moment().subtract(maxAgeInDays + 1, 'days').toDate()
+  var lessThanMaxAge = moment().subtract(maxAgeInDays - 1, 'days').toDate()
 
   before(function () {
     return Promise.all([

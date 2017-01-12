@@ -59,6 +59,6 @@ module.exports = {
   // Advance Claim mark as overpayment
   MARK_AS_OVERPAYMENT_DAYS: process.env.APVS_MARK_AS_OVERPAYMENT_DAYS || '10',
 
-  // Clean data from external task
-  EXTERNAL_MAX_HOURS_BEFORE_DELETE_OLD_DATA: process.env.APVS_EXTERNAL_MAX_HOURS_BEFORE_DELETE_OLD_DATA || '24'
+  // Cleanup task for external data
+  EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA: process.env.APVS_EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA || '30'
 }
