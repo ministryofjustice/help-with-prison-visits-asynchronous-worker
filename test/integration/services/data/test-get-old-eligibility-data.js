@@ -17,10 +17,6 @@ describe('services/data/delete-old-eligibility-data', function () {
   var eligibilityId2
   var eligibilityId3
   var eligibilityId4
-  var claimId1
-  var claimId2
-  var claimId3
-  var claimId4
 
   var dateThreshold = moment().subtract(maxAgeInHours, 'hours').toDate()
   var olderThanMaxAge = moment().subtract(maxAgeInHours + 1, 'hours').toDate()
@@ -38,12 +34,12 @@ describe('services/data/delete-old-eligibility-data', function () {
         .then(function (ids) {
           eligibilityId2 = ids.eligibilityId
         }),
-      // New eligibility with claim
+      // Newer eligibility with claim
       createTestData(reference3, lessThanMaxAge, false)
         .then(function (ids) {
           eligibilityId3 = ids.eligibilityId
         }),
-      // New eligibility without claim
+      // Newer eligibility without claim
       createTestData(reference4, lessThanMaxAge, true)
         .then(function (ids) {
           eligibilityId4 = ids.eligibilityId
@@ -91,26 +87,19 @@ function createTestData (ref, dateCreated, deleteClaim) {
       returnObject.eligibilityId = ids.eligibilityId
       returnObject.claimId = ids.claimId
 
-      return setDateCreatedForEligibility(returnObject.eligibilityId, dateCreated)
+      return knex('ExtSchema.Eligibility')
+        .where('EligibilityId', returnObject.eligibilityId)
+        .update({
+          'DateCreated': dateCreated
+        })
         .then(function () {
           if (deleteClaim) {
             return Promise.all([
               deleteFromTable(returnObject.claimId, 'ClaimBankDetail'),
               deleteFromTable(returnObject.claimId, 'ClaimExpense'),
               deleteFromTable(returnObject.claimId, 'ClaimDocument'),
-              
+              deleteFromTable(returnObject.claimId, 'ClaimChild')
             ])
-
-            return
-            .then(function () {
-              
-            })
-            .then(function () {
-              
-            })
-            .then(function () {
-              
-            })
             .then(function () {
               return deleteFromTable(returnObject.claimId, 'Claim')
             })
@@ -126,14 +115,6 @@ function deleteFromTable (claimId, tableName) {
   return knex(`ExtSchema.${tableName}`)
     .where('ClaimId', claimId)
     .del()
-}
-
-function setDateCreatedForEligibility (eligibilityId, dateCreated) {
-  return knex('ExtSchema.Eligibility')
-    .where('EligibilityId', eligibilityId)
-    .update({
-      'DateCreated': dateCreated
-    })
 }
 
 function eligibilityExists (value, collection) {
