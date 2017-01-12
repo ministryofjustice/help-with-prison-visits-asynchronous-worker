@@ -15,8 +15,8 @@ module.exports = function (autoApprovalData) {
       var currentExpenseType = groupedCurrentExpenses[index]
       var firstTimeExpenses = groupedFirstTimeClaimExpenses[index]
 
-      var currentExpenseTypeTotal = getTotalCost(currentExpenseType)
-      var firstTimeExpenseTypeTotal = getTotalCost(firstTimeExpenses)
+      var currentExpenseTypeTotal = getTotal(currentExpenseType, 'Cost')
+      var firstTimeExpenseTypeTotal = getTotal(firstTimeExpenses, 'ApprovedCost')
 
       if (currentExpenseTypeTotal !== firstTimeExpenseTypeTotal) {
         var variance = firstTimeExpenseTypeTotal * (Math.abs(autoApprovalData.costVariancePercentage) / 100)
@@ -33,14 +33,14 @@ module.exports = function (autoApprovalData) {
   return new AutoApprovalCheckResult(CHECK_NAME, true, '')
 }
 
-function getTotalCost (claimExpenses) {
+function getTotal (claimExpenses, fieldName) {
   var expenseTypeTotal = 0
   if (!claimExpenses) {
     return expenseTypeTotal
   }
 
   for (var i = 0; i < claimExpenses.length; i++) {
-    expenseTypeTotal += claimExpenses[i].Cost
+    expenseTypeTotal += claimExpenses[i][fieldName]
   }
 
   return expenseTypeTotal
