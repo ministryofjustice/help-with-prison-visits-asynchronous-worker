@@ -1,4 +1,5 @@
 const moment = require('moment')
+const dateFormatter = require('../../date-formatter')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
@@ -11,7 +12,7 @@ module.exports = function (autoApprovalData) {
   }
 
   var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
-  var now = moment().startOf('day')
+  var now = dateFormatter.now().startOf('day')
 
   var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
   var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')

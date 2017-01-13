@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const moment = require('moment')
+const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const hasClaimedLessThanMaxTimesThisMonth = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-month')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
@@ -8,7 +8,7 @@ const MAX_NUMBER_OF_CLAIMS_PER_MONTH = '4'
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-month', function () {
   it(`should return false if the number of claims made for the current month is greater than ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
-    var firstOfCurrentMonth = moment().startOf('month')
+    var firstOfCurrentMonth = dateFormatter.now().startOf('month')
     var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(8, firstOfCurrentMonth)
     autoApprovalData.previousClaims = setClaimStatuses(autoApprovalData.previousClaims, 2, 'NEW')
 
@@ -17,7 +17,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
   })
 
   it(`should return true if the number of claims made for the current month is less than ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
-    var firstOfCurrentMonth = moment().startOf('month')
+    var firstOfCurrentMonth = dateFormatter.now().startOf('month')
     var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(6, firstOfCurrentMonth)
     autoApprovalData = setClaimStatuses(autoApprovalData.previousClaims, 2, 'NEW')
 
@@ -39,7 +39,7 @@ function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) 
     previousClaims: [],
     maxNumberOfClaimsPerMonth: MAX_NUMBER_OF_CLAIMS_PER_MONTH
   }
-  var now = moment()
+  var now = dateFormatter.now()
   var durationSinceStartDate = now.diff(startDate, 'days')
   var daysBetweenClaims = Math.floor(durationSinceStartDate / numberOfClaims)
 
