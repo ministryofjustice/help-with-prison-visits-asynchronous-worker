@@ -7,7 +7,7 @@ const testHelper = require('../../../test-helper')
 
 const getOldEligibilityData = require('../../../../app/services/data/get-old-eligibility-data')
 
-describe('services/data/delete-old-eligibility-data', function () {
+describe('services/data/get-old-eligibility-data', function () {
   var maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
   var reference1 = 'GETELIG1'
   var reference2 = 'GETELIG2'
