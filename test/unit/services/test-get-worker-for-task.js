@@ -16,6 +16,7 @@ const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimReminders
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = {name: 'markOverpayments'}
 const sendFeedback = {name: 'sendFeedback'}
+const cleanupOldData = {name: 'cleanupOldData'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -31,7 +32,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
   './workers/mark-overpayments': markOverpayments,
-  './workers/send-feedback': sendFeedback
+  './workers/send-feedback': sendFeedback,
+  './workers/cleanup-old-data': cleanupOldData
 })
 
 describe('services/getWorkerForTask', function () {
@@ -103,5 +105,10 @@ describe('services/getWorkerForTask', function () {
   it('should return send-feedback', function () {
     var worker = getWorkerForTask(tasksEnum.FEEDBACK_SUBMITTED)
     expect(worker.name).to.be.equal('sendFeedback')
+  })
+
+  it('should return cleanup-old-data', function () {
+    var worker = getWorkerForTask(tasksEnum.CLEANUP_OLD_DATA)
+    expect(worker.name).to.be.equal('cleanupOldData')
   })
 })
