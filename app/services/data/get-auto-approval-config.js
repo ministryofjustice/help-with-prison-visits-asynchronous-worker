@@ -1,5 +1,6 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const config = require('../../../config')
+const knexConfig = require('../../../knexfile').intweb
+const knex = require('knex')(knexConfig)
 
 module.exports = function () {
   return knex('IntSchema.AutoApprovalConfig')
