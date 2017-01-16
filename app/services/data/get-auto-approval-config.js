@@ -6,11 +6,27 @@ module.exports = function () {
     .where('IsEnabled', true)
     .orderBy('DateCreated', 'desc')
     .first()
-    .then(function (config) {
-      var rulesDisabled = config.RulesDisabled
-      if (rulesDisabled) {
-        config.RulesDisabled = rulesDisabled.split(',')
+    .then(function (autoApprovalConfig) {
+      if (autoApprovalConfig) {
+        var rulesDisabled = autoApprovalConfig.RulesDisabled
+        if (rulesDisabled) {
+          autoApprovalConfig.RulesDisabled = rulesDisabled.split(',')
+        }
+        return autoApprovalConfig
+      } else {
+        return getDefaults()
       }
-      return config
     })
+}
+
+function getDefaults () {
+  return {
+    AutoApprovalEnabled: config.AUTO_APPROVAL_ENABLED,
+    CostVariancePercentage: config.AUTO_APPROVAL_COST_VARIANCE,
+    MaxClaimTotal: config.AUTO_APPROVAL_MAX_CLAIM_TOTAL,
+    MaxDaysAfterAPVUVisit: config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT,
+    MaxNumberOfClaimsPerYear: config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR,
+    MaxNumberOfClaimsPerMonth: config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH,
+    RulesDisabled: null
+  }
 }
