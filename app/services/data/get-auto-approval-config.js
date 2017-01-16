@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').intweb
+const knexConfig = require('../../../knexfile').asyncworker
 const knex = require('knex')(knexConfig)
 
 module.exports = function () {
@@ -22,12 +22,12 @@ module.exports = function () {
 
 function getDefaults () {
   return {
-    AutoApprovalEnabled: config.AUTO_APPROVAL_ENABLED,
-    CostVariancePercentage: config.AUTO_APPROVAL_COST_VARIANCE,
-    MaxClaimTotal: config.AUTO_APPROVAL_MAX_CLAIM_TOTAL,
-    MaxDaysAfterAPVUVisit: config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT,
-    MaxNumberOfClaimsPerYear: config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR,
-    MaxNumberOfClaimsPerMonth: config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH,
+    AutoApprovalEnabled: config.AUTO_APPROVAL_ENABLED === 'true',
+    CostVariancePercentage: parseFloat(config.AUTO_APPROVAL_COST_VARIANCE),
+    MaxClaimTotal: parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL),
+    MaxDaysAfterAPVUVisit: parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT),
+    MaxNumberOfClaimsPerYear: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR),
+    MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH),
     RulesDisabled: null
   }
 }
