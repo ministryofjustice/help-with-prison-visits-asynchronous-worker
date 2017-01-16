@@ -279,7 +279,7 @@ module.exports.getClaimData = function (reference) {
         ClaimDocumentId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
-        ClaimId: uniqueId,
+        ClaimId: null,
         DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
         DocumentStatus: 'uploaded',

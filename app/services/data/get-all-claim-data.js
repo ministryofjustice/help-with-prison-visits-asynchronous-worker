@@ -9,7 +9,7 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
     getClaim(schema, claimId),
     getClaimChildren(schema, claimId),
     getClaimExpenses(schema, claimId),
-    getClaimDocuments(schema, claimId),
+    getClaimDocuments(schema, reference, eligibilityId, claimId),
     getClaimBankDetail(schema, claimId),
     getEligibilityVisitorUpdateContactDetail(schema, reference, eligibilityId),
     getClaimEscort(schema, claimId)
@@ -57,8 +57,10 @@ function getClaimChildren (schema, claimId) {
   return knex(`${schema}.ClaimChild`).select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
 
-function getClaimDocuments (schema, claimId) {
-  return knex(`${schema}.ClaimDocument`).select().where({'ClaimId': claimId, 'IsEnabled': true})
+function getClaimDocuments (schema, reference, eligibilityId, claimId) {
+  return knex(`${schema}.ClaimDocument`).select()
+    .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'IsEnabled': true})
+    .orWhere({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': null, 'IsEnabled': true})
 }
 
 function getClaimEscort (schema, claimId) {
