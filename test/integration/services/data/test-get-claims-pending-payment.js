@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const testHelper = require('../../../test-helper')
 const getClaimsPendingPayment = require('../../../../app/services/data/get-claims-pending-payment')
 
@@ -47,7 +47,7 @@ describe('services/data/get-claims-pending-payment', function () {
   })
 
   it('should retrieve only APPROVED claim records with payment status of NULL', function () {
-    var currentDate = moment().format('YYYY-MM-DD')
+    var currentDate = dateFormatter.now().format('YYYY-MM-DD')
     return getClaimsPendingPayment()
       .then(function (results) {
         var filteredResults = results.filter(function (result) {

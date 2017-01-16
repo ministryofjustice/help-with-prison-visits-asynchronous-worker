@@ -1,4 +1,5 @@
 const moment = require('moment')
+const dateFormatter = require('../../date-formatter')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
@@ -6,7 +7,7 @@ const CHECK_NAME = 'are-children-under-18'
 const FAILURE_MESSAGE = 'One or more children to be claimed are over 18 years old'
 
 module.exports = function (autoApprovalData) {
-  var now = moment()
+  var now = dateFormatter.now()
 
   if (autoApprovalData.ClaimChildren && autoApprovalData.ClaimChildren.length > 0) {
     for (var i = 0; i < autoApprovalData.ClaimChildren.length; i++) {
