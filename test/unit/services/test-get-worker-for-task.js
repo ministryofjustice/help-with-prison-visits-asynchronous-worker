@@ -17,6 +17,7 @@ const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = {name: 'markOverpayments'}
 const sendFeedback = {name: 'sendFeedback'}
 const cleanupOldData = {name: 'cleanupOldData'}
+const sendTechnicalHelp = {name: 'sendTechnicalHelp'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -33,7 +34,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
   './workers/mark-overpayments': markOverpayments,
   './workers/send-feedback': sendFeedback,
-  './workers/cleanup-old-data': cleanupOldData
+  './workers/cleanup-old-data': cleanupOldData,
+  './workers/send-technical-help': sendTechnicalHelp
 })
 
 describe('services/getWorkerForTask', function () {
@@ -110,5 +112,10 @@ describe('services/getWorkerForTask', function () {
   it('should return cleanup-old-data', function () {
     var worker = getWorkerForTask(tasksEnum.CLEANUP_OLD_DATA)
     expect(worker.name).to.be.equal('cleanupOldData')
+  })
+
+  it('should return send-technical-help', function () {
+    var worker = getWorkerForTask(tasksEnum.TECHNICAL_HELP_SUBMITTED)
+    expect(worker.name).to.be.equal('sendTechnicalHelp')
   })
 })
