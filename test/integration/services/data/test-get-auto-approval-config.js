@@ -1,15 +1,10 @@
 var expect = require('chai').expect
 var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
-<<<<<<< HEAD
+
 var knexConfig = require('../../../../knexfile').asyncworker
 var knex = require('knex')(knexConfig)
 var config = require('../../../../config')
-var moment = require('moment')
-=======
-var config = require('../../../../knexfile').asyncworker
-var knex = require('knex')(config)
 var dateFormatter = require('../../../../app/services/date-formatter')
->>>>>>> develop
 
 var insertedIds
 
@@ -17,7 +12,6 @@ describe('services/data/get-auto-approval-config', function () {
   var existingAutoApprovalId
 
   before(function () {
-<<<<<<< HEAD
     return getCurrentAutoApprovalConfigId()
       .then(function (currentAutoApprovalConfigId) {
         if (currentAutoApprovalConfigId) {
@@ -26,34 +20,6 @@ describe('services/data/get-auto-approval-config', function () {
         } else {
           return Promise.resolve()
         }
-=======
-    return knex('IntSchema.AutoApprovalConfig')
-      .insert([{
-        Caseworker: 'caseworker1@test.com',
-        DateCreated: dateFormatter.now().toDate(),
-        AutoApprovalEnabled: 'true',
-        CostVariancePercentage: '5.00',
-        MaxClaimTotal: '100.00',
-        MaxDaysAfterAPVUVisit: '28',
-        MaxNumberOfClaimsPerYear: '10',
-        RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
-        IsEnabled: 'true'
-      },
-      {
-        Caseworker: 'caseworker2@test.com',
-        DateCreated: dateFormatter.now().subtract(1, 'day').toDate(),
-        AutoApprovalEnabled: 'true',
-        CostVariancePercentage: '5.00',
-        MaxClaimTotal: '100.00',
-        MaxDaysAfterAPVUVisit: '28',
-        MaxNumberOfClaimsPerYear: '10',
-        RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-3',
-        IsEnabled: 'false'
-      }])
-      .returning('AutoApprovalConfigId')
-      .then(function (result) {
-        insertedIds = result
->>>>>>> develop
       })
   })
 
@@ -98,7 +64,7 @@ function insertTestData () {
   return knex('IntSchema.AutoApprovalConfig')
     .insert([{
       Caseworker: 'caseworker1@test.com',
-      DateCreated: moment().toDate(),
+      DateCreated: dateFormatter.now().toDate(),
       AutoApprovalEnabled: 'true',
       CostVariancePercentage: '5.00',
       MaxClaimTotal: '100.00',
@@ -109,7 +75,7 @@ function insertTestData () {
     },
     {
       Caseworker: 'caseworker2@test.com',
-      DateCreated: moment().subtract(1, 'day').toDate(),
+      DateCreated: dateFormatter.now().subtract(1, 'day').toDate(),
       AutoApprovalEnabled: 'true',
       CostVariancePercentage: '5.00',
       MaxClaimTotal: '100.00',
