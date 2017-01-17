@@ -94,7 +94,7 @@ describe('services/data/copy-claim-data-to-internal', function () {
           .join('IntSchema.ClaimChild', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimChild.ClaimId')
           .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
           .join('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-          .join('IntSchema.ClaimDocument', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimDocument.ClaimId')
+          .join('IntSchema.ClaimDocument', 'IntSchema.Claim.Reference', '=', 'IntSchema.ClaimDocument.Reference')
           .select()
           .then(function (results) {
             expect(results.length, 'Should have 8 rows, 2x child 2x expense x2 document').to.be.equal(8)
