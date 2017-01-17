@@ -1,10 +1,11 @@
 const expect = require('chai').expect
 const moment = require('moment')
+const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const hasClaimedLessThanMaxTimesThisYear = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-year')
 var initialClaimId = 800000000
 
-const now = moment()
+const now = dateFormatter.now()
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-year', function () {
   it('should return false if the number of claims made for the current year is greater than 26', function () {
