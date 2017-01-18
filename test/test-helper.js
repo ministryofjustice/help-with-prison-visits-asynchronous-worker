@@ -1,6 +1,6 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../app/services/date-formatter')
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -46,11 +46,15 @@ module.exports.deleteAll = function (reference, schema) {
     .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
 }
 
-module.exports.insertClaimEligibilityData = function (schema, reference) {
+module.exports.insertClaimEligibilityData = function (schema, reference, status) {
   var data = this.getClaimData(reference)
+  if (status) {
+    data.Claim.Status = status
+  }
   var insertClaimData = this.insertClaimData
 
   var newEligibilityId
+  var newClaimBankDetailId = data.ClaimBankDetail.ClaimBankDetailId
   var isExtSchema = schema === 'ExtSchema'
 
   if (isExtSchema) {
@@ -79,7 +83,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference) {
       return insertClaimData(schema, reference, newEligibilityId, data)
     })
     .then(function (newClaimId) {
-      return { eligibilityId: newEligibilityId, claimId: newClaimId }
+      return { eligibilityId: newEligibilityId, claimId: newClaimId, claimBankDetailId: newClaimBankDetailId }
     })
 }
 
@@ -114,6 +118,8 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       if (isExtSchema) {
         delete data.ClaimExpenses[0].ClaimExpenseId
         delete data.ClaimExpenses[1].ClaimExpenseId
+        delete data.ClaimExpenses[0].ApprovedCost
+        delete data.ClaimExpenses[1].ApprovedCost
         data.ClaimExpenses[0].EligibilityId = newEligibilityId
         data.ClaimExpenses[1].EligibilityId = newEligibilityId
         data.ClaimExpenses[0].ClaimId = newClaimId
@@ -169,7 +175,8 @@ module.exports.getClaimData = function (reference) {
       DateOfJourney: new Date(),
       DateCreated: new Date(),
       DateSubmitted: new Date(),
-      Status: 'SUBMITTED'
+      Status: 'SUBMITTED',
+      IsAdvanceClaim: true
     },
     Prisoner: {
       PrisonerId: uniqueId,
@@ -185,7 +192,6 @@ module.exports.getClaimData = function (reference) {
       VisitorId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
-      Title: 'Mr',
       FirstName: 'Joe',
       LastName: 'Bloggs',
       NationalInsuranceNumber: 'AA123456A',
@@ -205,7 +211,8 @@ module.exports.getClaimData = function (reference) {
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
-        Name: 'Sam Bloggs',
+        FirstName: 'Sam',
+        LastName: 'Bloggs',
         DateOfBirth: new Date(),
         Relationship: 'prisoners-child',
         IsEnabled: true
@@ -214,7 +221,8 @@ module.exports.getClaimData = function (reference) {
         EligibilityId: uniqueId,
         Reference: reference,
         ClaimId: uniqueId,
-        Name: 'Mike Bloggs',
+        FirstName: 'Mike',
+        LastName: 'Bloggs',
         DateOfBirth: new Date(),
         Relationship: 'my-child',
         IsEnabled: true
@@ -228,6 +236,7 @@ module.exports.getClaimData = function (reference) {
         ClaimId: uniqueId,
         ExpenseType: 'car',
         Cost: 0,
+        ApprovedCost: 10,
         IsEnabled: true,
         TravelTime: null,
         From: 'London',
@@ -243,6 +252,7 @@ module.exports.getClaimData = function (reference) {
         ClaimId: uniqueId,
         ExpenseType: 'bus',
         Cost: 20.95,
+        ApprovedCost: 20,
         IsEnabled: true,
         TravelTime: null,
         From: 'Euston',
@@ -269,7 +279,7 @@ module.exports.getClaimData = function (reference) {
         ClaimDocumentId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
-        ClaimId: uniqueId,
+        ClaimId: null,
         DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
         DocumentStatus: 'uploaded',
@@ -326,10 +336,10 @@ module.exports.getAutoApprovalData = function (reference) {
   const claimExpenseId4 = claimExpenseId3 + 1
 
   return {
-    Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
+    Claim: getClaimObject(claimId1, uniqueId, reference, dateFormatter.now().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
     ClaimChildren: [
-      getClaimChildObject(1, claimId1, uniqueId, reference, 'Child A', 'my-child', subtractDateFromNow(10, 'years')),
-      getClaimChildObject(2, claimId1, uniqueId, reference, 'Child B', 'my-child', subtractDateFromNow(15, 'years'))
+      getClaimChildObject(1, claimId1, uniqueId, reference, 'Child', 'A', 'my-child', subtractDateFromNow(10, 'years')),
+      getClaimChildObject(2, claimId1, uniqueId, reference, 'Child', 'B', 'my-child', subtractDateFromNow(15, 'years'))
     ],
     ClaimDocument: [
       getClaimDocumentObject(1, claimId1, uniqueId, reference, 'VISIT-CONFIRMATION', 'uploaded')
@@ -347,7 +357,7 @@ module.exports.getAutoApprovalData = function (reference) {
       reference,
       subtractDateFromNow(9, 'months'),
       subtractDateFromNow(9, 'months'),
-      moment().subtract(9, 'months').add(10, 'days').toDate(),
+      dateFormatter.now().subtract(9, 'months').add(10, 'days').toDate(),
       'APPROVED',
       [
         getClaimExpenseObject(claimExpenseId3, claimId2, uniqueId, reference, 'car hire', 45),
@@ -360,7 +370,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(3, 'months'),
         subtractDateFromNow(3, 'months'),
-        moment().subtract(3, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(3, 'months').add(10, 'days').toDate(),
         'APPROVED'
       ),
       getClaimObject(claimId3,
@@ -368,7 +378,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(6, 'months'),
         subtractDateFromNow(6, 'months'),
-        moment().subtract(6, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(6, 'months').add(10, 'days').toDate(),
         'APPROVED'
       ),
       getClaimObject(claimId4,
@@ -376,7 +386,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(9, 'months'),
         subtractDateFromNow(9, 'months'),
-        moment().subtract(9, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(9, 'months').add(10, 'days').toDate(),
         'APPROVED'
       )
     ]
@@ -391,7 +401,7 @@ function getClaimObject (claimId, eligibilityId, reference, dateCreated, dateOfJ
     DateCreated: dateCreated,
     DateOfJourney: dateOfJourney,
     DateSubmitted: dateSubmitted,
-    DateReviewed: status === 'APPROVED' || status === 'AUTO-APPROVED' || status === 'REJECTED' || status === 'REQUEST_INFORMATION' ? moment().toDate() : null,
+    DateReviewed: status === 'APPROVED' || status === 'AUTO-APPROVED' || status === 'REJECTED' || status === 'REQUEST_INFORMATION' ? dateFormatter.now().toDate() : null,
     Status: status,
     Note: 'test note'
   }
@@ -425,13 +435,14 @@ function getClaimDocumentObject (claimDocumentId, claimId, eligibilityId, refere
   }
 }
 
-function getClaimChildObject (claimChildId, claimId, eligibilityId, reference, name, relationship, dateOfBirth) {
+function getClaimChildObject (claimChildId, claimId, eligibilityId, reference, firstName, lastName, relationship, dateOfBirth) {
   return {
     ClaimChildId: claimChildId,
     ClaimId: claimId,
     EligibilityId: eligibilityId,
     Reference: reference,
-    Name: name,
+    FirstName: firstName,
+    LastName: lastName,
     Relationship: relationship,
     DateOfBirth: dateOfBirth
   }
@@ -447,7 +458,7 @@ function getPrisonerObject (prisonerId, eligibilityId, reference, nameOfPrison) 
 }
 
 function subtractDateFromNow (amount, unit) {
-  return moment().subtract(amount, unit).toDate()
+  return dateFormatter.now().subtract(amount, unit).toDate()
 }
 
 function insertClaimDocuments (schema, eligibilityId, claimId, data) {

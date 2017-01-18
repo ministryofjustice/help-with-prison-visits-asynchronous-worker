@@ -9,9 +9,10 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
     getClaim(schema, claimId),
     getClaimChildren(schema, claimId),
     getClaimExpenses(schema, claimId),
-    getClaimDocuments(schema, claimId),
+    getClaimDocuments(schema, reference, eligibilityId, claimId),
     getClaimBankDetail(schema, claimId),
-    getEligibilityVisitorUpdateContactDetail(schema, reference, eligibilityId)
+    getEligibilityVisitorUpdateContactDetail(schema, reference, eligibilityId),
+    getClaimEscort(schema, claimId)
   ]).then(function (results) {
     return {
       Eligibility: results[0],
@@ -22,7 +23,8 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
       ClaimExpenses: results[5],
       ClaimDocument: results[6],
       ClaimBankDetail: results[7],
-      EligibilityVisitorUpdateContactDetail: results[8]
+      EligibilityVisitorUpdateContactDetail: results[8],
+      ClaimEscort: results[9]
     }
   })
 }
@@ -55,8 +57,14 @@ function getClaimChildren (schema, claimId) {
   return knex(`${schema}.ClaimChild`).select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
 
-function getClaimDocuments (schema, claimId) {
-  return knex(`${schema}.ClaimDocument`).select().where({'ClaimId': claimId, 'IsEnabled': true})
+function getClaimDocuments (schema, reference, eligibilityId, claimId) {
+  return knex(`${schema}.ClaimDocument`).select()
+    .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'IsEnabled': true})
+    .orWhere({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': null, 'IsEnabled': true})
+}
+
+function getClaimEscort (schema, claimId) {
+  return knex(`${schema}.ClaimEscort`).select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
 
 function getEligibilityVisitorUpdateContactDetail (schema, reference, eligibilityId) {

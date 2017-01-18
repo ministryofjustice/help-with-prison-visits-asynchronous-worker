@@ -46,7 +46,7 @@ describe('services/data/insert-task', function () {
     return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, emailAddress)
       .then(function () {
         return knex.table('IntSchema.Task')
-          .where({'Task': tasksEnum.ACCEPT_CLAIM_NOTIFICATION, 'Status': statusEnum.PENDING})
+          .where({'Task': tasksEnum.ACCEPT_CLAIM_NOTIFICATION, 'Status': statusEnum.PENDING, 'Reference': reference, 'ClaimId': claimId})
           .first()
           .then(function (result) {
             expect(result.AdditionalData).to.be.equal(emailAddress)

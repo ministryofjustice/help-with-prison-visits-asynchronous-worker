@@ -4,13 +4,18 @@ const knex = require('knex')(config)
 module.exports = function (eligibilityId, claimId) {
   return knex('ExtSchema.ClaimBankDetail').where('ClaimId', claimId).del()
     .then(function () {
-      return knex('ExtSchema.ClaimDocument').where('ClaimId', claimId).del()
+      return knex('ExtSchema.ClaimDocument')
+        .where('ClaimId', claimId).del()
+        .orWhere({'ClaimId': null, EligibilityId: eligibilityId})
     })
     .then(function () {
       return knex('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()
     })
     .then(function () {
       return knex('ExtSchema.ClaimChild').where('ClaimId', claimId).del()
+    })
+    .then(function () {
+      return knex('ExtSchema.ClaimEscort').where('ClaimId', claimId).del()
     })
     .then(function () {
       return knex('ExtSchema.EligibilityVisitorUpdateContactDetail').where('EligibilityId', eligibilityId).del()

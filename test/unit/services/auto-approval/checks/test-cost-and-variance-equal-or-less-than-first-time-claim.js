@@ -5,23 +5,23 @@ const autoApprovalData = {
     claimExpenses: [
       {
         ExpenseType: 'plane',
-        Cost: 100
+        ApprovedCost: 100
       },
       {
         ExpenseType: 'bus',
-        Cost: 10
+        ApprovedCost: 10
       },
       {
         ExpenseType: 'bus',
-        Cost: 15
+        ApprovedCost: 15
       },
       {
         ExpenseType: 'train',
-        Cost: 20
+        ApprovedCost: 20
       },
       {
         ExpenseType: 'light refreshment',
-        Cost: 5
+        ApprovedCost: 5
       }
     ]
   },

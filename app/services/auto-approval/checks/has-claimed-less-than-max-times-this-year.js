@@ -1,4 +1,5 @@
 const moment = require('moment')
+const dateFormatter = require('../../date-formatter')
 
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
@@ -11,7 +12,7 @@ module.exports = function (autoApprovalData) {
   }
 
   var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
-  var now = moment()
+  var now = dateFormatter.now().startOf('day')
 
   var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
   var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
@@ -21,19 +22,23 @@ module.exports = function (autoApprovalData) {
   var startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
     .subtract(daysSinceStartOfClaimableYear, 'days')
 
-  var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, startOfClaimableYear.toDate())
+  var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate())
   var checkPassed = numberOfClaimsThisYear < autoApprovalData.maxNumberOfClaimsPerYear
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
 
-function getNumberOfClaimsSinceDate (previousClaims, date) {
+function getNumberOfClaimsSinceDate (previousClaims, currentClaim, date) {
   var count = 0
+
+  if (currentClaim.DateOfJourney >= date) {
+    count++
+  }
 
   for (var i = 0; i < previousClaims.length; i++) {
     var claim = previousClaims[i]
 
-    if (claim.DateOfJourney > date) {
+    if (claim.DateOfJourney >= date) {
       count++
     }
   }

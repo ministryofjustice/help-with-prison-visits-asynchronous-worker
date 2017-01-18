@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const testHelper = require('../../../test-helper')
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 require('sinon-bluebird')
 
 const REFERENCE = 'AUTOAPD'
@@ -34,10 +34,10 @@ describe('services/data/get-data-for-auto-approval-check', function () {
           ClaimId: uniqueId,
           EligibilityId: claimData.Claim.EligibilityId,
           Reference: REFERENCE,
-          DateOfJourney: moment().subtract(80, 'days').toDate(),
-          DateCreated: moment().subtract(70, 'days').toDate(),
-          DateSubmitted: moment().subtract(60, 'days').toDate(),
-          DateReviewed: moment().subtract(50, 'days').toDate(),
+          DateOfJourney: dateFormatter.now().subtract(80, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(50, 'days').toDate(),
           IsAdvanceClaim: false,
           Status: 'APPROVED'
         }
@@ -47,10 +47,10 @@ describe('services/data/get-data-for-auto-approval-check', function () {
           ClaimId: uniqueId + 1,
           EligibilityId: claimData.Claim.EligibilityId,
           Reference: REFERENCE,
-          DateOfJourney: moment().subtract(70, 'days').toDate(),
-          DateCreated: moment().subtract(70, 'days').toDate(),
-          DateSubmitted: moment().subtract(70, 'days').toDate(),
-          DateReviewed: moment().subtract(71, 'days').toDate(),
+          DateOfJourney: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(71, 'days').toDate(),
           IsAdvanceClaim: true,
           Status: 'APPROVED'
         }
@@ -60,10 +60,10 @@ describe('services/data/get-data-for-auto-approval-check', function () {
           ClaimId: uniqueId + 2,
           EligibilityId: claimData.Claim.EligibilityId,
           Reference: REFERENCE,
-          DateOfJourney: moment().subtract(60, 'days').toDate(),
-          DateCreated: moment().subtract(50, 'days').toDate(),
-          DateSubmitted: moment().subtract(40, 'days').toDate(),
-          DateReviewed: moment().subtract(30, 'days').toDate(),
+          DateOfJourney: dateFormatter.now().subtract(60, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(50, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(40, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(30, 'days').toDate(),
           IsAdvanceClaim: false,
           Status: 'REJECTED'
         }
@@ -73,10 +73,10 @@ describe('services/data/get-data-for-auto-approval-check', function () {
           ClaimId: uniqueId + 3,
           EligibilityId: claimData.Claim.EligibilityId,
           Reference: REFERENCE,
-          DateOfJourney: moment().subtract(100, 'days').toDate(),
-          DateCreated: moment().subtract(90, 'days').toDate(),
-          DateSubmitted: moment().subtract(80, 'days').toDate(),
-          DateReviewed: moment().subtract(70, 'days').toDate(),
+          DateOfJourney: dateFormatter.now().subtract(100, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(90, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(80, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(70, 'days').toDate(),
           IsAdvanceClaim: false,
           Status: 'REJECTED'
         }

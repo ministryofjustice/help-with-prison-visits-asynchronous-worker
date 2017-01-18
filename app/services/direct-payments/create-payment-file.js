@@ -3,7 +3,7 @@ const stringify = Promise.promisify(require('csv-stringify'))
 const writeFile = Promise.promisify(require('fs').writeFile)
 const fs = require('fs')
 const path = require('path')
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 
 const dataPath = config.DATA_FILE_PATH
@@ -29,6 +29,6 @@ function mkdirIfNotExists (dir) {
 }
 
 function getFileName () {
-  const datestamp = moment().format('YYYYMMDD')
+  const datestamp = dateFormatter.now().format('YYYYMMDD')
   return `apvs-payments-${datestamp}.csv`
 }
