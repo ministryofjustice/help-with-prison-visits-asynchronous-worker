@@ -12,6 +12,41 @@ const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.Sor
 
 var claimResults
 
+function getManuallyProcessedExpenseCostsPerClaim (claims) {
+  var claimIds = []
+  claims.forEach(function (result) { return claimIds.push(result.ClaimId) })
+  claimResults = claims
+  return knex('IntSchema.ClaimExpense')
+    .sum('ApprovedCost as ManuallyProcessedCost')
+    .select('ClaimId')
+    .groupBy('ClaimId')
+    .where('Status', 'MANUALLY-PROCESSED')
+    .whereIn('ClaimId', claimIds)
+}
+
+function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPerClaim) {
+  var promises = []
+
+  claimResults.forEach(function (claim) {
+    var totalAmount = (claim.TotalApprovedCost - (claim.TotalDeductionAmount || 0))
+    claim.PaymentAmount = totalAmount
+    manuallyProcessedExpenseCostsPerClaim.forEach(function (manuallyProcessedExpenseCost) {
+      if (claim.ClaimId === manuallyProcessedExpenseCost.ClaimId) {
+        claim.PaymentAmount = (totalAmount - manuallyProcessedExpenseCost.ManuallyProcessedCost)
+        promises.push(updateClaimManuallyProcessedAmount(claim.ClaimId, manuallyProcessedExpenseCost.ManuallyProcessedCost))
+      }
+    })
+    promises.push(updateClaimTotalAmount(claim.ClaimId, totalAmount))
+  })
+  return Promise.all(promises)
+    .then(function () {
+      var claimsWithPositivePaymentAmount = claimResults.filter(function (claim) {
+        return claim.PaymentAmount > 0
+      })
+      return claimsWithPositivePaymentAmount
+    })
+}
+
 module.exports = function () {
   var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
     'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
@@ -27,41 +62,13 @@ module.exports = function () {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
-    .andWhere(function () {
-      this.where('IntSchema.ClaimDeduction.IsEnabled', true)
-      .orWhereNull('IntSchema.ClaimDeduction.ClaimDeductionId')
-    })
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
-    .then(function (results) {
-      var claimIds = []
-      results.forEach(function (result) { return claimIds.push(result.ClaimId) })
-      claimResults = results
-      return knex('IntSchema.ClaimExpense')
-        .sum('ApprovedCost as ManuallyProcessedCost')
-        .select('ClaimId')
-        .groupBy('ClaimId')
-        .where('Status', 'MANUALLY-PROCESSED')
-        .whereIn('ClaimId', claimIds)
+    .then(function (claims) {
+      return getManuallyProcessedExpenseCostsPerClaim(claims)
     })
     .then(function (manuallyProcessedExpenseCostsPerClaim) {
-      var promises = []
-
-      claimResults.forEach(function (claim) {
-        var totalAmount = (claim.TotalApprovedCost - (claim.TotalDeductionAmount || 0))
-        claim.PaymentAmount = totalAmount
-        manuallyProcessedExpenseCostsPerClaim.forEach(function (manuallyProcessedExpenseCost) {
-          if (claim.ClaimId === manuallyProcessedExpenseCost.ClaimId) {
-            claim.PaymentAmount = (totalAmount - manuallyProcessedExpenseCost.ManuallyProcessedCost)
-            promises.push(updateClaimManuallyProcessedAmount(claim.ClaimId, manuallyProcessedExpenseCost.ManuallyProcessedCost))
-          }
-        })
-        promises.push(updateClaimTotalAmount(claim.ClaimId, totalAmount))
-      })
-      return Promise.all(promises)
-        .then(function () {
-          return claimResults
-        })
+      return subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerClaim)
     })
     .then(function (results) {
       return _.map(results, record => {
