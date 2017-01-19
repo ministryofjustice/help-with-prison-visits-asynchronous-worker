@@ -3,7 +3,6 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const fileTypes = require('../../../../app/constants/payment-filetype-enum')
-const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
 const claimPaymentAmount1 = 45.50
 const claimPaymentAmount2 = 22.22
@@ -35,9 +34,9 @@ describe('services/workers/generate-direct-payments', function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true
       expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.true
       expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1, paymentMethods.DIRECT_BANK_PAYMENT.value)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2, paymentMethods.DIRECT_BANK_PAYMENT.value)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3, paymentMethods.DIRECT_BANK_PAYMENT.value)).to.be.true
+      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true
+      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true
+      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true
     })
   })
 })

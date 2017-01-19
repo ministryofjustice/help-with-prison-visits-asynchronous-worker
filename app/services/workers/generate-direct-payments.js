@@ -3,7 +3,6 @@ const createPaymentFile = require('../direct-payments/create-payment-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
-const paymentMethods = require('../../constants/payment-method-enum')
 const _ = require('lodash')
 
 module.exports.execute = function (task) {
@@ -45,7 +44,7 @@ function updateAllClaimsProcessedPayment (claimIds, paymentData) {
     var claimId = claimIds[i]
 
     var totalApprovedCostIndex = 3
-    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), paymentMethods.DIRECT_BANK_PAYMENT.value))
+    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex])))
   }
 
   return Promise.all(promises)
