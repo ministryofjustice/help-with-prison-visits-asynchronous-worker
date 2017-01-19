@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const _ = require('lodash')
 const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
+const paymentMethods = require('../../constants/payment-method-enum')
 
 const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
@@ -21,7 +22,10 @@ module.exports = function () {
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
-    .where({'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED})
+    .where({
+      'IntSchema.ClaimExpense.Status': claimStatuses.APPROVED,
+      'IntSchema.Claim.PaymentMethod': paymentMethods.DIRECT_BANK_PAYMENT.value
+    })
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (results) {

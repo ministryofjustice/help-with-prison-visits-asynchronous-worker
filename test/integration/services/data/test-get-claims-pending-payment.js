@@ -4,6 +4,7 @@ const knex = require('knex')(config)
 const dateFormatter = require('../../../../app/services/date-formatter')
 const testHelper = require('../../../test-helper')
 const getClaimsPendingPayment = require('../../../../app/services/data/get-claims-pending-payment')
+const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
 describe('services/data/get-claims-pending-payment', function () {
   var reference = 'PAYMENT'
@@ -62,6 +63,22 @@ describe('services/data/get-claims-pending-payment', function () {
         expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
         expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10')
         expect(filteredResults[0][5], 'should contain the reference and date of journey').to.be.equal(`${reference} ${currentDate}`)
+      })
+  })
+
+  it('should retrieve not retrieve claims with a PaymentMethod of manually processed', function () {
+    return knex('IntSchema.Claim')
+      .where('ClaimId', claimId)
+      .update({'PaymentMethod': paymentMethods.MANUALLY_PROCESSED.value})
+      .then(function () {
+        return getClaimsPendingPayment()
+      })
+      .then(function (results) {
+        var filteredResults = results.filter(function (result) {
+          return result[0] === claimId
+        })
+
+        expect(filteredResults.length === 0)
       })
   })
 

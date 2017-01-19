@@ -176,7 +176,8 @@ module.exports.getClaimData = function (reference) {
       DateCreated: new Date(),
       DateSubmitted: new Date(),
       Status: 'SUBMITTED',
-      IsAdvanceClaim: true
+      IsAdvanceClaim: true,
+      PaymentMethod: 'bank'
     },
     Prisoner: {
       PrisonerId: uniqueId,
