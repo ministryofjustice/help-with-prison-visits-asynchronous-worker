@@ -144,6 +144,28 @@ describe('services/data/get-claims-pending-payment', function () {
       })
   })
 
+  it('should call update claim manually processed amount the with correct value given a decimal value', function () {
+    var update1 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId1)
+      .update({
+        ApprovedCost: '10.20',
+        Status: 'MANUALLY-PROCESSED'
+      })
+    var update2 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId2)
+      .update({
+        ApprovedCost: '15',
+        Status: 'MANUALLY-PROCESSED'
+      })
+    Promise.all([update1, update2])
+      .then(function () {
+        return getClaimsPendingPayment()
+          .then(function () {
+            expect(updateClaimManuallyApprovedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
+          })
+      })
+  })
+
   after(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })

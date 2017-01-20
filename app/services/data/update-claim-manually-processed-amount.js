@@ -4,5 +4,5 @@ const knex = require('knex')(config)
 module.exports = function (claimId, manuallyProcessedAmount) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claimId)
-    .update('ManuallyProcessedAmount', manuallyProcessedAmount)
+    .update('ManuallyProcessedAmount', Number(manuallyProcessedAmount).toFixed(2))
 }

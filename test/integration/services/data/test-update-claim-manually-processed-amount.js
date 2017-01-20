@@ -25,6 +25,18 @@ describe('services/data/update-claim-manually-processed-amount', function () {
       })
   })
 
+  it('should update the manually processed column for a particular claim given a decimal number', function () {
+    return updateClaimManuallyProcessedAmount(claimId, '12.10')
+      .then(function () {
+        knex('IntSchema.Claim')
+          .select('ManuallyProcessedAmount')
+          .where('ClaimId', claimId)
+          .then(function (result) {
+            expect(result[0].ManuallyProcessedAmount, 'manually processed amount should equal 12.10').to.equal(12.10)
+          })
+      })
+  })
+
   after(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
