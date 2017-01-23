@@ -6,6 +6,7 @@ const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
+const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
 describe('services/data/get-claims-pending-payment', function () {
   var reference = 'PAYMENT'
@@ -96,6 +97,7 @@ describe('services/data/get-claims-pending-payment', function () {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
             })
+
             // Total approved amount: £25.05. Payment amount: £25.05 - £15 (deduction) - £4.55 (Manually processed) = £5.50
             expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.equal('5.50')
           })
@@ -190,6 +192,7 @@ describe('services/data/get-claims-pending-payment', function () {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
             })
+
             // Total approved amount: £31.10. Payment amount: £31.10 - £15 (deduction) - £10.45 (Manually processed) = £5.65
             expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.equal('5.65')
           })
@@ -217,9 +220,26 @@ describe('services/data/get-claims-pending-payment', function () {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
             })
+
             // Total approved amount: £30. Payment amount: £30 - £15 (deduction) - £15 (Manually processed) = £0.00
             expect(filteredResults.length, 'should not return claims to be paid given PaymentAmount of 0').to.equal(0)
           })
+      })
+  })
+
+  it('should retrieve not retrieve claims with a PaymentMethod of manually processed', function () {
+    return knex('IntSchema.Claim')
+      .where('ClaimId', claimId)
+      .update({'PaymentMethod': paymentMethods.MANUALLY_PROCESSED.value})
+      .then(function () {
+        return getClaimsPendingPayment()
+      })
+      .then(function (results) {
+        var filteredResults = results.filter(function (result) {
+          return result[0] === claimId
+        })
+
+        expect(filteredResults.length === 0)
       })
   })
 

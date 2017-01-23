@@ -6,6 +6,7 @@ const claimStatuses = require('../../constants/claim-status-enum')
 const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
 const updateClaimTotalAmount = require('./update-claim-total-amount')
 const updateClaimManuallyProcessedAmount = require('./update-claim-manually-processed-amount')
+const paymentMethods = require('../../constants/payment-method-enum')
 
 const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
@@ -62,6 +63,7 @@ module.exports = function () {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
+    .where('IntSchema.Claim.PaymentMethod', paymentMethods.DIRECT_BANK_PAYMENT.value)
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (claims) {
