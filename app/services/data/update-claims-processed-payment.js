@@ -6,6 +6,6 @@ module.exports = function (claimId, bankPaymentAmount) {
     .where('ClaimId', claimId)
     .update({
       'PaymentStatus': 'PROCESSED',
-      'BankPaymentAmount': bankPaymentAmount
+      'BankPaymentAmount': Number(bankPaymentAmount).toFixed(2)
     })
 }
