@@ -77,7 +77,7 @@ module.exports = function () {
           record.SortCode,
           record.AccountNumber,
           record.FirstName + ' ' + record.LastName,
-          record.PaymentAmount.toString(),
+          record.PaymentAmount.toFixed(2),
           record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
         ]
       })

@@ -14,14 +14,14 @@ describe('services/data/get-claims-pending-payment', function () {
   var claimExpenseId2
 
   var updateClaimTotalAmountStub = sinon.stub().resolves()
-  var updateClaimManuallyApprovedAmountStub = sinon.stub().resolves()
+  var updateClaimManuallyProcessedAmountStub = sinon.stub().resolves()
 
   const getClaimsPendingPayment = proxyquire('../../../../app/services/data/get-claims-pending-payment', {
     './update-claim-total-amount': updateClaimTotalAmountStub,
-    './update-claim-manually-approved-amount': updateClaimManuallyApprovedAmountStub
+    './update-claim-manually-processed-amount': updateClaimManuallyProcessedAmountStub
   })
 
-  beforeEach(function () {
+  before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
@@ -64,13 +64,13 @@ describe('services/data/get-claims-pending-payment', function () {
           return result[0] === claimId
         })
 
-        expect(filteredResults.length === 1)
-        expect(filteredResults[0][0].length === 6, 'should contain 6 fields')
+        expect(filteredResults.length === 1).to.be.true
+        expect(filteredResults[0].length === 6, 'should contain 6 fields').to.be.true
         expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
         expect(filteredResults[0][1], 'should contain the sort code').to.be.equal('001122')
         expect(filteredResults[0][2], 'should contain the account number').to.be.equal('00123456')
         expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
-        expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10')
+        expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10.00')
         expect(filteredResults[0][5], 'should contain the reference and date of journey').to.be.equal(`${reference} ${currentDate}`)
       })
   })
@@ -79,23 +79,25 @@ describe('services/data/get-claims-pending-payment', function () {
     var update1 = knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId1)
       .update({
-        ApprovedCost: '15',
+        ApprovedCost: '20.50',
         Status: 'APPROVED-DIFF-AMOUNT'
       })
     var update2 = knex('IntSchema.ClaimExpense')
       .where('ClaimExpenseId', claimExpenseId2)
       .update({
-        ApprovedCost: '15',
+        ApprovedCost: '4.55',
         Status: 'MANUALLY-PROCESSED'
       })
-    Promise.all([update1, update2])
+
+    return Promise.all([update1, update2])
       .then(function () {
         return getClaimsPendingPayment()
           .then(function (results) {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
             })
-            expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.be.equal('15')
+            // Total approved amount: £25.05. Payment amount: £25.05 - £15 (deduction) - £4.55 (Manually processed) = £5.50
+            expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.equal('5.50')
           })
       })
   })
@@ -113,10 +115,11 @@ describe('services/data/get-claims-pending-payment', function () {
         ApprovedCost: '15',
         Status: 'MANUALLY-PROCESSED'
       })
-    Promise.all([update1, update2])
+    return Promise.all([update1, update2])
       .then(function () {
         return getClaimsPendingPayment()
           .then(function () {
+            // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
             expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
           })
       })
@@ -135,11 +138,11 @@ describe('services/data/get-claims-pending-payment', function () {
         ApprovedCost: '15',
         Status: 'MANUALLY-PROCESSED'
       })
-    Promise.all([update1, update2])
+    return Promise.all([update1, update2])
       .then(function () {
         return getClaimsPendingPayment()
           .then(function () {
-            expect(updateClaimManuallyApprovedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
+            expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
           })
       })
   })
@@ -157,11 +160,65 @@ describe('services/data/get-claims-pending-payment', function () {
         ApprovedCost: '15',
         Status: 'MANUALLY-PROCESSED'
       })
-    Promise.all([update1, update2])
+    return Promise.all([update1, update2])
       .then(function () {
         return getClaimsPendingPayment()
           .then(function () {
-            expect(updateClaimManuallyApprovedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
+            expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
+          })
+      })
+  })
+
+  it('should return payment amount to two decimal places', function () {
+    var update1 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId1)
+      .update({
+        ApprovedCost: '20.65',
+        Status: 'APPROVED'
+      })
+    var update2 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId2)
+      .update({
+        ApprovedCost: '10.45',
+        Status: 'MANUALLY-PROCESSED'
+      })
+
+    return Promise.all([update1, update2])
+      .then(function () {
+        return getClaimsPendingPayment()
+          .then(function (results) {
+            var filteredResults = results.filter(function (result) {
+              return result[0] === claimId
+            })
+            // Total approved amount: £31.10. Payment amount: £31.10 - £15 (deduction) - £10.45 (Manually processed) = £5.65
+            expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.equal('5.65')
+          })
+      })
+  })
+
+  it('should not return claims to be paid if PaymentAmount is not positive', function () {
+    var update1 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId1)
+      .update({
+        ApprovedCost: '15',
+        Status: 'APPROVED'
+      })
+    var update2 = knex('IntSchema.ClaimExpense')
+      .where('ClaimExpenseId', claimExpenseId2)
+      .update({
+        ApprovedCost: '15',
+        Status: 'MANUALLY-PROCESSED'
+      })
+
+    return Promise.all([update1, update2])
+      .then(function () {
+        return getClaimsPendingPayment()
+          .then(function (results) {
+            var filteredResults = results.filter(function (result) {
+              return result[0] === claimId
+            })
+            // Total approved amount: £30. Payment amount: £30 - £15 (deduction) - £15 (Manually processed) = £0.00
+            expect(filteredResults.length, 'should not return claims to be paid given PaymentAmount of 0').to.equal(0)
           })
       })
   })

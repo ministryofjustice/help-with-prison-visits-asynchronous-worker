@@ -16,7 +16,7 @@ describe('services/data/update-claim-manually-processed-amount', function () {
   it('should update the manually processed column for a particular claim', function () {
     return updateClaimManuallyProcessedAmount(claimId, '12')
       .then(function () {
-        knex('IntSchema.Claim')
+        return knex('IntSchema.Claim')
           .select('ManuallyProcessedAmount')
           .where('ClaimId', claimId)
           .then(function (result) {
@@ -28,7 +28,7 @@ describe('services/data/update-claim-manually-processed-amount', function () {
   it('should update the manually processed column for a particular claim given a decimal number', function () {
     return updateClaimManuallyProcessedAmount(claimId, '12.10')
       .then(function () {
-        knex('IntSchema.Claim')
+        return knex('IntSchema.Claim')
           .select('ManuallyProcessedAmount')
           .where('ClaimId', claimId)
           .then(function (result) {
