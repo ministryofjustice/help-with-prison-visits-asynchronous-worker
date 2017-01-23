@@ -17,6 +17,7 @@ var sendFeedback = require('./workers/send-feedback')
 var cleanupOldData = require('./workers/cleanup-old-data')
 var sendMalwareUploadNotification = require('./workers/send-malware-notification')
 var sendTechnicalHelp = require('./workers/send-technical-help')
+var archiveOldClaims = require('./workers/archive-old-claims')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -39,6 +40,7 @@ module.exports = function (taskType) {
     case tasksEnum.CLEANUP_OLD_DATA: return cleanupOldData
     case tasksEnum.SEND_MALWARE_ALERT: return sendMalwareUploadNotification
     case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
+    case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
   }
 
   return null
