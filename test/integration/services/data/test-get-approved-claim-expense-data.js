@@ -11,7 +11,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
   var claimExpenseId1
   var claimExpenseId2
 
-  beforeEach(function () {
+  before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId

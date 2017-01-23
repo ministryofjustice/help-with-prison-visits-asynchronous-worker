@@ -12,7 +12,7 @@ describe('services/data/update-claims-processed-payment', function () {
   var referenceA = 'PROCESS'
   var claimId
 
-  beforeEach(function () {
+  before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', referenceA)
       .then(function (ids) {
         claimId = ids.claimId

@@ -10,7 +10,7 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
   var claimId
   var claimData = testHelper.getClaimData(reference)
 
-  beforeEach(function () {
+  before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
