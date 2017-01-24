@@ -19,6 +19,7 @@ const sendFeedback = {name: 'sendFeedback'}
 const cleanupOldData = {name: 'cleanupOldData'}
 const sendTechnicalHelp = {name: 'sendTechnicalHelp'}
 const archiveOldClaims = {name: 'archiveOldClaims'}
+const archiveClaim = {name: 'archiveClaim'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -37,7 +38,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-feedback': sendFeedback,
   './workers/cleanup-old-data': cleanupOldData,
   './workers/send-technical-help': sendTechnicalHelp,
-  './workers/archive-old-claims': archiveOldClaims
+  './workers/archive-old-claims': archiveOldClaims,
+  './workers/archive-claim': archiveClaim
 })
 
 describe('services/getWorkerForTask', function () {
@@ -124,5 +126,10 @@ describe('services/getWorkerForTask', function () {
   it('should return archive-old-claims', function () {
     var worker = getWorkerForTask(tasksEnum.ARCHIVE_OLD_CLAIMS)
     expect(worker.name).to.be.equal('archiveOldClaims')
+  })
+
+  it('should return archive-claim', function () {
+    var worker = getWorkerForTask(tasksEnum.ARCHIVE_CLAIM)
+    expect(worker.name).to.be.equal('archiveClaim')
   })
 })
