@@ -1,5 +1,5 @@
 const moment = require('moment')
-const config = require('../../../knexfile')
+const config = require('../../../config')
 
 const getOldEligibilityData = require('../data/get-old-eligibility-data')
 const getOldClaimData = require('../data/get-old-claim-data')
