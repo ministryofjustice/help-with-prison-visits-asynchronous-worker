@@ -1,7 +1,7 @@
 const getClaim = require('../data/get-claim')
 const getNumberOfClaimsForEligibility = require('../data/get-number-of-claims-for-eligibility')
 const getAllClaimData = require('../data/get-all-claim-data') // TODO update to include internal tables like claimEvents/deductions
-const copyClaimDataToArchive = require('../data/copy-claim-data-to-archive') // TODO
+const copyClaimDataToArchive = require('../data/copy-claim-data-to-archive')
 const deleteClaimFromInternal = require('../data/delete-claim-from-internal')
 
 module.exports = function (claimId) {
