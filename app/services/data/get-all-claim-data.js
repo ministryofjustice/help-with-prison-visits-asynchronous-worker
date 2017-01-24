@@ -12,7 +12,9 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
     getClaimDocuments(schema, reference, eligibilityId, claimId),
     getClaimBankDetail(schema, claimId),
     getEligibilityVisitorUpdateContactDetail(schema, reference, eligibilityId),
-    getClaimEscort(schema, claimId)
+    getClaimEscort(schema, claimId),
+    getClaimEvents(schema, claimId),
+    getClaimDeductions(schema, claimId)
   ]).then(function (results) {
     return {
       Eligibility: results[0],
@@ -24,7 +26,9 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
       ClaimDocument: results[6],
       ClaimBankDetail: results[7],
       EligibilityVisitorUpdateContactDetail: results[8],
-      ClaimEscort: results[9]
+      ClaimEscort: results[9],
+      ClaimEvents: results[10],
+      ClaimDeductions: results[11]
     }
   })
 }
@@ -70,6 +74,22 @@ function getClaimEscort (schema, claimId) {
 function getEligibilityVisitorUpdateContactDetail (schema, reference, eligibilityId) {
   if (schema === 'ExtSchema') {
     return knex(`${schema}.EligibilityVisitorUpdateContactDetail`).first().where({'Reference': reference, 'EligibilityId': eligibilityId}).orderBy('DateSubmitted', 'desc')
+  } else {
+    return Promise.resolve(null)
+  }
+}
+
+function getClaimEvents (schema, claimId) {
+  if (schema === 'IntSchema') {
+    return knex(`${schema}.ClaimEvent`).select().where({'ClaimId': claimId})
+  } else {
+    return Promise.resolve(null)
+  }
+}
+
+function getClaimDeductions (schema, claimId) {
+  if (schema === 'IntSchema') {
+    return knex(`${schema}.ClaimDeduction`).select().where({'ClaimId': claimId, 'IsEnabled': true})
   } else {
     return Promise.resolve(null)
   }
