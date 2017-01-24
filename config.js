@@ -21,6 +21,7 @@ module.exports = {
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '5',
   DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '30 04 * * * *', // default every day at 0430
   NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: process.env.APVS_NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER || '1',
+  ARCHIVE_CLAIMS_AFTER_DAYS: process.env.APVS_ARCHIVE_CLAIMS_AFTER_DAYS || '365',
 
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',
