@@ -30,16 +30,23 @@ function copyEligibilityDataIfNotPresent (data) {
 }
 
 function copyClaimData (data) {
+  cleanClaimDeductions(data.ClaimDeductions)
+  cleanClaimEvents(data.ClaimEvents)
+
   return insertInternal('Claim', data.Claim)
+    .then(function () {
+      return insertInternalAll('ClaimExpense', data.ClaimExpenses) // Documents reference ClaimExpenseId
+    })
+    .then(function () {
+      return insertInternalAll('ClaimDocument', data.ClaimDocument) // Events reference ClaimDocumentId
+    })
     .then(function () {
       return Promise.all([
         insertInternalAll('ClaimEscort', data.ClaimEscorts),
         insertInternalAll('ClaimDeduction', data.ClaimDeductions),
-        insertInternalAll('ClaimEvent', data.ClaimEvent),
+        insertInternalAll('ClaimEvent', data.ClaimEvents),
         insertInternalAll('ClaimChild', data.ClaimChildren),
-        insertInternalAll('ClaimDocument', data.ClaimDocument),
-        insertInternal('ClaimBankDetail', data.ClaimBankDetail),
-        insertInternalAll('ClaimExpense', data.ClaimExpenses)])
+        insertInternal('ClaimBankDetail', data.ClaimBankDetail)])
     })
 }
 
@@ -61,4 +68,20 @@ function insertInternalAll (table, tableDataArray) {
   }
 
   return Promise.all(inserts)
+}
+
+function cleanClaimDeductions (claimDeductions) {
+  if (claimDeductions) {
+    claimDeductions.forEach(function (claimDeduction) {
+      delete claimDeduction.ClaimDeductionId
+    })
+  }
+}
+
+function cleanClaimEvents (claimEvents) {
+  if (claimEvents) {
+    claimEvents.forEach(function (claimEvent) {
+      delete claimEvent.ClaimEventId
+    })
+  }
 }
