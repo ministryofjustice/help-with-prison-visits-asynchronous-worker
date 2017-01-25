@@ -41,9 +41,11 @@ describe('services/data/get-all-claims-older-than-date', function () {
   it('should return claims with date reviewed older than date', function () {
     return getAllClaimsOldersThanDate(olderThanDate)
       .then(function (claimIds) {
-        expect(claimIds.length).to.equal(2)
-        expect(claimIds[0].ClaimId).to.be.equal(claim2.ClaimId)
-        expect(claimIds[1].ClaimId).to.be.equal(claim3.ClaimId)
+        var expectedClaimIds = claimIds.filter(function (result) { // filter to remove old test claims
+          return result.ClaimId === claim2.ClaimId || result.ClaimId === claim3.ClaimId
+        })
+
+        expect(expectedClaimIds.length).to.equal(2)
       })
   })
 
