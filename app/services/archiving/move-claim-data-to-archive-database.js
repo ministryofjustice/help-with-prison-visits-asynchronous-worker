@@ -8,6 +8,7 @@ module.exports = function (claimId) {
   var eligibilityId
   var reference
   var deleteEligibility
+  var claimData
 
   return getClaim('IntSchema', claimId)
     .then(function (claim) {
@@ -19,13 +20,15 @@ module.exports = function (claimId) {
       deleteEligibility = numberOfClaims === 1
       return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
     })
-    .then(function (claimData) {
+    .then(function (result) {
+      claimData = result
       return copyClaimDataToArchive(claimData)
     })
     .then(function () {
       return deleteClaimFromInternal(eligibilityId, claimId, deleteEligibility)
     })
     .then(function () {
-      return deleteEligibility ? eligibilityId : null
+      claimData.DeleteEligibility = deleteEligibility
+      return claimData
     })
 }

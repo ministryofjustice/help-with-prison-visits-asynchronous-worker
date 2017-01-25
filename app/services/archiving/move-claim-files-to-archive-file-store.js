@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
 
-module.exports.execute = function (claimId, optionalEligibilityId) {
+module.exports = function (archivedClaimData) {
   return Promise.resolve()
 }

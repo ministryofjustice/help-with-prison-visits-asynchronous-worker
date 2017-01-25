@@ -5,7 +5,7 @@ module.exports.execute = function (task) {
   var claimId = task.claimId
 
   return moveClaimDataToArchiveDatabase(claimId)
-    .then(function (optionalEligibilityId) {
-      return moveClaimFilesToArchiveFileStore(claimId, optionalEligibilityId)
+    .then(function (archivedClaimData) {
+      return moveClaimFilesToArchiveFileStore(archivedClaimData)
     })
 }

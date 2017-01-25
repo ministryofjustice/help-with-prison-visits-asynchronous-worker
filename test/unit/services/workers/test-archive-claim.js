@@ -4,7 +4,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 
 const CLAIM_ID = 1234
-const ELIGIBILITY_ID = 4321
+const CLAIM_DATA = { DeleteEligibility: false, Claim: { ClaimId: CLAIM_ID } }
 
 var archiveClaim
 
@@ -23,11 +23,11 @@ describe('services/workers/archive-claim', function () {
   })
 
   it('should move claim data then claim files', function () {
-    moveClaimDataToArchiveDatabase.resolves(ELIGIBILITY_ID)
+    moveClaimDataToArchiveDatabase.resolves(CLAIM_DATA)
 
     return archiveClaim.execute({claimId: CLAIM_ID}).then(function () {
       expect(moveClaimDataToArchiveDatabase.calledWith(CLAIM_ID)).to.be.true
-      expect(moveClaimFilesToArchiveFileStore.calledWith(CLAIM_ID, ELIGIBILITY_ID)).to.be.true
+      expect(moveClaimFilesToArchiveFileStore.calledWith(CLAIM_DATA)).to.be.true
     })
   })
 })
