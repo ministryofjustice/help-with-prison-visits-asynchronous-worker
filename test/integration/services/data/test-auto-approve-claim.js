@@ -34,7 +34,7 @@ describe('services/data/auto-approve-claim', function () {
   })
 
   it('should update the status of the claim to AUTOAPPROVED, call to update expenses, send accept email and add claim event', function () {
-    const CLAIM_EVENT = 'CLAIM-APPROVED'
+    const CLAIM_EVENT = 'CLAIM-AUTO-APPROVED'
 
     return autoApproveClaim(REFERENCE, eligibilityId, claimId, EMAIL_ADDRESS)
       .then(function () {
@@ -46,7 +46,7 @@ describe('services/data/auto-approve-claim', function () {
             expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED)
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
-            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, CLAIM_EVENT, null, null, false)).to.be.true
+            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, CLAIM_EVENT, null, 'Passed all auto approval checks', true)).to.be.true
           })
       })
   })
