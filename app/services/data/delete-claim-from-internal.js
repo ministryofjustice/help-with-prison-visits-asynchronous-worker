@@ -8,9 +8,13 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
     deleteInternal('ClaimDeduction', 'ClaimId', claimId),
     deleteInternal('ClaimEvent', 'ClaimId', claimId),
     deleteInternal('ClaimChild', 'ClaimId', claimId),
-    deleteInternal('ClaimDocument', 'ClaimId', claimId),
-    deleteInternal('ClaimBankDetail', 'ClaimId', claimId),
-    deleteInternal('ClaimExpense', 'ClaimId', claimId)])
+    deleteInternal('ClaimBankDetail', 'ClaimId', claimId)])
+    .then(function () {
+      return deleteInternal('ClaimDocument', 'ClaimId', claimId) // Events reference ClaimDocumentId
+    })
+    .then(function () {
+      return deleteInternal('ClaimExpense', 'ClaimId', claimId) // Documents reference ClaimExpenseId
+    })
     .then(function () {
       return deleteInternal('Claim', 'ClaimId', claimId)
     })
