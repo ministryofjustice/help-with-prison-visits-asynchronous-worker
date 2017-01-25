@@ -13,8 +13,8 @@ module.exports.execute = function (task) {
       var insertArchiveClaimTasks = []
 
       if (claimIdsToArchive) {
-        claimIdsToArchive.forEach(function (claimId) {
-          insertArchiveClaimTasks.push(insertTask(null, null, claimId, tasksEnum.ARCHIVE_CLAIM))
+        claimIdsToArchive.forEach(function (result) {
+          insertArchiveClaimTasks.push(insertTask(null, null, result.ClaimId, tasksEnum.ARCHIVE_CLAIM))
         })
       }
 
