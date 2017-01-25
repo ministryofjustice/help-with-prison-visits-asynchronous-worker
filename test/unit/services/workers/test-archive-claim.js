@@ -18,7 +18,7 @@ describe('services/workers/archive-claim', function () {
 
     archiveClaim = proxyquire('../../../../app/services/workers/archive-claim', {
       '../archiving/move-claim-data-to-archive-database': moveClaimDataToArchiveDatabase,
-      '../archiving/move-claim-files-to-archive-fileStore': moveClaimFilesToArchiveFileStore
+      '../archiving/move-claim-files-to-archive-file-store': moveClaimFilesToArchiveFileStore
     })
   })
 
