@@ -7,14 +7,27 @@ module.exports = function (archivedClaimData) {
   var reference = archivedClaimData.Claim.Reference
   var eligibilityId = archivedClaimData.Claim.EligibilityId
   var claimId = archivedClaimData.Claim.ClaimId
+  var hasDocuments = false
 
-  var directoryToCopy = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
-  var targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
-
-  if (!archiveEligibilityDocuments) {
-    directoryToCopy = `${directoryToCopy}/${claimId}`
-    targetDirectory = `${targetDirectory}/${claimId}`
+  if (archivedClaimData.ClaimDocument) {
+    archivedClaimData.ClaimDocument.forEach(function (claimDocument) {
+      if (claimDocument.Filepath) {
+        hasDocuments = true
+      }
+    })
   }
 
-  return mv(directoryToCopy, targetDirectory, {mkdirp: true})
+  if (hasDocuments) {
+    var directoryToCopy = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
+    var targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
+
+    if (!archiveEligibilityDocuments) {
+      directoryToCopy = `${directoryToCopy}/${claimId}`
+      targetDirectory = `${targetDirectory}/${claimId}`
+    }
+
+    return mv(directoryToCopy, targetDirectory, {mkdirp: true})
+  } else {
+    return Promise.resolve()
+  }
 }
