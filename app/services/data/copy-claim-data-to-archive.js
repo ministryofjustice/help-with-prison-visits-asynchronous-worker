@@ -38,7 +38,7 @@ function copyClaimData (data) {
       return insertInternalAll('ClaimExpense', data.ClaimExpenses) // Documents reference ClaimExpenseId
     })
     .then(function () {
-      return insertInternalAll('ClaimDocument', data.ClaimDocument) // Events reference ClaimDocumentId
+      return insertClaimDocuments(data.ClaimDocument) // Events reference ClaimDocumentId
     })
     .then(function () {
       return Promise.all([
@@ -68,6 +68,25 @@ function insertInternalAll (table, tableDataArray) {
   }
 
   return Promise.all(inserts)
+}
+
+function insertClaimDocuments (allClaimDocuments) {
+  var eligibilityDocuments = allClaimDocuments.filter(function (claimDocument) {
+    return !claimDocument.ClaimId
+  })
+  var claimDocuments = allClaimDocuments.filter(function (claimDocument) {
+    return claimDocument.ClaimId
+  })
+
+  return insertInternal('ClaimDocument', claimDocuments)
+    .then(function () {
+      return insertInternal('ClaimDocument', eligibilityDocuments)
+        .catch(function (error) { // suppress error from already inserted eligibility documents
+          if (!error.message.includes('Cannot insert duplicate key')) {
+            throw error
+          }
+        })
+    })
 }
 
 function cleanClaimDeductions (claimDeductions) {
