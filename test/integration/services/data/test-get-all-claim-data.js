@@ -1,9 +1,11 @@
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
+const insertClaimEvent = require('../../../../app/services/data/insert-claim-event')
 
 const getAllClaimData = require('../../../../app/services/data/get-all-claim-data')
 
 const EXTSCHEMA = 'ExtSchema'
+const INTSCHEMA = 'IntSchema'
 
 describe('services/data/get-all-claim-data', function () {
   describe('get first time claim data', function () {
@@ -68,6 +70,34 @@ describe('services/data/get-all-claim-data', function () {
 
     after(function () {
       return testHelper.deleteAll(REFERENCE, EXTSCHEMA)
+    })
+  })
+
+  describe('get internal claim data', function () {
+    const REFERENCE = 'INTCLMD'
+    var eligibilityId
+    var claimId
+
+    before(function () {
+      return testHelper.insertClaimEligibilityData(INTSCHEMA, REFERENCE)
+        .then(function (ids) {
+          eligibilityId = ids.eligibilityId
+          claimId = ids.claimId
+          return insertClaimEvent(REFERENCE, eligibilityId, claimId, null, 'TEST', null, null, true)
+        })
+    })
+
+    it('should return events and deductions', function () {
+      return getAllClaimData(INTSCHEMA, REFERENCE, eligibilityId, claimId)
+        .then(function (data) {
+          expect(data.Eligibility.Reference).to.be.equal(REFERENCE)
+          expect(data.ClaimEvents[0].ClaimId).to.be.equal(claimId)
+          expect(data.ClaimDeductions[0].ClaimId).to.be.equal(claimId)
+        })
+    })
+
+    after(function () {
+      return testHelper.deleteAll(REFERENCE, INTSCHEMA)
     })
   })
 })

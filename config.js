@@ -14,12 +14,18 @@ module.exports = {
   ASYNC_WORKER_USERNAME: process.env.APVS_ASYNC_WORKER_USERNAME,
   ASYNC_WORKER_PASSWORD: process.env.APVS_ASYNC_WORKER_PASSWORD,
   DATABASE: process.env.APVS_DATABASE,
+  ARCHIVE_DATABASE: process.env.APVS_ARCHIVE_DATABASE,
 
   // Worker
   ASYNC_WORKER_CRON: process.env.APVS_ASYNC_WORKER_CRON || '*/2 * * * * *',
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '5',
   DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '30 04 * * * *', // default every day at 0430
   NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: process.env.APVS_NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER || '1',
+  ARCHIVE_CLAIMS_AFTER_DAYS: process.env.APVS_ARCHIVE_CLAIMS_AFTER_DAYS || '365',
+
+  // File upload
+  FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
+  FILE_ARCHIVE_LOCATION: process.env.FILE_ARCHIVE_LOCATION || './archive',
 
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',

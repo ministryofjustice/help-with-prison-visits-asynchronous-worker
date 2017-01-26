@@ -952,9 +952,8 @@
     },
     "mv": {
       "version": "2.1.1",
-      "from": "mv@>=2.0.0 <3.0.0",
-      "resolved": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
-      "optional": true
+      "from": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
+      "resolved": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz"
     },
     "nan": {
       "version": "2.5.0",
@@ -965,8 +964,7 @@
     "ncp": {
       "version": "2.0.0",
       "from": "ncp@>=2.0.0 <2.1.0",
-      "resolved": "http://registry.npmjs.org/ncp/-/ncp-2.0.0.tgz",
-      "optional": true
+      "resolved": "http://registry.npmjs.org/ncp/-/ncp-2.0.0.tgz"
     },
     "negotiator": {
       "version": "0.6.1",
