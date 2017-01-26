@@ -1,6 +1,8 @@
 const Promise = require('bluebird')
 const config = require('../../../config')
 const mv = Promise.promisify(require('mv'))
+const fs = require('fs')
+const path = require('path')
 
 module.exports = function (archivedClaimData) {
   var archiveEligibilityDocuments = archivedClaimData.DeleteEligibility
@@ -18,15 +20,32 @@ module.exports = function (archivedClaimData) {
   }
 
   if (hasDocuments) {
-    var directoryToCopy = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
-    var targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
+    var claimDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}/${claimId}`
+    var archiveClaimDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}/${claimId}`
 
-    if (!archiveEligibilityDocuments) {
-      directoryToCopy = `${directoryToCopy}/${claimId}`
-      targetDirectory = `${targetDirectory}/${claimId}`
-    }
+    return mv(claimDirectory, archiveClaimDirectory, {mkdirp: true})
+      .then(function () {
+        if (archiveEligibilityDocuments) {
+          var eligibilityDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
+          var targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
 
-    return mv(directoryToCopy, targetDirectory, {mkdirp: true})
+          var allEligibilityFilesFolders = fs.readdirSync(eligibilityDirectory)
+
+          if (allEligibilityFilesFolders && allEligibilityFilesFolders.length > 0) {
+            var movePromises = []
+
+            allEligibilityFilesFolders.forEach(function (eligibilityFileOrFolder) {
+              var eligibilityFileOrFolderPath = path.join(eligibilityDirectory, eligibilityFileOrFolder)
+              var targetFileOrFolderPath = path.join(targetDirectory, eligibilityFileOrFolder)
+
+              movePromises.push(mv(eligibilityFileOrFolderPath, targetFileOrFolderPath, {mkdirp: true}))
+            })
+            return Promise.all(movePromises)
+          }
+        }
+
+        return Promise.resolve()
+      })
   } else {
     return Promise.resolve()
   }
