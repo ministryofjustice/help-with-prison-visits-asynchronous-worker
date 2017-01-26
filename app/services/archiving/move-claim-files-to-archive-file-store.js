@@ -41,6 +41,11 @@ module.exports = function (archivedClaimData) {
               movePromises.push(mv(eligibilityFileOrFolderPath, targetFileOrFolderPath, {mkdirp: true}))
             })
             return Promise.all(movePromises)
+              .then(function () {
+                fs.rmdirSync(eligibilityDirectory)
+              })
+          } else {
+            fs.rmdirSync(eligibilityDirectory)
           }
         }
 

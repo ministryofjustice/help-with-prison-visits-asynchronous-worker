@@ -21,11 +21,13 @@ var sourceDirectory
 var targetDirectory
 var calledMove = false
 var calledFsReaddirSync = false
+var calledFsRmdirSync = false
 
 describe('services/archiving/move-claim-files-to-archive-file-store', function () {
   beforeEach(function () {
     calledMove = false
     calledFsReaddirSync = false
+    calledFsRmdirSync = false
 
     mv = function (srcDir, targetDir, opt, callback) {
       calledMove = true
@@ -33,10 +35,17 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
       targetDirectory = targetDir
       callback()
     }
-    fs = { readdirSync: function () {
-      calledFsReaddirSync = true
-      return [ ELIGIBILITY_DIR ]
-    }}
+
+    fs = {
+      readdirSync: function () {
+        calledFsReaddirSync = true
+        return [ ELIGIBILITY_DIR ]
+      },
+      rmdirSync: function () {
+        calledFsRmdirSync = true
+      }
+    }
+
     var config = { FILE_UPLOAD_LOCATION: UPLOAD_LOCATION, FILE_ARCHIVE_LOCATION: ARCHIVE_LOCATION }
 
     moveClaimFilesToArchiveFileStore = proxyquire('../../../../app/services/archiving/move-claim-files-to-archive-file-store', {
@@ -57,6 +66,7 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
   it('should copy eligibility directory to archive when archiving eligibility', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA_DELETE_ELIGIBILTIY).then(function () {
       expect(calledFsReaddirSync).to.be.true
+      expect(calledFsRmdirSync).to.be.true
       expect(sourceDirectory).to.be.equal(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`)
       expect(targetDirectory).to.be.equal(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`)
     })
