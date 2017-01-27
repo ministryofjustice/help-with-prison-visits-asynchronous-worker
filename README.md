@@ -22,16 +22,10 @@ Install dependencies and run
 
 ```
 npm install
-npm start
-
-# start Express healthcheck available on http://localhost:3999/status
-npm run-script start-web
-
-# start schedule script for payment run tasks
-node start-schedule-payment-run
-
-# start schedule script for daily tasks
-node start-schedule-daily-tasks
+npm start                                 # start worker
+npm run-script start-web                  # start Express healthcheck available on http://localhost:3999/status
+npm run-script start-schedule-daily-tasks # start schedule script for daily tasks
+npm run-script start-schedule-payment-run # start schedule script for payment run tasks
 ```
 
 ### With Docker Compose
@@ -66,6 +60,18 @@ npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
 npm run-script test-coverage    # generate code coverage report
 ```
+
+## Task execution
+
+The asynchronous worker uses [npm cron](https://www.npmjs.com/package/cron) to poll the External and Internal database †ask tables for tasks to execute in batches. Tasks which fail can be re-executed by updating their status or re-inserting with same data.
+
+### Scheduling daily tasks
+
+The script [start-schedule-daily-tasks.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/start-schedule-daily-tasks.js) is used to insert tasks which need to be executed daily, using `DAILY_TASKS_CRON` environmental variable to control cron.
+
+### Scheduling payment run
+
+The script [start-schedule-payment-run.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/start-schedule-payment-run.js) is used to insert payment run tasks which need to be executed on a custom schedule, using `PAYMENT_GENERATION_CRON` environmental variable to control cron.
 
 ## Integration points
 
