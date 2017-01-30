@@ -29,6 +29,6 @@ function mkdirIfNotExists (dir) {
 }
 
 function getFileName () {
-  const datestamp = dateFormatter.now().format('YYYYMMDD')
+  const datestamp = dateFormatter.now().format('YYYYMMDDhhmmss')
   return `apvs-payments-${datestamp}.csv`
 }
