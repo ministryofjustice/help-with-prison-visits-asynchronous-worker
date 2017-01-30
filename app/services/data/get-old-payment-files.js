@@ -1,10 +1,10 @@
 const knexConfig = require('../../../knexfile').asyncworker
 const knex = require('knex')(knexConfig)
 const config = require('../../../config')
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 
 const numberOfDays = config.PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS
-const cleanupDate = moment().subtract(numberOfDays, 'days')
+const cleanupDate = dateFormatter.now().subtract(numberOfDays, 'days')
 
 module.exports = function () {
   return knex('IntSchema.DirectPaymentFile')

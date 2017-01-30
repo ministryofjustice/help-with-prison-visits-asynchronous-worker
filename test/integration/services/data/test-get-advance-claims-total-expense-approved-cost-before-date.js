@@ -1,13 +1,13 @@
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 const getAdvanceClaimsTotalExpenseApprovedCostBeforeDate = require('../../../../app/services/data/get-advance-claims-total-expense-approved-cost-before-date')
 
 describe('services/data/get-advance-claims-total-expense-approved-cost-before-date', function () {
   const REFERENCE = 'AMOUNTO'
   var claimId
-  var date = moment().add('1', 'd').toDate()
+  var date = dateFormatter.now().add('1', 'd').toDate()
   var amount
 
   before(function () {

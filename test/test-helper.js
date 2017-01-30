@@ -1,6 +1,6 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../app/services/date-formatter')
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -176,7 +176,8 @@ module.exports.getClaimData = function (reference) {
       DateCreated: new Date(),
       DateSubmitted: new Date(),
       Status: 'SUBMITTED',
-      IsAdvanceClaim: true
+      IsAdvanceClaim: true,
+      PaymentMethod: 'bank'
     },
     Prisoner: {
       PrisonerId: uniqueId,
@@ -279,7 +280,7 @@ module.exports.getClaimData = function (reference) {
         ClaimDocumentId: uniqueId2,
         EligibilityId: uniqueId,
         Reference: reference,
-        ClaimId: uniqueId,
+        ClaimId: null,
         DocumentType: 'BENEFIT',
         ClaimExpenseId: null,
         DocumentStatus: 'uploaded',
@@ -336,7 +337,7 @@ module.exports.getAutoApprovalData = function (reference) {
   const claimExpenseId4 = claimExpenseId3 + 1
 
   return {
-    Claim: getClaimObject(claimId1, uniqueId, reference, moment().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
+    Claim: getClaimObject(claimId1, uniqueId, reference, dateFormatter.now().toDate(), subtractDateFromNow(29, 'days'), subtractDateFromNow(2, 'days'), 'NEW'),
     ClaimChildren: [
       getClaimChildObject(1, claimId1, uniqueId, reference, 'Child', 'A', 'my-child', subtractDateFromNow(10, 'years')),
       getClaimChildObject(2, claimId1, uniqueId, reference, 'Child', 'B', 'my-child', subtractDateFromNow(15, 'years'))
@@ -357,7 +358,7 @@ module.exports.getAutoApprovalData = function (reference) {
       reference,
       subtractDateFromNow(9, 'months'),
       subtractDateFromNow(9, 'months'),
-      moment().subtract(9, 'months').add(10, 'days').toDate(),
+      dateFormatter.now().subtract(9, 'months').add(10, 'days').toDate(),
       'APPROVED',
       [
         getClaimExpenseObject(claimExpenseId3, claimId2, uniqueId, reference, 'car hire', 45),
@@ -370,7 +371,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(3, 'months'),
         subtractDateFromNow(3, 'months'),
-        moment().subtract(3, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(3, 'months').add(10, 'days').toDate(),
         'APPROVED'
       ),
       getClaimObject(claimId3,
@@ -378,7 +379,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(6, 'months'),
         subtractDateFromNow(6, 'months'),
-        moment().subtract(6, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(6, 'months').add(10, 'days').toDate(),
         'APPROVED'
       ),
       getClaimObject(claimId4,
@@ -386,7 +387,7 @@ module.exports.getAutoApprovalData = function (reference) {
         reference,
         subtractDateFromNow(9, 'months'),
         subtractDateFromNow(9, 'months'),
-        moment().subtract(9, 'months').add(10, 'days').toDate(),
+        dateFormatter.now().subtract(9, 'months').add(10, 'days').toDate(),
         'APPROVED'
       )
     ]
@@ -401,7 +402,7 @@ function getClaimObject (claimId, eligibilityId, reference, dateCreated, dateOfJ
     DateCreated: dateCreated,
     DateOfJourney: dateOfJourney,
     DateSubmitted: dateSubmitted,
-    DateReviewed: status === 'APPROVED' || status === 'AUTO-APPROVED' || status === 'REJECTED' || status === 'REQUEST_INFORMATION' ? moment().toDate() : null,
+    DateReviewed: status === 'APPROVED' || status === 'AUTO-APPROVED' || status === 'REJECTED' || status === 'REQUEST_INFORMATION' ? dateFormatter.now().toDate() : null,
     Status: status,
     Note: 'test note'
   }
@@ -458,7 +459,7 @@ function getPrisonerObject (prisonerId, eligibilityId, reference, nameOfPrison) 
 }
 
 function subtractDateFromNow (amount, unit) {
-  return moment().subtract(amount, unit).toDate()
+  return dateFormatter.now().subtract(amount, unit).toDate()
 }
 
 function insertClaimDocuments (schema, eligibilityId, claimId, data) {

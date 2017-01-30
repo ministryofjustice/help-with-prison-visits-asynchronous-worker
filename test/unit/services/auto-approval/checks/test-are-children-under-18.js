@@ -1,15 +1,15 @@
 const expect = require('chai').expect
-const moment = require('moment')
+const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const areChildrenUnder18 = require('../../../../../app/services/auto-approval/checks/are-children-under-18')
 
 var autoApprovalDataClaimChildrenOver18 = {
   ClaimChildren: [
     {
-      DateOfBirth: moment().subtract(17, 'years').toDate()
+      DateOfBirth: dateFormatter.now().subtract(17, 'years').toDate()
     },
     {
-      DateOfBirth: moment().subtract(19, 'years').toDate()
+      DateOfBirth: dateFormatter.now().subtract(19, 'years').toDate()
     }
   ]
 }
@@ -23,7 +23,7 @@ var autoApprovalDataClaimChildrenUnder18 = {
       ClaimId: 798118115,
       FirstName: 'Sam',
       LastName: 'Bloggs',
-      DateOfBirth: moment().subtract(14, 'years').toDate(),
+      DateOfBirth: dateFormatter.now().subtract(14, 'years').toDate(),
       Relationship: 'prisoners-child',
       IsEnabled: true
     },
@@ -34,7 +34,7 @@ var autoApprovalDataClaimChildrenUnder18 = {
       ClaimId: 798118115,
       FirstName: 'Mike',
       LastName: 'Bloggs',
-      DateOfBirth: moment().subtract(15, 'years').toDate(),
+      DateOfBirth: dateFormatter.now().subtract(15, 'years').toDate(),
       Relationship: 'my-child',
       IsEnabled: true
     }

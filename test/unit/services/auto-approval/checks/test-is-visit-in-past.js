@@ -1,18 +1,18 @@
 const expect = require('chai').expect
-const moment = require('moment')
+const dateFormatter = require('../../../../../app/services/date-formatter')
 const isVisitInPast = require('../../../../../app/services/auto-approval/checks/is-visit-in-past')
 
 var autoApprovalDataWithPastClaim = {
   Claim: {
     ClaimId: 1,
-    DateOfJourney: moment().subtract(1, 'days')
+    DateOfJourney: dateFormatter.now().subtract(1, 'days')
   }
 }
 
 var autoApprovalDataWithFutureClaim = {
   Claim: {
     ClaimId: 1,
-    DateOfJourney: moment().add(1, 'days')
+    DateOfJourney: dateFormatter.now().add(1, 'days')
   }
 }
 

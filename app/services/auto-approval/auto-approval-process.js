@@ -62,11 +62,11 @@ function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
 }
 
 function addAutoApprovalConfigToData (autoApprovalData, config) {
-  autoApprovalData.costVariancePercentage = config.CostVariancePercentage || '10'
-  autoApprovalData.maxNumberOfClaimsPerYear = config.MaxNumberOfClaimsPerYear || '26'
-  autoApprovalData.maxDaysAfterAPVUVisit = config.MaxDaysAfterAPVUVisit || '28'
-  autoApprovalData.maxClaimTotal = config.MaxClaimTotal || '250'
-  autoApprovalData.maxNumberOfClaimsPerMonth = config.MaxNumberOfClaimsPerMonth || '4'
+  autoApprovalData.costVariancePercentage = config.CostVariancePercentage
+  autoApprovalData.maxNumberOfClaimsPerYear = config.MaxNumberOfClaimsPerYear
+  autoApprovalData.maxDaysAfterAPVUVisit = config.MaxDaysAfterAPVUVisit
+  autoApprovalData.maxClaimTotal = config.MaxClaimTotal
+  autoApprovalData.maxNumberOfClaimsPerMonth = config.MaxNumberOfClaimsPerMonth
 }
 
 function runEnabledChecks (result, autoApprovalData, disabledRules) {

@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "node start.js",
+    "start-schedule-daily-tasks": "node start-schedule-daily-tasks.js",
     "start-schedule-payment-run": "node start-schedule-payment-run.js",
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
@@ -54,6 +55,7 @@
     "lodash": "^4.17.2",
     "moment": "^2.15.2",
     "mssql": "^3.3.0",
+    "mv": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
     "notifications-node-client": "2.1.0",
     "request": "^2.78.0",
     "request-promise": "^4.1.1",

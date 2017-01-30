@@ -10,11 +10,12 @@ describe('services/data/delete-claim-from-external', function () {
   var eligibilityId
   var claimId
 
-  before(function () {
-    return testHelper.insertClaimEligibilityData('ExtSchema', reference).then(function (ids) {
-      eligibilityId = ids.eligibilityId
-      claimId = ids.claimId
-    })
+  beforeEach(function () {
+    return testHelper.insertClaimEligibilityData('ExtSchema', reference)
+      .then(function (ids) {
+        eligibilityId = ids.eligibilityId
+        claimId = ids.claimId
+      })
   })
 
   it('should delete the first time claim from external', function () {
@@ -39,7 +40,18 @@ describe('services/data/delete-claim-from-external', function () {
     })
   })
 
-  after(function () {
-    return testHelper.deleteAll(reference, 'IntSchema')
+  it('should not throw an error when only eligibility id is supplied', function () {
+    return deleteClaimFromExternal(eligibilityId, null)
+      .then(function () {
+      }).catch(function (err) {
+        expect.fail(err)
+      })
+  })
+
+  afterEach(function () {
+    return Promise.all([
+      testHelper.deleteAll(reference, 'IntSchema'),
+      testHelper.deleteAll(reference, 'ExtSchema')
+    ])
   })
 })

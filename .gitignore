@@ -37,8 +37,10 @@ run-standard-linter.sh
 run-test-coverage.sh
 run-unit-tests.sh
 
-# CSV output
+# Files CSV output
 data/payments
+uploads
+archive
 
 # Public directory
 app/public

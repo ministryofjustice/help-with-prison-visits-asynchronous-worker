@@ -10,7 +10,7 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   var dwpBenefitCheckerResult = 'YES'
   var visitorId
 
-  beforeEach(function () {
+  before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function () {
         return knex('IntSchema.Visitor').where('Reference', reference).first('VisitorId')

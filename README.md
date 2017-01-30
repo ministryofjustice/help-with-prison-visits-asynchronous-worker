@@ -22,16 +22,10 @@ Install dependencies and run
 
 ```
 npm install
-npm start
-
-# start Express healthcheck available on http://localhost:3999/status
-npm run-script start-web
-
-# start schedule script for payment run tasks
-node start-schedule-payment-run
-
-# start schedule script for daily tasks
-node start-schedule-daily-tasks
+npm start                                 # start worker
+npm run-script start-web                  # start Express healthcheck available on http://localhost:3999/status
+npm run-script start-schedule-daily-tasks # start schedule script for daily tasks
+npm run-script start-schedule-payment-run # start schedule script for payment run tasks
 ```
 
 ### With Docker Compose
@@ -67,6 +61,18 @@ npm run-script test-integration # integration tests
 npm run-script test-coverage    # generate code coverage report
 ```
 
+## Task execution
+
+The asynchronous worker uses [npm cron](https://www.npmjs.com/package/cron) to poll the External and Internal database †ask tables for tasks to execute in batches. Tasks which fail can be re-executed by updating their status or re-inserting with same data.
+
+### Scheduling daily tasks
+
+The script [start-schedule-daily-tasks.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/start-schedule-daily-tasks.js) is used to insert tasks which need to be executed daily, using `DAILY_TASKS_CRON` environmental variable to control cron.
+
+### Scheduling payment run
+
+The script [start-schedule-payment-run.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/start-schedule-payment-run.js) is used to insert payment run tasks which need to be executed on a custom schedule, using `PAYMENT_GENERATION_CRON` environmental variable to control cron.
+
 ## Integration points
 
 ### Database
@@ -85,3 +91,12 @@ The `DWP-CHECK` task requires making a call to the DWP Benefit Checker service. 
 
 See [call-dwp-benefit-checker-soap-service.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/call-dwp-benefit-checker-soap-service.js) for implementation, [here](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/BenefitChecker.wsdl) for the SOAP service WSDL.
 
+## Notes
+
+### Updating dependencies
+
+This node application uses [npm shrinkwrap](https://docs.npmjs.com/cli/shrinkwrap) to fix dependencies and peer dependencies to specific versions. This prevents node modules from automatically updating on new releases without developers knowledge.
+
+To manually update a dependency (e.g. GOV.UK styles) use `npm update my-dependency` and commit the updated `package.json` and `npm-shrinkwrap.json` files.
+
+Please note, there is an outstanding [bug in npm](https://github.com/npm/npm/issues/14042) which attempts to install incompatible optional dependencies when referenced in shrinkwrap (`fsevents` is one). To prevent this, either update the dependency from inside a docker image or manually remove the dependency from `npm-shrinkwrap.json`.
