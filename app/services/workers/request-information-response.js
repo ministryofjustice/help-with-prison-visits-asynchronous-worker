@@ -43,7 +43,11 @@ function getStatusForUpdatedClaim (claimData) {
 }
 
 function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
-  return insertClaimEvent(reference, eligibilityId, claimId, null, 'NEW-DOCUMENT-UPLOADED', null, note, false)
+  if (note) {
+    return insertClaimEvent(reference, eligibilityId, claimId, null, 'MESSAGE', null, note, false)
+  } else {
+    return Promise.resolve()
+  }
 }
 
 function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDocuments) {
