@@ -14,7 +14,7 @@ module.exports = function (autoApprovalData) {
   var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
   var now = dateFormatter.now().startOf('day')
 
-  var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
+  var daysSinceFirstClaim = now.diff(firstClaimDate, 'days') 
   var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
   var monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
   var daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
