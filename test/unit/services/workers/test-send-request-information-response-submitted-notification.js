@@ -20,7 +20,7 @@ const sendRequestInformationResponseSubmittedNotification = proxyquire('../../..
   '../data/get-first-name-by-reference': stubGetFirstNameByReference
 })
 
-describe('services/send-claim-notification', function () {
+describe('services/send-request-information-response-submitted-notification', function () {
   it('should call send-notification with correct details', function () {
     return sendRequestInformationResponseSubmittedNotification.execute({
       reference: reference,
