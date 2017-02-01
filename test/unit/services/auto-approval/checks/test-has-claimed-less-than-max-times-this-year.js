@@ -36,6 +36,14 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
     var checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
+
+  it('should return true if the claimant has claimed the max number of claims this year, and submits an advance claim that falls outside the claimable year', function () {
+    var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(26, now.clone().subtract(1, 'years'))
+    autoApprovalData.Claim.DateOfJourney = now.clone().add('20', 'days').toDate()
+
+    var checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
+    expect(checkResult.result).to.equal(true)
+  })
 })
 
 function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) {

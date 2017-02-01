@@ -21,17 +21,18 @@ module.exports = function (autoApprovalData) {
 
   var startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
     .subtract(daysSinceStartOfClaimableYear, 'days')
+  var endOfClaimableYear = startOfClaimableYear.clone().add('1', 'years')
 
-  var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate())
+  var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate(), endOfClaimableYear.toDate())
   var checkPassed = numberOfClaimsThisYear < autoApprovalData.maxNumberOfClaimsPerYear
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
 
-function getNumberOfClaimsSinceDate (previousClaims, currentClaim, date) {
+function getNumberOfClaimsSinceDate (previousClaims, currentClaim, date, cutOffDate) {
   var count = 0
 
-  if (currentClaim.DateOfJourney >= date) {
+  if (currentClaim.DateOfJourney >= date && currentClaim.DateOfJourney <= cutOffDate) {
     count++
   }
 
