@@ -24,7 +24,7 @@ module.exports = function (autoApprovalData) {
   var endOfClaimableYear = startOfClaimableYear.clone().add('1', 'years')
 
   var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate(), endOfClaimableYear.toDate())
-  var checkPassed = numberOfClaimsThisYear < autoApprovalData.maxNumberOfClaimsPerYear
+  var checkPassed = numberOfClaimsThisYear <= autoApprovalData.maxNumberOfClaimsPerYear
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
