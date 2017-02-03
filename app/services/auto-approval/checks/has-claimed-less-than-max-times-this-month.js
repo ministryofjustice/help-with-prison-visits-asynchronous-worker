@@ -11,15 +11,20 @@ module.exports = function (autoApprovalData) {
   }
 
   var firstDayOfCurrentMonth = dateFormatter.now().startOf('month').toDate()
+  var firstDayOfNextMonth = dateFormatter.now().startOf('month').add('1', 'months').toDate()
 
-  var numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(autoApprovalData.previousClaims, firstDayOfCurrentMonth)
-  var checkPassed = numberOfClaimsThisMonth < autoApprovalData.maxNumberOfClaimsPerMonth
+  var numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, firstDayOfCurrentMonth, firstDayOfNextMonth)
+  var checkPassed = numberOfClaimsThisMonth <= autoApprovalData.maxNumberOfClaimsPerMonth
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
 
-function getCountOfApprovedClaimsSubmittedSinceDate (previousClaims, date) {
+function getCountOfApprovedClaimsSubmittedSinceDate (previousClaims, currentClaim, date, cutOffDate) {
   var count = 0
+
+  if (currentClaim.DateOfJourney >= date && currentClaim.DateOfJourney <= cutOffDate) {
+    count++
+  }
 
   var claims = previousClaims.filter(function (claim) {
     return claim.Status === claimStatusEnum.APPROVED ||

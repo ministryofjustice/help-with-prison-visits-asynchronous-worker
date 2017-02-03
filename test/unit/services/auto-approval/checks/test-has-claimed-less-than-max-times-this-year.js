@@ -8,11 +8,11 @@ var initialClaimId = 800000000
 const now = dateFormatter.now()
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-year', function () {
-  it('should return false if the number of claims made for the current year is equal to 26', function () {
+  it('should return true if the number of claims made for the current year is equal to 26', function () {
     var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(26, now.clone().subtract(1, 'years'))
 
     var checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).to.equal(true)
   })
 
   it('should return false if the number of claims made for the current year is greater than 26', function () {
