@@ -1,11 +1,11 @@
 const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
-const getFirstNameByReference = require('../data/get-first-name-by-reference')
+const getFirstNameByReference = require('../data/get-first-name-by-claimId')
 
 module.exports.execute = function (task) {
   var reference = task.reference
 
-  return getFirstNameByReference('IntSchema', reference)
+  return getFirstNameByReference('IntSchema', task.claimId)
   .then(function (result) {
     var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
     var personalisation = {

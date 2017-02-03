@@ -5,7 +5,7 @@ require('sinon-bluebird')
 
 const config = require('../../../../config')
 
-var emailAddress = 'test@test.com'
+var emailAddress = 'h.vekriya@kainos.com'
 var reference = '1234567'
 var eligibilityId = '4321'
 var firstName = 'Joe'
@@ -17,7 +17,7 @@ var stubGetFirstNameByReference = sinon.stub().resolves({
 
 const sendClaimNotification = proxyquire('../../../../app/services/workers/send-claim-notification', {
   '../notify/send-notification': stubSendNotification,
-  '../data/get-first-name-by-reference': stubGetFirstNameByReference
+  '../data/get-first-name-by-claimId': stubGetFirstNameByReference
 })
 
 describe('services/send-claim-notification', function () {

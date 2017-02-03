@@ -1,6 +1,6 @@
 const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
-const getFirstNameByReference = require('../data/get-first-name-by-reference')
+const getFirstNameByReference = require('../data/get-first-name-by-claimId')
 
 module.exports.execute = function (task) {
   var reference = task.reference

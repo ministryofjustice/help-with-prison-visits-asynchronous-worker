@@ -17,7 +17,7 @@ var stubGetFirstNameByReference = sinon.stub().resolves({
 
 const sendRejectedClaimNotification = proxyquire('../../../../app/services/workers/send-rejected-claim-notification', {
   '../notify/send-notification': stubSendNotification,
-  '../data/get-first-name-by-reference': stubGetFirstNameByReference
+  '../data/get-first-name-by-claimId': stubGetFirstNameByReference
 })
 
 describe('services/send-rejected-claim-notification', function () {
