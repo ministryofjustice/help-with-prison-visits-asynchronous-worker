@@ -6,7 +6,7 @@ require('sinon-bluebird')
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const REFERENCE = 'DELFILE'
-const CLAIM_DOCUMENT_FILEPATH = [{FilePath: '1'}]
+const CLAIM_DOCUMENT_FILEPATH = [{Filepath: '1'}]
 const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
