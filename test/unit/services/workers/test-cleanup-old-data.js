@@ -23,8 +23,18 @@ const OLD_CLAIM_DATA = [
   }
 ]
 
+const OLD_CLAIM_DOCUMENT_DATA = [
+  {
+    ClaimId: 5
+  },
+  {
+    ClaimId: 6
+  }
+]
+
 var getOldEligibilityDataStub
 var getOldClaimDataStub
+var getOldClaimDocumentDataStub
 var deleteClaimFromExternalStub
 var deleteOldFilesStub
 
@@ -34,12 +44,14 @@ describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {
     getOldEligibilityDataStub = sinon.stub()
     getOldClaimDataStub = sinon.stub()
+    getOldClaimDocumentDataStub = sinon.stub()
     deleteClaimFromExternalStub = sinon.stub().resolves()
     deleteOldFilesStub = sinon.stub().resolves()
 
     cleanupOldData = proxyquire('../../../../app/services/workers/cleanup-old-data', {
       '../data/get-old-eligibility-data': getOldEligibilityDataStub,
       '../data/get-old-claim-data': getOldClaimDataStub,
+      '../data/get-old-claim-document-data': getOldClaimDocumentDataStub,
       '../data/delete-claim-from-external': deleteClaimFromExternalStub,
       '../cleanup-old-data/delete-old-files': deleteOldFilesStub
     })
@@ -48,6 +60,7 @@ describe('services/workers/cleanup-old-data', function () {
   it('should retrieve any old eligibility records and delete them from the external database', function () {
     getOldEligibilityDataStub.resolves(OLD_ELIGIBILITY_DATA)
     getOldClaimDataStub.resolves([])
+    getOldClaimDocumentDataStub.resolves([])
 
     return cleanupOldData.execute({}).then(function () {
       expect(getOldEligibilityDataStub.calledOnce).to.be.true
@@ -61,6 +74,7 @@ describe('services/workers/cleanup-old-data', function () {
   it('should retrieve any old claim records and delete them from the external database', function () {
     getOldEligibilityDataStub.resolves([])
     getOldClaimDataStub.resolves(OLD_CLAIM_DATA)
+    getOldClaimDocumentDataStub.resolves([])
 
     return cleanupOldData.execute({}).then(function () {
       expect(getOldEligibilityDataStub.calledOnce).to.be.true
@@ -68,6 +82,20 @@ describe('services/workers/cleanup-old-data', function () {
       expect(deleteOldFilesStub.calledTwice).to.be.true
       expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId)).to.be.true
       expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId)).to.be.true
+    })
+  })
+
+  it('should retrieve any old claim document records and delete them from the external database', function () {
+    getOldEligibilityDataStub.resolves([])
+    getOldClaimDataStub.resolves([])
+    getOldClaimDocumentDataStub.resolves(OLD_CLAIM_DOCUMENT_DATA)
+
+    return cleanupOldData.execute({}).then(function () {
+      expect(getOldEligibilityDataStub.calledOnce).to.be.true
+      expect(getOldClaimDataStub.calledOnce).to.be.true
+      expect(deleteOldFilesStub.calledTwice).to.be.true
+      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId)).to.be.true
+      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId)).to.be.true
     })
   })
 })
