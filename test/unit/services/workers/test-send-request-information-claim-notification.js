@@ -11,13 +11,13 @@ var eligibilityId = '4321'
 var firstName = 'Joe'
 
 var stubSendNotification = sinon.stub().resolves()
-var stubGetFirstNameByReference = sinon.stub().resolves({
+var getFirstNameByClaimId = sinon.stub().resolves({
   'FirstName': firstName
 })
 
 const sendRequestInformationClaimNotification = proxyquire('../../../../app/services/workers/send-request-information-claim-notification', {
   '../notify/send-notification': stubSendNotification,
-  '../data/get-first-name-by-claimId': stubGetFirstNameByReference
+  '../data/get-first-name-by-claimId': getFirstNameByClaimId
 })
 
 describe('services/send-request-information-claim-notification', function () {

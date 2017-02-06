@@ -16,13 +16,13 @@ const dateOfJourneyString = '1 February 2016'
 
 var stubGetClaim = sinon.stub().resolves({DateOfJourney: dateOfJourney})
 var stubSendNotification = sinon.stub().resolves()
-var stubGetFirstNameByReference = sinon.stub().resolves({
+var getFirstNameByClaimId = sinon.stub().resolves({
   'FirstName': firstName
 })
 
 const sendRequestInformationClaimNotification = proxyquire('../../../../app/services/workers/send-advance-claim-evidence-reminder-notification', {
   '../data/get-claim': stubGetClaim,
-  '../data/get-first-name-by-reference': stubGetFirstNameByReference,
+  '../data/get-first-name-by-claimId': getFirstNameByClaimId,
   '../notify/send-notification': stubSendNotification
 })
 
