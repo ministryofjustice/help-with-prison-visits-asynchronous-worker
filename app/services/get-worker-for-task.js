@@ -19,6 +19,7 @@ var sendMalwareUploadNotification = require('./workers/send-malware-notification
 var sendTechnicalHelp = require('./workers/send-technical-help')
 var archiveOldClaims = require('./workers/archive-old-claims')
 var archiveClaim = require('./workers/archive-claim')
+var referenceRecovery = require('./workers/reference-recovery')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -43,6 +44,7 @@ module.exports = function (taskType) {
     case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
     case tasksEnum.ARCHIVE_CLAIM: return archiveClaim
+    case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
   }
 
   return null
