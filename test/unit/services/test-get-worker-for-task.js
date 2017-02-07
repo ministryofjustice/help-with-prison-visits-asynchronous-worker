@@ -20,6 +20,7 @@ const cleanupOldData = {name: 'cleanupOldData'}
 const sendTechnicalHelp = {name: 'sendTechnicalHelp'}
 const archiveOldClaims = {name: 'archiveOldClaims'}
 const archiveClaim = {name: 'archiveClaim'}
+const referenceRecovery = {name: 'referenceRecovery'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -39,7 +40,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/cleanup-old-data': cleanupOldData,
   './workers/send-technical-help': sendTechnicalHelp,
   './workers/archive-old-claims': archiveOldClaims,
-  './workers/archive-claim': archiveClaim
+  './workers/archive-claim': archiveClaim,
+  './workers/reference-recovery': referenceRecovery
 })
 
 describe('services/getWorkerForTask', function () {
@@ -131,5 +133,10 @@ describe('services/getWorkerForTask', function () {
   it('should return archive-claim', function () {
     var worker = getWorkerForTask(tasksEnum.ARCHIVE_CLAIM)
     expect(worker.name).to.be.equal('archiveClaim')
+  })
+
+  it('should return reference-recovery', function () {
+    var worker = getWorkerForTask(tasksEnum.REFERENCE_RECOVERY)
+    expect(worker.name).to.be.equal('referenceRecovery')
   })
 })
