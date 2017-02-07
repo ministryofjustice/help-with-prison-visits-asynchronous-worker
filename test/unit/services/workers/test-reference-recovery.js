@@ -10,18 +10,19 @@ const PRISON_NUMBER = 'B123456'
 
 var additionalData = `${EMAIL}~~${PRISON_NUMBER}`
 
-var sandbox = sinon.sandbox.create()
-var stubReferenceNumberRecovery = sandbox.stub()
-var stubSendNotification = sandbox.stub().resolves()
-
-const referenceRecovery = proxyquire('../../../../app/services/workers/reference-recovery', {
-  '../data/reference-number-recovery': stubReferenceNumberRecovery,
-  '../notify/send-notification': stubSendNotification
-})
+var stubReferenceNumberRecovery
+var stubSendNotification
+var referenceRecovery
 
 describe('services/reference-recovery', function () {
   beforeEach(function () {
-    sandbox.reset()
+    stubReferenceNumberRecovery = sinon.stub()
+    stubSendNotification = sinon.stub().resolves()
+
+    referenceRecovery = proxyquire('../../../../app/services/workers/reference-recovery', {
+      '../data/reference-number-recovery': stubReferenceNumberRecovery,
+      '../notify/send-notification': stubSendNotification
+    })
   })
 
   it('should call reference number recovery send email with recovered reference number', function () {

@@ -4,9 +4,8 @@ const referenceNumberRecovery = require('../data/reference-number-recovery')
 
 module.exports.execute = function (task) {
   var recoveryRequest = task.additionalData.split('~~')
-  var emailAddress
-  var prisonNumber
-  [emailAddress, prisonNumber] = [recoveryRequest[0], recoveryRequest[1]]
+  var emailAddress = recoveryRequest[0]
+  var prisonNumber = recoveryRequest[1]
 
   return referenceNumberRecovery(emailAddress, prisonNumber)
     .then(function (data) {
