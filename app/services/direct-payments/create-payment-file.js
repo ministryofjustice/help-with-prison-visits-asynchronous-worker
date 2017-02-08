@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
+const log = require('../log')
 
 const dataPath = config.DATA_FILE_PATH
 const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
@@ -17,8 +18,11 @@ module.exports = function (payments) {
   mkdirIfNotExists(outputPath)
 
   return stringify(data).then(function (content) {
-    writeFile(filePath, content, {})
-    return Promise.resolve(filePath)
+    return writeFile(filePath, content, {})
+      .then(function () {
+        log.info(`Filepath for payment file = ${filePath}`)
+        return filePath
+      })
   })
 }
 
