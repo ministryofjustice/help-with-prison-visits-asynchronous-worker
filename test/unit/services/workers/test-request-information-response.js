@@ -1,3 +1,4 @@
+const tasksEnum = require('../../../../app/constants/tasks-enum')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -13,6 +14,7 @@ const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: new Date() }, Cla
 const BANK_DETAILS = {ClaimBankDetailId: 1, SortCode: '123456', AccountNumber: '12345678'}
 const CLAIM_DATA_FOR_BANK_DETAILS = { Claim: { DateReviewed: null, Status: 'REQUEST-INFO-PAYMENT' }, ClaimBankDetail: BANK_DETAILS }
 const SINGLE_UPLOADED_DOCUMENT = [{ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded'}]
+const EMAIL_ADDRESS = 'test@test.com'
 
 var moveClaimDocumentsToInternal
 var getAllClaimData
@@ -22,6 +24,8 @@ var generateClaimUpdatedString
 var autoApprovalProcess
 var updateBankDetails
 var deleteClaimFromExternal
+var getVisitorEmailAddress
+var insertTask
 
 var requestInformationResponse
 
@@ -35,6 +39,8 @@ describe('services/workers/request-information-response', function () {
     autoApprovalProcess = sinon.stub().resolves()
     updateBankDetails = sinon.stub().resolves()
     deleteClaimFromExternal = sinon.stub().resolves()
+    getVisitorEmailAddress = sinon.stub().resolves(EMAIL_ADDRESS)
+    insertTask = sinon.stub().resolves()
 
     requestInformationResponse = proxyquire('../../../../app/services/workers/request-information-response', {
       '../data/move-claim-documents-to-internal': moveClaimDocumentsToInternal,
@@ -44,7 +50,9 @@ describe('services/workers/request-information-response', function () {
       '../notify/helpers/generate-claim-updated-string': generateClaimUpdatedString,
       '../auto-approval/auto-approval-process': autoApprovalProcess,
       '../data/update-bank-details': updateBankDetails,
-      '../data/delete-claim-from-external': deleteClaimFromExternal
+      '../data/delete-claim-from-external': deleteClaimFromExternal,
+      '../data/get-visitor-email-address': getVisitorEmailAddress,
+      '../data/insert-task': insertTask
     })
   })
 
@@ -80,6 +88,18 @@ describe('services/workers/request-information-response', function () {
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
       expect(deleteClaimFromExternal.called).to.be.false
+    })
+  })
+
+  it('should insert task to send notification', function () {
+    return requestInformationResponse.execute({
+      reference: reference,
+      eligibilityId: eligibilityId,
+      claimId: claimId,
+      additionalData: ADDITIONAL_DATA
+    }).then(function () {
+      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true
+      expect(insertTask.calledWith(reference, eligibilityId, claimId, tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
     })
   })
 
