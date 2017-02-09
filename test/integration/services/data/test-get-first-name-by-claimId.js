@@ -16,8 +16,8 @@ describe('services/data/get-first-name-by-claimId', function () {
 
   it('should get the firstname when given the claim id', function () {
     return getFirstNameByClaimId('IntSchema', claimId)
-      .then(function (result) {
-        expect(result[0].FirstName).to.equal('Joe')
+      .then(function (firstName) {
+        expect(firstName).to.equal('Joe')
       })
   })
 
