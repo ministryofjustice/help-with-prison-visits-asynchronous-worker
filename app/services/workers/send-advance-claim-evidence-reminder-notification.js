@@ -9,7 +9,7 @@ module.exports.execute = function (task) {
   var reference = task.reference
   var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
 
-  return getClaim('IntSchema', task.claimId)
+  return getClaim('IntSchema', claimId)
     .then(function (claim) {
       var dateOfJourneyString = moment(claim.DateOfJourney).format('D MMMM YYYY')
 
