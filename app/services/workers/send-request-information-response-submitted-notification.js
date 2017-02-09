@@ -3,13 +3,14 @@ const sendNotification = require('../notify/send-notification')
 const getFirstNameByClaimId = require('../data/get-first-name-by-claimId')
 
 module.exports.execute = function (task) {
+  var claimId = task.claimId
   var reference = task.reference
 
-  return getFirstNameByClaimId('IntSchema', task.claimId)
-  .then(function (result) {
+  return getFirstNameByClaimId('IntSchema', claimId)
+  .then(function (firstName) {
     var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
     var personalisation = {
-      first_name: result.FirstName,
+      first_name: firstName,
       reference: reference,
       requestInfoUrl: requestInfoUrl
     }
