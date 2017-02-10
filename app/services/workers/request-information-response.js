@@ -6,6 +6,9 @@ const updateBankDetails = require('../data/update-bank-details')
 const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 const generateClaimUpdatedString = require('../notify/helpers/generate-claim-updated-string')
 const autoApprovalProcess = require('../auto-approval/auto-approval-process')
+const getVisitorEmailAddress = require('../data/get-visitor-email-address')
+const insertTask = require('../data/insert-task')
+const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 const Promise = require('bluebird')
 
@@ -31,6 +34,7 @@ module.exports.execute = function (task) {
     .then(function () { return updateClaimStatus(claimId, status) })
     .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
     .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
+    .then(function () { return insertTaskRequestInformationResponseSubmittedNotification(reference, eligibilityId, claimId) })
     .then(function () { return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status) })
 }
 
@@ -77,4 +81,11 @@ function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, cl
   } else {
     return Promise.resolve()
   }
+}
+
+function insertTaskRequestInformationResponseSubmittedNotification (reference, eligibilityId, claimId) {
+  return getVisitorEmailAddress('IntSchema', reference, eligibilityId)
+    .then(function (emailAddress) {
+      return insertTask(reference, eligibilityId, claimId, tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION, emailAddress)
+    })
 }
