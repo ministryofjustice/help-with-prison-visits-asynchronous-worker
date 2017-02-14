@@ -10,7 +10,8 @@ module.exports.execute = function (task) {
   return referenceNumberRecovery(emailAddress, prisonNumber)
     .then(function (data) {
       if (data) {
-        var personalisation = {reference: data.Reference}
+        var registeredUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
+        var personalisation = {reference: data.Reference, firstname: data.FirstName, registeredUrl}
         var emailTemplateId = config.NOTIFY_SEND_REFERENCE_RECOVERY_EMAIL_TEMPLATE_ID
         return sendNotification(emailTemplateId, emailAddress, personalisation)
       }
