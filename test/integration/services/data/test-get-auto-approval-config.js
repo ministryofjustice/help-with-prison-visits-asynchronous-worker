@@ -33,6 +33,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.MaxNumberOfClaimsPerYear).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
         expect(result.MaxNumberOfClaimsPerMonth).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
         expect(result.RulesDisabled).to.be.null
+        expect(result.CostPerMile).to.equal(parseInt(config.AUTO_APPROVAL_COST_PER_MILE))
       })
   })
 
@@ -71,6 +72,7 @@ function insertTestData () {
       MaxDaysAfterAPVUVisit: '28',
       MaxNumberOfClaimsPerYear: '10',
       RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
+      CostPerMile: '13.00',
       IsEnabled: 'true'
     },
     {
@@ -82,6 +84,7 @@ function insertTestData () {
       MaxDaysAfterAPVUVisit: '28',
       MaxNumberOfClaimsPerYear: '10',
       RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-3',
+      CostPerMile: '13.00',
       IsEnabled: 'false'
     }])
     .returning('AutoApprovalConfigId')

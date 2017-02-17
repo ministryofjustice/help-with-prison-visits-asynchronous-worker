@@ -5,6 +5,7 @@ require('sinon-bluebird')
 
 var callDistanceApiForPostcodes
 var updateExpenseForDistanceCalculation
+var getAutoApprovalConfig
 
 var calculateCarExpenseCosts
 
@@ -26,11 +27,13 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
     callDistanceApiForPostcodes = sinon.stub().resolves(10.0)
     updateExpenseForDistanceCalculation = sinon.stub().resolves()
+    getAutoApprovalConfig = sinon.stub().resolves({CostPerMile: '13.00'})
 
     calculateCarExpenseCosts = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', {
       '../../../config': { DISTANCE_CALCULATION_ENABLED: 'true' },
       './call-distance-api-for-postcodes': callDistanceApiForPostcodes,
-      '../data/update-expense-for-distance-calculation': updateExpenseForDistanceCalculation
+      '../data/update-expense-for-distance-calculation': updateExpenseForDistanceCalculation,
+      '../data/get-auto-approval-config': getAutoApprovalConfig
     })
   })
 
@@ -60,6 +63,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
+        expect(getAutoApprovalConfig.called).to.be.true
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST)).to.be.true
       })
   })

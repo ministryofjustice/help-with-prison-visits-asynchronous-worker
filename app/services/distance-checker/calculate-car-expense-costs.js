@@ -2,11 +2,11 @@ const Promise = require('bluebird')
 const config = require('../../../config')
 const callDistanceApiForPostcodes = require('./call-distance-api-for-postcodes')
 const updateExpenseForDistanceCalculation = require('../data/update-expense-for-distance-calculation')
+const getAutoApprovalConfig = require('../data/get-auto-approval-config')
 const prisonsEnum = require('../../constants/prisons-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 
 const KILOMETERS_TO_MILES = 0.621371
-const COST_PER_MILE = 13.0 // TODO get from config
 
 module.exports = function (reference, eligibilityId, claimId, claimData) {
   if (config.DISTANCE_CALCULATION_ENABLED !== 'true') {
@@ -20,15 +20,10 @@ module.exports = function (reference, eligibilityId, claimId, claimData) {
   if (carExpenses.length > 0 && visitorPostCode && prisonPostCode) {
     var promises = []
 
-    return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode)
-      .then(function (distanceInKm) {
-        var cost = 0.0
-        var distanceInMiles = null
-
-        if (distanceInKm) {
-          distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
-          cost = Number(Math.round(distanceInMiles * COST_PER_MILE + 'e2') + 'e-2')
-        }
+    return getDistanceInMilesAndCost(visitorPostCode, prisonPostCode)
+      .then(function (result) {
+        var cost = result.cost
+        var distanceInMiles = result.distanceInMiles
 
         carExpenses.forEach(function (carExpense) {
           promises.push(updateExpenseForDistanceCalculation(carExpense.ClaimExpenseId, visitorPostCode, prisonPostCode, distanceInMiles, cost))
@@ -48,4 +43,25 @@ function getUncalculatedCarExpenses (claimData) {
 function getPrisonPostCode (nameOfPrison) {
   var prison = enumHelper.getKeyByValue(prisonsEnum, nameOfPrison)
   return prison ? prison.postcode : null
+}
+
+function getDistanceInMilesAndCost (visitorPostCode, prisonPostCode) {
+  return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode)
+      .then(function (distanceInKm) {
+        var cost = 0.0
+        var distanceInMiles = null
+
+        if (distanceInKm) {
+          distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
+          return getAutoApprovalConfig()
+            .then(function (config) {
+              var costPerMile = parseFloat(config.CostPerMile)
+              cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2')
+
+              return {cost: cost, distanceInMiles: distanceInMiles}
+            })
+        } else {
+          return {cost: cost, distanceInMiles: distanceInMiles}
+        }
+      })
 }
