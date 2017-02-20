@@ -30,7 +30,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     getAutoApprovalConfig = sinon.stub().resolves({CostPerMile: '13.00'})
 
     calculateCarExpenseCosts = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', {
-      '../../../config': { DISTANCE_CALCULATION_ENABLED: 'true' },
+      '../../../config': { DISTANCE_CALCULATION_ENABLED: 'true', DISTANCE_CALCULATION_MAX_MILES: '750' },
       './call-distance-api-for-postcodes': callDistanceApiForPostcodes,
       '../data/update-expense-for-distance-calculation': updateExpenseForDistanceCalculation,
       '../data/get-auto-approval-config': getAutoApprovalConfig
@@ -65,6 +65,19 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
         expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
         expect(getAutoApprovalConfig.called).to.be.true
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST)).to.be.true
+      })
+  })
+
+  it('should not set cost if distance over max', function () {
+    const DISTANCE = 776.71375
+    var distanceInKm = 1250
+
+    callDistanceApiForPostcodes.resolves(distanceInKm)
+    updateExpenseForDistanceCalculation.resolves()
+
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
+      .then(function () {
+        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0)).to.be.true
       })
   })
 })

@@ -25,6 +25,10 @@ module.exports = function (reference, eligibilityId, claimId, claimData) {
         var cost = result.cost
         var distanceInMiles = result.distanceInMiles
 
+        if (distanceInMiles > parseFloat(config.DISTANCE_CALCULATION_MAX_MILES)) {
+          cost = 0.0
+        }
+
         carExpenses.forEach(function (carExpense) {
           promises.push(updateExpenseForDistanceCalculation(carExpense.ClaimExpenseId, visitorPostCode, prisonPostCode, distanceInMiles, cost))
         })
@@ -56,7 +60,7 @@ function getDistanceInMilesAndCost (visitorPostCode, prisonPostCode) {
           return getAutoApprovalConfig()
             .then(function (config) {
               var costPerMile = parseFloat(config.CostPerMile)
-              cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2')
+              cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2') // accurate 2 decimal place rounding
 
               return {cost: cost, distanceInMiles: distanceInMiles}
             })
