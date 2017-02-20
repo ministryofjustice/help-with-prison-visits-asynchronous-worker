@@ -37,7 +37,7 @@ module.exports = function (reference, eligibilityId, claimId, claimData) {
 }
 
 function getUncalculatedCarExpenses (claimData) {
-  return claimData.ClaimExpenses ? claimData.ClaimExpenses.filter(function (expense) { return expense.ExpenseType === 'car' && expense.Cost === 0 }) : []
+  return claimData.ClaimExpenses ? claimData.ClaimExpenses.filter(function (expense) { return expense.ExpenseType === 'car' && expense.Cost === '0.00' }) : []
 }
 
 function getPrisonPostCode (nameOfPrison) {

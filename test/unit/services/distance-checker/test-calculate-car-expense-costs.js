@@ -17,8 +17,8 @@ const NAME_OF_PRISON = 'hewell'
 const PRISON_POSTCODE = 'B97 6QS'
 const CAR_EXPENSE_ID = 321
 const BUS_EXPENSE_ID = 322
-const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: 0.0 }
-const BUS_EXPENSE = { ClaimExpenseId: BUS_EXPENSE_ID, ExpenseType: 'bus', Cost: 10.0 }
+const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: '0.00' }
+const BUS_EXPENSE = { ClaimExpenseId: BUS_EXPENSE_ID, ExpenseType: 'bus', Cost: '10.00' }
 
 const CLAIM_DATA_WITH_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 const CLAIM_DATA_WITH_NO_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [BUS_EXPENSE] }
