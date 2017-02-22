@@ -16,7 +16,7 @@ const getOldPaymentFiles = sinon.stub().resolves(OLD_PAYMENT_FILES)
 const updateOldPaymentFilesIsEnabledFalse = sinon.stub().resolves()
 
 const cleanupOldPaymentFiles = proxyquire('../../../../app/services/workers/cleanup-old-payment-files', {
-  '../direct-payments/delete-old-payment-files': deleteOldPaymentFiles,
+  '../cleanup-old-data/delete-old-payment-files': deleteOldPaymentFiles,
   '../data/get-old-payment-files': getOldPaymentFiles,
   '../data/update-old-payment-files-is-enabled-false': updateOldPaymentFilesIsEnabledFalse
 })
