@@ -97,7 +97,7 @@ module.exports = function (paymentMethod) {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
-    .where('IntSchema.Claim.PaymentMethod', paymentMethod)
+    .andWhere('IntSchema.Claim.PaymentMethod', paymentMethod)
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (claims) {
