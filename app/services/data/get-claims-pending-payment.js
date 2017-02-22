@@ -6,9 +6,13 @@ const claimStatuses = require('../../constants/claim-status-enum')
 const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
 const updateClaimTotalAmount = require('./update-claim-total-amount')
 const updateClaimManuallyProcessedAmount = require('./update-claim-manually-processed-amount')
+const paymentMethods = require('../../constants/payment-method-enum')
 
-const selectColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
+const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
+
+var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
+  'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference']
 
 var claimResults
 
@@ -47,17 +51,48 @@ function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPer
     })
 }
 
+function directPaymentsReturn (results) {
+  return _.map(results, record => {
+    return [
+      record.ClaimId,
+      record.SortCode,
+      record.AccountNumber,
+      record.FirstName + ' ' + record.LastName,
+      record.PaymentAmount.toFixed(2),
+      record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
+    ]
+  })
+}
+
+function payoutPaymentsReturn (results) {
+  return _.map(results, record => {
+    return [
+      record.ClaimId,
+      record.PaymentAmount.toFixed(2),
+      record.FirstName,
+      record.LastName,
+      record.HouseNumberAndStreet,
+      record.Town,
+      record.County,
+      record.Country,
+      record.PostCode,
+      record.Reference
+    ]
+  })
+}
+
 module.exports = function (paymentMethod) {
   var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
     'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
     'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
     'AS TotalDeductionAmount'
+  var selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
 
   return knex('IntSchema.Claim')
     .column(knex.raw(rawDeductionTotalQuery))
     .sum('IntSchema.ClaimExpense.ApprovedCost as TotalApprovedCost')
     .select(selectColumns)
-    .innerJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
+    .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
@@ -72,15 +107,10 @@ module.exports = function (paymentMethod) {
       return subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerClaim)
     })
     .then(function (results) {
-      return _.map(results, record => {
-        return [
-          record.ClaimId,
-          record.SortCode,
-          record.AccountNumber,
-          record.FirstName + ' ' + record.LastName,
-          record.PaymentAmount.toFixed(2),
-          record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
-        ]
-      })
+      if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
+        return directPaymentsReturn(results)
+      } else {
+        return payoutPaymentsReturn(results)
+      }
     })
 }

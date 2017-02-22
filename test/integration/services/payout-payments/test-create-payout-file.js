@@ -7,8 +7,8 @@ const createPaymentFile = require('../../../../app/services/payout-payments/crea
 var testFilePath
 
 const data = [
-  ['34.22', 'Joe', 'Bloggs', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', '3', '', '', 'V123456', '', '', '', '', '', 'TEST089-LET-001'],
-  ['12.22', 'Frank', 'Bloggs', '456 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT126BT', '3', '', '', 'V123457', '', '', '', '', '', 'TEST089-LET-001']
+  ['34.22', '', 'Joe', 'Bloggs', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', '3', '', '', 'V123456', '', '', '', '', '', 'TEST089-LET-001'],
+  ['12.22', '', 'Frank', 'Bloggs', '456 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT126BT', '3', '', '', 'V123457', '', '', '', '', '', 'TEST089-LET-001']
 ]
 
 describe('services/payout-payments/create-payout-file', function () {
@@ -21,8 +21,8 @@ describe('services/payout-payments/create-payout-file', function () {
         readFile(filePath).then(function (content) {
           var lines = content.toString().split('\n')
           expect(lines.length).to.be.equal(3)
-          expect(lines[0]).to.be.equal('34.22,Joe,Bloggs,123 Test Street,Test Town,Test County,Test Country,BT123BT,3,,,V123456,,,,,,TEST089-LET-001')
-          expect(lines[1]).to.be.equal('12.22,Frank,Bloggs,456 Test Street,Test Town,Test County,Test Country,BT126BT,3,,,V123457,,,,,,TEST089-LET-001')
+          expect(lines[0]).to.be.equal('34.22,,Joe,Bloggs,123 Test Street,Test Town,Test County,Test Country,BT123BT,3,,,V123456,,,,,,TEST089-LET-001')
+          expect(lines[1]).to.be.equal('12.22,,Frank,Bloggs,456 Test Street,Test Town,Test County,Test Country,BT126BT,3,,,V123457,,,,,,TEST089-LET-001')
         })
       })
   })
