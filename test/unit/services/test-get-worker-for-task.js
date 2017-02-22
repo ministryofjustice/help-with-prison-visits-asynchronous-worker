@@ -21,6 +21,7 @@ const sendTechnicalHelp = {name: 'sendTechnicalHelp'}
 const archiveOldClaims = {name: 'archiveOldClaims'}
 const archiveClaim = {name: 'archiveClaim'}
 const referenceRecovery = {name: 'referenceRecovery'}
+const generatePayoutPayments = {name: 'generatePayoutPayments'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -41,7 +42,8 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-technical-help': sendTechnicalHelp,
   './workers/archive-old-claims': archiveOldClaims,
   './workers/archive-claim': archiveClaim,
-  './workers/reference-recovery': referenceRecovery
+  './workers/reference-recovery': referenceRecovery,
+  './workers/generate-payout-payments': generatePayoutPayments
 })
 
 describe('services/getWorkerForTask', function () {
@@ -138,5 +140,10 @@ describe('services/getWorkerForTask', function () {
   it('should return reference-recovery', function () {
     var worker = getWorkerForTask(tasksEnum.REFERENCE_RECOVERY)
     expect(worker.name).to.be.equal('referenceRecovery')
+  })
+
+  it('should return generate-payout-payments', function () {
+    var worker = getWorkerForTask(tasksEnum.GENERATE_PAYOUT_PAYMENTS)
+    expect(worker.name).to.be.equal('generatePayoutPayments')
   })
 })

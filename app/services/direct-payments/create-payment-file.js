@@ -20,7 +20,7 @@ module.exports = function (payments) {
   return stringify(data).then(function (content) {
     return writeFile(filePath, content, {})
       .then(function () {
-        log.info(`Filepath for payment file = ${filePath}`)
+        log.info(`Filepath for direct payment file = ${filePath}`)
         return filePath
       })
   })

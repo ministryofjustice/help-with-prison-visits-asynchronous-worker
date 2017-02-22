@@ -20,6 +20,7 @@ var sendTechnicalHelp = require('./workers/send-technical-help')
 var archiveOldClaims = require('./workers/archive-old-claims')
 var archiveClaim = require('./workers/archive-claim')
 var referenceRecovery = require('./workers/reference-recovery')
+var generatePayoutPayments = require('./workers/generate-payout-payments')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -45,6 +46,7 @@ module.exports = function (taskType) {
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
     case tasksEnum.ARCHIVE_CLAIM: return archiveClaim
     case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
+    case tasksEnum.GENERATE_PAYOUT_PAYMENTS: return generatePayoutPayments
   }
 
   return null
