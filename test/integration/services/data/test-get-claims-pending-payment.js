@@ -59,7 +59,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
   it('should retrieve only APPROVED claim records with payment status of NULL', function () {
     var currentDate = dateFormatter.now().format('YYYY-MM-DD')
-    return getClaimsPendingPayment()
+    return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
       .then(function (results) {
         var filteredResults = results.filter(function (result) {
           return result[0] === claimId
@@ -92,7 +92,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function (results) {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
@@ -119,7 +119,7 @@ describe('services/data/get-claims-pending-payment', function () {
       })
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function () {
             // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
             expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
@@ -142,7 +142,7 @@ describe('services/data/get-claims-pending-payment', function () {
       })
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function () {
             expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
           })
@@ -164,7 +164,7 @@ describe('services/data/get-claims-pending-payment', function () {
       })
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function () {
             expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
           })
@@ -187,7 +187,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function (results) {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
@@ -215,7 +215,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
     return Promise.all([update1, update2])
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
           .then(function (results) {
             var filteredResults = results.filter(function (result) {
               return result[0] === claimId
@@ -232,7 +232,7 @@ describe('services/data/get-claims-pending-payment', function () {
       .where('ClaimId', claimId)
       .update({'PaymentMethod': paymentMethods.MANUALLY_PROCESSED.value})
       .then(function () {
-        return getClaimsPendingPayment()
+        return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
       })
       .then(function (results) {
         var filteredResults = results.filter(function (result) {
