@@ -38,6 +38,6 @@ function getFileName () {
 }
 
 function stripSpecialCharacters (payments) {
-  var replaceCharacters = item => item.replace(/[^a-zA-Z0-9-,. ]/g, '')
+  var replaceCharacters = item => item.replace(/[^a-zA-Z0-9-. ]/g, '')
   return _.map(payments, subarray => _.map(subarray, replaceCharacters))
 }
