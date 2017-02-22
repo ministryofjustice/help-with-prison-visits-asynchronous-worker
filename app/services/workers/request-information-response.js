@@ -10,6 +10,7 @@ const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
+const paymentMethodEnum = require('../../constants/payment-method-enum')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
@@ -28,7 +29,9 @@ module.exports.execute = function (task) {
     .then(function (claimData) {
       status = getStatusForUpdatedClaim(claimData)
       originalStatus = claimData.Claim.Status
-      claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
+      if (claimData.Claim.PaymentMethod !== paymentMethodEnum.PAYOUT.value) {
+        claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
+      }
     })
     .then(function () { return updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
     .then(function () { return updateClaimStatus(claimId, status) })

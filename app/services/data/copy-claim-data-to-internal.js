@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
+const paymentMethodEnum = require('../../constants/payment-method-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const updateContactDetails = require('./update-contact-details')
 
@@ -34,7 +35,11 @@ function copyClaimData (data, additionalData) {
 
   return knex('IntSchema.Claim').insert(data.Claim)
     .then(function () {
-      return knex('IntSchema.ClaimBankDetail').insert(data.ClaimBankDetail)
+      if (data.Claim.PaymentMethod !== paymentMethodEnum.PAYOUT.value) {
+        return knex('IntSchema.ClaimBankDetail').insert(data.ClaimBankDetail)
+      } else {
+        return Promise.resolve()
+      }
     })
     .then(function () {
       data.ClaimExpenses.forEach(function (claimExpense) {
