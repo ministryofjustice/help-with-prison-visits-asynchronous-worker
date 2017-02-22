@@ -14,9 +14,7 @@ module.exports.execute = function (task) {
       if (paymentData.length > 0) {
         var claimIdIndex = 0
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        console.log(paymentData)
         removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        console.log(paymentData)
         return createPaymentFile(paymentData)
           .then(function (result) {
             return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
