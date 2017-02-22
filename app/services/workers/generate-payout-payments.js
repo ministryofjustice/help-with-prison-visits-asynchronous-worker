@@ -1,7 +1,8 @@
 const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
 const createPayoutFile = require('../payout-payments/create-payout-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
-const insertPayoutPaymentFile = require('../data/insert-payout-payment-file')
+const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
+const fileTypes = require('../../constants/payment-filetype-enum')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 
@@ -16,7 +17,7 @@ module.exports.execute = function (task) {
         formatData(paymentData, claimIdIndex)
         return createPayoutFile(paymentData)
           .then(function (result) {
-            return insertPayoutPaymentFile(result)
+            return insertDirectPaymentFile(result, fileTypes.PAYOUT_FILE)
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData)
               })

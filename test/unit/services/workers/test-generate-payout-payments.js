@@ -18,13 +18,13 @@ var testPath = 'data/payments/test.csv'
 var getClaimsPendingPayment = sinon.stub().resolves(claimsPendingPayment)
 var createPayoutFile = sinon.stub().resolves(testPath)
 var updateClaimsProcessedPaymentResult = sinon.stub().resolves()
-var insertPayoutPayments = sinon.stub().resolves()
+var insertDirectBankPayments = sinon.stub().resolves()
 
 const generateDirectPayments = proxyquire('../../../../app/services/workers/generate-payout-payments', {
   '../data/get-claims-pending-payment': getClaimsPendingPayment,
   '../payout-payments/create-payout-file': createPayoutFile,
   '../data/update-claims-processed-payment': updateClaimsProcessedPaymentResult,
-  '../data/insert-direct-payment-file': insertPayoutPayments
+  '../data/insert-direct-payment-file': insertDirectBankPayments
 })
 
 describe('services/workers/generate-payout-payments', function () {
