@@ -46,7 +46,7 @@ describe('services/workers/complete-claim', function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
       expect(copyClaimDataToInternal.calledWith(claimData)).to.be.true
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
-      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId, claimData)).to.be.true
+      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true

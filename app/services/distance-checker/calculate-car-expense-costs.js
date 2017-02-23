@@ -3,24 +3,41 @@ const config = require('../../../config')
 const callDistanceApiForPostcodes = require('./call-distance-api-for-postcodes')
 const updateExpenseForDistanceCalculation = require('../data/update-expense-for-distance-calculation')
 const getAutoApprovalConfig = require('../data/get-auto-approval-config')
+const getAllClaimData = require('../data/get-all-claim-data')
 const prisonsEnum = require('../../constants/prisons-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 
 const KILOMETERS_TO_MILES = 0.621371
 
-module.exports = function (reference, eligibilityId, claimId, claimData) {
+module.exports = function (reference, eligibilityId, claimId) {
   if (config.DISTANCE_CALCULATION_ENABLED !== 'true') {
     return Promise.resolve()
   }
 
-  var carExpenses = getUncalculatedCarExpenses(claimData)
-  var visitorPostCode = claimData.Visitor.PostCode
-  var prisonPostCode = getPrisonPostCode(claimData.Prisoner.NameOfPrison)
+  return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
+    .then(function (claimData) {
+      var carExpenses = getUncalculatedCarExpenses(claimData)
 
-  if (carExpenses.length > 0 && visitorPostCode && prisonPostCode) {
-    var promises = []
+      if (carExpenses.length > 0) {
+        var promises = []
 
-    return getDistanceInMilesAndCost(visitorPostCode, prisonPostCode)
+        carExpenses.forEach(function (carExpense) {
+          promises.push(calculateCarExpenseCost(carExpense, claimData))
+        })
+
+        return Promise.all(promises)
+      } else {
+        return Promise.resolve()
+      }
+    })
+}
+
+function calculateCarExpenseCost (carExpense, claimData) {
+  var fromPostCode = carExpense.FromPostCode ? carExpense.FromPostCode : claimData.Visitor ? claimData.Visitor.PostCode : null
+  var toPostCode = carExpense.ToPostCode ? carExpense.ToPostCode : claimData.Prisoner ? getPrisonPostCode(claimData.Prisoner.NameOfPrison) : null
+
+  if (fromPostCode && toPostCode) {
+    return getDistanceInMilesAndCost(fromPostCode, toPostCode)
       .then(function (result) {
         var cost = result.cost
         var distanceInMiles = result.distanceInMiles
@@ -29,11 +46,7 @@ module.exports = function (reference, eligibilityId, claimId, claimData) {
           cost = 0.0
         }
 
-        carExpenses.forEach(function (carExpense) {
-          promises.push(updateExpenseForDistanceCalculation(carExpense.ClaimExpenseId, visitorPostCode, prisonPostCode, distanceInMiles, cost))
-        })
-
-        return Promise.all(promises)
+        return updateExpenseForDistanceCalculation(carExpense.ClaimExpenseId, fromPostCode, toPostCode, distanceInMiles, cost)
       })
   } else {
     return Promise.resolve()
@@ -41,7 +54,7 @@ module.exports = function (reference, eligibilityId, claimId, claimData) {
 }
 
 function getUncalculatedCarExpenses (claimData) {
-  return claimData.ClaimExpenses ? claimData.ClaimExpenses.filter(function (expense) { return expense.ExpenseType === 'car' && expense.Cost === '0.00' }) : []
+  return claimData.ClaimExpenses ? claimData.ClaimExpenses.filter(function (expense) { return expense.ExpenseType === 'car' && expense.Cost === 0 }) : []
 }
 
 function getPrisonPostCode (nameOfPrison) {

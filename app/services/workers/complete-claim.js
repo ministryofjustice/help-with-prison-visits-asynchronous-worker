@@ -17,7 +17,7 @@ module.exports.execute = function (task) {
     .then(function (data) { claimData = data })
     .then(function () { return copyClaimDataToInternal(claimData, task.additionalData) })
     .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
-    .then(function () { return calculateCarExpenseCosts(reference, eligibilityId, claimId, claimData) })
+    .then(function () { return calculateCarExpenseCosts(reference, eligibilityId, claimId) })
     .then(function () { return autoApprovalProcess(reference, eligibilityId, claimId) })
     .then(function () { return insertTaskSendClaimNotification(reference, eligibilityId, claimId) })
     .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK) })

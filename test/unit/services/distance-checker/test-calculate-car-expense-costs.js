@@ -3,6 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
+var getAllClaimData
 var callDistanceApiForPostcodes
 var updateExpenseForDistanceCalculation
 var getAutoApprovalConfig
@@ -15,22 +16,28 @@ const CLAIM_ID = 123
 const VISITOR_POSTCODE = 'BT11 1BT'
 const NAME_OF_PRISON = 'hewell'
 const PRISON_POSTCODE = 'B97 6QS'
+
 const CAR_EXPENSE_ID = 321
 const BUS_EXPENSE_ID = 322
-const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: '0.00' }
-const BUS_EXPENSE = { ClaimExpenseId: BUS_EXPENSE_ID, ExpenseType: 'bus', Cost: '10.00' }
+
+const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: 0.0 }
+const BUS_EXPENSE = { ClaimExpenseId: BUS_EXPENSE_ID, ExpenseType: 'bus', Cost: 10.00 }
+const CAR_EXPENSE_ALREADY_CALCULATED = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: 0.0, FromPostCode: 'FR111FR', ToPostCode: 'TO111TO' }
 
 const CLAIM_DATA_WITH_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 const CLAIM_DATA_WITH_NO_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [BUS_EXPENSE] }
+const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED] }
 
 describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
+    getAllClaimData = sinon.stub()
     callDistanceApiForPostcodes = sinon.stub().resolves(10.0)
     updateExpenseForDistanceCalculation = sinon.stub().resolves()
     getAutoApprovalConfig = sinon.stub().resolves({CostPerMile: '13.00'})
 
     calculateCarExpenseCosts = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', {
       '../../../config': { DISTANCE_CALCULATION_ENABLED: 'true', DISTANCE_CALCULATION_MAX_MILES: '750' },
+      '../data/get-all-claim-data': getAllClaimData,
       './call-distance-api-for-postcodes': callDistanceApiForPostcodes,
       '../data/update-expense-for-distance-calculation': updateExpenseForDistanceCalculation,
       '../data/get-auto-approval-config': getAutoApprovalConfig
@@ -46,7 +53,9 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   })
 
   it('should not call if no car expense', function () {
-    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_NO_CAR_EXPENSE)
+    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_CAR_EXPENSE)
+
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).to.be.false
       })
@@ -57,10 +66,11 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     const DISTANCE = 6.21371
     var distanceInKm = 10.0
 
+    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
     callDistanceApiForPostcodes.resolves(distanceInKm)
     updateExpenseForDistanceCalculation.resolves()
 
-    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
         expect(getAutoApprovalConfig.called).to.be.true
@@ -72,12 +82,24 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     const DISTANCE = 776.71375
     var distanceInKm = 1250
 
+    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
     callDistanceApiForPostcodes.resolves(distanceInKm)
     updateExpenseForDistanceCalculation.resolves()
 
-    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0)).to.be.true
+      })
+  })
+
+  it('should use existing car expense to/from postcodes', function () {
+    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA)
+    callDistanceApiForPostcodes.resolves(20.0)
+    updateExpenseForDistanceCalculation.resolves()
+
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function () {
+        expect(callDistanceApiForPostcodes.calledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode)).to.be.true
       })
   })
 })
