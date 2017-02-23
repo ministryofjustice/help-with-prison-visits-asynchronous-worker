@@ -1,4 +1,5 @@
 const config = require('../../../config')
+const log = require('../log')
 const moment = require('moment')
 const getNumberOfSubmittedClaimsForDateRange = require('../data/get-number-of-submitted-claims-for-date-range')
 const sendPerformancePlatformMetricsForDay = require('../performance-platform/send-performance-platform-metrics-for-day')
@@ -13,6 +14,7 @@ module.exports.execute = function (task) {
 
     return getNumberOfSubmittedClaimsForDateRange(startOfPreviousDayDateCreated, endOfPreviousDayDateCreated)
       .then(function (submittedClaimCount) {
+        log.info(`send-performance-platform-metrics-for-day - sending ${startOfPreviousDayDateCreated} count ${submittedClaimCount}`)
         return sendPerformancePlatformMetricsForDay(startOfPreviousDayDateCreated, submittedClaimCount)
       })
   } else {
