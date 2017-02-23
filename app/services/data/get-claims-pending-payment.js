@@ -14,12 +14,7 @@ const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail
 var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference']
 
-var claimResults
-
-function getManuallyProcessedExpenseCostsPerClaim (claims) {
-  var claimIds = []
-  claims.forEach(function (result) { return claimIds.push(result.ClaimId) })
-  claimResults = claims
+function getManuallyProcessedExpenseCostsPerClaim (claimIds) {
   return knex('IntSchema.ClaimExpense')
     .sum('ApprovedCost as ManuallyProcessedCost')
     .select('ClaimId')
@@ -28,7 +23,7 @@ function getManuallyProcessedExpenseCostsPerClaim (claims) {
     .whereIn('ClaimId', claimIds)
 }
 
-function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPerClaim) {
+function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPerClaim, claimResults) {
   var promises = []
 
   claimResults.forEach(function (claim) {
@@ -82,6 +77,7 @@ function payoutPaymentsReturn (results) {
 }
 
 module.exports = function (paymentMethod) {
+  var claimResults
   var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
     'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
     'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
@@ -97,14 +93,17 @@ module.exports = function (paymentMethod) {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
-    .andWhere('IntSchema.Claim.PaymentMethod', paymentMethod)
+    .where('IntSchema.Claim.PaymentMethod', paymentMethod)
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (claims) {
-      return getManuallyProcessedExpenseCostsPerClaim(claims)
+      var claimIds = []
+      claims.forEach(function (result) { return claimIds.push(result.ClaimId) })
+      claimResults = claims
+      return getManuallyProcessedExpenseCostsPerClaim(claimIds)
     })
     .then(function (manuallyProcessedExpenseCostsPerClaim) {
-      return subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerClaim)
+      return subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerClaim, claimResults)
     })
     .then(function (results) {
       if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
