@@ -1,13 +1,13 @@
 const Promise = require('bluebird')
 const expect = require('chai').expect
-const deleteOldPaymentFiles = require('../../../../app/services/direct-payments/delete-old-payment-files')
+const deleteOldPaymentFiles = require('../../../../app/services/cleanup-old-data/delete-old-payment-files')
 const writeFile = Promise.promisify(require('fs').writeFile)
 const fs = require('fs')
 
 const TEST_FILE_PATH = 'test.csv'
 const PAYMENT_FILE = { 'Filepath': TEST_FILE_PATH }
 
-describe('services/direct-payments/delete-old-payment-files', function () {
+describe('services/cleanup-old-data/delete-old-payment-files', function () {
   before(function () {
     writeFile(TEST_FILE_PATH, 'test file contents\n')
   })

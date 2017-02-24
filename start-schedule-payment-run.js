@@ -9,7 +9,7 @@ var taskTypes = require('./app/constants/tasks-enum')
 var directPaymentJob = new CronJob({
   cronTime: paymentCron,
   onTick: function () {
-    log.info('CRON triggered - initiating run of direct payments generation...')
+    log.info('CRON triggered - initiating run of payments generation...')
     insertTask('', '', '', taskTypes.GENERATE_DIRECT_PAYMENTS)
       .then(function () {
         log.info('Direct Payment Generation task created')
@@ -20,9 +20,15 @@ var directPaymentJob = new CronJob({
             log.info('Cleanup Old Payment Files task created')
           })
       })
+      .then(function () {
+        insertTask('', '', '', taskTypes.GENERATE_PAYOUT_PAYMENTS)
+          .then(function () {
+            log.info('Payout Payment Generation task created')
+          })
+      })
   },
   start: false
 })
 
-log.info(`Starting direct payment generation on schedule [${paymentCron}]`)
+log.info(`Starting payment generation on schedule [${paymentCron}]`)
 directPaymentJob.start()

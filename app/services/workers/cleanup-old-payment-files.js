@@ -1,4 +1,4 @@
-const deleteOldPaymentFiles = require('../direct-payments/delete-old-payment-files')
+const deleteOldPaymentFiles = require('../cleanup-old-data/delete-old-payment-files')
 const getOldPaymentFiles = require('../data/get-old-payment-files')
 const updateOldPaymentFilesIsEnabledFalse = require('../data/update-old-payment-files-is-enabled-false')
 

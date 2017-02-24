@@ -1,23 +1,24 @@
 const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
-const createPaymentFile = require('../direct-payments/create-payment-file')
+const createPayoutFile = require('../payout-payments/create-payout-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
+const config = require('../../../config')
 
 module.exports.execute = function (task) {
   var claimIds
 
-  return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+  return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
       if (paymentData.length > 0) {
         var claimIdIndex = 0
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        return createPaymentFile(paymentData)
+        formatCSVData(paymentData, claimIdIndex)
+        return createPayoutFile(paymentData)
           .then(function (result) {
-            return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
+            return insertDirectPaymentFile(result, fileTypes.PAYOUT_FILE)
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData)
               })
@@ -30,11 +31,20 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
   return _.map(paymentData, p => { return p[claimIdIndex] })
 }
 
-function removeClaimIdsFromPaymentData (paymentData, claimIdIndex) {
-  paymentData.forEach(function (data) { data.splice(claimIdIndex, 1) })
+// Format to be Payment Amount, blank, First Name, Last Name, Address1, Address2, Address3, Address4, Postcode,
+// POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
+function formatCSVData (paymentData, claimIdIndex) {
+  paymentData.forEach(function (data) {
+    data.splice(claimIdIndex, 1)
+    data.splice(1, 0, '')
+    data.splice(9, 0, '3', '', '') // 3 is the code for checking ID in POI
+    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
+  })
 
   return paymentData
 }
+
+// Makes it specific layout for post office payout
 
 function updateAllClaimsProcessedPayment (claimIds, paymentData) {
   var promises = []
@@ -43,7 +53,7 @@ function updateAllClaimsProcessedPayment (claimIds, paymentData) {
     var claimPaymentData = paymentData[i]
     var claimId = claimIds[i]
 
-    var totalApprovedCostIndex = 3
+    var totalApprovedCostIndex = 0
     promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex])))
   }
 

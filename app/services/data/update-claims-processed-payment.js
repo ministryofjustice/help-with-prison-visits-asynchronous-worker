@@ -1,11 +1,11 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (claimId, bankPaymentAmount) {
+module.exports = function (claimId, paymentAmount) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claimId)
     .update({
       'PaymentStatus': 'PROCESSED',
-      'BankPaymentAmount': Number(bankPaymentAmount).toFixed(2)
+      'PaymentAmount': Number(paymentAmount).toFixed(2)
     })
 }
