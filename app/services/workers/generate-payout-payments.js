@@ -15,7 +15,7 @@ module.exports.execute = function (task) {
       if (paymentData.length > 0) {
         var claimIdIndex = 0
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        formatData(paymentData, claimIdIndex)
+        formatCSVData(paymentData, claimIdIndex)
         return createPayoutFile(paymentData)
           .then(function (result) {
             return insertDirectPaymentFile(result, fileTypes.PAYOUT_FILE)
@@ -31,11 +31,13 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
   return _.map(paymentData, p => { return p[claimIdIndex] })
 }
 
-function formatData (paymentData, claimIdIndex) {
+// Format to be Payment Amount, blank, First Name, Last Name, Address1, Address2, Address3, Address4, Postcode,
+// POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
+function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
-    data.splice(9, 0, '3', '', '')
+    data.splice(9, 0, '3', '', '') // 3 is the code for checking ID in POI
     data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
   })
 

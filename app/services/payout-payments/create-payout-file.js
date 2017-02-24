@@ -34,7 +34,7 @@ function mkdirIfNotExists (dir) {
 
 function getFileName () {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  return `apvs-payout-${datestamp}.csv`
+  return `${config.PAYOUT_FILENAME_PREFIX}${datestamp}.csv`
 }
 
 function stripSpecialCharacters (payments) {
