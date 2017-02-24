@@ -5,6 +5,7 @@ const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
+const config = require('../../../config')
 
 module.exports.execute = function (task) {
   var claimIds
@@ -35,7 +36,7 @@ function formatData (paymentData, claimIdIndex) {
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
     data.splice(9, 0, '3', '', '')
-    data.splice(13, 0, '', '', '', '', '')
+    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
   })
 
   return paymentData
