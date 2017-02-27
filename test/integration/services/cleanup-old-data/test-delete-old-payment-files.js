@@ -9,16 +9,13 @@ const PAYMENT_FILE = { 'Filepath': TEST_FILE_PATH }
 
 describe('services/cleanup-old-data/delete-old-payment-files', function () {
   before(function () {
-    writeFile(TEST_FILE_PATH, 'test file contents\n')
+    return writeFile(TEST_FILE_PATH, 'test file contents\n')
   })
 
-  it('should delete test payment files', function (done) {
-    deleteOldPaymentFiles([PAYMENT_FILE])
-    fs.stat(TEST_FILE_PATH, function (err, stat) {
-      // file should not exist
-      expect(err.code).to.equal('ENOENT')
-      expect(stat).to.be.undefined
-      done()
-    })
+  it('should delete test payment files', function () {
+    return deleteOldPaymentFiles([PAYMENT_FILE])
+      .then(function () {
+        expect(fs.existsSync(TEST_FILE_PATH)).to.be.false
+      })
   })
 })
