@@ -16,7 +16,9 @@ module.exports = function (payments) {
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
   var formattedPayments = stripSpecialCharacters(payments)
+  var length = formattedPayments.length
 
+  log.info(`Generating payout file with ${length} payments`)
   return stringify(formattedPayments).then(function (content) {
     return writeFile(filePath, content, {})
       .then(function () {

@@ -17,6 +17,9 @@ module.exports = function (payments) {
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
 
+  var length = payments.length
+  log.info(`Generating direct bank payments file with ${length} payments`)
+
   return stringify(data).then(function (content) {
     return writeFile(filePath, content, {})
       .then(function () {
