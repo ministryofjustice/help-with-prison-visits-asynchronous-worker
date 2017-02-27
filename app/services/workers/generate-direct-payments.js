@@ -5,6 +5,7 @@ const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
+const log = require('../log')
 
 module.exports.execute = function (task) {
   var claimIds
@@ -12,6 +13,11 @@ module.exports.execute = function (task) {
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
       if (paymentData.length > 0) {
+        var missingData = checkForAccountNumberAndSortCode(paymentData)
+        if (missingData) {
+          log.info(`Data is missing from direct payment ${paymentData}`)
+          return Promise.reject('Data is missing')
+        }
         var claimIdIndex = 0
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
         removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
@@ -48,4 +54,16 @@ function updateAllClaimsProcessedPayment (claimIds, paymentData) {
   }
 
   return Promise.all(promises)
+}
+
+function checkForAccountNumberAndSortCode (paymentData) {
+  var missingData = false
+  paymentData.forEach(function (data) {
+    // Checks Account Number and Sort Code
+    if (!data[0] || !data[1]) {
+      missingData = true
+    }
+  })
+
+  return missingData
 }
