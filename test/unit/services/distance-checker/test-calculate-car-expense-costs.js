@@ -27,6 +27,8 @@ const CAR_EXPENSE_ALREADY_CALCULATED = { ClaimExpenseId: CAR_EXPENSE_ID, Expense
 const CLAIM_DATA_WITH_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 const CLAIM_DATA_WITH_NO_CAR_EXPENSE = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: NAME_OF_PRISON }, ClaimExpenses: [BUS_EXPENSE] }
 const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED] }
+const CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES = { ClaimExpenses: [CAR_EXPENSE] }
+const CLAIM_DATA_WITH_INCORRECT_PRISON = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: 'test' }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 
 describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
@@ -100,6 +102,40 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode)).to.be.true
+      })
+  })
+
+  it('should resolve without calling distance checker if no claim expenses', function () {
+    getAllClaimData.resolves({})
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function () {
+        expect(callDistanceApiForPostcodes.called).to.be.false
+      })
+  })
+
+  it('should resolve without calling distance checker if no postcodes', function () {
+    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES)
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function () {
+        expect(callDistanceApiForPostcodes.called).to.be.false
+      })
+  })
+
+  it('should resolve without calling distance checker if prison incorrect', function () {
+    getAllClaimData.resolves(CLAIM_DATA_WITH_INCORRECT_PRISON)
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function () {
+        expect(callDistanceApiForPostcodes.called).to.be.false
+      })
+  })
+
+  it('should return distance in miles to be null if no distance in km calculated', function () {
+    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
+    callDistanceApiForPostcodes.resolves()
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function () {
+        expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
+        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0)).to.be.true
       })
   })
 })
