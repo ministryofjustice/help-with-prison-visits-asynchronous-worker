@@ -16,7 +16,7 @@
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
     "test-integration": "mocha --recursive -u exports test/integration/ --timeout 5000",
-    "test-coverage": "istanbul cover _mocha -- --recursive -u exports test/unit/"
+    "test-coverage": "istanbul cover -x 'app/services/data/**' -x 'app/services/benefit-checker/**' -x 'app/services/direct-payments/**' -x 'app/services/payout-payments/**' -x 'app/services/notify/**' -x 'app/services/performance-platform/**' -x 'app/services/distance-checker/call-distance-api-for-postcodes.js' -x 'app/services/cleanup-old-data/delete-old-payment-files.js' _mocha -- --recursive -u exports test/unit/"
   },
   "standard": {
     "ignore": [

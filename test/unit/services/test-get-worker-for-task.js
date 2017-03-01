@@ -22,6 +22,8 @@ const archiveOldClaims = {name: 'archiveOldClaims'}
 const archiveClaim = {name: 'archiveClaim'}
 const referenceRecovery = {name: 'referenceRecovery'}
 const generatePayoutPayments = {name: 'generatePayoutPayments'}
+const generateDirectPayments = {name: 'generateDirectPayments'}
+const sendMalwareAlert = {name: 'sendMalwareAlert'}
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,
@@ -43,7 +45,9 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/archive-old-claims': archiveOldClaims,
   './workers/archive-claim': archiveClaim,
   './workers/reference-recovery': referenceRecovery,
-  './workers/generate-payout-payments': generatePayoutPayments
+  './workers/generate-payout-payments': generatePayoutPayments,
+  './workers/generate-direct-payments': generateDirectPayments,
+  './workers/send-malware-notification': sendMalwareAlert
 })
 
 describe('services/getWorkerForTask', function () {
@@ -145,5 +149,20 @@ describe('services/getWorkerForTask', function () {
   it('should return generate-payout-payments', function () {
     var worker = getWorkerForTask(tasksEnum.GENERATE_PAYOUT_PAYMENTS)
     expect(worker.name).to.be.equal('generatePayoutPayments')
+  })
+
+  it('should return generate-direct-payments', function () {
+    var worker = getWorkerForTask(tasksEnum.GENERATE_DIRECT_PAYMENTS)
+    expect(worker.name).to.be.equal('generateDirectPayments')
+  })
+
+  it('should return send-malware-alert', function () {
+    var worker = getWorkerForTask(tasksEnum.SEND_MALWARE_ALERT)
+    expect(worker.name).to.be.equal('sendMalwareAlert')
+  })
+
+  it('should return null if none found', function () {
+    var worker = getWorkerForTask('')
+    expect(worker).to.be.equal(null)
   })
 })

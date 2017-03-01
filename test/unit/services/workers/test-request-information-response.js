@@ -13,6 +13,7 @@ const CLAIM_DATA_FOR_UNREVIEWED_CLAIM = { Claim: { DateReviewed: null }, ClaimBa
 const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: new Date() }, ClaimBankDetail: {} }
 const BANK_DETAILS = {ClaimBankDetailId: 1, SortCode: '123456', AccountNumber: '12345678'}
 const CLAIM_DATA_FOR_BANK_DETAILS = { Claim: { DateReviewed: null, Status: 'REQUEST-INFO-PAYMENT' }, ClaimBankDetail: BANK_DETAILS }
+const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
 const SINGLE_UPLOADED_DOCUMENT = [{ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded'}]
 const EMAIL_ADDRESS = 'test@test.com'
 
@@ -57,6 +58,24 @@ describe('services/workers/request-information-response', function () {
   })
 
   it('should call data methods to move claim documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
+    moveClaimDocumentsToInternal.resolves()
+    return requestInformationResponse.execute({
+      reference: reference,
+      eligibilityId: eligibilityId,
+      claimId: claimId,
+      additionalData: ADDITIONAL_DATA
+    }).then(function () {
+      expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true
+      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
+      expect(updateClaimStatus.calledWith(claimId, 'NEW')).to.be.true
+      expect(insertClaimEvent.calledOnce, 'should have inserted event for just the note, no document').to.be.true
+      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
+      expect(updateBankDetails.called).to.be.false
+      expect(deleteClaimFromExternal.called).to.be.false
+    })
+  })
+
+  it('should call data methods to move claim documents, but not insert event as no documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
     return requestInformationResponse.execute({
       reference: reference,
       eligibilityId: eligibilityId,
@@ -126,6 +145,18 @@ describe('services/workers/request-information-response', function () {
       expect(updateBankDetails.calledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber)).to.be.true
       expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, 'BANK-DETAILS-UPDATED', null, null, true))
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+    })
+  })
+
+  it('should not call bank details methods', function () {
+    getAllClaimData.resolves(CLAIM_DATA_FOR_PAYOUT)
+    return requestInformationResponse.execute({
+      reference: reference,
+      eligibilityId: eligibilityId,
+      claimId: claimId
+    }).then(function () {
+      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true
+      expect(updateBankDetails.called).to.be.false
     })
   })
 })
