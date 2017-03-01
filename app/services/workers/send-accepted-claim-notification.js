@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
       var caseworkerNote = claimantData.CaseworkerNote || ''
       var paymentMethod = claimantData.PaymentMethod || ''
       var town = claimantData.Town || ''
-      var prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).DisplayName : ''
+      var prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).displayName : ''
 
       var personalisation
       var emailTemplateId

@@ -187,7 +187,7 @@ module.exports.getClaimData = function (reference) {
       LastName: 'Bloggs',
       DateOfBirth: new Date(),
       PrisonNumber: 'A1234BC',
-      NameOfPrison: 'Hewell'
+      NameOfPrison: 'hewell'
     },
     Visitor: {
       VisitorId: uniqueId,
