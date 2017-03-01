@@ -57,7 +57,7 @@ function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) 
   var durationSinceStartDate = now.clone().diff(moment(startDate), 'days')
   var daysBetweenClaims = Math.floor(durationSinceStartDate / numberOfClaims)
 
-  for (var i = 0; i < numberOfClaims - 1; i++) {
+  for (var i = 0; i < numberOfClaims; i++) {
     var increment = daysBetweenClaims * i
 
     var dateOfJourney = startDate.add(increment, 'days').toDate()
