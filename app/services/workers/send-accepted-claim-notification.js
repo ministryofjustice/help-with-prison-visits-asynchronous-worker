@@ -81,8 +81,8 @@ function formatCaseworkerNote (caseworkerNote) {
 
     // Extra new line at start and end to create gap between note and adjacent sections
     result.push(newLine)
-    result.push('Case worker note:')
-    result.push(caseworkerNote)
+    result.push('Note from case worker:')
+    result.push(`"${caseworkerNote}"`)
     result.push(newLine)
 
     return result.join(newLine)
