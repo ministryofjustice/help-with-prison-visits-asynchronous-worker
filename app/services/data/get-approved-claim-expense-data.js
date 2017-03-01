@@ -25,8 +25,9 @@ function getClaimantData (claimId) {
 
   return knex('IntSchema.Visitor')
     .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
+    .join('IntSchema.Prisoner', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
     .where('IntSchema.Claim.ClaimId', claimId)
-    .select('FirstName', 'Note')
+    .select('Visitor.FirstName AS FirstName', 'Note', 'PaymentMethod', 'Town', 'NameOfPrison')
     .first()
     .then(function (visitorData) {
       visitor = visitorData
@@ -43,14 +44,26 @@ function getClaimantData (claimId) {
       var visitorFirstName = (visitor && visitor.FirstName
         ? visitor.FirstName
         : '')
+      var paymentMethod = (visitor && visitor.PaymentMethod
+        ? visitor.PaymentMethod
+        : '')
       var caseworkerNote = (visitor && visitor.Note
         ? visitor.Note
+        : '')
+      var town = (visitor && visitor.Town
+        ? visitor.Town
+        : '')
+      var prison = (visitor && visitor.NameOfPrison
+        ? visitor.NameOfPrison
         : '')
 
       return {
         'VisitorFirstName': visitorFirstName,
+        'PaymentMethod': paymentMethod,
         'AccountNumberLastFourDigits': accountNumberLastFourDigits,
-        'CaseworkerNote': caseworkerNote
+        'CaseworkerNote': caseworkerNote,
+        'Town': town,
+        'Prison': prison
       }
     })
 }
