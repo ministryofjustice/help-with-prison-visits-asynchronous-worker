@@ -1273,6 +1273,11 @@
       "from": "setprototypeof@1.0.2",
       "resolved": "http://registry.npmjs.org/setprototypeof/-/setprototypeof-1.0.2.tgz"
     },
+    "sftp-promises": {
+      "version": "1.4.0",
+      "from": "sftp-promises@latest",
+      "resolved": "http://registry.npmjs.org/sftp-promises/-/sftp-promises-1.4.0.tgz"
+    },
     "sntp": {
       "version": "1.0.9",
       "from": "sntp@>=1.0.0 <2.0.0",
@@ -1293,6 +1298,16 @@
       "version": "1.0.3",
       "from": "sprintf-js@>=1.0.2 <1.1.0",
       "resolved": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
+    },
+    "ssh2": {
+      "version": "0.5.4",
+      "from": "ssh2@>=0.5.1 <0.6.0",
+      "resolved": "http://registry.npmjs.org/ssh2/-/ssh2-0.5.4.tgz"
+    },
+    "ssh2-streams": {
+      "version": "0.1.16",
+      "from": "ssh2-streams@>=0.1.8 <0.2.0",
+      "resolved": "http://registry.npmjs.org/ssh2-streams/-/ssh2-streams-0.1.16.tgz"
     },
     "sshpk": {
       "version": "1.10.2",
@@ -1320,6 +1335,11 @@
       "version": "0.1.1",
       "from": "stream-transform@>=0.1.0 <0.2.0",
       "resolved": "http://registry.npmjs.org/stream-transform/-/stream-transform-0.1.1.tgz"
+    },
+    "streamsearch": {
+      "version": "0.1.2",
+      "from": "streamsearch@>=0.1.2 <0.2.0",
+      "resolved": "https://registry.npmjs.org/streamsearch/-/streamsearch-0.1.2.tgz"
     },
     "string_decoder": {
       "version": "0.10.31",

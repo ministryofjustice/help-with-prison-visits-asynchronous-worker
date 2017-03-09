@@ -1,14 +1,17 @@
 const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
 const createPayoutFile = require('../payout-payments/create-payout-file')
+const sftpSendPayoutPaymentFile = require('../sftp/sftp-send-payout-payment-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
-const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
+const _ = require('lodash')
+const path = require('path')
 
 module.exports.execute = function (task) {
   var claimIds
+  var paymentCsvFilePath
 
   return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
@@ -17,8 +20,15 @@ module.exports.execute = function (task) {
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
         formatCSVData(paymentData, claimIdIndex)
         return createPayoutFile(paymentData)
-          .then(function (result) {
-            return insertDirectPaymentFile(result, fileTypes.PAYOUT_FILE)
+          .then(function (filePath) {
+            paymentCsvFilePath = filePath
+            var filename = path.basename(paymentCsvFilePath)
+            var remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
+
+            return sftpSendPayoutPaymentFile(paymentCsvFilePath, remotePaypitCsvFilePath)
+          })
+          .then(function () {
+            return insertDirectPaymentFile(paymentCsvFilePath, fileTypes.PAYOUT_FILE)
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData)
               })
