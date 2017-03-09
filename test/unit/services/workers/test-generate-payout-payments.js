@@ -17,12 +17,14 @@ var testPath = 'data/payments/test.csv'
 
 var getClaimsPendingPayment = sinon.stub().resolves(claimsPendingPayment)
 var createPayoutFile = sinon.stub().resolves(testPath)
+var sftpSendPayoutPaymentFile = sinon.stub().resolves()
 var updateClaimsProcessedPaymentResult = sinon.stub().resolves()
 var insertDirectBankPayments = sinon.stub().resolves()
 
 const generateDirectPayments = proxyquire('../../../../app/services/workers/generate-payout-payments', {
   '../data/get-claims-pending-payment': getClaimsPendingPayment,
   '../payout-payments/create-payout-file': createPayoutFile,
+  '../sftp/sftp-send-payout-payment-file': sftpSendPayoutPaymentFile,
   '../data/update-claims-processed-payment': updateClaimsProcessedPaymentResult,
   '../data/insert-direct-payment-file': insertDirectBankPayments
 })
@@ -32,6 +34,7 @@ describe('services/workers/generate-payout-payments', function () {
     return generateDirectPayments.execute({}).then(function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true
       expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true
+      expect(sftpSendPayoutPaymentFile.calledWith(testPath, './test.csv')).to.be.true
       expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true
       expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true
       expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true
