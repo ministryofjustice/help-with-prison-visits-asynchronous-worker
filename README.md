@@ -91,6 +91,12 @@ The `DWP-CHECK` task requires making a call to the DWP Benefit Checker service. 
 
 See [call-dwp-benefit-checker-soap-service.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/call-dwp-benefit-checker-soap-service.js) for implementation, [here](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/benefit-checker/BenefitChecker.wsdl) for the SOAP service WSDL.
 
+### Google Distance Matrix API
+
+To calculate car expense distances the `COMPLETE-CLAIM` task calls the [Google Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix/) and attempt to retrieve the distance between the visitor address and the prison (using postcodes).
+
+See [call-distance-api-for-postcodes.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/distance-checker/call-distance-api-for-postcodes.js) for implementation.
+
 ## Notes
 
 ### Updating dependencies
