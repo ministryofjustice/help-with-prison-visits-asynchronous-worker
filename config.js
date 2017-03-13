@@ -91,7 +91,7 @@ module.exports = {
 
   // Distance calculation
   DISTANCE_CALCULATION_ENABLED: process.env.APVS_DISTANCE_CALCULATION_ENABLED || 'true',
-  DISTANCE_CALCULATION_MAX_MILES: process.env.APVS_DISTANCE_CALCULATION_MAX_MILES || '750',
+  DISTANCE_CALCULATION_MAX_MILES: process.env.APVS_DISTANCE_CALCULATION_MAX_MILES || '1500', // 750 each way
   DISTANCE_CALCULATION_DIRECTIONS_API_URL: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_URL || 'https://maps.googleapis.com/maps/api/directions/json',
   DISTANCE_CALCULATION_DIRECTIONS_API_KEY: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY // generate key at https://developers.google.com/maps/documentation/distance-matrix/
 }

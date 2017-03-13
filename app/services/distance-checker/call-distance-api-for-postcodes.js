@@ -19,7 +19,7 @@ module.exports = function (originPostCode, destinationPostCode) {
       if (result && result.routes && result.routes[0] &&
         result.routes[0].legs && result.routes[0].legs[0] &&
         result.routes[0].legs[0].distance && result.routes[0].legs[0].distance.value) {
-        distance = result.routes[0].legs[0].distance.value / 1000.0 // distance is in meters
+        distance = (result.routes[0].legs[0].distance.value / 1000.0) * 2 // distance is in metres and add return journey
       }
 
       return distance
