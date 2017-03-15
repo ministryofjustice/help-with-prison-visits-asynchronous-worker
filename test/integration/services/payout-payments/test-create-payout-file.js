@@ -1,3 +1,4 @@
+const config = require('../../../../config')
 const expect = require('chai').expect
 const Promise = require('bluebird')
 const readFile = Promise.promisify(require('fs').readFile)
@@ -16,6 +17,8 @@ describe('services/payout-payments/create-payout-file', function () {
     return createPaymentFile(data)
       .then(function (filePath) {
         expect(filePath).to.be.not.null
+        expect(filePath).to.contain(config.PAYOUT_FILENAME_PREFIX)
+        expect(filePath).to.contain(config.PAYOUT_FILENAME_POSTFIX)
         testFilePath = filePath
 
         return readFile(filePath).then(function (content) {
