@@ -6,6 +6,8 @@ const sendPerformancePlatformMetricsForDay = require('../performance-platform/se
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
+  log.info(`send-performance-platform-metrics-for-day PERFORMANCE_PLATFORM_SEND_ENABLED: ${config.PERFORMANCE_PLATFORM_SEND_ENABLED}`)
+
   if (config.PERFORMANCE_PLATFORM_SEND_ENABLED === 'true') {
     var dateCreated = task.dateCreated
 

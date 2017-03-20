@@ -1,4 +1,5 @@
 const Promise = require('bluebird')
+const log = require('../log')
 const config = require('../../../config')
 const callDistanceApiForPostcodes = require('./call-distance-api-for-postcodes')
 const updateExpenseForDistanceCalculation = require('../data/update-expense-for-distance-calculation')
@@ -10,6 +11,8 @@ const enumHelper = require('../../constants/helpers/enum-helper')
 const KILOMETERS_TO_MILES = 0.621371
 
 module.exports = function (reference, eligibilityId, claimId) {
+  log.info(`calculate-car-expense-costs DISTANCE_CALCULATION_ENABLED: ${config.DISTANCE_CALCULATION_ENABLED}`)
+
   if (config.DISTANCE_CALCULATION_ENABLED !== 'true') {
     return Promise.resolve()
   }
