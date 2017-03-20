@@ -1,3 +1,4 @@
+const log = require('../log')
 const config = require('../../../config')
 const Promise = require('bluebird')
 const requestPromise = require('request-promise')
@@ -6,6 +7,8 @@ const xpath = require('xml2js-xpath')
 
 // Creating HTTP request rather than using SOAP client as node SOAP clients are unreliable
 module.exports = function (visitorDwpBenefitCheckerData) {
+  log.info(`call-dwp-benefit-checker-soap-service DWP_BENEFIT_CHECKER_ENABLED: ${config.DWP_BENEFIT_CHECKER_ENABLED}`)
+
   if (config.DWP_BENEFIT_CHECKER_ENABLED !== 'true') {
     return Promise.resolve({
       'visitorId': visitorDwpBenefitCheckerData.visitorId,

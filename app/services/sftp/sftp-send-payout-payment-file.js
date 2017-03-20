@@ -4,6 +4,8 @@ const SFTPClient = require('sftp-promises')
 const Promise = require('bluebird')
 
 module.exports = function (paymentFilePathLocal, paymentFilePathRemote) {
+  log.info(`sftp-send-payout-payment-file PAYOUT_SFTP_ENABLED: ${config.PAYOUT_SFTP_ENABLED}`)
+
   if (config.PAYOUT_SFTP_ENABLED === 'true') {
     var sftpConfig = {
       host: config.PAYOUT_SFTP_HOST,
