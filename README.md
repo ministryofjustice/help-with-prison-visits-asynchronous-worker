@@ -10,6 +10,7 @@ This allows the External/Internal web applications to offload long running or er
 
 * Node 6 (Including NPM) - If running locally
 * Docker (Including Docker Compose) (optional)
+* Python (for generating ADI Journal as part of payment run)
 
 ## Run
 
@@ -98,6 +99,18 @@ To calculate car expense distances the `COMPLETE-CLAIM` task calls the [Google D
 See [call-distance-api-for-postcodes.js](https://github.com/ministryofjustice/apvs-asynchronous-worker/blob/develop/app/services/distance-checker/call-distance-api-for-postcodes.js) for implementation.
 
 ## Notes
+
+### Python
+
+This node application uses [python-shell](https://www.npmjs.com/package/python-shell) to call a number of python scripts as part of the `GENERATE-DIRECT-PAYMENTS` task. This is required as node libraries for generating XSLM files do not support preserving macros, which are included in supplied template for the ADI Journal.
+
+This project uses Python major [Version 2.7](https://www.python.org/download/releases/2.7/)
+
+To install the required python dependencies run:
+
+```
+pip install -r python/requirements.txt
+```
 
 ### Updating dependencies
 
