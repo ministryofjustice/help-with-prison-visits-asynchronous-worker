@@ -14,26 +14,26 @@ def main():
         help='Journal total credit amount'
     )
 
-    args = parser.parse_args()
-    write_journal(args.total)
+    parser.add_argument(
+        'filePath',
+        help='Journal filepath'
+    )
 
-def write_journal(total):
+    args = parser.parse_args()
+    write_journal(args.total, args.filePath)
+
+def write_journal(total, filepath):
     """ Update and save ADI Journal file to disk """
     workbook = load_workbook(config.ADI_TEMPLATE_FILEPATH, keep_vba=True)
     update_journal_total(workbook, total)
-    workbook.save(filename=config.TEST_OUTPUT_FILEPATH)
+    workbook.save(filename=filepath)
 
 def update_journal_total(workbook, total):
     """ Update the Journal account date"""
     journal_ws = workbook.get_sheet_by_name(config.ADI_JOURNAL_SHEET)
 
-    total_label_cell = journal_ws[config.ADI_TOTAL_LABEL_CELL]
-    total_label_cell.value = 'Total'
-    total_label_cell.fill = config.WHITE_CELL_FILL
-
     total_cell = journal_ws[config.ADI_TOTAL_CELL]
     total_cell.value = total
-    total_cell.fill = config.WHITE_CELL_FILL
 
 if __name__ == '__main__':
     main()

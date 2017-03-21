@@ -14,8 +14,7 @@ class AdiJournalTestCase(unittest.TestCase):
         workbook = Workbook()
         workbook.create_sheet(0, 'TEMPLATE')
         update_journal_total(workbook, total)
-        self.assertEqual(workbook['TEMPLATE']['K16'].value, 'Total')
-        self.assertEqual(workbook['TEMPLATE']['L16'].value, total)
+        self.assertEqual(workbook['TEMPLATE']['K19'].value, total)
 
 if __name__ == '__main__':
     unittest.main()
