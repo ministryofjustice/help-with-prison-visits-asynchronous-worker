@@ -1,7 +1,4 @@
 const expect = require('chai').expect
-const knexfile = require('../../../../knexfile').asyncworker
-const knex = require('knex')(knexfile)
-const moment = require('moment')
 const testHelper = require('../../../test-helper')
 
 const getLastSetNumberOfClaimsStatus = require('../../../../app/services/data/get-last-set-number-of-claims-status')
