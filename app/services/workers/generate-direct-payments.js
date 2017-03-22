@@ -1,5 +1,6 @@
 const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
 const createPaymentFile = require('../direct-payments/create-payment-file')
+const createAdiJournalFile = require('../direct-payments/create-adi-journal-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
@@ -9,6 +10,7 @@ const log = require('../log')
 
 module.exports.execute = function (task) {
   var claimIds
+  var total
 
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
@@ -21,12 +23,21 @@ module.exports.execute = function (task) {
         var claimIdIndex = 0
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
         removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
+
+        total = getTotalFromPaymentData(paymentData)
+
         return createPaymentFile(paymentData)
           .then(function (result) {
             return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
-              .then(function () {
-                return updateAllClaimsProcessedPayment(claimIds, paymentData)
-              })
+          })
+          .then(function () {
+            return createAdiJournalFile(total)
+          })
+          .then(function (result) {
+            return insertDirectPaymentFile(result, fileTypes.ADI_JOURNAL_FILE)
+          })
+          .then(function () {
+            return updateAllClaimsProcessedPayment(claimIds, paymentData)
           })
       }
     })
@@ -66,4 +77,13 @@ function checkForAccountNumberAndSortCode (paymentData) {
   })
 
   return missingData
+}
+
+function getTotalFromPaymentData (paymentData) {
+  var totalApprovedCostIndex = 3
+  var total = 0.0
+
+  paymentData.forEach(function (data) { total += parseFloat(data[totalApprovedCostIndex]) })
+
+  return total
 }
