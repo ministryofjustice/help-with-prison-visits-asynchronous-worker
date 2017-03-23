@@ -32,7 +32,7 @@ module.exports = function (reference, eligibilityId, claimId) {
               return result
             }
 
-            return exceedConsecutiveAutoApprovalLimit(reference, config.NumberOfConsecutiveAutoApprovals)
+            return exceedConsecutiveAutoApprovalLimit(reference, claimId, config.NumberOfConsecutiveAutoApprovals)
               .then(function (exceedAutoApprovalLimit) {
                 if (exceedAutoApprovalLimit) {
                   result.claimApproved = false
@@ -73,15 +73,17 @@ function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
   }
 }
 
-function exceedConsecutiveAutoApprovalLimit (reference, numberOfConsecutiveAutoApprovals) {
-  return getLastSetNumberOfClaimsStatus(reference, numberOfConsecutiveAutoApprovals)
+function exceedConsecutiveAutoApprovalLimit (reference, claimId, numberOfConsecutiveAutoApprovals) {
+  return getLastSetNumberOfClaimsStatus(reference, claimId, numberOfConsecutiveAutoApprovals)
     .then(function (claims) {
       var numberOfAutoApprovals = 0
       claims.forEach(function (claim) {
+        console.log(claim.Status)
         if (claim.Status === statusEnum.AUTOAPPROVED) {
           numberOfAutoApprovals++
         }
       })
+      console.log(numberOfConsecutiveAutoApprovals <= numberOfAutoApprovals)
       return numberOfConsecutiveAutoApprovals <= numberOfAutoApprovals
     })
 }

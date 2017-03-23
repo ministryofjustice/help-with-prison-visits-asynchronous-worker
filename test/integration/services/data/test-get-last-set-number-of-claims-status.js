@@ -7,6 +7,9 @@ const REFERENCE = 'GETSTAT'
 const NUMBER_OF_CLAIMS = 4
 const STATUS_RETURN = 'TEST_RETURNED'
 const STATUS_NOT_RETURN = 'TEST_NOT_RETURNED'
+const STATUS_CURRENT_CLAIM = 'CURRENT_CLAIM'
+
+var claimId
 
 describe('services/data/get-last-set-number-of-claims-status', function () {
   before(function () {
@@ -16,13 +19,17 @@ describe('services/data/get-last-set-number-of-claims-status', function () {
           testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_RETURN, true),
           testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_RETURN, true),
           testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_RETURN, true),
-          testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_RETURN, true)
+          testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_RETURN, true),
+          testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, STATUS_CURRENT_CLAIM, true)
+            .then(function (ids) {
+              claimId = ids.claimId
+            })
         ])
       })
   })
 
   it('should retrieve claim document records past the date threshold', function () {
-    return getLastSetNumberOfClaimsStatus(REFERENCE, NUMBER_OF_CLAIMS)
+    return getLastSetNumberOfClaimsStatus(REFERENCE, claimId, NUMBER_OF_CLAIMS)
       .then(function (results) {
         expect(results.length).to.equal(4)
         expect(results[0].Status).to.equal(STATUS_RETURN)
