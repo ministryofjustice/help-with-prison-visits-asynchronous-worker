@@ -32,8 +32,12 @@ def update_journal_total(workbook, total):
     """ Update the Journal account date"""
     journal_ws = workbook.get_sheet_by_name(config.ADI_JOURNAL_SHEET)
 
+    """ Update the two template rows to debit/credit the total amount """
     total_cell = journal_ws[config.ADI_TOTAL_CELL]
     total_cell.value = total
+
+    debit_cell = journal_ws[config.ADI_DEBIT_CELL]
+    debit_cell.value = total
 
 if __name__ == '__main__':
     main()
