@@ -157,7 +157,7 @@ module.exports.insertClaimDocumentData = insertClaimDocuments
 
 module.exports.getClaimData = function (reference, randomIds) {
   // Add random number to ID when generating muliple with same reference number
-  var randomAddition = randomIds ? Math.floor((Math.random() * 200) + 1) : 0
+  var randomAddition = randomIds ? Math.floor((Math.random() * 10000) + 1) : 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + randomAddition
   var uniqueId2 = uniqueId + 1

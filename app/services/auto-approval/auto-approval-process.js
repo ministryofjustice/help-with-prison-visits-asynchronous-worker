@@ -32,7 +32,10 @@ module.exports = function (reference, eligibilityId, claimId) {
               return result
             }
 
-            return exceedConsecutiveAutoApprovalLimit(reference, claimId, config.NumberOfConsecutiveAutoApprovals)
+            // This rule is not in enum as it does not have a dedicated check assosiated with it like the other rules that can be disabled
+            var forceManualCheck = !disabledRules.includes('force-manual-check-after-number-of-auto-approvals')
+
+            return exceedConsecutiveAutoApprovalLimit(reference, claimId, config.NumberOfConsecutiveAutoApprovals, forceManualCheck)
               .then(function (exceedAutoApprovalLimit) {
                 if (exceedAutoApprovalLimit) {
                   result.claimApproved = false
@@ -73,15 +76,17 @@ function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
   }
 }
 
-function exceedConsecutiveAutoApprovalLimit (reference, claimId, numberOfConsecutiveAutoApprovals) {
+function exceedConsecutiveAutoApprovalLimit (reference, claimId, numberOfConsecutiveAutoApprovals, forceManualCheck) {
   return getLastSetNumberOfClaimsStatus(reference, claimId, numberOfConsecutiveAutoApprovals)
     .then(function (claims) {
       var numberOfAutoApprovals = 0
-      claims.forEach(function (claim) {
-        if (claim.Status === statusEnum.AUTOAPPROVED) {
-          numberOfAutoApprovals++
-        }
-      })
+      if (forceManualCheck) {
+        claims.forEach(function (claim) {
+          if (claim.Status === statusEnum.AUTOAPPROVED) {
+            numberOfAutoApprovals++
+          }
+        })
+      }
       return numberOfConsecutiveAutoApprovals <= numberOfAutoApprovals
     })
 }
