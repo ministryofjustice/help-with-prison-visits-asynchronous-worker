@@ -78,12 +78,10 @@ function exceedConsecutiveAutoApprovalLimit (reference, claimId, numberOfConsecu
     .then(function (claims) {
       var numberOfAutoApprovals = 0
       claims.forEach(function (claim) {
-        console.log(claim.Status)
         if (claim.Status === statusEnum.AUTOAPPROVED) {
           numberOfAutoApprovals++
         }
       })
-      console.log(numberOfConsecutiveAutoApprovals <= numberOfAutoApprovals)
       return numberOfConsecutiveAutoApprovals <= numberOfAutoApprovals
     })
 }
