@@ -25,6 +25,7 @@ var getAutoApprovalConfigStub
 var insertTaskStub
 var autoApproveClaimStub
 var autoApprovalDependencies
+var getLastSetNumberOfClaimsStatusStub
 
 var autoApprovalProcess
 
@@ -41,7 +42,8 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       MaxNumberOfClaimsPerYear: 10,
       MaxNumberOfClaimsPerMonth: 3,
       RulesDisabled: null,
-      IsEnabled: true
+      IsEnabled: true,
+      NumberOfConsecutiveAutoApprovals: 4
     }
 
     autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
@@ -50,6 +52,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     insertClaimEventStub = sinon.stub().resolves()
     insertTaskStub = sinon.stub().resolves()
     autoApproveClaimStub = sinon.stub().resolves()
+    getLastSetNumberOfClaimsStatusStub = sinon.stub().resolves([])
 
     autoApprovalDependencies = {
       '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
@@ -58,7 +61,8 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       '../data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../data/auto-approve-claim': autoApproveClaimStub,
       '../data/insert-claim-event': insertClaimEventStub,
-      '../data/insert-task': insertTaskStub
+      '../data/insert-task': insertTaskStub,
+      '../data/get-last-set-number-of-claims-status': getLastSetNumberOfClaimsStatusStub
     }
 
     autoApprovalRulesEnum.forEach(function (check) {
@@ -110,7 +114,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       })
   })
 
-  it('should return claimApproved true for NEW claims', function () {
+  it('should return claimApproved true for NEW claims and those that are less than number of consecutive auto approvals', function () {
     var newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
@@ -118,6 +122,18 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved, 'should auto approve NEW claims').to.be.true
+      })
+  })
+
+  it('should return claimApproved false for NEW claims and those that exceed consecutive auto approvals limit', function () {
+    var newClaimData = validAutoApprovalData
+    newClaimData.Claim = { Status: statusEnum.NEW }
+    getDataForAutoApprovalCheckStub.resolves(newClaimData)
+    getLastSetNumberOfClaimsStatusStub.resolves([{Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}])
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      .then(function (result) {
+        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false
       })
   })
 

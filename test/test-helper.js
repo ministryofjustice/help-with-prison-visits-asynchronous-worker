@@ -46,8 +46,8 @@ module.exports.deleteAll = function (reference, schema) {
     .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
 }
 
-module.exports.insertClaimEligibilityData = function (schema, reference, status) {
-  var data = this.getClaimData(reference)
+module.exports.insertClaimEligibilityData = function (schema, reference, status, randomIds) {
+  var data = this.getClaimData(reference, randomIds)
   if (status) {
     data.Claim.Status = status
   }
@@ -155,9 +155,11 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
 
 module.exports.insertClaimDocumentData = insertClaimDocuments
 
-module.exports.getClaimData = function (reference) {
+module.exports.getClaimData = function (reference, randomIds) {
+  // Add random number to ID when generating muliple with same reference number
+  var randomAddition = randomIds ? Math.floor((Math.random() * 10000) + 1) : 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  var uniqueId = Math.floor(Date.now() / 100) - 14000000000
+  var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + randomAddition
   var uniqueId2 = uniqueId + 1
 
   return {
