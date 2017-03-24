@@ -1,4 +1,5 @@
 const EXPENSE_TYPE = require('../../../constants/expense-type-enum')
+const EXPENSE_STATUS = require('../../../constants/claim-expense-status-enum')
 const DEDUCTION_TYPE = require('../../../constants/deduction-type-enum')
 const enumHelper = require('../../../constants/helpers/enum-helper')
 const newLine = '\r\n'
@@ -43,8 +44,10 @@ function buildPaymentBreakdown (claimExpenses) {
     var claimHeader = getClaimHeader(claimExpense)
 
     result.push(claimHeader)
-    result.push(`Claimed: £${claimExpense.Cost.toFixed(2)}`)
-    result.push(`Approved: £${(claimExpense.ApprovedCost ? claimExpense.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
+    if (claimExpense.Status !== EXPENSE_STATUS.MANUALLY_PROCESSED) {
+      result.push(`Claimed: £${claimExpense.Cost.toFixed(2)}`)
+      result.push(`Approved: £${(claimExpense.ApprovedCost ? claimExpense.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
+    }
     result.push(newLine)
   })
 
