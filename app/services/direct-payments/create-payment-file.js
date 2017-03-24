@@ -12,8 +12,7 @@ const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
 module.exports = function (payments) {
   const filePath = path.join(outputPath, getFileName())
-  const header = [['sort code', 'account number', 'name', 'amount', 'reference']]
-  const data = header.concat(payments)
+  const data = formatPaymentsToCsvStandard(payments)
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
 
@@ -27,6 +26,32 @@ module.exports = function (payments) {
         return filePath
       })
   })
+}
+
+function formatPaymentsToCsvStandard (payments) {
+  var csvFormattedPayments = []
+
+  payments.forEach(function (payment) {
+    csvFormattedPayments.push([
+      payment[0],                                         // sortcode
+      payment[1],                                         // account number
+      getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
+      getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
+      payment[4]                                          // reference
+    ])
+  })
+
+  return csvFormattedPayments
+}
+
+function getNameAs18CharactersPaddedWithSpaces (name) {
+  var trimmedName = name.substring(0, 17)
+  return trimmedName + Array(18 - trimmedName.length + 1).join(' ')
+}
+
+function getAmountAs11CharactersPaddedWithZeros (amount) {
+  var padded = '00000000000' + amount
+  return padded.substring(padded.length - 11)
 }
 
 function mkdirIfNotExists (dir) {

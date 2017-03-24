@@ -54,7 +54,7 @@ function directPaymentsReturn (results) {
       record.AccountNumber,
       record.FirstName + ' ' + record.LastName,
       record.PaymentAmount.toFixed(2),
-      record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
+      record.Reference
     ]
   })
 }
