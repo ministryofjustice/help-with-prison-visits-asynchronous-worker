@@ -1,6 +1,7 @@
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
 const updateOldPaymentFilesIsEnabledFalse = require('../../../../app/services/data/update-old-payment-files-is-enabled-false')
 
 describe('services/data/update-old-payment-files-is-enabled-false', function () {
@@ -11,13 +12,13 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
       .insert([
         {
           FileType: 'TEST_FILE',
-          DateCreated: new Date(),
+          DateCreated: dateFormatter.now().toDate(),
           Filepath: 'test-file-path/testfile1.csv',
           IsEnabled: 'true'
         },
         {
           FileType: 'TEST_FILE',
-          DateCreated: new Date(),
+          DateCreated: dateFormatter.now().toDate(),
           Filepath: 'test-file-path/testfile2.csv',
           IsEnabled: 'true'
         }

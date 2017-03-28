@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
+const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, taskType, additionalData) {
   var task = {
@@ -9,7 +10,7 @@ module.exports = function (reference, eligibilityId, claimId, taskType, addition
     'EligibilityId': eligibilityId,
     'ClaimId': claimId,
     'AdditionalData': additionalData,
-    'DateCreated': new Date(),
+    'DateCreated': dateFormatter.now().toDate(),
     'Status': statusEnum.PENDING
   }
 

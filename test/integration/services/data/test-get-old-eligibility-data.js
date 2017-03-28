@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const knexfile = require('../../../../knexfile').asyncworker
 const knex = require('knex')(knexfile)
 const config = require('../../../../config')
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const testHelper = require('../../../test-helper')
 
 const getOldEligibilityData = require('../../../../app/services/data/get-old-eligibility-data')
@@ -18,9 +18,9 @@ describe('services/data/get-old-eligibility-data', function () {
   var eligibilityId3
   var eligibilityId4
 
-  var dateThreshold = moment().subtract(maxAgeInDays, 'days').toDate()
-  var olderThanMaxAge = moment().subtract(maxAgeInDays + 1, 'days').toDate()
-  var lessThanMaxAge = moment().subtract(maxAgeInDays - 1, 'days').toDate()
+  var dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
+  var olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
+  var lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
   before(function () {
     return Promise.all([

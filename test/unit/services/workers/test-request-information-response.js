@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 const reference = '1234567'
 const eligibilityId = '1234'
@@ -10,7 +11,7 @@ const claimId = 123
 
 const ADDITIONAL_DATA = 'Message from claimant'
 const CLAIM_DATA_FOR_UNREVIEWED_CLAIM = { Claim: { DateReviewed: null }, ClaimBankDetail: {} }
-const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: new Date() }, ClaimBankDetail: {} }
+const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: dateFormatter.now().toDate() }, ClaimBankDetail: {} }
 const BANK_DETAILS = {ClaimBankDetailId: 1, SortCode: '123456', AccountNumber: '12345678'}
 const CLAIM_DATA_FOR_BANK_DETAILS = { Claim: { DateReviewed: null, Status: 'REQUEST-INFO-PAYMENT' }, ClaimBankDetail: BANK_DETAILS }
 const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
