@@ -29,6 +29,7 @@ function getDefaults () {
     MaxNumberOfClaimsPerYear: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR),
     MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH),
     RulesDisabled: null,
-    CostPerMile: parseFloat(config.AUTO_APPROVAL_COST_PER_MILE)
+    CostPerMile: parseFloat(config.AUTO_APPROVAL_COST_PER_MILE),
+    NumberOfConsecutiveAutoApprovals: parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS)
   }
 }
