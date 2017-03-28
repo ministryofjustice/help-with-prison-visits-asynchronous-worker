@@ -3,6 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const moment = require('moment')
 require('sinon-bluebird')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 const SUBMITTED_CLAIM_COUNT = 100
 
@@ -27,7 +28,7 @@ describe('services/workers/send-performance-platform-metrics-for-day', function 
 
   it('should do nothing if disabled by config', function () {
     configStub.PERFORMANCE_PLATFORM_SEND_ENABLED = 'false'
-    return sendPerformancePlatformMetricsForDay.execute({ dateCreated: new Date() })
+    return sendPerformancePlatformMetricsForDay.execute({ dateCreated: dateFormatter.now().toDate() })
       .then(function () {
         expect(getNumberOfSubmittedClaimsForDateRangeStub.called).to.be.false
         expect(sendPerformancePlatformMetricsForDayStub.called).to.be.false

@@ -1,5 +1,6 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
+const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, claimDocumentId, event, additionalData, note, isInternal) {
   var claimEvent = {
@@ -7,7 +8,7 @@ module.exports = function (reference, eligibilityId, claimId, claimDocumentId, e
     'Reference': reference,
     'ClaimId': claimId,
     'ClaimDocumentId': claimDocumentId,
-    'DateAdded': new Date(),
+    'DateAdded': dateFormatter.now().toDate(),
     'Event': event,
     'additionalData': additionalData,
     'note': note,

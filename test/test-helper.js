@@ -166,17 +166,17 @@ module.exports.getClaimData = function (reference, randomIds) {
     Eligibility: {
       EligibilityId: uniqueId,
       Reference: reference,
-      DateCreated: new Date(),
-      DateSubmitted: new Date(),
+      DateCreated: dateFormatter.now().toDate(),
+      DateSubmitted: dateFormatter.now().toDate(),
       Status: 'SUBMITTED'
     },
     Claim: {
       ClaimId: uniqueId,
       EligibilityId: uniqueId,
       Reference: reference,
-      DateOfJourney: new Date(),
-      DateCreated: new Date(),
-      DateSubmitted: new Date(),
+      DateOfJourney: dateFormatter.now().toDate(),
+      DateCreated: dateFormatter.now().toDate(),
+      DateSubmitted: dateFormatter.now().toDate(),
       Status: 'SUBMITTED',
       IsAdvanceClaim: true,
       PaymentMethod: 'bank'
@@ -187,7 +187,7 @@ module.exports.getClaimData = function (reference, randomIds) {
       Reference: reference,
       FirstName: 'Joe',
       LastName: 'Bloggs',
-      DateOfBirth: new Date(),
+      DateOfBirth: dateFormatter.now().toDate(),
       PrisonNumber: 'A1234BC',
       NameOfPrison: 'hewell'
     },
@@ -205,7 +205,7 @@ module.exports.getClaimData = function (reference, randomIds) {
       Country: 'Northern Ireland',
       EmailAddress: 'test@test.com',
       PhoneNumber: '0123456789',
-      DateOfBirth: new Date(),
+      DateOfBirth: dateFormatter.now().toDate(),
       Relationship: 'partner'
     },
     ClaimChildren: [
@@ -216,7 +216,7 @@ module.exports.getClaimData = function (reference, randomIds) {
         ClaimId: uniqueId,
         FirstName: 'Sam',
         LastName: 'Bloggs',
-        DateOfBirth: new Date(),
+        DateOfBirth: dateFormatter.now().toDate(),
         Relationship: 'prisoners-child',
         IsEnabled: true
       },
@@ -226,7 +226,7 @@ module.exports.getClaimData = function (reference, randomIds) {
         ClaimId: uniqueId,
         FirstName: 'Mike',
         LastName: 'Bloggs',
-        DateOfBirth: new Date(),
+        DateOfBirth: dateFormatter.now().toDate(),
         Relationship: 'my-child',
         IsEnabled: true
       }
@@ -275,7 +275,7 @@ module.exports.getClaimData = function (reference, randomIds) {
         ClaimExpenseId: null,
         DocumentStatus: 'uploaded',
         Filepath: 'path',
-        DateSubmitted: new Date(),
+        DateSubmitted: dateFormatter.now().toDate(),
         IsEnabled: true
       },
       {
@@ -287,7 +287,7 @@ module.exports.getClaimData = function (reference, randomIds) {
         ClaimExpenseId: null,
         DocumentStatus: 'uploaded',
         Filepath: null,
-        DateSubmitted: new Date(),
+        DateSubmitted: dateFormatter.now().toDate(),
         IsEnabled: true
       }
     ],
@@ -304,7 +304,7 @@ module.exports.getClaimData = function (reference, randomIds) {
       Reference: reference,
       EmailAddress: 'newEmail@test.com',
       PhoneNumber: '0123456789',
-      DateSubmitted: new Date()
+      DateSubmitted: dateFormatter.now().toDate()
     },
     ClaimDeduction: [
       {

@@ -1,4 +1,4 @@
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const getAllClaimsOlderThanDate = require('../data/get-all-claims-older-than-date')
 const insertTask = require('../data/insert-task')
@@ -6,7 +6,7 @@ const tasksEnum = require('../../constants/tasks-enum')
 
 module.exports.execute = function (task) {
   var archiveClaimsAfterDays = parseInt(config.ARCHIVE_CLAIMS_AFTER_DAYS)
-  var archiveClaimsOlderThan = moment().subtract(archiveClaimsAfterDays, 'days').toDate()
+  var archiveClaimsOlderThan = dateFormatter.now().subtract(archiveClaimsAfterDays, 'days').toDate()
 
   return getAllClaimsOlderThanDate(archiveClaimsOlderThan)
     .then(function (claimIdsToArchive) {

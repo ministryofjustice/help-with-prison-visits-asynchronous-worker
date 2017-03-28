@@ -1,4 +1,4 @@
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 
 const getOldEligibilityData = require('../data/get-old-eligibility-data')
@@ -9,7 +9,7 @@ const deleteOldFiles = require('../cleanup-old-data/delete-old-files')
 
 module.exports.execute = function (task) {
   var maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
-  var dateThreshold = moment().subtract(maxDaysBeforeDeleteData, 'days').toDate()
+  var dateThreshold = dateFormatter.now().subtract(maxDaysBeforeDeleteData, 'days').toDate()
 
   return cleanEligibilityData(dateThreshold)
     .then(function () {

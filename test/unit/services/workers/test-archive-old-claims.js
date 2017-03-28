@@ -1,14 +1,14 @@
 const expect = require('chai').expect
-const moment = require('moment')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const dateFormatter = require('../../../../app/services/date-formatter')
 require('sinon-bluebird')
 
 const CLAIM_ID_1 = 1
 const CLAIM_ID_2 = 2
 
 var config = { ARCHIVE_CLAIMS_AFTER_DAYS: '10' }
-var tenDaysAgo = moment().subtract(10, 'day')
+var tenDaysAgo = dateFormatter.now().subtract(10, 'day')
 var tenDaysAgoMinus5mins = tenDaysAgo.subtract(5, 'minute').toDate()
 var tenDaysAgoPlus5mins = tenDaysAgo.add(10, 'minute').toDate()
 
