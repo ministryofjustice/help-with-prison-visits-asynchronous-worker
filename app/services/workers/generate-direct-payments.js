@@ -85,5 +85,5 @@ function getTotalFromPaymentData (paymentData) {
 
   paymentData.forEach(function (data) { total += parseFloat(data[totalApprovedCostIndex]) })
 
-  return total
+  return Number(total).toFixed(2)
 }

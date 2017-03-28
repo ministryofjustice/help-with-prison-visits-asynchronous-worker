@@ -7,7 +7,7 @@ const fileTypes = require('../../../../app/constants/payment-filetype-enum')
 const claimPaymentAmount1 = 45.50
 const claimPaymentAmount2 = 22.22
 const claimPaymentAmount3 = 13.99
-const total = 81.71
+const total = '81.71'
 
 var claimsPendingPayment = [
   ['999997', '223344', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234'],
