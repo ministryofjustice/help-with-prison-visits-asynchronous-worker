@@ -3,6 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const moment = require('moment')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
+const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 require('sinon-bluebird')
 
 describe('services/send-all-advance-claim-reminders-for-day', function () {
@@ -36,13 +37,16 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
 
     return sendAllAdvanceClaimRemindersForDay.execute({ dateCreated: dateCreated })
       .then(function () {
-        expect(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.calledOnce).to.be.true
+        expect(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.calledTwice).to.be.true
         expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.firstCall.args[0]).format('YYYY-MM-DD HH:mm')).to.be.equal(startDateString)
         expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.firstCall.args[1]).format('YYYY-MM-DD HH:mm')).to.be.equal(endDateString)
-        expect(insertTask.calledTwice).to.be.true
+        expect(insertTask.callCount).to.equal(4)
         expect(insertTask.firstCall.args[0]).to.be.equal(CLAIMS_WITH_EMAIL[0].Reference)
         expect(insertTask.firstCall.args[3]).to.be.equal(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
-        expect(insertTask.firstCall.args[4]).to.be.equal(CLAIMS_WITH_EMAIL[0].EmailAddress)
+        expect(insertTask.firstCall.args[4]).to.be.equal(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.FIRST}`)
+        expect(insertTask.thirdCall.args[0]).to.be.equal(CLAIMS_WITH_EMAIL[0].Reference)
+        expect(insertTask.thirdCall.args[3]).to.be.equal(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
+        expect(insertTask.thirdCall.args[4]).to.be.equal(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.SECOND}`)
       })
   })
 })

@@ -3,6 +3,8 @@ const moment = require('moment')
 const getClaim = require('../data/get-claim')
 const sendNotification = require('../notify/send-notification')
 const getFirstNameByClaimId = require('../data/get-first-name-by-claimId')
+const reminderEnum = require('../../constants/advance-claim-reminder-enum')
+const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
   var claimId = task.claimId
@@ -16,8 +18,17 @@ module.exports.execute = function (task) {
       return getFirstNameByClaimId('IntSchema', claimId)
         .then(function (firstName) {
           var personalisation = {reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName}
-          var emailAddress = task.additionalData
-          var emailTemplateId = config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID
+          var additionalData = task.additionalData.split('~~')
+          var emailAddress = additionalData[0]
+          var reminder = additionalData[1]
+          var emailTemplateId
+          if (reminderEnum.FIRST === reminder) {
+            emailTemplateId = config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID
+          } else if (reminderEnum.SECOND === reminder) {
+            emailTemplateId = config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID
+          } else {
+            return Promise.reject('Not valid reminder type')
+          }
 
           return sendNotification(emailTemplateId, emailAddress, personalisation)
         })
