@@ -25,32 +25,30 @@ module.exports.execute = function (task) {
       var accountLastFourDigits = claimantData.AccountNumberLastFourDigits || ''
       var caseworkerNote = claimantData.CaseworkerNote || ''
       var paymentMethod = claimantData.PaymentMethod || ''
+      var isAdvanceClaim = claimantData.IsAdvanceClaim
       var town = claimantData.Town || ''
       var prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).displayName : ''
 
-      var personalisation
+      var personalisation = standardPersonalisationElements(personalisation, firstName, reference, town, prison, caseworkerNote)
       var emailTemplateId
+
       if (paymentMethod === paymentMethodEnum.DIRECT_BANK_PAYMENT.value) {
-        personalisation = {
-          first_name: firstName,
-          reference: reference,
-          claim_details: getApprovedClaimDetailsString(claimExpenseData, claimDeductions),
-          account_last_four_digits: accountLastFourDigits,
-          approved_amount: getTotalApprovedAmount(claimExpenseData, claimDeductions),
-          caseworker_note: formatCaseworkerNote(caseworkerNote)
+        personalisation.account_last_four_digits = accountLastFourDigits
+        if (isAdvanceClaim) {
+          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_BANK_EMAIL_TEMPLATE_ID
+        } else {
+          personalisation.claim_details = getApprovedClaimDetailsString(claimExpenseData, claimDeductions)
+          personalisation.approved_amount = getTotalApprovedAmount(claimExpenseData, claimDeductions)
+          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
         }
-        emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
       } else if (paymentMethod === paymentMethodEnum.PAYOUT.value) {
-        personalisation = {
-          first_name: firstName,
-          reference: reference,
-          claim_details: getApprovedClaimDetailsString(claimExpenseData, claimDeductions),
-          start_town: town,
-          prison: prison,
-          approved_amount: getTotalApprovedAmount(claimExpenseData, claimDeductions),
-          caseworker_note: formatCaseworkerNote(caseworkerNote)
+        if (isAdvanceClaim) {
+          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_PAYOUT_EMAIL_TEMPLATE_ID
+        } else {
+          personalisation.claim_details = getApprovedClaimDetailsString(claimExpenseData, claimDeductions)
+          personalisation.approved_amount = getTotalApprovedAmount(claimExpenseData, claimDeductions)
+          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID
         }
-        emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID
       } else {
         return Promise.reject('No payment method found')
       }
@@ -88,5 +86,15 @@ function formatCaseworkerNote (caseworkerNote) {
     return result.join(newLine)
   } else {
     return ''
+  }
+}
+
+function standardPersonalisationElements (personalisation, firstName, reference, town, prison, caseworkerNote) {
+  return {
+    first_name: firstName,
+    reference: reference,
+    start_town: town,
+    prison: prison,
+    caseworker_note: formatCaseworkerNote(caseworkerNote)
   }
 }
