@@ -20,7 +20,7 @@ const PRISON_POSTCODE = 'B97 6QS'
 const CAR_EXPENSE_ID = 321
 const BUS_EXPENSE_ID = 322
 
-const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: 0.0 }
+const CAR_EXPENSE = { ClaimExpenseId: CAR_EXPENSE_ID, To: NAME_OF_PRISON, ExpenseType: 'car', Cost: 0.0 }
 const BUS_EXPENSE = { ClaimExpenseId: BUS_EXPENSE_ID, ExpenseType: 'bus', Cost: 10.00 }
 const CAR_EXPENSE_ALREADY_CALCULATED = { ClaimExpenseId: CAR_EXPENSE_ID, ExpenseType: 'car', Cost: 0.0, FromPostCode: 'FR111FR', ToPostCode: 'TO111TO' }
 
