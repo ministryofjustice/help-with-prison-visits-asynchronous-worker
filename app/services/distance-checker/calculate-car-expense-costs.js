@@ -39,6 +39,10 @@ function calculateCarExpenseCost (carExpense, claimData) {
   var fromPostCode = carExpense.FromPostCode ? carExpense.FromPostCode : claimData.Visitor ? claimData.Visitor.PostCode : null
   var toPostCode = carExpense.ToPostCode ? carExpense.ToPostCode : claimData.Prisoner ? getPrisonPostCode(claimData.Prisoner.NameOfPrison) : null
 
+  if (claimData.Prisoner && carExpense.To !== claimData.Prisoner.NameOfPrison && !carExpense.ToPostCode) {
+    toPostCode = null
+  }
+
   if (fromPostCode && toPostCode) {
     return getDistanceInMilesAndCost(fromPostCode, toPostCode)
       .then(function (result) {
