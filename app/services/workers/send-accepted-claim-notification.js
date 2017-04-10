@@ -39,7 +39,7 @@ module.exports.execute = function (task) {
         } else {
           personalisation.claim_details = getApprovedClaimDetailsString(claimExpenseData, claimDeductions)
           personalisation.approved_amount = getTotalApprovedAmount(claimExpenseData, claimDeductions)
-          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID
+          emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID
         }
       } else if (paymentMethod === paymentMethodEnum.PAYOUT.value) {
         if (isAdvanceClaim) {
