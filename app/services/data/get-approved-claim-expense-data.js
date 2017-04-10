@@ -27,7 +27,7 @@ function getClaimantData (claimId) {
     .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
     .join('IntSchema.Prisoner', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
     .where('IntSchema.Claim.ClaimId', claimId)
-    .select('Visitor.FirstName AS FirstName', 'Note', 'PaymentMethod', 'Town', 'NameOfPrison')
+    .select('Visitor.FirstName AS FirstName', 'Note', 'PaymentMethod', 'Town', 'NameOfPrison', 'IsAdvanceClaim')
     .first()
     .then(function (visitorData) {
       visitor = visitorData
@@ -56,6 +56,9 @@ function getClaimantData (claimId) {
       var prison = (visitor && visitor.NameOfPrison
         ? visitor.NameOfPrison
         : '')
+      var isAdvanceClaim = (visitor && visitor.IsAdvanceClaim
+        ? visitor.IsAdvanceClaim
+        : '')
 
       return {
         'VisitorFirstName': visitorFirstName,
@@ -63,7 +66,8 @@ function getClaimantData (claimId) {
         'AccountNumberLastFourDigits': accountNumberLastFourDigits,
         'CaseworkerNote': caseworkerNote,
         'Town': town,
-        'Prison': prison
+        'Prison': prison,
+        'IsAdvanceClaim': isAdvanceClaim
       }
     })
 }
