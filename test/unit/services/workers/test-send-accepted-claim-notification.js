@@ -49,7 +49,7 @@ describe('services/send-accepted-claim-notification', function () {
     })
     .then(function () {
       expect(stubSendNotification.calledOnce).to.be.true
-      expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_EMAIL_TEMPLATE_ID)
+      expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID)
       expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
       expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
       expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true
