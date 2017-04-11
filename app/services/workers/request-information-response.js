@@ -10,6 +10,7 @@ const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
+const claimEventEnum = require('../../constants/claim-event-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const Promise = require('bluebird')
 
@@ -51,7 +52,7 @@ function getStatusForUpdatedClaim (claimData) {
 
 function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
   if (note) {
-    return insertClaimEvent(reference, eligibilityId, claimId, null, 'MESSAGE', null, note, false)
+    return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.MESSAGE.value, null, note, false)
   } else {
     return Promise.resolve()
   }
@@ -59,7 +60,7 @@ function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
 
 function insertClaimEventForUpdate (reference, eligibilityId, claimId, updatedDocuments) {
   if (updatedDocuments && updatedDocuments.length > 0) {
-    return insertClaimEvent(reference, eligibilityId, claimId, null, 'CLAIM-UPDATED', null, generateClaimUpdatedString(updatedDocuments), true)
+    return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.CLAIM_UPDATED.value, null, generateClaimUpdatedString(updatedDocuments), true)
   } else {
     return Promise.resolve()
   }
@@ -79,7 +80,7 @@ function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, cl
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
       .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
       .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber) })
-      .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, 'BANK-DETAILS-UPDATED', null, null, true) })
+      .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true) })
       .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
   } else {
     return Promise.resolve()

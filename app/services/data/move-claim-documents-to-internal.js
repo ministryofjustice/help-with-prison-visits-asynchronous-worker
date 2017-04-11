@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const getClaimDocuments = require('./get-claim-documents')
 const disableClaimDocument = require('./disable-claim-document')
 const insertClaimEvent = require('./insert-claim-event')
+const claimEventEnum = require('../../constants/claim-event-enum')
 const Promise = require('bluebird')
 
 module.exports = function (reference, eligibilityId, claimId) {
@@ -64,7 +65,7 @@ function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updated
 function insertClaimEventReplacedDocument (reference, eligibilityId, claimId, oldDocumentToDisable) {
   if (oldDocumentToDisable.DocumentStatus === 'uploaded') {
     const note = `Replaced previous document ${oldDocumentToDisable.DocumentType}`
-    return insertClaimEvent(reference, eligibilityId, claimId, oldDocumentToDisable.ClaimDocumentId, 'REPLACED-PREVIOUS-DOCUMENT', null, note, true)
+    return insertClaimEvent(reference, eligibilityId, claimId, oldDocumentToDisable.ClaimDocumentId, claimEventEnum.REPLACED_PREVIOUS_DOCUMENT.value, null, note, true)
   } else {
     return Promise.resolve()
   }

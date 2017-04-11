@@ -7,14 +7,13 @@ const insertTask = require('../data/insert-task')
 const insertClaimEvent = require('../data/insert-claim-event')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
+const claimEventEnum = require('../../constants/claim-event-enum')
 
 module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
-  const CLAIM_EVENT = 'CLAIM-AUTO-APPROVED'
-
   return setClaimStatusToAutoApproved(claimId)
     .then(function () { return autoApproveClaimExpenses(claimId) })
     .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress) })
-    .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, CLAIM_EVENT, null, 'Passed all auto approval checks', true) })
+    .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true) })
 }
 
 function setClaimStatusToAutoApproved (claimId) {
