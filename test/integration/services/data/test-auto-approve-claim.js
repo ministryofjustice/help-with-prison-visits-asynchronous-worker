@@ -8,6 +8,7 @@ require('sinon-bluebird')
 const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 const autoApproveClaimExpenseStub = sinon.stub().resolves()
 const insertTaskStub = sinon.stub().resolves()
@@ -34,8 +35,6 @@ describe('services/data/auto-approve-claim', function () {
   })
 
   it('should update the status of the claim to AUTOAPPROVED, call to update expenses, send accept email and add claim event', function () {
-    const CLAIM_EVENT = 'CLAIM-AUTO-APPROVED'
-
     return autoApproveClaim(REFERENCE, eligibilityId, claimId, EMAIL_ADDRESS)
       .then(function () {
         return knex('IntSchema.Claim')
@@ -46,7 +45,7 @@ describe('services/data/auto-approve-claim', function () {
             expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED)
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
-            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, CLAIM_EVENT, null, 'Passed all auto approval checks', true)).to.be.true
+            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).to.be.true
           })
       })
   })

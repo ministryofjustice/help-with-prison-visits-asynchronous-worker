@@ -1,4 +1,5 @@
 const tasksEnum = require('../../../../app/constants/tasks-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -144,7 +145,7 @@ describe('services/workers/request-information-response', function () {
     }).then(function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.calledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber)).to.be.true
-      expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, 'BANK-DETAILS-UPDATED', null, null, true))
+      expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true))
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
     })
   })

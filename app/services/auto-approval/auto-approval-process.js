@@ -6,6 +6,7 @@ const autoApproveClaim = require('../data/auto-approve-claim')
 const claimTypeEnum = require('../../constants/claim-type-enum')
 const statusEnum = require('../../constants/status-enum')
 const autoApprovalRulesEnum = require('../../constants/auto-approval-rules-enum')
+const claimEventEnum = require('../../constants/claim-event-enum')
 const getLastSetNumberOfClaimsStatus = require('../data/get-last-set-number-of-claims-status')
 
 var autoApprovalChecks = {}
@@ -39,7 +40,7 @@ module.exports = function (reference, eligibilityId, claimId) {
               .then(function (exceedAutoApprovalLimit) {
                 if (exceedAutoApprovalLimit) {
                   result.claimApproved = false
-                  return insertClaimEvent(reference, eligibilityId, claimId, null, 'FORCED-MANUAL-CHECK', autoApprovalData.Visitor.EmailAddress, 'Number of consecutive auto approvals exceeded limit', true)
+                  return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.FORCED_MANUAL_CHECK.value, autoApprovalData.Visitor.EmailAddress, 'Number of consecutive auto approvals exceeded limit', true)
                     .then(function () {
                       return result
                     })
@@ -55,7 +56,7 @@ module.exports = function (reference, eligibilityId, claimId) {
                       return result
                     })
                 } else {
-                  return insertClaimEvent(reference, eligibilityId, claimId, null, 'AUTO-APPROVAL-FAILURE', autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
+                  return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.AUTO_APPROVAL_FAILURE.value, autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
                     .then(function () {
                       return result
                     })
