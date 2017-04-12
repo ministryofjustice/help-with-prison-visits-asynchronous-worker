@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
-const dateFormatter = require('../../../../app/services/date-formatter')
 const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -63,7 +62,6 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should retrieve only APPROVED claim records with payment status of NULL', function () {
-      var currentDate = dateFormatter.now().format('YYYY-MM-DD')
       return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (results) {
           var filteredResults = results.filter(function (result) {
@@ -76,7 +74,7 @@ describe('services/data/get-claims-pending-payment', function () {
           expect(filteredResults[0][2], 'should contain the account number').to.be.equal('00123456')
           expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
           expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10.00')
-          expect(filteredResults[0][5], 'should contain the reference and date of journey').to.be.equal(`${reference} ${currentDate}`)
+          expect(filteredResults[0][5], 'should contain the reference').to.be.equal(reference)
         })
     })
 

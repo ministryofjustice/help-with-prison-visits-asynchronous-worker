@@ -1,7 +1,6 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const _ = require('lodash')
-const moment = require('moment')
 const claimStatuses = require('../../constants/claim-status-enum')
 const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
 const updateClaimTotalAmount = require('./update-claim-total-amount')
@@ -54,7 +53,7 @@ function directPaymentsReturn (results) {
       record.AccountNumber,
       record.FirstName + ' ' + record.LastName,
       record.PaymentAmount.toFixed(2),
-      record.Reference + ' ' + moment(record.DateOfJourney).format('YYYY-MM-DD')
+      record.Reference
     ]
   })
 }

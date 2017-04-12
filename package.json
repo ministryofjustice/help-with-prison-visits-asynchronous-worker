@@ -57,6 +57,7 @@
     "mssql": "^3.3.0",
     "mv": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
     "notifications-node-client": "2.1.0",
+    "python-shell": "^0.4.0",
     "request": "^2.78.0",
     "request-promise": "^4.1.1",
     "sftp-promises": "^1.4.0",
