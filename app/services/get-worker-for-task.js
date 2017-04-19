@@ -4,6 +4,7 @@ var sendRejectedClaimNotification = require('./workers/send-rejected-claim-notif
 var sendRequestInformationClaimNotification = require('./workers/send-request-information-claim-notification')
 var sendRequestInformationResponseSubmittedNotification = require('./workers/send-request-information-response-submitted-notification')
 var sendAdvanceClaimEvidenceReminderNotification = require('./workers/send-advance-claim-evidence-reminder-notification')
+var sendUpdatedContactDetailsClaimNotification = require('./workers/send-updated-contact-details-claim-notification')
 var sendClaimNotification = require('./workers/send-claim-notification')
 var completeClaim = require('./workers/complete-claim')
 var requestInformationResponse = require('./workers/request-information-response')
@@ -30,6 +31,7 @@ module.exports = function (taskType) {
     case tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION: return sendRequestInformationClaimNotification
     case tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION: return sendRequestInformationResponseSubmittedNotification
     case tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION: return sendAdvanceClaimEvidenceReminderNotification
+    case tasksEnum.UPDATED_CONTACT_DETAILS_CLAIM_NOTIFICATION: return sendUpdatedContactDetailsClaimNotification
     case tasksEnum.SEND_CLAIM_NOTIFICATION: return sendClaimNotification
     case tasksEnum.COMPLETE_CLAIM: return completeClaim
     case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
