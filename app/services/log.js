@@ -17,7 +17,8 @@ var log = bunyan.createLogger({
   name: 'asynchronous-worker',
   streams: [],
   serializers: {
-    'error': errorSerializer
+    'error': errorSerializer,
+    'memstats': memstatSerializer
   }
 })
 
@@ -57,6 +58,19 @@ function errorSerializer (error) {
     message: error.message,
     name: error.name,
     stack: error.stack
+  }
+}
+
+function memstatSerializer (stats) {
+  return {
+    num_full_gc: stats.num_full_gc,
+    num_inc_gc: stats.num_inc_gc,
+    heap_compactions: stats.heap_compactions,
+    usage_trend: stats.usage_trend,
+    estimated_base: stats.estimated_base,
+    current_base: stats.current_base,
+    min: stats.min,
+    max: stats.max
   }
 }
 

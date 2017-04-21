@@ -1,3 +1,4 @@
+require('./memory')
 const config = require('./config')
 const log = require('./app/services/log')
 var CronJob = require('cron').CronJob
