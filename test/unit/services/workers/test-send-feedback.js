@@ -8,7 +8,8 @@ const RatingEnum = require('../../../../app/constants/rating-enum')
 
 var rating = RatingEnum['satisfied'].databaseValue
 var improvements = 'This is a test message'
-var additionalData = `${rating}~~${improvements}`
+var emailAddress = 'test@test.com'
+var additionalData = `${rating}~~${improvements}~~${emailAddress}`
 
 var stubSendNotification = sinon.stub().resolves()
 
@@ -25,6 +26,7 @@ describe('services/send-feedback', function () {
         expect(stubSendNotification.firstCall.args[1]).to.be.equal(config.APVS_FEEDBACK_EMAIL_ADDRESS)
         expect(stubSendNotification.firstCall.args[2].rating).to.be.equal(RatingEnum[rating].displayName)
         expect(stubSendNotification.firstCall.args[2].improvements).to.be.equal(improvements)
+        expect(stubSendNotification.firstCall.args[2].contactEmailAddress).to.be.equal(emailAddress)
       })
   })
 })
