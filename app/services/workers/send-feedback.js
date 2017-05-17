@@ -6,7 +6,8 @@ module.exports.execute = function (task) {
   var feedback = task.additionalData.split('~~')
   var personalisation = {
     rating: RatingEnum[feedback[0]].displayName,
-    improvements: feedback[1]
+    improvements: feedback[1],
+    contactEmailAddress: feedback[2]
   }
   var emailAddress = config.APVS_FEEDBACK_EMAIL_ADDRESS
   var emailTemplateId = config.NOTIFY_SEND_FEEDBACK_EMAIL_TEMPLATE_ID
