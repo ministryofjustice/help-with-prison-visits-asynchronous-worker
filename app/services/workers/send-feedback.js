@@ -1,6 +1,6 @@
-const config = require('../../../config')
-const sendNotification = require('../notify/send-notification')
 const RatingEnum = require('../../constants/rating-enum')
+const Config = require('../../../config')
+const Zendesk = require('zendesk-node-api')
 
 module.exports.execute = function (task) {
   var feedback = task.additionalData.split('~~')
@@ -8,7 +8,23 @@ module.exports.execute = function (task) {
     rating: RatingEnum[feedback[0]].displayName,
     improvements: feedback[1]
   }
-  var emailAddress = config.APVS_FEEDBACK_EMAIL_ADDRESS
-  var emailTemplateId = config.NOTIFY_SEND_FEEDBACK_EMAIL_TEMPLATE_ID
-  return sendNotification(emailTemplateId, emailAddress, personalisation)
+
+  if (Config.ZENDESK_ENABLED) {
+    var zendesk = new Zendesk({
+      url: Config.ZENDESK_API_URL,
+      email: Config.ZENDESK_EMAIL_ADDRESS,
+      token: Config.ZENDESK_API_KEY
+    })
+
+    zendesk.tickets.create({
+      subject: 'APVS feedback received: ' + personalisation.rating,
+      comment: {
+        body: personalisation.improvements
+      }
+    }).then(function (result) {
+      console.dir(result)
+    })
+  } else {
+    console.dir('Zendesk not implemented in development environments.')
+  }
 }

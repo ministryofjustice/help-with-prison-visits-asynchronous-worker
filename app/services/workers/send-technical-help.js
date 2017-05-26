@@ -1,5 +1,5 @@
-const config = require('../../../config')
-const sendNotification = require('../notify/send-notification')
+const Config = require('../../../config')
+const Zendesk = require('zendesk-node-api')
 
 module.exports.execute = function (task) {
   var technicalHelp = task.additionalData.split('~~')
@@ -8,7 +8,28 @@ module.exports.execute = function (task) {
     phone: technicalHelp[1],
     issue: technicalHelp[2]
   }
-  var emailAddress = config.APVS_FEEDBACK_EMAIL_ADDRESS
-  var emailTemplateId = config.NOTIFY_SEND_TECHNICAL_HELP_EMAIL_TEMPLATE_ID
-  return sendNotification(emailTemplateId, emailAddress, personalisation)
+
+  if (Config.ZENDESK_ENABLED) {
+    var zendesk = new Zendesk({
+      url: Config.ZENDESK_API_URL,
+      email: Config.ZENDESK_EMAIL_ADDRESS,
+      token: Config.ZENDESK_API_KEY
+    })
+
+    zendesk.tickets.create({
+      subject: 'APVS Technical Help',
+      comment: {
+        body: personalisation.issue
+      },
+      collaborators: {
+        name: personalisation.email,
+        email: personalisation.phone
+      }
+    }).then(function (result) {
+      console.dir(result)
+    })
+  } else {
+    console.dir('Zendesk not implemented in development environments.')
+  }
 }
+
