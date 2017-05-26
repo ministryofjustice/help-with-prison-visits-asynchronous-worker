@@ -3,8 +3,6 @@ const log = require('../log')
 const requestPromise = require('request-promise')
 
 module.exports = function (originPostCode, destinationPostCode) {
-  originPostCode
-
   var distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
   var options = {
     method: 'GET',

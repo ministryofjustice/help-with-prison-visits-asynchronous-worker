@@ -6,7 +6,8 @@ module.exports.execute = function (task) {
   var feedback = task.additionalData.split('~~')
   var personalisation = {
     rating: RatingEnum[feedback[0]].displayName,
-    improvements: feedback[1]
+    improvements: feedback[1],
+    contactEmailAddress: feedback[2]
   }
 
   if (Config.ZENDESK_ENABLED) {
@@ -17,7 +18,7 @@ module.exports.execute = function (task) {
     })
 
     zendesk.tickets.create({
-      subject: 'APVS feedback received: ' + personalisation.rating,
+      subject: 'APVS Feedback: ' + personalisation.rating,
       comment: {
         body: personalisation.improvements
       }

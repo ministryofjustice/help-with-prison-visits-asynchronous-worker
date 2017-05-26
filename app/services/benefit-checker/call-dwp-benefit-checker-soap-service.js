@@ -63,4 +63,3 @@ function getSoapBenefitCheckerRequestBody (data) {
   </soapenv:Body>
 </soapenv:Envelope>`
 }
-

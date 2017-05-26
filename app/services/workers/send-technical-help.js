@@ -5,7 +5,7 @@ module.exports.execute = function (task) {
   var technicalHelp = task.additionalData.split('~~')
   var personalisation = {
     name: technicalHelp[0],
-    phone: technicalHelp[1],
+    contactEmailAddress: technicalHelp[1],
     issue: technicalHelp[2]
   }
 
@@ -22,8 +22,8 @@ module.exports.execute = function (task) {
         body: personalisation.issue
       },
       collaborators: {
-        name: personalisation.email,
-        email: personalisation.phone
+        name: personalisation.name,
+        email: personalisation.contactEmailAddress
       }
     }).then(function (result) {
       console.dir(result)
