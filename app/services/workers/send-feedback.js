@@ -17,15 +17,18 @@ module.exports.execute = function (task) {
       token: Config.ZENDESK_API_KEY
     })
 
-    zendesk.tickets.create({
-      subject: 'APVS Feedback: ' + personalisation.rating,
+    return zendesk.tickets.create({
+      subject: 'APVS Feedback',
       comment: {
-        body: personalisation.improvements
+        body: personalisation.improvements + '\n\n' +
+        'Rating: ' + personalisation.rating + '\n' +
+        'Email address (optional): ' + personalisation.contactEmailAddress
       }
     }).then(function (result) {
       console.dir(result)
+      console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
     })
   } else {
-    console.dir('Zendesk not implemented in development environments.')
+    return console.log('Zendesk not implemented in development environments.')
   }
 }
