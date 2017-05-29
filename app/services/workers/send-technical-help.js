@@ -9,7 +9,7 @@ module.exports.execute = function (task) {
     issue: technicalHelp[2]
   }
 
-  if (Config.ZENDESK_ENABLED) {
+  if (Config.ZENDESK_ENABLED === 'true') {
     var zendesk = new Zendesk({
       url: Config.ZENDESK_API_URL,
       email: Config.ZENDESK_EMAIL_ADDRESS,
