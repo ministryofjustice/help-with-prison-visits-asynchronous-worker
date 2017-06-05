@@ -25,7 +25,6 @@ module.exports.execute = function (task) {
         'Email address (optional): ' + personalisation.contactEmailAddress
       }
     }).then(function (result) {
-      console.dir(result)
       console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
     })
   } else {

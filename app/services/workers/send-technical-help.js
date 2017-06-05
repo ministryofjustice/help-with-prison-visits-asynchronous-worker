@@ -24,7 +24,7 @@ module.exports.execute = function (task) {
         'Email address: ' + personalisation.contactEmailAddress
       }
     }).then(function (result) {
-      console.dir(result)
+      console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
     })
   } else {
     return console.dir('Zendesk not implemented in development environments.')
