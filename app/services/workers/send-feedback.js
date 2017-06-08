@@ -29,7 +29,6 @@ module.exports.execute = function (task) {
           562,
           personalisation.contactEmailAddress,
           {
-            'name': personalisation.name,
             'email': personalisation.contactEmailAddress
           }
         ]
@@ -48,7 +47,6 @@ module.exports.execute = function (task) {
           562,
           personalisation.contactEmailAddress,
           {
-            'name': personalisation.name,
             'email': personalisation.contactEmailAddress
           }
         ]
