@@ -33,7 +33,6 @@ module.exports.execute = function (task) {
           }
         ]
       }).then(function (result) {
-        console.log(result)
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
     } else {
@@ -53,7 +52,6 @@ module.exports.execute = function (task) {
           }
         ]
       }).then(function (result) {
-        console.log(result)
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
     }
