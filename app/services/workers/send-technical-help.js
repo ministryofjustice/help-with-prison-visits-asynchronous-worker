@@ -23,8 +23,17 @@ module.exports.execute = function (task) {
           body: personalisation.issue + '\n\n' +
           'Name: ' + personalisation.name + '\n' +
           'Email address: ' + personalisation.contactEmailAddress
-        }
+        },
+        collaborators: [
+          562,
+          personalisation.contactEmailAddress,
+          {
+            'name': personalisation.name,
+            'email': personalisation.contactEmailAddress
+          }
+        ]
       }).then(function (result) {
+        console.log(result)
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
     } else {
@@ -34,8 +43,17 @@ module.exports.execute = function (task) {
           body: personalisation.issue + '\n\n' +
           'Name: ' + personalisation.name + '\n' +
           'Email address: ' + personalisation.contactEmailAddress
-        }
+        },
+        collaborators: [
+          562,
+          personalisation.contactEmailAddress,
+          {
+            'name': personalisation.name,
+            'email': personalisation.contactEmailAddress
+          }
+        ]
       }).then(function (result) {
+        console.log(result)
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
     }
