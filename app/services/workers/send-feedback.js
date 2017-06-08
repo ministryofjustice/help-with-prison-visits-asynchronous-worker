@@ -24,7 +24,15 @@ module.exports.execute = function (task) {
           body: personalisation.improvements + '\n\n' +
           'Rating: ' + personalisation.rating + '\n' +
           'Email address (optional): ' + personalisation.contactEmailAddress
-        }
+        },
+        collaborators: [
+          562,
+          personalisation.contactEmailAddress,
+          {
+            'name': personalisation.name,
+            'email': personalisation.contactEmailAddress
+          }
+        ]
       }).then(function (result) {
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
@@ -35,7 +43,15 @@ module.exports.execute = function (task) {
           body: personalisation.improvements + '\n\n' +
           'Rating: ' + personalisation.rating + '\n' +
           'Email address (optional): ' + personalisation.contactEmailAddress
-        }
+        },
+        collaborators: [
+          562,
+          personalisation.contactEmailAddress,
+          {
+            'name': personalisation.name,
+            'email': personalisation.contactEmailAddress
+          }
+        ]
       }).then(function (result) {
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
