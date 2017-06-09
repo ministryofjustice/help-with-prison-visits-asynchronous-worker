@@ -4,6 +4,7 @@ const Zendesk = require('zendesk-node-api')
 
 module.exports.execute = function (task) {
   var feedback = task.additionalData.split('~~')
+  var subjectText = 'Help With Prison Visits - Feedback'
   var personalisation = {
     rating: RatingEnum[feedback[0]].displayName,
     improvements: feedback[1],
@@ -18,38 +19,31 @@ module.exports.execute = function (task) {
     })
 
     if (Config.ZENDESK_TEST_ENVIRONMENT === 'true') {
+      subjectText = 'Test: Help With Prison Visits - Feedback'
+    }
+
+    if (personalisation.contactEmailAddress === '') {
       return zendesk.tickets.create({
-        subject: 'Test: Help With Prison Visits - Feedback',
+        requester_id: '114198238551',
+        subject: subjectText,
         comment: {
           body: personalisation.improvements + '\n\n' +
-          'Rating: ' + personalisation.rating + '\n' +
-          'Email address (optional): ' + personalisation.contactEmailAddress
-        },
-        collaborators: [
-          562,
-          personalisation.contactEmailAddress,
-          {
-            'email': personalisation.contactEmailAddress
-          }
-        ]
+          'Rating: ' + personalisation.rating
+        }
       }).then(function (result) {
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
     } else {
       return zendesk.tickets.create({
-        subject: 'Help With Prison Visits - Feedback',
+        requester: {
+          'name': personalisation.contactEmailAddress,
+          'email': personalisation.contactEmailAddress
+        },
+        subject: subjectText,
         comment: {
           body: personalisation.improvements + '\n\n' +
-          'Rating: ' + personalisation.rating + '\n' +
-          'Email address (optional): ' + personalisation.contactEmailAddress
-        },
-        collaborators: [
-          562,
-          personalisation.contactEmailAddress,
-          {
-            'email': personalisation.contactEmailAddress
-          }
-        ]
+          'Rating: ' + personalisation.rating
+        }
       }).then(function (result) {
         console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
       })
