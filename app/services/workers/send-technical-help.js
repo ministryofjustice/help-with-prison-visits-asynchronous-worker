@@ -18,7 +18,7 @@ module.exports.execute = function (task) {
     })
 
     if (Config.ZENDESK_TEST_ENVIRONMENT === 'true') {
-      subjectText = 'Test: Help With Prison Visits - Feedback'
+      subjectText = 'Test: Help With Prison Visits - Help'
     }
 
     return zendesk.tickets.create({
