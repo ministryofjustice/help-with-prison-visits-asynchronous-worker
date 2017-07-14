@@ -481,7 +481,7 @@ module.exports = {
     value: 'leyhill',
     displayName: 'Leyhill',
     region: 'ENG/WAL',
-    postcode: 'LN2 4BD'
+    postcode: 'GL12 8BT'
   },
 
   LINCOLN: {
