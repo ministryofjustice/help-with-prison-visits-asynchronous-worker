@@ -18,7 +18,7 @@ var claimsPendingPayment = [
 var claimsMissingData = [['', '', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234']]
 
 var testPath = 'data/payments/test.csv'
-var testAdiPath = 'data/payments/adi.xlsm'
+var testAdiPath = 'data/payments/adi.xls'
 
 var generateDirectPayments
 var getClaimsPendingPayment
