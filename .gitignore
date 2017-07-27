@@ -11,7 +11,7 @@ node_modules
 .start.pid
 .port.tmp
 .tmuxp.*
-~$*.xlsm
+~$*.xls
 *.pyc
 
 # Static managed assets
