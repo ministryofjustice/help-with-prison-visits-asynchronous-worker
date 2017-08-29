@@ -9,6 +9,8 @@ const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
 
+module.exports._test_formatCSVData = formatCSVData
+
 module.exports.execute = function (task) {
   var claimIds
   var paymentCsvFilePath
@@ -45,16 +47,16 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
 // POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
 function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
+    data.splice(claimIdIndex, 1)
+    data.splice(1, 0, '')
+    data.splice(9, 0, '3', '', '') // 3 is the code for checking ID in POI
+    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
+
     // Ensures there is a space in the postcode
     var postCodeIndex = 8
     if (data[postCodeIndex].indexOf(' ') < 0) {
       data[postCodeIndex] = data[postCodeIndex].replace(/^(.*)(.{3})$/, '$1 $2')
     }
-
-    data.splice(claimIdIndex, 1)
-    data.splice(1, 0, '')
-    data.splice(9, 0, '3', '', '') // 3 is the code for checking ID in POI
-    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
   })
 
   return paymentData
