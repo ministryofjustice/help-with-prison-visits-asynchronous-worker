@@ -59,8 +59,8 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
   it('should copy claim directory to archive when not archiving eligibility', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA).then(function () {
       expect(calledMove).to.be.true
-      expect(sourceDirectory).to.be.equal(path.normalize(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`))
-      expect(targetDirectory).to.be.equal(path.normalize(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`))
+      expect(sourceDirectory).to.be.equal(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
+      expect(targetDirectory).to.be.equal(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
     })
   })
 
