@@ -1,5 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
+const path = require('path')
 
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
@@ -58,8 +59,8 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
   it('should copy claim directory to archive when not archiving eligibility', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA).then(function () {
       expect(calledMove).to.be.true
-      expect(sourceDirectory).to.be.equal(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
-      expect(targetDirectory).to.be.equal(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
+      expect(sourceDirectory).to.be.equal(path.normalize(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`))
+      expect(targetDirectory).to.be.equal(path.normalize(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`))
     })
   })
 
@@ -67,8 +68,8 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA_DELETE_ELIGIBILTIY).then(function () {
       expect(calledFsReaddirSync).to.be.true
       expect(calledFsRmdirSync).to.be.true
-      expect(sourceDirectory).to.be.equal(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`)
-      expect(targetDirectory).to.be.equal(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`)
+      expect(sourceDirectory).to.be.equal(path.normalize(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`))
+      expect(targetDirectory).to.be.equal(path.normalize(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`))
     })
   })
 
