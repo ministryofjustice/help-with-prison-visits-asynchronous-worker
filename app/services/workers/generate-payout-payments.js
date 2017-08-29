@@ -45,10 +45,9 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
 // POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
 function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
-
     // Ensures there is a space in the postcode
     var postCodeIndex = 8
-    if(data[postCodeIndex].indexOf(' ') < 0) {
+    if (data[postCodeIndex].indexOf(' ') < 0) {
       data[postCodeIndex] = data[postCodeIndex].replace(/^(.*)(.{3})$/, '$1 $2')
     }
 
