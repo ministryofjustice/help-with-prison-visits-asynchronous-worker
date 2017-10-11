@@ -357,7 +357,6 @@ describe('services/data/get-claims-pending-payment', function () {
         .then(function () {
           return changeClaimStatus('REJECTED')
             .then(function () {
-              var claimData = testHelper.getClaimData(reference)
               return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
                 .then(function (results) {
                   expect(results.length === 0).to.be.true
