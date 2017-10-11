@@ -4,6 +4,7 @@ const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const dateFormatter = require('../../../../app/services/date-formatter')
 require('sinon-bluebird')
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
@@ -29,7 +30,10 @@ describe('services/data/get-claims-pending-payment', function () {
       .then(function () {
         return knex('IntSchema.Claim')
           .where('ClaimId', claimId)
-          .update('Status', 'APPROVED')
+          .update({
+            'Status': 'APPROVED',
+            'DateApproved': dateFormatter.now().toDate()
+          })
       })
       .then(function () {
         return knex('IntSchema.ClaimExpense')
@@ -54,6 +58,18 @@ describe('services/data/get-claims-pending-payment', function () {
             'ApprovedCost': 25
           })
       })
+  }
+
+  function changeClaimStatus (status) {
+    return knex('IntSchema.Claim')
+      .where('ClaimId', claimId)
+      .update('Status', status)
+  }
+
+  function changeClaimDateApproved (dateApproved) {
+    return knex('IntSchema.Claim')
+      .where('ClaimId', claimId)
+      .update('DateApproved', dateApproved)
   }
 
   describe('Direct Bank payment', function () {
@@ -283,6 +299,70 @@ describe('services/data/get-claims-pending-payment', function () {
           expect(filteredResults[0][7], 'should contain the visitor country').to.be.equal(claimData.Visitor.Country)
           expect(filteredResults[0][8], 'should contain the visitor postcode').to.be.equal(claimData.Visitor.PostCode)
           expect(filteredResults[0][9], 'should contain the reference number').to.be.equal(reference)
+        })
+    })
+
+    it('should retrieve UPDATED claim records with payment status of NULL', function () {
+      return changeClaimStatus('UPDATED')
+        .then(function () {
+          var claimData = testHelper.getClaimData(reference)
+          return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+            .then(function (results) {
+              var filteredResults = results.filter(function (result) {
+                return result[0] === claimId
+              })
+              expect(filteredResults.length === 1).to.be.true
+              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
+              expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
+              expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
+              expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
+              expect(filteredResults[0][3], 'should contain the visitor last name').to.be.equal(claimData.Visitor.LastName)
+              expect(filteredResults[0][4], 'should contain the visitor house number and street').to.be.equal(claimData.Visitor.HouseNumberAndStreet)
+              expect(filteredResults[0][5], 'should contain the visitor town').to.be.equal(claimData.Visitor.Town)
+              expect(filteredResults[0][6], 'should contain the visitor county').to.be.equal(claimData.Visitor.County)
+              expect(filteredResults[0][7], 'should contain the visitor country').to.be.equal(claimData.Visitor.Country)
+              expect(filteredResults[0][8], 'should contain the visitor postcode').to.be.equal(claimData.Visitor.PostCode)
+              expect(filteredResults[0][9], 'should contain the reference number').to.be.equal(reference)
+            })
+        })
+    })
+
+    it('should retrieve APPROVED-ADVANCE-CLOSED claim records with payment status of NULL', function () {
+      return changeClaimStatus('APPROVED-ADVANCE-CLOSED')
+        .then(function () {
+          var claimData = testHelper.getClaimData(reference)
+          return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+            .then(function (results) {
+              var filteredResults = results.filter(function (result) {
+                return result[0] === claimId
+              })
+              expect(filteredResults.length === 1).to.be.true
+              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
+              expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
+              expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
+              expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
+              expect(filteredResults[0][3], 'should contain the visitor last name').to.be.equal(claimData.Visitor.LastName)
+              expect(filteredResults[0][4], 'should contain the visitor house number and street').to.be.equal(claimData.Visitor.HouseNumberAndStreet)
+              expect(filteredResults[0][5], 'should contain the visitor town').to.be.equal(claimData.Visitor.Town)
+              expect(filteredResults[0][6], 'should contain the visitor county').to.be.equal(claimData.Visitor.County)
+              expect(filteredResults[0][7], 'should contain the visitor country').to.be.equal(claimData.Visitor.Country)
+              expect(filteredResults[0][8], 'should contain the visitor postcode').to.be.equal(claimData.Visitor.PostCode)
+              expect(filteredResults[0][9], 'should contain the reference number').to.be.equal(reference)
+            })
+        })
+    })
+
+    it('should not retrieve REJECTED claim records', function () {
+      return changeClaimDateApproved(null)
+        .then(function () {
+          return changeClaimStatus('REJECTED')
+            .then(function () {
+              var claimData = testHelper.getClaimData(reference)
+              return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+                .then(function (results) {
+                  expect(results.length === 0).to.be.true
+                })
+            })
         })
     })
 
