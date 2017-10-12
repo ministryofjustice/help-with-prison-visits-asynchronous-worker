@@ -34,7 +34,7 @@ describe('services/data/auto-approve-claim', function () {
       })
   })
 
-  it('should update the status of the claim to AUTOAPPROVED, call to update expenses, send accept email and add claim event', function () {
+  it('should update the status of the claim to AUTOAPPROVED, add current timestamp to DateApproved, call to update expenses, send accept email and add claim event', function () {
     return autoApproveClaim(REFERENCE, eligibilityId, claimId, EMAIL_ADDRESS)
       .then(function () {
         return knex('IntSchema.Claim')
@@ -42,6 +42,7 @@ describe('services/data/auto-approve-claim', function () {
           .first()
           .then(function (claim) {
             expect(claim.Status).to.equal(statusEnum.AUTOAPPROVED)
+            expect(claim.DateApproved).not.to.be.null
             expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED)
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
