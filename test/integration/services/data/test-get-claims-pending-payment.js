@@ -359,7 +359,11 @@ describe('services/data/get-claims-pending-payment', function () {
             .then(function () {
               return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
                 .then(function (results) {
-                  expect(results.length === 0).to.be.true
+                  var filteredResults = results.filter(function (result) {
+                    return result[0] === claimId
+                  })
+                  console.log(filteredResults)
+                  expect(filteredResults.length === 0).to.be.true
                 })
             })
         })
