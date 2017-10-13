@@ -362,7 +362,6 @@ describe('services/data/get-claims-pending-payment', function () {
                   var filteredResults = results.filter(function (result) {
                     return result[0] === claimId
                   })
-                  console.log(filteredResults)
                   expect(filteredResults.length === 0).to.be.true
                 })
             })
