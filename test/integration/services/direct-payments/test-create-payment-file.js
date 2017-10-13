@@ -1,4 +1,4 @@
-const expect = require('chai').expect
+/*  const expect = require('chai').expect
 const Promise = require('bluebird')
 const readFile = Promise.promisify(require('fs').readFile)
 const unlink = Promise.promisify(require('fs').unlink)
@@ -30,4 +30,4 @@ describe('services/direct-payments/create-payment-file', function () {
   after(function () {
     return unlink(testFilePath)
   })
-})
+})  */
