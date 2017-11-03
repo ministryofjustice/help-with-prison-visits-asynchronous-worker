@@ -16,7 +16,7 @@ module.exports.execute = function (task) {
     }
 
     var emailAddress = task.additionalData
-    var emailTemplateId = config.NOTIFY_SUBMIT_CLAIM_EMAIL_TEMPLATE_ID
+    var emailTemplateId = config.NOTIFY_REQUEST_INFORMATION_CLAIM_EMAIL_TEMPLATE_ID
 
     return sendNotification(emailTemplateId, emailAddress, personalisation)
   })
