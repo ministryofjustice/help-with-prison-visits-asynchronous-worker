@@ -10,12 +10,9 @@ module.exports.execute = function (task) {
     .then(function (visitorDwpBenefitCheckerData) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {
-          if(benefitCheckerResult.result) {
+          if(benefitCheckerResult.result != "YES") {
             insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
           }
-
-          console.dir(task.reference + " " + task.eligibilityId + " " + task.claimId + " " + tasksEnum.DWP_FAILED_NOTIFICATION + " " + benefitCheckerResult.result)
-          console.log(task.reference + " " + task.eligibilityId + " " + task.claimId + " " + tasksEnum.DWP_FAILED_NOTIFICATION + " " + benefitCheckerResult.result)
 
           return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
         })
