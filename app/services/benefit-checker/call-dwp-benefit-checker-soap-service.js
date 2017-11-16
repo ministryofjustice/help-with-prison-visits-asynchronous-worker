@@ -12,7 +12,8 @@ module.exports = function (visitorDwpBenefitCheckerData) {
   if (config.DWP_BENEFIT_CHECKER_ENABLED !== 'true') {
     return Promise.resolve({
       'visitorId': visitorDwpBenefitCheckerData.visitorId,
-      'result': 'NOT-RUN'
+      'result': 'NOT-RUN',
+      'benefit': visitorDwpBenefitCheckerData.benefit
     })
   }
 
@@ -37,7 +38,8 @@ module.exports = function (visitorDwpBenefitCheckerData) {
             var status = result[0]._.toString().toUpperCase()
             return {
               'visitorId': visitorDwpBenefitCheckerData.visitorId,
-              'result': status
+              'result': status,
+              'benefit': visitorDwpBenefitCheckerData.benefit
             }
           } else {
             throw new Error(`Could not parse response: ${responseBody}`)
