@@ -12,12 +12,21 @@ module.exports.execute = function (task) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {
           if(benefitCheckerResult.result != "YES") {
-            if(sendDWPFailedEmailEnum[benefitCheckerResult.benefit]) {
+            if(sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
               insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
+              insertClaimEventForNote(reference, eligibilityId, claimId, note)
             }
           }
 
           return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
         })
     })
+}
+
+function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
+  if (note) {
+    return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.MESSAGE.value, null, note, false)
+  } else {
+    return Promise.resolve()
+  }
 }
