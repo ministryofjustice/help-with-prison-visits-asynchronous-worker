@@ -4,6 +4,8 @@ const callDwpBenefitCheckerSoapService = require('../benefit-checker/call-dwp-be
 const updateVisitorWithDwpBenefitCheckerResult = require('../data/update-visitor-with-dwp-benefit-checker-result')
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
+const claimEventEnum = require('../../constants/claim-event-enum')
+const insertClaimEvent = require('../data/insert-claim-event')
 const sendDWPFailedEmailEnum = require('../../constants/dwp-failed-email-enum')
 
 module.exports.execute = function (task) {
@@ -11,22 +13,13 @@ module.exports.execute = function (task) {
     .then(function (visitorDwpBenefitCheckerData) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {
-          if(benefitCheckerResult.result != "YES") {
-            if(sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
-              insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
-              insertClaimEventForNote(reference, eligibilityId, claimId, note)
-            }
+          if(benefitCheckerResult.result != "YES" && sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
+              return insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
+                .then(function() { return insertClaimEvent(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.MESSAGE.value, null, "Additional information automatically requested after DWP check", false) })
+                .then(function() { return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result) })
+          } else {
+            return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
           }
-
-          return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
         })
     })
-}
-
-function insertClaimEventForNote (reference, eligibilityId, claimId, note) {
-  if (note) {
-    return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.MESSAGE.value, null, note, false)
-  } else {
-    return Promise.resolve()
-  }
 }
