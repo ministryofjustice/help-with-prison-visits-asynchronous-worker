@@ -42,4 +42,3 @@ module.exports.execute = function (task) {
     return console.dir('Zendesk not implemented in development environments.')
   }
 }
-

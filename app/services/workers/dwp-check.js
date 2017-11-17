@@ -15,11 +15,11 @@ module.exports.execute = function (task) {
     .then(function (visitorDwpBenefitCheckerData) {
       return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
         .then(function (benefitCheckerResult) {
-          if(benefitCheckerResult.result != "YES" && sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
-              return insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
-                .then(function() { return insertClaimEvent(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.CLAIM_REQUEST_INFORMATION.value, null, "Additional information automatically requested after DWP check", false) })
-                .then(function() { return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result) })
-                .then(function() { return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION) })
+          if (benefitCheckerResult.result != 'YES' && sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
+            return insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, benefitCheckerResult.result)
+                .then(function () { return insertClaimEvent(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.CLAIM_REQUEST_INFORMATION.value, null, 'Additional information automatically requested after DWP check', false) })
+                .then(function () { return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result) })
+                .then(function () { return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION) })
           } else {
             return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result)
           }
