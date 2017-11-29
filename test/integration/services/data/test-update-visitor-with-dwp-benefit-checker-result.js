@@ -21,7 +21,7 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   })
 
   it('should update internal Visitor with DWP benefit checker result ', function () {
-    return updateVisitorWithDwpBenefitCheckerResult(visitorId, dwpBenefitCheckerResult)
+    return updateVisitorWithDwpBenefitCheckerResult(visitorId, dwpBenefitCheckerResult, null)
       .then(function () {
         return knex('IntSchema.Visitor').where('Reference', reference).first('DWPBenefitCheckerResult')
           .then(function (visitor) {

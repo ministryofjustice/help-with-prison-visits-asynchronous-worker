@@ -1,8 +1,11 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (visitorId, dwpBenefitCheckerResult) {
+module.exports = function (visitorId, dwpBenefitCheckerResult, dwpCheckValue) {
   return knex('IntSchema.Visitor')
     .where('VisitorId', visitorId)
-    .update('DWPBenefitCheckerResult', dwpBenefitCheckerResult)
+    .update({
+      'DWPBenefitCheckerResult': dwpBenefitCheckerResult,
+      'DWPCheck': dwpCheckValue
+    })
 }
