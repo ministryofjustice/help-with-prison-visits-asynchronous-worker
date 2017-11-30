@@ -19,7 +19,7 @@ module.exports.execute = function (task) {
         .then(function (benefitCheckerResult) {
           if (benefitCheckerResult.result !== 'YES' && sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
             return insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, visitorDwpBenefitCheckerData.email)
-                .then(function () { return insertDummyUploadLaterBenefitDocument(task.claimId, task.eligibilityId, task.reference) })
+                .then(function () { return insertDummyUploadLaterBenefitDocument(task.claimId, visitorDwpBenefitCheckerData.benefit, task.eligibilityId, task.reference) })
                 .then(function () { return insertClaimEventSystemMessage(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.CLAIM_REQUEST_INFORMATION.value, null, 'We have not been able to verify your benefit status. Please upload evidence of the benefit you receive', false) })
                 .then(function () { return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION) })
                 .then(function () { return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION) })
@@ -30,19 +30,14 @@ module.exports.execute = function (task) {
     })
 }
 
-function insertDummyUploadLaterBenefitDocument (claimId, eligibilityId, reference) {
-  return knex('IntSchema.Visitor')
-  .where({'Reference': reference, 'EligibilityId': eligibilityId})
-  .first('benefit')
-  .then(function (result) {
+function insertDummyUploadLaterBenefitDocument (claimId, benefit, eligibilityId, reference) {
     return knex('IntSchema.ClaimDocument').insert({
       ClaimDocumentId: (Math.floor(Date.now() / 100) - 14000000000) + 2, // taken from internal-claim-document.helper.js on external web
       ClaimId: claimId,
       EligibilityId: eligibilityId,
       Reference: reference,
-      DocumentType: result.benefit,
+      DocumentType: benefit,
       DocumentStatus: 'upload-later',
       IsEnabled: true
     })
-  })
 }
