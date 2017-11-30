@@ -6,7 +6,7 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
-const insertClaimEvent = require('../data/insert-claim-event')
+const insertClaimEventSystemMessage = require('../data/insert-claim-event-system-message')
 const updateClaimStatus = require('../data/update-claim-status')
 const sendDWPFailedEmailEnum = require('../../constants/dwp-failed-email-enum')
 const config = require('../../../knexfile').asyncworker
@@ -21,7 +21,7 @@ module.exports.execute = function (task) {
           if (benefitCheckerResult.result !== 'YES' && sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]) {
             return insertTask(task.reference, task.eligibilityId, task.claimId, tasksEnum.DWP_FAILED_NOTIFICATION, visitorDwpBenefitCheckerData.email)
                 .then(function () { return insertDummyUploadLaterBenefitDocument(task.claimId, task.eligibilityId, task.reference) })
-                .then(function () { return insertClaimEvent(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.CLAIM_REQUEST_INFORMATION.value, null, 'We have not been able to verify your benefit status. Please upload evidence of the benefit you receive', false) })
+                .then(function () { return insertClaimEventSystemMessage(task.reference, task.eligibilityId, task.claimId, null, claimEventEnum.CLAIM_REQUEST_INFORMATION.value, null, 'We have not been able to verify your benefit status. Please upload evidence of the benefit you receive', false) })
                 .then(function () { return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION) })
                 .then(function () { return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION) })
           } else {
