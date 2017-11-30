@@ -11,7 +11,6 @@ const updateClaimStatus = require('../data/update-claim-status')
 const sendDWPFailedEmailEnum = require('../../constants/dwp-failed-email-enum')
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
-const log = require('../../services/log')
 
 module.exports.execute = function (task) {
   return getVisitorDwpBenefitCheckerData(task.reference, task.eligibilityId, task.claimId)
@@ -31,7 +30,7 @@ module.exports.execute = function (task) {
     })
 }
 
-function insertDummyUploadLaterBenefitDocument(claimId, eligibilityId, reference) {
+function insertDummyUploadLaterBenefitDocument (claimId, eligibilityId, reference) {
   return knex('IntSchema.Visitor')
   .where({'Reference': reference, 'EligibilityId': eligibilityId})
   .first('benefit')
