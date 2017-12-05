@@ -40,6 +40,6 @@ function insertDummyUploadLaterBenefitDocument (claimId, benefit, eligibilityId,
     DocumentType: benefit,
     DocumentStatus: 'upload-later',
     IsEnabled: true,
-    DateSubmitted: dateFormatter.now()
+    DateSubmitted: dateFormatter.now().toDate()
   })
 }
