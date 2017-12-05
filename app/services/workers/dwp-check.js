@@ -11,6 +11,7 @@ const updateClaimStatus = require('../data/update-claim-status')
 const sendDWPFailedEmailEnum = require('../../constants/dwp-failed-email-enum')
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
+const dateFormatter = require('../date-formatter')
 
 module.exports.execute = function (task) {
   return getVisitorDwpBenefitCheckerData(task.reference, task.eligibilityId, task.claimId)
@@ -38,6 +39,7 @@ function insertDummyUploadLaterBenefitDocument (claimId, benefit, eligibilityId,
     Reference: reference,
     DocumentType: benefit,
     DocumentStatus: 'upload-later',
-    IsEnabled: true
+    IsEnabled: true,
+    DateSubmitted: dateFormatter.now()
   })
 }
