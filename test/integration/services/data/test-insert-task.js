@@ -19,7 +19,7 @@ describe('services/data/insert-task', function () {
           .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'Task': tasksEnum.DWP_CHECK})
           .first()
           .then(function (result) {
-            expect(result.Status).to.be.equal(statusEnum.PENDING)
+            expect(result.Status).to.be.equal(statusEnum.INPROGRESS)
             expect(result.DateCreated).not.to.be.null
           })
       })
