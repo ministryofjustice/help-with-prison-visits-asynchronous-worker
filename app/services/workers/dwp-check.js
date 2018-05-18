@@ -1,4 +1,3 @@
-
 const getVisitorDwpBenefitCheckerData = require('../data/get-visitor-dwp-benefit-checker-data')
 const callDwpBenefitCheckerSoapService = require('../benefit-checker/call-dwp-benefit-checker-soap-service')
 const updateVisitorWithDwpBenefitCheckerResult = require('../data/update-visitor-with-dwp-benefit-checker-result')
