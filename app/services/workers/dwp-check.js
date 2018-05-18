@@ -27,7 +27,7 @@ module.exports.execute = function (task) {
                 .then(function () { return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION) })
           } else {
             return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)
-              .then(function () { 
+              .then(function () {
                 if (benefitCheckerResult.result === dwpCheckResultEnum.YES) {
                   return autoApprovalProcess(task.reference, task.eligibilityId, task.claimId)
                 }

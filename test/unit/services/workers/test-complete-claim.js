@@ -47,7 +47,7 @@ describe('services/workers/complete-claim', function () {
       expect(copyClaimDataToInternal.calledWith(claimData)).to.be.true
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
       expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true
-      //autoApprovalProcess Removed in APVS0115
+      // autoApprovalProcess Removed in APVS0115
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true
