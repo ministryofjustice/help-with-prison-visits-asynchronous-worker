@@ -49,7 +49,7 @@ function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
-    data.splice(9, 0, '3', '', '') // 3 is the code for checking ID in POI
+    data.splice(9, 0, '2', '', '') // 2 is the code for checking ID in POI
     data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
 
     // Ensures there is a space in the postcode
