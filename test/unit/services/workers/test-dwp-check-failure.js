@@ -5,7 +5,7 @@ const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-e
 require('sinon-bluebird')
 
 var visitorDwpBenefitCheckerData = {'visitorId': 1234, 'surname': 'YELLOW', 'dateOfBirth': '19681210', 'nino': 'PW556356A'}
-var benefitCheckerResult = {'visitorId': 1234, 'result': dwpCheckResultEnum.YES}
+var benefitCheckerResult = {'visitorId': 1234, 'result': dwpCheckResultEnum.NO}
 
 var getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
 var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
@@ -24,7 +24,7 @@ const eligibilityId = '4321'
 const claimId = 123
 
 describe('services/workers/dwp-check', function () {
-  it('should call to retrieve data then make benefit check call and finally run auto-approval checks', function () {
+  it('should call to retrieve data then make benefit check call and NOT run auto-approval checks', function () {
     return dwpCheck.execute({
       reference: reference,
       eligibilityId: eligibilityId,
@@ -33,8 +33,8 @@ describe('services/workers/dwp-check', function () {
       expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true
       expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)).to.be.true
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
-      sinon.assert.called(autoApprovalProcess)
+      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.false
+      sinon.assert.notCalled(autoApprovalProcess)
     })
   })
 })
