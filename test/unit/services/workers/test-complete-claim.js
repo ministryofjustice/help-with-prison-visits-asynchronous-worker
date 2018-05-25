@@ -22,7 +22,7 @@ var getAllClaimData = sinon.stub().resolves(claimData)
 var copyClaimDataToInternal = sinon.stub().resolves()
 var deleteClaimFromExternal = sinon.stub().resolves()
 var calculateCarExpenseCosts = sinon.stub().resolves()
-var autoApprovalProcess = sinon.stub().resolves()
+// autoApprovalProcess Removed in APVS0115
 var insertTask = sinon.stub().resolves()
 var getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
 
@@ -31,7 +31,7 @@ const completeClaim = proxyquire('../../../../app/services/workers/complete-clai
   '../data/copy-claim-data-to-internal': copyClaimDataToInternal,
   '../data/delete-claim-from-external': deleteClaimFromExternal,
   '../distance-checker/calculate-car-expense-costs': calculateCarExpenseCosts,
-  '../auto-approval/auto-approval-process': autoApprovalProcess,
+  // autoApprovalProcess Removed in APVS0115
   '../data/insert-task': insertTask,
   '../data/get-visitor-email-address': getVisitorEmailAddress
 })
@@ -47,7 +47,7 @@ describe('services/workers/complete-claim', function () {
       expect(copyClaimDataToInternal.calledWith(claimData)).to.be.true
       expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
       expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
+      // autoApprovalProcess Removed in APVS0115
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true
