@@ -17,7 +17,7 @@ var getDataForAutoApprovalCheck
 
 describe('services/data/get-data-for-auto-approval-check', function () {
   before(function () {
-    var uniqueId = Math.floor(Date.now() / 100) - 14000000000
+    var uniqueId = Math.floor(Date.now() / 100) - 13999999999
     claimData = testHelper.getClaimData(REFERENCE)
 
     getAllClaimDataStub = sinon.stub().resolves(claimData)
