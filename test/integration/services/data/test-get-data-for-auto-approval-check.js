@@ -80,6 +80,32 @@ describe('services/data/get-data-for-auto-approval-check', function () {
           IsAdvanceClaim: false,
           Status: 'REJECTED'
         }
+      },
+      {
+        Claim: { // This claim should be used for auto-approval time limit check
+          ClaimId: uniqueId + 4,
+          EligibilityId: claimData.Claim.EligibilityId,
+          Reference: REFERENCE,
+          DateOfJourney: dateFormatter.now().subtract(80, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(20, 'days').toDate(),
+          IsAdvanceClaim: false,
+          Status: 'APPROVED'
+        }
+      },
+      {
+        Claim: { // Auto-approved claim should not be used for auto-approval
+          ClaimId: uniqueId + 5,
+          EligibilityId: claimData.Claim.EligibilityId,
+          Reference: REFERENCE,
+          DateOfJourney: dateFormatter.now().subtract(80, 'days').toDate(),
+          DateCreated: dateFormatter.now().subtract(70, 'days').toDate(),
+          DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
+          DateReviewed: dateFormatter.now().subtract(10, 'days').toDate(),
+          IsAdvanceClaim: false,
+          Status: 'AUTO-APPROVED'
+        }
       }
     ]
 

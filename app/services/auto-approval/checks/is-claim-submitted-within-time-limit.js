@@ -6,8 +6,8 @@ const CHECK_NAME = 'is-claim-submitted-within-time-limit'
 const FAILURE_MESSAGE = 'Claim was not submitted with the time limit'
 
 module.exports = function (autoApprovalData) {
-  var claimSubmissionDateMoment = moment(autoApprovalData.Claim.DateSubmitted)
-  var claimSubmissionCutOffDate = moment(autoApprovalData.latestManuallyApprovedClaim.DateOfJourney).add(autoApprovalData.maxDaysAfterAPVUVisit, 'days')
+  var claimSubmissionDateMoment = moment(autoApprovalData.Claim.DateOfJourney)
+  var claimSubmissionCutOffDate = moment(autoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(autoApprovalData.maxDaysAfterAPVUVisit, 'days')
 
   var checkPassed = claimSubmissionDateMoment.isSameOrBefore(claimSubmissionCutOffDate)
 
