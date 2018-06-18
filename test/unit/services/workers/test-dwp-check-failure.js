@@ -13,6 +13,7 @@ var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResul
 var updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
 var autoApprovalProcess = sinon.stub().resolves()
 
+var insertTask = sinon.stub().resolves()
 var insertDummyUploadLaterBenefitDocument = sinon.stub().resolves()
 var insertClaimEventSystemMessage = sinon.stub().resolves()
 var updateClaimStatus = sinon.stub().resolves()
@@ -22,6 +23,7 @@ const dwpCheck = proxyquire('../../../../app/services/workers/dwp-check', {
   '../benefit-checker/call-dwp-benefit-checker-soap-service': callDwpBenefitCheckerSoapService,
   '../data/update-visitor-with-dwp-benefit-checker-result': updateVisitorWithDwpBenefitCheckerResult,
   '../auto-approval/auto-approval-process': autoApprovalProcess,
+  '../data/insert-task': insertTask,
   './helpers/insert-dummy-upload-later-benefit-document': insertDummyUploadLaterBenefitDocument,
   '../data/insert-claim-event-system-message': insertClaimEventSystemMessage,
   '../data/update-claim-status': updateClaimStatus
