@@ -8,11 +8,9 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const insertClaimEventSystemMessage = require('../data/insert-claim-event-system-message')
 const updateClaimStatus = require('../data/update-claim-status')
 const sendDWPFailedEmailEnum = require('../../constants/dwp-failed-email-enum')
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
-const dateFormatter = require('../date-formatter')
 const autoApprovalProcess = require('../auto-approval/auto-approval-process')
 const dwpCheckResultEnum = require('../../constants/dwp-check-result-enum')
+const insertDummyUploadLaterBenefitDocument = require('./helpers/insert-dummy-upload-later-benefit-document')
 
 module.exports.execute = function (task) {
   return getVisitorDwpBenefitCheckerData(task.reference, task.eligibilityId, task.claimId)
@@ -28,24 +26,10 @@ module.exports.execute = function (task) {
           } else {
             return updateVisitorWithDwpBenefitCheckerResult(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)
               .then(function () {
-                if (benefitCheckerResult.result === dwpCheckResultEnum.YES) {
-                  return autoApprovalProcess(task.reference, task.eligibilityId, task.claimId)
-                }
+                // If this code is reached the benefit checker has either passed or is not required for this particular benefit
+                return autoApprovalProcess(task.reference, task.eligibilityId, task.claimId)
               })
           }
         })
     })
-}
-
-function insertDummyUploadLaterBenefitDocument (claimId, benefit, eligibilityId, reference) {
-  return knex('IntSchema.ClaimDocument').insert({
-    ClaimDocumentId: (Math.floor(Date.now() / 100) - 14000000000) + 2, // taken from internal-claim-document.helper.js on external web
-    ClaimId: claimId,
-    EligibilityId: eligibilityId,
-    Reference: reference,
-    DocumentType: benefit,
-    DocumentStatus: 'upload-later',
-    IsEnabled: true,
-    DateSubmitted: dateFormatter.now().toDate()
-  })
 }
