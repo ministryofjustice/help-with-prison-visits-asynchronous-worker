@@ -5,10 +5,10 @@ const isClaimSubmittedWithinTimeLimit = require('../../../../../app/services/aut
 const validAutoApprovalData = {
   Claim: {
     ClaimId: 1,
-    DateSubmitted: dateFormatter.now().subtract(2, 'days').toDate()
+    DateOfJourney: dateFormatter.now().subtract(2, 'days').toDate()
   },
   latestManuallyApprovedClaim: {
-    DateOfJourney: dateFormatter.now().subtract(30, 'days').toDate()
+    DateReviewed: dateFormatter.now().subtract(30, 'days').toDate()
   },
   maxDaysAfterAPVUVisit: '28'
 }
@@ -16,10 +16,10 @@ const validAutoApprovalData = {
 const invalidAutoApprovalData = {
   Claim: {
     ClaimId: 2,
-    DateSubmitted: dateFormatter.now().subtract(1, 'days').toDate()
+    DateOfJourney: dateFormatter.now().subtract(1, 'days').toDate()
   },
   latestManuallyApprovedClaim: {
-    DateOfJourney: dateFormatter.now().subtract(30, 'days').toDate()
+    DateReviewed: dateFormatter.now().subtract(30, 'days').toDate()
   },
   maxDaysAfterAPVUVisit: '28'
 }

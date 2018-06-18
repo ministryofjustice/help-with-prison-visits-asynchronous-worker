@@ -36,7 +36,7 @@ function getLatestManuallyApprovedClaim (previousClaims) {
         if (!latestManuallyApprovedClaim) {
           latestManuallyApprovedClaim = previousClaim
         } else {
-          if (previousClaim.DateReviewed < latestManuallyApprovedClaim.DateReviewed) {
+          if (previousClaim.DateReviewed > latestManuallyApprovedClaim.DateReviewed) {
             latestManuallyApprovedClaim = previousClaim
           }
         }
