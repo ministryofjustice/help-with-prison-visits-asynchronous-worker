@@ -1,4 +1,4 @@
-/*  const expect = require('chai').expect
+const expect = require('chai').expect
 const Promise = require('bluebird')
 const fs = require('fs')
 const unlink = Promise.promisify(require('fs').unlink)
@@ -19,4 +19,4 @@ describe('services/direct-payments/create-adi-journal-file', function () {
     console.log('\n\n\n\n\nTest File Path is ' + testFilePath+'\n\n\n\n\n\n')
     return unlink(testFilePath)
   })
-})  */
+})
