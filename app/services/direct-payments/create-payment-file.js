@@ -37,7 +37,7 @@ function formatPaymentsToCsvStandard (payments) {
   var scoTotal = 0
   log.info(payments)
   payments.forEach(function (payment) {
-    switch(payment[5]) {
+    switch (payment[5]) {
       case 'England':
         engTotal += payment[3]
         break

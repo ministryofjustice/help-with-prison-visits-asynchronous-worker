@@ -16,7 +16,7 @@ describe('services/direct-payments/create-adi-journal-file', function () {
   })
 
   after(function () {
-    console.log('\n\n\n\n\nTest File Path is ' + testFilePath+'\n\n\n\n\n\n')
+    console.log('\n\n\n\n\nTest File Path is ' + testFilePath + '\n\n\n\n\n\n')
     return unlink(testFilePath)
   })
 })
