@@ -33,10 +33,9 @@ describe('services/direct-payments/create-payment-file', function () {
 
         return readFile(filePath).then(function (content) {
           var lines = content.toString().split('\n')
-          log.info(lines)
           expect(lines.length, '2 payment rows without header').to.be.equal(18)
           expect(lines[0]).to.be.equal('223344,11223344,Alan Turing       ,00000022.33,REF1234H,England')
-          expect(lines[1]).to.be.equal("334455,22334455,John O'Shea       ,00000000010,REF4321H,Wales")
+          expect(lines[1]).to.be.equal("334455,22334455,John O'Shea       ,00000010.00,REF4321H,Wales")
           expect(lines[13]).to.be.equal('England,37.84')
           expect(lines[14]).to.be.equal('Northern Ireland,72.10')
           expect(lines[15]).to.be.equal('Wales,20.00')
