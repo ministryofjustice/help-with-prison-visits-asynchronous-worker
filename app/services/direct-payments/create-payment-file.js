@@ -37,7 +37,7 @@ function formatPaymentsToCsvStandard (payments) {
   var scoTotal = 0
   log.info(payments)
   payments.forEach(function (payment) {
-    var cost = parseInt(payment[3])
+    var cost = parseFloat(payment[3])
     switch (payment[5]) {
       case 'England':
         engTotal = engTotal + cost
