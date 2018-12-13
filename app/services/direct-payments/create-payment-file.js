@@ -35,7 +35,6 @@ function formatPaymentsToCsvStandard (payments) {
   var engTotal = 0
   var walTotal = 0
   var scoTotal = 0
-  log.info(payments)
   payments.forEach(function (payment) {
     var cost = parseFloat(payment[3])
     switch (payment[5]) {
