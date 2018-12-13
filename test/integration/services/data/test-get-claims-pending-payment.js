@@ -7,7 +7,6 @@ const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 require('sinon-bluebird')
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
-const log = require('../../../../app/services/log')
 
 describe('services/data/get-claims-pending-payment', function () {
   var reference = 'PAYMENT'
@@ -84,7 +83,6 @@ describe('services/data/get-claims-pending-payment', function () {
           var filteredResults = results.filter(function (result) {
             return result[0] === claimId
           })
-          log.info(filteredResults)
           expect(filteredResults.length === 1).to.be.true
           expect(filteredResults[0].length === 7, 'should contain 7 fields').to.be.true // updated to 7 as country is now included
           expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
