@@ -31,15 +31,42 @@ module.exports = function (payments) {
 function formatPaymentsToCsvStandard (payments) {
   var csvFormattedPayments = []
 
+  var niTotal = 0
+  var engTotal = 0
+  var walTotal = 0
+  var scoTotal = 0
   payments.forEach(function (payment) {
+    var cost = parseFloat(payment[3])
+    switch (payment[5]) {
+      case 'England':
+        engTotal = engTotal + cost
+        break
+      case 'Northern Ireland':
+        niTotal = niTotal + cost
+        break
+      case 'Scotland':
+        scoTotal = scoTotal + cost
+        break
+      case 'Wales':
+        walTotal = walTotal + cost
+        break
+    }
     csvFormattedPayments.push([
       payment[0],                                         // sortcode
       payment[1],                                         // account number
       getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[4]                                          // reference
+      payment[4],                                         // reference
+      payment[5]                                          // country
     ])
   })
+
+  csvFormattedPayments.push([])
+  csvFormattedPayments.push(['Country', 'Total Amount'])
+  csvFormattedPayments.push(['England', engTotal.toFixed(2)])
+  csvFormattedPayments.push(['Northern Ireland', niTotal.toFixed(2)])
+  csvFormattedPayments.push(['Wales', walTotal.toFixed(2)])
+  csvFormattedPayments.push(['Scotland', scoTotal.toFixed(2)])
 
   return csvFormattedPayments
 }

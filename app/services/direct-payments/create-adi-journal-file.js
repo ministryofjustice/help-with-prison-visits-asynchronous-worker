@@ -18,7 +18,9 @@ module.exports = function (totalPayment) {
 
     var filePath = path.join(outputPath, getFileName())
 
-    options.args = [totalPayment, filePath]
+    var accountingDate = dateFormatter.now().format('DD MMM YYYY')
+
+    options.args = [totalPayment, filePath, accountingDate]
     python.run('adi.py', options, function (error, results) {
       if (error) {
         log.error('Error calling python to generate ADI Journal')
