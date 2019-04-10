@@ -10,9 +10,9 @@ const log = require('../log')
 const dataPath = config.DATA_FILE_PATH
 const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
-module.exports = function (payments) {
+module.exports = function (payments, isForApvu = false) {
   const filePath = path.join(outputPath, getFileName())
-  const data = formatPaymentsToCsvStandard(payments)
+  const data = formatPaymentsToCsvStandard(payments, isForApvu)
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
 
@@ -28,7 +28,7 @@ module.exports = function (payments) {
   })
 }
 
-function formatPaymentsToCsvStandard (payments) {
+function formatPaymentsToCsvStandard (payments, isForApvu = false) {
   var csvFormattedPayments = []
 
   var niTotal = 0
@@ -60,13 +60,14 @@ function formatPaymentsToCsvStandard (payments) {
       payment[5]                                          // country
     ])
   })
-
-  csvFormattedPayments.push([])
-  csvFormattedPayments.push(['Country', 'Total Amount'])
-  csvFormattedPayments.push(['England', engTotal.toFixed(2)])
-  csvFormattedPayments.push(['Northern Ireland', niTotal.toFixed(2)])
-  csvFormattedPayments.push(['Wales', walTotal.toFixed(2)])
-  csvFormattedPayments.push(['Scotland', scoTotal.toFixed(2)])
+  if(isForApvu) {
+    csvFormattedPayments.push([])
+    csvFormattedPayments.push(['Country', 'Total Amount'])
+    csvFormattedPayments.push(['England', engTotal.toFixed(2)])
+    csvFormattedPayments.push(['Northern Ireland', niTotal.toFixed(2)])
+    csvFormattedPayments.push(['Wales', walTotal.toFixed(2)])
+    csvFormattedPayments.push(['Scotland', scoTotal.toFixed(2)])
+  }
 
   return csvFormattedPayments
 }
