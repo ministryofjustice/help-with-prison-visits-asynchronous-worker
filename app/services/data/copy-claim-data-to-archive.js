@@ -56,14 +56,6 @@ function insertInternal (table, tableData) {
     if (tableData[table + 'Id']) {
       tableId = tableData[table + 'Id']
     }
-    if (table === 'ClaimDocument') {
-      var documentData = tableData[0]
-      if (documentData) {
-        if (documentData[table + 'Id']) {
-          tableId = documentData[table + 'Id']
-        }
-      }
-    }
     return knex(`IntSchema.${table}`)
     .where(table + 'Id', tableId)
     .count(table + 'Id as count')
@@ -93,6 +85,8 @@ function insertInternalAll (table, tableDataArray) {
 }
 
 function insertClaimDocuments (allClaimDocuments) {
+  var claimDocumentInserts = []
+  var eligibilityDocumentInserts = []
   var eligibilityDocuments = allClaimDocuments.filter(function (claimDocument) {
     return !claimDocument.ClaimId
   })
@@ -100,14 +94,21 @@ function insertClaimDocuments (allClaimDocuments) {
     return claimDocument.ClaimId
   })
 
-  return insertInternal('ClaimDocument', claimDocuments)
+  if (claimDocuments) {
+    claimDocuments.forEach(function (claimDocument) {
+      claimDocumentInserts.push(insertInternal('ClaimDocument', claimDocument))
+    })
+  }
+
+  if (eligibilityDocuments) {
+    eligibilityDocuments.forEach(function (eligibilityDocument) {
+      eligibilityDocumentInserts.push(insertInternal('ClaimDocument', eligibilityDocument))
+    })
+  }
+
+  return Promise.all(claimDocumentInserts)
     .then(function () {
-      return insertInternal('ClaimDocument', eligibilityDocuments)
-        .catch(function (error) { // suppress error from already inserted eligibility documents
-          if (!error.message.includes('Cannot insert duplicate key')) {
-            throw error
-          }
-        })
+      return Promise.all(eligibilityDocumentInserts)
     })
 }
 
