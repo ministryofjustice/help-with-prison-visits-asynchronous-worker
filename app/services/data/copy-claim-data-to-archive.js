@@ -51,8 +51,30 @@ function copyClaimData (data) {
 }
 
 function insertInternal (table, tableData) {
+  var tableId = null
   if (tableData) {
-    return knex(`IntSchema.${table}`).insert(tableData)
+    if (tableData[table + 'Id']) {
+      tableId = tableData[table + 'Id']
+    }
+    if (table === 'ClaimDocument') {
+      var documentData = tableData[0]
+      if (documentData) {
+        if (documentData[table + 'Id']) {
+          tableId = documentData[table + 'Id']
+        }
+      }
+    }
+    return knex(`IntSchema.${table}`)
+    .where(table + 'Id', tableId)
+    .count(table + 'Id as count')
+    .then(function (countResult) {
+      var dataNotPresent = countResult[0].count === 0
+      if (dataNotPresent) {
+        return knex(`IntSchema.${table}`).insert(tableData)
+      } else {
+        return Promise.resolve()
+      }
+    })
   } else {
     return Promise.resolve()
   }
