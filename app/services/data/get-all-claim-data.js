@@ -2,14 +2,14 @@ const Promise = require('bluebird')
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (schema, reference, eligibilityId, claimId) {
+module.exports = function (schema, reference, eligibilityId, claimId, getDisabledDocuments = false) {
   return Promise.all([getEligilibility(schema, reference, eligibilityId),
     getPrisoner(schema, reference, eligibilityId),
     getVisitor(schema, reference, eligibilityId),
     getClaim(schema, claimId),
     getClaimChildren(schema, claimId),
     getClaimExpenses(schema, claimId),
-    getClaimDocuments(schema, reference, eligibilityId, claimId),
+    getClaimDocuments(schema, reference, eligibilityId, claimId, getDisabledDocuments),
     getClaimBankDetail(schema, claimId),
     getEligibilityVisitorUpdateContactDetail(schema, reference, eligibilityId),
     getClaimEscort(schema, claimId),
@@ -61,10 +61,16 @@ function getClaimChildren (schema, claimId) {
   return knex(`${schema}.ClaimChild`).select().where({'ClaimId': claimId, 'IsEnabled': true})
 }
 
-function getClaimDocuments (schema, reference, eligibilityId, claimId) {
-  return knex(`${schema}.ClaimDocument`).select()
-    .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'IsEnabled': true})
-    .orWhere({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': null, 'IsEnabled': true})
+function getClaimDocuments (schema, reference, eligibilityId, claimId, getDisabledDocuments) {
+  if (getDisabledDocuments) {
+    return knex(`${schema}.ClaimDocument`).select()
+      .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId})
+      .orWhere({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': null})
+  } else {
+    return knex(`${schema}.ClaimDocument`).select()
+      .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'IsEnabled': true})
+      .orWhere({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': null, 'IsEnabled': true})
+  }
 }
 
 function getClaimEscort (schema, claimId) {
