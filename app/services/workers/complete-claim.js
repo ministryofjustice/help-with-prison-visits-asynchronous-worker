@@ -5,7 +5,6 @@ const calculateCarExpenseCosts = require('../distance-checker/calculate-car-expe
 const insertTask = require('../data/insert-task')
 const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const tasksEnum = require('../../constants/tasks-enum')
-const autoApprovalProcess = require('../auto-approval/auto-approval-process')
 
 module.exports.execute = function (task) {
   var reference = task.reference
@@ -18,7 +17,7 @@ module.exports.execute = function (task) {
     .then(function () { return copyClaimDataToInternal(claimData, task.additionalData) })
     .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
     .then(function () { return calculateCarExpenseCosts(reference, eligibilityId, claimId) })
-    .then(function () { return autoApprovalProcess(reference, eligibilityId, claimId) })
+    // autoApprovalProcess Removed in APVS0115
     .then(function () { return insertTaskSendClaimNotification(reference, eligibilityId, claimId) })
     .then(function () { return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK) })
 }
