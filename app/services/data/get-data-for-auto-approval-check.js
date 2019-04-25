@@ -11,7 +11,10 @@ module.exports = function (reference, eligibilityId, claimId) {
   .then(function () { return getPreviousClaims(claimId, eligibilityId) })
   .then(function (previousClaims) { claimData.previousClaims = previousClaims })
   .then(function () { return getLatestManuallyApprovedClaim(claimData.previousClaims) })
-  .then(function (latestManuallyApprovedClaim) { claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim })
+  .then(function (latestManuallyApprovedClaim) {
+    claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
+    claimData.latestManualClaim = getLatestManualClaim(claimData.previousClaims)
+  })
   .then(function () { return claimData })
 }
 
@@ -57,6 +60,32 @@ function getLatestManuallyApprovedClaim (previousClaims) {
   } else {
     return Promise.resolve(null)
   }
+}
+
+function getLatestManualClaim (previousClaims) {
+  var result = {}
+  if (previousClaims.length > 0) {
+    var latestManualClaim = null
+
+    previousClaims.forEach(function (previousClaim) {
+      var previousClaimIsApprovedOrRejected = previousClaim.DateReviewed &&
+        (previousClaim.Status === statusEnum.APPROVED || previousClaim.Status === 'REJECTED') &&
+        !previousClaim.IsAdvanceClaim
+
+      if (previousClaimIsApprovedOrRejected) {
+        if (!latestManualClaim) {
+          latestManualClaim = previousClaim
+        } else {
+          if (previousClaim.DateReviewed > latestManualClaim.DateReviewed) {
+            latestManualClaim = previousClaim
+          }
+        }
+      }
+    })
+
+    result = latestManualClaim
+  }
+  return result
 }
 
 function getClaimExpenses (claimId) {
