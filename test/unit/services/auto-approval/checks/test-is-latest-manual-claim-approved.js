@@ -4,17 +4,24 @@ const isLatestManualClaimApproved = require('../../../../../app/services/auto-ap
 const approvedClaim = {
   latestManuallyApprovedClaim: {
     Status: 'APPROVED'
+  },
+  latestManualClaim: {
+    Status: 'APPROVED'
   }
 }
 
 const notApprovedClaim = {
   latestManuallyApprovedClaim: {
     Status: 'FAILED'
+  },
+  latestManualClaim: {
+    Status: 'REJECTED'
   }
 }
 
 const noPreviousFirstTimeClaim = {
-  latestManuallyApprovedClaim: null
+  latestManuallyApprovedClaim: null,
+  latestManualClaim: null
 }
 
 describe('services/auto-approval/checks/is-latest-manual-claim-approved', function () {
