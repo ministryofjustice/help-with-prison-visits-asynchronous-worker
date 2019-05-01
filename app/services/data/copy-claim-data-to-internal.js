@@ -21,6 +21,9 @@ function copyEligibilityDataIfPresent (data) {
       .then(function () {
         return knex('IntSchema.Prisoner').insert(data.Prisoner)
       })
+      .then(function () {
+        return knex('IntSchema.Benefit').insert(data.Benefit)
+      }
   } else {
     return Promise.resolve()
   }
