@@ -23,7 +23,7 @@ function copyEligibilityDataIfPresent (data) {
       })
       .then(function () {
         return knex('IntSchema.Benefit').insert(data.Benefit)
-      }
+      })
   } else {
     return Promise.resolve()
   }

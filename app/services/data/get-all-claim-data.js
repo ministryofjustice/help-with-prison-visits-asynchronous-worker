@@ -20,7 +20,7 @@ module.exports = function (schema, reference, eligibilityId, claimId) {
     return {
       Eligibility: results[0],
       Prisoner: results[1],
-      Benefit: retults[2],
+      Benefit: results[2],
       Visitor: results[3],
       Claim: results[4],
       ClaimChildren: results[5],
