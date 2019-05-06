@@ -7,7 +7,7 @@ module.exports = function (reference, eligibilityId, claimId) {
   return knex('IntSchema.Eligibility')
     .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
     .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
-    .join('IntSchema.Benefit', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Benefit.EligibilityId')
+    .leftJoin('IntSchema.Benefit', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Benefit.EligibilityId')
     .where({'IntSchema.Eligibility.Reference': reference, 'IntSchema.Eligibility.EligibilityId': eligibilityId, 'IntSchema.Claim.ClaimId': claimId})
     .first('IntSchema.Visitor.VisitorId', 'IntSchema.Visitor.BenefitOwner', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.NationalInsuranceNumber', 'IntSchema.Visitor.DateOfBirth', 'IntSchema.Visitor.Benefit', 'IntSchema.Visitor.EmailAddress', 'IntSchema.Benefit.LastName', 'IntSchema.Benefit.NationalInsuranceNumber', 'IntSchema.Benefit.DateOfBirth')
     .then(function (result) {
