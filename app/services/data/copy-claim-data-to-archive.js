@@ -21,7 +21,8 @@ function copyEligibilityDataIfNotPresent (data) {
           .then(function () {
             return Promise.all([
               insertInternal('Visitor', data.Visitor),
-              insertInternal('Prisoner', data.Prisoner)])
+              insertInternal('Prisoner', data.Prisoner),
+              insertInternal('Benefit', data.Benefit)])
           })
       } else {
         return Promise.resolve()

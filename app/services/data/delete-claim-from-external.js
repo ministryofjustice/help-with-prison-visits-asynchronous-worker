@@ -30,6 +30,9 @@ module.exports = function (eligibilityId, claimId) {
       return knex('ExtSchema.Prisoner').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
+      return knex('ExtSchema.Benefit').where('EligibilityId', eligibilityId).del()
+    })
+    .then(function () {
       return knex('ExtSchema.Eligibility').where('EligibilityId', eligibilityId).del()
     })
 }
