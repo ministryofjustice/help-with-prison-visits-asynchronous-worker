@@ -1,7 +1,6 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const moment = require('moment')
-const log = require('../../../app/services/log')
 
 module.exports = function (reference, eligibilityId, claimId) {
   return knex('IntSchema.Eligibility')
