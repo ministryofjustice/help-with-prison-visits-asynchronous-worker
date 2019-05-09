@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const moment = require('moment')
+const log = require('../../../app/services/log')
 
 module.exports = function (reference, eligibilityId, claimId) {
   return knex('IntSchema.Eligibility')
@@ -22,9 +23,9 @@ module.exports = function (reference, eligibilityId, claimId) {
       } else {
         return {
           'visitorId': result.VisitorId,
-          'nino': result.NationalInsuranceNumber.trim().toUpperCase(),
-          'surname': result.LastName.trim().toUpperCase(),
-          'dateOfBirth': moment(result.DateOfBirth).format('YYYYMMDD'),
+          'nino': result.NationalInsuranceNumber[0].trim().toUpperCase(),
+          'surname': result.LastName[0].trim().toUpperCase(),
+          'dateOfBirth': moment(result.DateOfBirth[0]).format('YYYYMMDD'),
           'benefit': result.Benefit,
           'email': result.EmailAddress
         }
