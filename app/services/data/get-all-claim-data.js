@@ -5,6 +5,7 @@ const knex = require('knex')(config)
 module.exports = function (schema, reference, eligibilityId, claimId, getDisabledDocuments = false) {
   return Promise.all([getEligilibility(schema, reference, eligibilityId),
     getPrisoner(schema, reference, eligibilityId),
+    getBenefit(schema, reference, eligibilityId),
     getVisitor(schema, reference, eligibilityId),
     getClaim(schema, claimId),
     getClaimChildren(schema, claimId),
@@ -19,16 +20,17 @@ module.exports = function (schema, reference, eligibilityId, claimId, getDisable
     return {
       Eligibility: results[0],
       Prisoner: results[1],
-      Visitor: results[2],
-      Claim: results[3],
-      ClaimChildren: results[4],
-      ClaimExpenses: results[5],
-      ClaimDocument: results[6],
-      ClaimBankDetail: results[7],
-      EligibilityVisitorUpdateContactDetail: results[8],
-      ClaimEscort: results[9],
-      ClaimEvents: results[10],
-      ClaimDeductions: results[11]
+      Benefit: results[2],
+      Visitor: results[3],
+      Claim: results[4],
+      ClaimChildren: results[5],
+      ClaimExpenses: results[6],
+      ClaimDocument: results[7],
+      ClaimBankDetail: results[8],
+      EligibilityVisitorUpdateContactDetail: results[9],
+      ClaimEscort: results[10],
+      ClaimEvents: results[11],
+      ClaimDeductions: results[12]
     }
   })
 }
@@ -43,6 +45,10 @@ function getClaim (schema, claimId) {
 
 function getPrisoner (schema, reference, eligibilityId) {
   return knex(`${schema}.Prisoner`).first().where({'Reference': reference, 'EligibilityId': eligibilityId})
+}
+
+function getBenefit (schema, reference, eligibilityId) {
+  return knex(`${schema}.Benefit`).first().where({'Reference': reference, 'EligibilityId': eligibilityId})
 }
 
 function getVisitor (schema, reference, eligibilityId) {
