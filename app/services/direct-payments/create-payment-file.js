@@ -60,7 +60,7 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
       payment[5]                                          // country
     ])
   })
-  if(isForApvu) {
+  if (isForApvu) {
     csvFormattedPayments.push([])
     csvFormattedPayments.push(['Country', 'Total Amount'])
     csvFormattedPayments.push(['England', engTotal.toFixed(2)])
