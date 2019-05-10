@@ -11,7 +11,7 @@ const dataPath = config.DATA_FILE_PATH
 const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
 module.exports = function (payments, isForApvu = false) {
-  const filePath = path.join(outputPath, getFileName())
+  const filePath = path.join(outputPath, getFileName(isForApvu))
   const data = formatPaymentsToCsvStandard(payments, isForApvu)
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
@@ -88,7 +88,11 @@ function mkdirIfNotExists (dir) {
   }
 }
 
-function getFileName () {
+function getFileName (isForApvu = false) {
+  var filePrefix = 'apvs-payments'
+  if (isForApvu) {
+    filePrefix = 'apvu-' + filePrefix
+  }
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  return `apvs-payments-${datestamp}.txt`
+  return `${filePrefix}-${datestamp}.txt`
 }
