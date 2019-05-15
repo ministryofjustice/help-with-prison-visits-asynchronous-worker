@@ -8,6 +8,7 @@ const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
+const dateFormatter = require('../date-formatter')
 
 module.exports._test_formatCSVData = formatCSVData
 
@@ -67,12 +68,14 @@ function formatCSVData (paymentData, claimIdIndex) {
 function updateAllClaimsProcessedPayment (claimIds, paymentData) {
   var promises = []
 
+  var now = dateFormatter.now().toDate()
+
   for (var i = 0; i < claimIds.length; i++) {
     var claimPaymentData = paymentData[i]
     var claimId = claimIds[i]
 
     var totalApprovedCostIndex = 0
-    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex])))
+    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), now))
   }
 
   return Promise.all(promises)
