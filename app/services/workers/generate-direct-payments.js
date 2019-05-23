@@ -26,9 +26,15 @@ module.exports.execute = function (task) {
 
         total = getTotalFromPaymentData(paymentData)
 
-        return createPaymentFile(paymentData)
+        return createPaymentFile(paymentData, false)
           .then(function (result) {
             return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
+          })
+          .then(function () {
+            return createPaymentFile(paymentData, true)
+          })
+          .then(function (result) {
+            return insertDirectPaymentFile(result, fileTypes.APVU_ACCESSPAY_FILE)
           })
           .then(function () {
             return createAdiJournalFile(total)
