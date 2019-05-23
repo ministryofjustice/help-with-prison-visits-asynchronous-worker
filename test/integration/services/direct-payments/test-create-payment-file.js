@@ -24,8 +24,8 @@ const data = [
 // Sco Total = 21.22
 // Wales Total = 20.00
 describe('services/direct-payments/create-payment-file', function () {
-  it('should generate valid AccessPay file with correct header', function () {
-    return createPaymentFile(data)
+  it('should generate valid APVU AccessPay file with correct header', function () {
+    return createPaymentFile(data, true)
       .then(function (filePath) {
         expect(filePath).to.be.not.null
         testFilePath = filePath
@@ -35,10 +35,27 @@ describe('services/direct-payments/create-payment-file', function () {
           expect(lines.length, '2 payment rows without header').to.be.equal(18)
           expect(lines[0]).to.be.equal('223344,11223344,Alan Turing       ,00000022.33,REF1234H,England')
           expect(lines[1]).to.be.equal("334455,22334455,John O'Shea       ,00000010.00,REF4321H,Wales")
+          expect(lines[10]).to.be.equal("338289,03418438,Terry O'Sullivan  ,00000010.00,REF1007H,Scotland")
           expect(lines[13]).to.be.equal('England,37.84')
           expect(lines[14]).to.be.equal('Northern Ireland,72.10')
           expect(lines[15]).to.be.equal('Wales,20.00')
           expect(lines[16]).to.be.equal('Scotland,21.22')
+        })
+      })
+  })
+
+  it('should generate valid SSCL AccessPay file with correct header', function () {
+    return createPaymentFile(data, false)
+      .then(function (filePath) {
+        expect(filePath).to.be.not.null
+        testFilePath = filePath
+
+        return readFile(filePath).then(function (content) {
+          var lines = content.toString().split('\n')
+          expect(lines.length, '2 payment rows without header').to.be.equal(12)
+          expect(lines[0]).to.be.equal('223344,11223344,Alan Turing       ,00000022.33,REF1234H,England')
+          expect(lines[1]).to.be.equal("334455,22334455,John O'Shea       ,00000010.00,REF4321H,Wales")
+          expect(lines[10]).to.be.equal("338289,03418438,Terry O'Sullivan  ,00000010.00,REF1007H,Scotland")
         })
       })
   })
