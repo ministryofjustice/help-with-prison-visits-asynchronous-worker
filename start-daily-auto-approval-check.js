@@ -6,7 +6,7 @@ var CronJob = require('cron').CronJob
 var insertTask = require('./app/services/data/insert-task')
 var autoApprovalCron = config.AUTO_APPROVAL_CRON
 var taskTypes = require('./app/constants/tasks-enum')
-                  
+
 // This script inserts auto approval, according to a CRON config value (e.g. every morning at 5am)
 var autoApprovalJob = new CronJob({
   cronTime: autoApprovalCron,
@@ -21,5 +21,5 @@ var autoApprovalJob = new CronJob({
   start: false
 })
 
-log.info(`Starting auto approval checks on schedule [${dailyAutoApprovalCron}]`)
+log.info(`Starting auto approval checks on schedule [${autoApprovalCron}]`)
 autoApprovalJob.start()
