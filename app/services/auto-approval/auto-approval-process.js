@@ -3,11 +3,13 @@ const getAutoApprovalConfig = require('../data/get-auto-approval-config')
 const insertClaimEvent = require('../data/insert-claim-event')
 const generateFailureReasonString = require('../notify/helpers/generate-failure-reason-string')
 const autoApproveClaim = require('../data/auto-approve-claim')
+const insertAutoApproveClaim = require('../data/insert-auto-approve-claim')
 const claimTypeEnum = require('../../constants/claim-type-enum')
 const statusEnum = require('../../constants/status-enum')
 const autoApprovalRulesEnum = require('../../constants/auto-approval-rules-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const getLastSetNumberOfClaimsStatus = require('../data/get-last-set-number-of-claims-status')
+const dateFormatter = require('../date-formatter'
 
 var autoApprovalChecks = {}
 
@@ -51,16 +53,30 @@ module.exports = function (reference, eligibilityId, claimId) {
                 runEnabledChecks(result, autoApprovalData, disabledRules)
 
                 if (result.claimApproved) {
-                  return autoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress)
-                    .then(function () {
-                      return result
-                    })
-                } else {
-                  return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.AUTO_APPROVAL_FAILURE.value, autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
-                    .then(function () {
-                      return result
-                    })
-                }
+
+                  var now = dateFormatter.now().toDate()
+                    
+                  if(now.getDay() < 5 || now.getHours() > 9 || now.getHours() < 17){
+                    return autoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress)
+                      .then(function () {
+                        return result
+                      })
+                  } else {
+                    return insertAutoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress)
+                      .then(function () {
+                        return result
+                      })
+                  }
+
+                    
+                  } else {
+                    return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.AUTO_APPROVAL_FAILURE.value, autoApprovalData.Visitor.EmailAddress, generateFailureReasonString(result.checks), true)
+                      .then(function () {
+                        return result
+                      })
+                  }
+
+                
               })
           })
       } else {
