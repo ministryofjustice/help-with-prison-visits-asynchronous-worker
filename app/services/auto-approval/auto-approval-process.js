@@ -55,7 +55,7 @@ module.exports = function (reference, eligibilityId, claimId) {
                 if (result.claimApproved) {
                   var now = dateFormatter.now().toDate()
 
-                  if (now.getDay() < 5 && now.getHours() > 9 && now.getHours() < 17) {
+                  if (now.getDay() < 5 && now.getHours() > 10 && now.getHours() < 17) {
                     return autoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress)
                       .then(function () {
                         return result
