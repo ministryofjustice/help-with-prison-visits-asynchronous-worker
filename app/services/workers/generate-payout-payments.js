@@ -8,6 +8,7 @@ const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
+const log = require('../log')
 
 module.exports._test_formatCSVData = formatCSVData
 
@@ -47,6 +48,8 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
 // POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
 function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
+    log.info(data)
+
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
     data.splice(9, 0, '2', '', '') // 2 is the code for checking ID in POI
