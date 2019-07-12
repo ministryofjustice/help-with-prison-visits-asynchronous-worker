@@ -8,6 +8,7 @@ const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
+const log = require('../log.js')
 
 module.exports._test_formatCSVData = formatCSVData
 
@@ -44,19 +45,25 @@ function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
 }
 
 // Format to be Payment Amount, blank, First Name, Last Name, Address1, Address2, Address3, Address4, Postcode,
-// POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code
+// POI code, blank, blank, Reference, blank, blank, blank, blank, blank, template code, blank, blank, Date of Visit
 function formatCSVData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) {
+    log.info(data)
+
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
     data.splice(9, 0, '2', '', '') // 2 is the code for checking ID in POI
-    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
+    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE, '', '', data[10])
 
     // Ensures there is a space in the postcode
     var postCodeIndex = 8
     if (data[postCodeIndex].indexOf(' ') < 0) {
       data[postCodeIndex] = data[postCodeIndex].replace(/^(.*)(.{3})$/, '$1 $2')
     }
+
+    // Formats the date of visit
+    var dateOfVisitIndex = 10
+    data[dateOfVisitIndex] = data[dateOfVisitIndex].
   })
 
   return paymentData
