@@ -53,7 +53,8 @@ function formatCSVData (paymentData, claimIdIndex) {
     data.splice(claimIdIndex, 1)
     data.splice(1, 0, '')
     data.splice(9, 0, '2', '', '') // 2 is the code for checking ID in POI
-    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE, '', '', data[10])
+    data.splice(13, 0, '', '', '', '', '', config.PAYOUT_TEMPLATE_CODE)
+    data.splice(19, 0, '', '')
 
     // Ensures there is a space in the postcode
     var postCodeIndex = 8
@@ -62,8 +63,8 @@ function formatCSVData (paymentData, claimIdIndex) {
     }
 
     // Formats the date of visit
-    var dateOfVisitIndex = 10
-    data[dateOfVisitIndex] = data[dateOfVisitIndex].
+    //var dateOfVisitIndex = 10
+    //data[dateOfVisitIndex] = data[dateOfVisitIndex].replace()
   })
 
   return paymentData
