@@ -71,7 +71,8 @@ function payoutPaymentsReturn (results) {
       record.County,
       record.Country,
       record.PostCode,
-      record.Reference
+      record.Reference,
+      record.DateOfJourney
     ]
   })
 }
