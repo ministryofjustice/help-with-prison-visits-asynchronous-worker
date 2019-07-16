@@ -8,7 +8,6 @@ const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
-const log = require('../log')
 
 module.exports._test_formatCSVData = formatCSVData
 
