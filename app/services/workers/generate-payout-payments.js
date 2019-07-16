@@ -8,7 +8,6 @@ const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
-const log = require('../log')
 
 module.exports._test_formatCSVData = formatCSVData
 
@@ -58,8 +57,6 @@ function formatCSVData (paymentData, claimIdIndex) {
     if (data[postCodeIndex].indexOf(' ') < 0) {
       data[postCodeIndex] = data[postCodeIndex].replace(/^(.*)(.{3})$/, '$1 $2')
     }
-
-    log.info(data)
   })
 
   return paymentData
