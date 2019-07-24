@@ -55,7 +55,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     insertTaskStub = sinon.stub().resolves()
     autoApproveClaimStub = sinon.stub().resolves()
     getLastSetNumberOfClaimsStatusStub = sinon.stub().resolves([])
-    insertAutoApproveClaimStub = sinon.stub.resolves()
+    insertAutoApproveClaimStub = sinon.stub().resolves()
 
     autoApprovalDependencies = {
       '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
