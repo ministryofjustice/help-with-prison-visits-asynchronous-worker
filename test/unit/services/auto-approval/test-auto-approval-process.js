@@ -5,6 +5,7 @@ const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
 const autoApprovalRulesEnum = require('../../../../app/constants/auto-approval-rules-enum')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 const testHelper = require('../../../test-helper')
 const AutoApprovalCheckResult = require('../../../../app/services/domain/auto-approval-check-result')
@@ -26,6 +27,7 @@ var insertTaskStub
 var autoApproveClaimStub
 var autoApprovalDependencies
 var getLastSetNumberOfClaimsStatusStub
+var insertAutoApproveClaimStub
 
 var autoApprovalProcess
 
@@ -53,6 +55,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     insertTaskStub = sinon.stub().resolves()
     autoApproveClaimStub = sinon.stub().resolves()
     getLastSetNumberOfClaimsStatusStub = sinon.stub().resolves([])
+    insertAutoApproveClaimStub = sinon.stub.resolves()
 
     autoApprovalDependencies = {
       '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
@@ -62,7 +65,8 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       '../data/auto-approve-claim': autoApproveClaimStub,
       '../data/insert-claim-event': insertClaimEventStub,
       '../data/insert-task': insertTaskStub,
-      '../data/get-last-set-number-of-claims-status': getLastSetNumberOfClaimsStatusStub
+      '../data/get-last-set-number-of-claims-status': getLastSetNumberOfClaimsStatusStub,
+      '../data/insert-auto-approve-claim': insertAutoApproveClaimStub
     }
 
     autoApprovalRulesEnum.forEach(function (check) {
@@ -118,10 +122,14 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
+    var isInOfficeHours
+    var expectedResult = true
+    var now = dateFormatter.now().toDate()
+    isInOfficeHours = now.getDay() < 5 && now.getHours() > 10 && now.getHours() < 17
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should auto approve NEW claims').to.be.true
+        expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(isInOfficeHours && expectedResult)
       })
   })
 
