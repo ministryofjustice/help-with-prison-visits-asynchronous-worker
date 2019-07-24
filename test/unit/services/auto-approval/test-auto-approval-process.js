@@ -30,7 +30,6 @@ var getLastSetNumberOfClaimsStatusStub
 var insertAutoApproveClaimStub
 
 var autoApprovalProcess
-const log = require('../../../../app/services/log')
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
@@ -126,8 +125,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var isInOfficeHours
     var expectedResult = true
     var now = dateFormatter.now().toDate()
-    log.info(now)
-    isInOfficeHours = now.getDay() < 5 && now.getHours() > 10 && now.getHours() < 17
+    isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
