@@ -28,6 +28,7 @@ var autoApproveClaimStub
 var autoApprovalDependencies
 var getLastSetNumberOfClaimsStatusStub
 var insertAutoApproveClaimStub
+const log = require('../../../../app/services/log')
 
 var autoApprovalProcess
 
@@ -127,6 +128,10 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var now = dateFormatter.now().toDate()
     isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
 
+    console.log('isInOfficeHours ' + isInOfficeHours)
+    console.log('now ' + now)
+    log.info('isInOfficeHours ' + isInOfficeHours)
+    log.info('now ' + now)
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(isInOfficeHours && expectedResult)
