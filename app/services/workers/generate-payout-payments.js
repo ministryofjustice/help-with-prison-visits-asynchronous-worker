@@ -1,7 +1,9 @@
 const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
+const getTopUpsPendingPayment = require('../data/get-topups-pending-payment')
 const createPayoutFile = require('../payout-payments/create-payout-file')
 const sftpSendPayoutPaymentFile = require('../sftp/sftp-send-payout-payment-file')
 const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
+const updateTopupsProcessedPayment = require('../data/update-topups-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const paymentMethods = require('../../constants/payment-method-enum')
@@ -14,29 +16,41 @@ module.exports._test_formatCSVData = formatCSVData
 
 module.exports.execute = function (task) {
   var claimIds
+  var topUpClaimIds
   var paymentCsvFilePath
 
   return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
-      if (paymentData.length > 0) {
-        var claimIdIndex = 0
-        claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
-        formatCSVData(paymentData, claimIdIndex)
-        return createPayoutFile(paymentData)
-          .then(function (filePath) {
-            paymentCsvFilePath = filePath
-            var filename = path.basename(paymentCsvFilePath)
-            var remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
+      return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
+        .then(function (topupData) {
+          (paymentData)
+          if (paymentData.length + topupData.length > 0) {
+            var claimIdIndex = 0
+            claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
+            topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
+            topupData.forEach(function (topup) {
+              paymentData.push(topup)
+            })
+            formatCSVData(paymentData, claimIdIndex)
+            return createPayoutFile(paymentData)
+              .then(function (filePath) {
+                paymentCsvFilePath = filePath
+                var filename = path.basename(paymentCsvFilePath)
+                var remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
 
-            return sftpSendPayoutPaymentFile(paymentCsvFilePath, remotePaypitCsvFilePath)
-          })
-          .then(function () {
-            return insertDirectPaymentFile(paymentCsvFilePath, fileTypes.PAYOUT_FILE)
-              .then(function () {
-                return updateAllClaimsProcessedPayment(claimIds, paymentData)
+                return sftpSendPayoutPaymentFile(paymentCsvFilePath, remotePaypitCsvFilePath)
               })
-          })
-      }
+              .then(function () {
+                return insertDirectPaymentFile(paymentCsvFilePath, fileTypes.PAYOUT_FILE)
+                  .then(function () {
+                    return updateAllClaimsProcessedPayment(claimIds, paymentData)
+                      .then(function () {
+                        return updateAllTopupsProcessedPayment(topUpClaimIds)
+                      })
+                  })
+              })
+          }
+        })
     })
 }
 
@@ -76,6 +90,19 @@ function updateAllClaimsProcessedPayment (claimIds, paymentData) {
 
     var totalApprovedCostIndex = 0
     promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), now))
+  }
+
+  return Promise.all(promises)
+}
+
+function updateAllTopupsProcessedPayment (claimIds) {
+  var promises = []
+
+  var now = dateFormatter.now().toDate()
+
+  for (var i = 0; i < claimIds.length; i++) {
+    var claimId = claimIds[i]
+    promises.push(updateTopupsProcessedPayment(claimId, now))
   }
 
   return Promise.all(promises)

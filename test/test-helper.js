@@ -41,6 +41,7 @@ module.exports.deleteAll = function (reference, schema) {
       }
     })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
+    .then(function () { return deleteByReference(`${schema}.TopUp`, reference) })
     .then(function () { return deleteByReference(`${schema}.Visitor`, reference) })
     .then(function () { return deleteByReference(`${schema}.Prisoner`, reference) })
     .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
