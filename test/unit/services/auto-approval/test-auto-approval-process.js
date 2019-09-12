@@ -123,18 +123,10 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
-    var isInOfficeHours
     var expectedResult = true
-    var now = dateFormatter.now().toDate()
-    isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
-
-    console.log('isInOfficeHours ' + isInOfficeHours)
-    console.log('now ' + now)
-    log.info('isInOfficeHours ' + isInOfficeHours)
-    log.info('now ' + now)
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(isInOfficeHours && expectedResult)
+        expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(expectedResult)
       })
   })
 
@@ -171,7 +163,13 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       .then(function (result) {
         expect(result.claimApproved).to.be.true
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        sinon.assert.calledOnce(autoApproveClaimStub)
+        var now = dateFormatter.now().toDate()
+        isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+        if (isInOfficeHours) {
+          sinon.assert.calledOnce(autoApproveClaimStub)
+        } else {
+          sinon.assert.calledOnce(insertAutoApproveClaimStub)
+        }
         var keys = Object.keys(autoApprovalDependencies)
         for (var i = 0; i < keys.length; i++) {
           var key = keys[i]
@@ -219,7 +217,13 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         .then(function (result) {
           expect(result.claimApproved).to.be.true
           sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-          sinon.assert.calledOnce(autoApproveClaimStub)
+          var now = dateFormatter.now().toDate()
+          isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+          if (isInOfficeHours) {
+            sinon.assert.calledOnce(autoApproveClaimStub)
+          } else {
+            sinon.assert.calledOnce(insertAutoApproveClaimStub)
+          }
           sinon.assert.notCalled(autoApprovalDependencies[`./checks/${check}`])
         })
     })
