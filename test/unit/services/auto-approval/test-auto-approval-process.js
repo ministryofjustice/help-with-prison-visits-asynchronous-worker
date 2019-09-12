@@ -28,7 +28,6 @@ var autoApproveClaimStub
 var autoApprovalDependencies
 var getLastSetNumberOfClaimsStatusStub
 var insertAutoApproveClaimStub
-const log = require('../../../../app/services/log')
 
 var autoApprovalProcess
 
@@ -164,7 +163,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         expect(result.claimApproved).to.be.true
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         var now = dateFormatter.now().toDate()
-        isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+        var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
         if (isInOfficeHours) {
           sinon.assert.calledOnce(autoApproveClaimStub)
         } else {
@@ -218,7 +217,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
           expect(result.claimApproved).to.be.true
           sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
           var now = dateFormatter.now().toDate()
-          isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+          var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
           if (isInOfficeHours) {
             sinon.assert.calledOnce(autoApproveClaimStub)
           } else {
