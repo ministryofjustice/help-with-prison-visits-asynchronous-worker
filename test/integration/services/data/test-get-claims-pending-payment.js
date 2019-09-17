@@ -288,7 +288,6 @@ describe('services/data/get-claims-pending-payment', function () {
             return result[0] === claimId
           })
           expect(filteredResults.length === 1).to.be.true
-          expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
           expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
           expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
           expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
@@ -312,7 +311,6 @@ describe('services/data/get-claims-pending-payment', function () {
                 return result[0] === claimId
               })
               expect(filteredResults.length === 1).to.be.true
-              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
               expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
               expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
               expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
@@ -337,7 +335,6 @@ describe('services/data/get-claims-pending-payment', function () {
                 return result[0] === claimId
               })
               expect(filteredResults.length === 1).to.be.true
-              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
               expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
               expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
               expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
