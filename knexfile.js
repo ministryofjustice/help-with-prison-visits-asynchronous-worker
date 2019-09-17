@@ -15,9 +15,9 @@ module.exports = {
     },
     pool: {
       min: 2,
-      max: 10
+      max: 100
     },
-    acquireConnectionTimeout: 150000
+    acquireConnectionTimeout: 300000
     //, debug: true // uncomment to debug
   },
   archive: {
@@ -36,7 +36,7 @@ module.exports = {
       min: 2,
       max: 10
     },
-    acquireConnectionTimeout: 150000
+    acquireConnectionTimeout: 300000
     //, debug: true // uncomment to debug
   }
 

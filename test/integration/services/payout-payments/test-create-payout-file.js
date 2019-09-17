@@ -9,8 +9,8 @@ const generatePayoutPayments = require('../../../../app/services/workers/generat
 var testFilePath
 
 var data = [
-  ['34.22', 'Joe', 'Bloggs$$', '123 Test Street$$', 'Test Town&&', 'Test County||', 'Test>><< Country', 'BT123BT', 'V123456', 'TEST089-LET-001'],
-  ['12.22', 'Frank', 'Bloggs', '456 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT12 6BT', 'V123457', 'TEST089-LET-001']
+  ['34.22', 'Joe', 'Bloggs$$', '123 Test Street$$', 'Test Town&&', 'Test County||', 'Test>><< Country', 'BT123BT', 'V123456', 'TEST089-LET-001', '28// 09 2017'],
+  ['12.22', 'Frank', 'Bloggs', '456 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT12 6BT', 'V123457', 'TEST089-LET-001', '28 09 2017']
 ]
 
 describe('services/payout-payments/create-payout-file', function () {
