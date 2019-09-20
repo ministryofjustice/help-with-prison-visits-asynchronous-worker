@@ -15,7 +15,7 @@ module.exports = function (data, additionalData) {
   .then(function () {
     log.info(`Claim with ${data.Claim.ClaimId} copied to internal`)
   })
-  .catch(function(error) {
+  .catch(function (error) {
     log.error(`ERROR copying claim with ${data.Claim.ClaimId} to internal`)
     throw error
   })
