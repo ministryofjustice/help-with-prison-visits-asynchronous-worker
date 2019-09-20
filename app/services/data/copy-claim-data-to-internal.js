@@ -13,10 +13,10 @@ module.exports = function (data, additionalData) {
       .then(function () { return copyClaimData(data, additionalData, trx) })
   })
   .then(function () {
-    log.info(`Claim with ${data.Claim.ClaimId} copied to internal`)
+    log.info(`Claim with ClaimId: ${data.Claim.ClaimId} copied to internal`)
   })
   .catch(function (error) {
-    log.error(`ERROR copying claim with ${data.Claim.ClaimId} to internal`)
+    log.error(`ERROR copying claim with ClaimId: ${data.Claim.ClaimId} to internal`)
     throw error
   })
 }
