@@ -327,6 +327,77 @@ module.exports.getClaimData = function (reference, randomIds) {
   }
 }
 
+module.exports.claimMigrationData = function (reference) {
+  var eligibilityId = 0
+  var claimId = 0
+  var claimExpenseId = 0
+  var eligibility = { Reference: reference, DateCreated: dateFormatter.now().toDate(), Status: 'SUBMITTED' }
+  var prisoner = { EligibilityId: eligibilityId, Reference: reference, FirstName: 'Joe', LastName: 'Bloggs', DateOfBirth: dateFormatter.now().toDate(), PrisonNumber: 'LP1735L', NameOfPrison: 'Test Prison' }
+  var visitor = {EligibilityId: eligibilityId, Reference: reference, FirstName: 'Joe', LastName: 'Bloggs', NationalInsuranceNumber: 'AA123456P', HouseNumberAndStreet: '', Town: '', County: '', PostCode: '', Country: '', EmailAddress: '', PhoneNumber: '', DateOfBirth: dateFormatter.now().toDate(), Relationship: 'sibling', Benefit: 'Benefit test'}
+  var claim = {EligibilityId: eligibilityId, Reference: reference, Status: 'SUBMITTED', IsAdvanceClaim: false, DateOfJourney: dateFormatter.now().toDate(), DateCreated: dateFormatter.now().toDate(), DateSubmitted: dateFormatter.now().toDate(), PaymentMethod: 'payout'}
+  var claimExpense = {EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, ExpenseType: 'car', Cost: 0, TravelTime: null, From: 'London', To: 'Hewell', IsReturn: false, DurationOfTravel: null, TicketType: null, IsEnabled: true}
+  var claimDocument = {EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, DocumentType: 'RECEIPT', ClaimExpenseId: claimExpenseId, DocumentStatus: 'UPLOADED', Filepath: 'path/to/nowhere', DateSubmitted: dateFormatter.now().toDate(), IsEnabled: true}
+
+  return knex('ExtSchema.Eligibility').insert(eligibility).returning('EligibilityId')
+    .then(function (id) {
+      eligibilityId = id[0]
+      eligibility.EligibilityId = eligibilityId
+      prisoner.EligibilityId = eligibilityId
+      visitor.EligibilityId = eligibilityId
+      claim.EligibilityId = eligibilityId
+      claimExpense.EligibilityId = eligibilityId
+      claimDocument.EligibilityId = eligibilityId
+      return knex('ExtSchema.Prisoner').insert(prisoner).returning('PrisonerId')
+    })
+    .then(function (prisonerId) {
+      prisoner.PrisonerId = prisonerId[0]
+      return knex('ExtSchema.Visitor').insert(visitor).returning('VisitorId')
+    })
+    .then(function (VisitorId) {
+      visitor.VisitorId = VisitorId[0]
+      return knex('ExtSchema.Claim').insert(claim).returning('ClaimId')
+    })
+    .then(function (id) {
+      claimId = id[0]
+      claim.ClaimId = claimId
+      claimExpense.ClaimId = claimId
+      claimDocument.ClaimId = claimId
+      return knex('ExtSchema.ClaimExpense').insert(claimExpense).returning('ClaimExpenseId')
+    })
+    .then(function (id) {
+      claimExpenseId = id[0]
+      claimExpense.ClaimExpenseId = claimExpenseId
+      claimDocument.ClaimExpenseId = claimExpenseId
+      return knex('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
+    })
+    .then(function (ClaimDocumentId) {
+      claimDocument.ClaimDocumentId = ClaimDocumentId[0]
+      return {
+        Eligibility: eligibility,
+        Prisoner: prisoner,
+        Visitor: visitor,
+        Claim: claim,
+        ClaimChildren: [],
+        ClaimExpenses: [claimExpense],
+        ClaimDocument: [claimDocument],
+        ClaimEscort: [],
+        ClaimEvents: null,
+        ClaimDeductions: null
+      }
+    })
+}
+
+module.exports.orphanedClaimDocument = function (eligibilityId, claimId, reference) {
+  var claimDocument = {EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, ClaimExpenseId: 0, DocumentType: 'RECEIPT', DocumentStatus: 'UPLOADED', Filepath: 'path/to/nowhere', DateSubmitted: dateFormatter.now().toDate(), IsEnabled: true}
+  return knex('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
+    .then(function (ClaimDocumentId) {
+      claimDocument.ClaimDocumentId = ClaimDocumentId[0]
+      return {
+        ClaimDocument: [claimDocument]
+      }
+    })
+}
+
 module.exports.getAutoApprovalData = function (reference) {
   const uniqueId = Math.floor(Date.now() / 100) - 14000000000
   const claimId1 = uniqueId + 1
