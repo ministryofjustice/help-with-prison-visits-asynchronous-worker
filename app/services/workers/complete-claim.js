@@ -21,7 +21,7 @@ module.exports.execute = function (task) {
       return knex.transaction(function (trx) {
         return copyClaimDataToInternal(claimData, task.additionalData, trx)
           .then(function () {
-            return deleteClaimFromExternal(eligibilityId, claimId, trx) 
+            return deleteClaimFromExternal(eligibilityId, claimId, trx)
           })
       })
       .then(function () {
