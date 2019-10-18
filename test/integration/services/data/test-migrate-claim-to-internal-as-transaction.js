@@ -56,6 +56,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
       return migrateClaimToInternalAsTransaction(claimData, 'first-time', claimData.Claim.EligibilityId, claimData.Claim.ClaimId)
       .then(function () {})
       .catch(function (error) {
+        expect.fail(error)
         return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .select()
           .then(function (results) {
