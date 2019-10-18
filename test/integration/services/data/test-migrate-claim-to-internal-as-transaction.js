@@ -14,16 +14,15 @@ var claimData
 describe('services/data/migrate-claim-to-internal-as-transaction', function () {
   beforeEach(function () {
     return testHelper.deleteAll(reference, 'ExtSchema')
-      .then (function() {
+      .then(function () {
         return testHelper.deleteAll(reference, 'IntSchema')
       })
-      .then (function() {
+      .then(function () {
         return testHelper.claimMigrationData(reference)
       })
       .then(function (data) {
         claimData = data
       })
-
   })
 
   it('should copy the first time claim data to internal and delete from external', function () {
@@ -78,7 +77,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
 
   afterEach(function () {
     return testHelper.deleteAll(reference, 'ExtSchema')
-      .then (function() {
+      .then(function () {
         return testHelper.deleteAll(reference, 'IntSchema')
       })
   })

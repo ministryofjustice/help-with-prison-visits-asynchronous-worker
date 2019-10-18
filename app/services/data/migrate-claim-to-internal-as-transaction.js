@@ -5,7 +5,7 @@ const copyClaimDataToInternal = require('../data/copy-claim-data-to-internal')
 const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 
 module.exports = function (claimData, additionalData, eligibilityId, claimId) {
-return knex.transaction(function (trx) {
+  return knex.transaction(function (trx) {
     return copyClaimDataToInternal(claimData, additionalData, trx)
       .then(function () {
         return deleteClaimFromExternal(eligibilityId, claimId, trx)
