@@ -5,6 +5,9 @@ const calculateCarExpenseCosts = require('../distance-checker/calculate-car-expe
 const insertTask = require('../data/insert-task')
 const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const tasksEnum = require('../../constants/tasks-enum')
+const config = require('../../../knexfile').asyncworker
+const knex = require('knex')(config)
+const log = require('../log')
 
 module.exports.execute = function (task) {
   var reference = task.reference
@@ -14,8 +17,21 @@ module.exports.execute = function (task) {
 
   return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
     .then(function (data) { claimData = data })
-    .then(function () { return copyClaimDataToInternal(claimData, task.additionalData) })
-    .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
+    .then(function () {
+      return knex.transaction(function (trx) {
+        return copyClaimDataToInternal(claimData, task.additionalData, trx)
+          .then(function () {
+            return deleteClaimFromExternal(eligibilityId, claimId, trx) 
+          })
+      })
+      .then(function () {
+        log.info(`Claim with ClaimId: ${claimData.Claim.ClaimId} copied to internal`)
+      })
+      .catch(function (error) {
+        log.error(`ERROR copying claim with ClaimId: ${claimData.Claim.ClaimId} to internal`)
+        throw error
+      })
+    })
     .then(function () { return calculateCarExpenseCosts(reference, eligibilityId, claimId) })
     // autoApprovalProcess Removed in APVS0115
     .then(function () { return insertTaskSendClaimNotification(reference, eligibilityId, claimId) })
