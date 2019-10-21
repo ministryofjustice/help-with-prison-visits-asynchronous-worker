@@ -10,6 +10,7 @@ const migrateClaimToInternalAsTransaction = require('../../../../app/services/da
 
 const reference = 'MIGR123'
 var claimData
+const log = require('../../../../app/services/log')
 
 describe('services/data/migrate-claim-to-internal-as-transaction', function () {
   beforeEach(function () {
@@ -56,7 +57,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
       return migrateClaimToInternalAsTransaction(claimData, 'first-time', claimData.Claim.EligibilityId, claimData.Claim.ClaimId)
       .then(function () {})
       .catch(function (error) {
-        expect.fail(error)
+        log.error(error)
         return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .select()
           .then(function (results) {
