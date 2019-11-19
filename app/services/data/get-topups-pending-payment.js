@@ -55,7 +55,7 @@ module.exports = function (paymentMethod) {
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.TopUp', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.TopUp.ClaimId')
     .where('IntSchema.TopUp.IsPaid', false)
-    .where('IntSchema.TopUp.PaymentMethod', paymentMethod)
+    .where('IntSchema.Claim.PaymentMethod', paymentMethod)
     .whereNull('IntSchema.TopUp.PaymentDate')
     .groupBy(selectColumns)
     .then(function (claims) {

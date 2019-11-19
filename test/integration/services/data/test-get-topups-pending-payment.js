@@ -17,7 +17,7 @@ describe('services/data/get-claims-pending-payment', function () {
   var updateClaimTotalAmountStub = sinon.stub().resolves()
   var updateClaimManuallyProcessedAmountStub = sinon.stub().resolves()
 
-  const getTopupsPendingPayment = proxyquire('../../../../app/services/data/get-topups-pending-payment', {
+  const getTopUpsPendingPayment = proxyquire('../../../../app/services/data/get-topups-pending-payment', {
   })
 
   function beforeDataCreation () {
@@ -76,7 +76,7 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should retrieve only APPROVED claim records with payment status of NULL', function () {
-      return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+      return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (results) {
           var filteredResults = results.filter(function (result) {
             return result[0] === claimId
@@ -108,7 +108,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function (results) {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
@@ -135,7 +135,7 @@ describe('services/data/get-claims-pending-payment', function () {
         })
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function () {
               // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
               expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
@@ -158,7 +158,7 @@ describe('services/data/get-claims-pending-payment', function () {
         })
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function () {
               expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
             })
@@ -180,7 +180,7 @@ describe('services/data/get-claims-pending-payment', function () {
         })
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function () {
               expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
             })
@@ -203,7 +203,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function (results) {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
@@ -231,7 +231,7 @@ describe('services/data/get-claims-pending-payment', function () {
 
       return Promise.all([update1, update2])
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function (results) {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
@@ -248,7 +248,7 @@ describe('services/data/get-claims-pending-payment', function () {
         .where('ClaimId', claimId)
         .update({'PaymentMethod': paymentMethods.MANUALLY_PROCESSED.value})
         .then(function () {
-          return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
+          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         })
         .then(function (results) {
           var filteredResults = results.filter(function (result) {
@@ -280,7 +280,7 @@ describe('services/data/get-claims-pending-payment', function () {
     })
     it('should retrieve only APPROVED claim records with payment status of NULL', function () {
       var claimData = testHelper.getClaimData(reference)
-      return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+      return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
         .then(function (results) {
           var filteredResults = results.filter(function (result) {
             return result[0] === claimId
@@ -304,7 +304,7 @@ describe('services/data/get-claims-pending-payment', function () {
       return changeClaimStatus('UPDATED')
         .then(function () {
           var claimData = testHelper.getClaimData(reference)
-          return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+          return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
             .then(function (results) {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
@@ -329,7 +329,7 @@ describe('services/data/get-claims-pending-payment', function () {
       return changeClaimStatus('APPROVED-ADVANCE-CLOSED')
         .then(function () {
           var claimData = testHelper.getClaimData(reference)
-          return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+          return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
             .then(function (results) {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
@@ -355,7 +355,7 @@ describe('services/data/get-claims-pending-payment', function () {
         .then(function () {
           return changeClaimStatus('REJECTED')
             .then(function () {
-              return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
+              return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
                 .then(function (results) {
                   var filteredResults = results.filter(function (result) {
                     return result[0] === claimId

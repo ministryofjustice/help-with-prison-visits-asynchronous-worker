@@ -23,7 +23,6 @@ module.exports.execute = function (task) {
     .then(function (paymentData) {
       return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
         .then(function (topupData) {
-          (paymentData)
           if (paymentData.length + topupData.length > 0) {
             var claimIdIndex = 0
             claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)

@@ -1,6 +1,8 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
+const logger = require('../app/services/log');
+
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -26,6 +28,25 @@ function deleteByReference (schemaTable, reference) {
   return knex(schemaTable).where('Reference', reference).del()
 }
 
+function deleteByClaimID (schemaTable, ReturnedClaimIDs) {
+  return knex(schemaTable).whereIn('ClaimID', ReturnedClaimIDs).del()
+}
+
+function getClaimIDFromReference (reference) {
+  var ClaimIDs = []
+  return knex('IntSchema.Claim')
+    .where({
+      'Reference': reference,
+    })
+    .select('ClaimId')
+    .then(function (ReturnedClaimIDs){
+      ReturnedClaimIDs.forEach(element => {
+        ClaimIDs.push(element.ClaimId)
+      });
+      return ClaimIDs
+    })
+}
+
 module.exports.deleteAll = function (reference, schema) {
   return deleteByReference(`${schema}.Task`, reference)
     .then(function () { return deleteByReference(`${schema}.ClaimBankDetail`, reference) })
@@ -38,10 +59,11 @@ module.exports.deleteAll = function (reference, schema) {
       } else {
         return deleteByReference(`${schema}.ClaimEvent`, reference)
           .then(function () { return deleteByReference(`${schema}.ClaimDeduction`, reference) })
+          .then(function () { return getClaimIDFromReference(reference) })
+          .then(function (ReturnedClaimIDs) { logger.info(ReturnedClaimIDs); return deleteByClaimID(`${schema}.TopUp`, ReturnedClaimIDs) })
       }
     })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
-    .then(function () { return deleteByReference(`${schema}.TopUp`, reference) })
     .then(function () { return deleteByReference(`${schema}.Visitor`, reference) })
     .then(function () { return deleteByReference(`${schema}.Prisoner`, reference) })
     .then(function () { return deleteByReference(`${schema}.Eligibility`, reference) })
@@ -100,7 +122,10 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
-
+      
+      insertedClaimIds.forEach(element => {
+        return knex(`${schema}.TopUp`).insert(data.TopUp)
+      });
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
         data.ClaimBankDetail.EligibilityId = newEligibilityId
@@ -306,6 +331,14 @@ module.exports.getClaimData = function (reference, randomIds) {
       EmailAddress: 'newEmail@test.com',
       PhoneNumber: '0123456789',
       DateSubmitted: dateFormatter.now().toDate()
+    },
+    TopUp: {
+      ClaimId: uniqueId,
+      IsPaid: false,
+      Caseworker: 'test@test.com',
+      TopUpAmount: 22.66,
+      Reason: 'Test Reason',
+      PaymentDate: null
     },
     ClaimDeduction: [
       {
