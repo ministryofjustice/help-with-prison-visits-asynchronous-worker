@@ -23,14 +23,14 @@ var topUpsPendingPayment = [
   ['999992', topUpPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
 ]
 
-var combinedPayments = [
-  ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
-  ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
-  ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910'],
-  ['999990', topUpPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
-  ['999991', topUpPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
-  ['999992', topUpPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
-]
+// var combinedPayments = [
+//   ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
+//   ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
+//   ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910'],
+//   ['999990', topUpPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
+//   ['999991', topUpPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
+//   ['999992', topUpPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
+// ]
 var testPath = 'data/payments/test.csv'
 
 var getClaimsPendingPayment = sinon.stub().resolves(claimsPendingPayment)
