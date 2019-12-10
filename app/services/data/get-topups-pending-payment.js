@@ -3,16 +3,16 @@ const knex = require('knex')(config)
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 
-const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
+const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.TopUp.TopUpId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country']
 
-var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
+var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.TopUp.TopUpId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference']
 
 function directPaymentsReturn (results) {
   return _.map(results, record => {
     return [
-      record.ClaimId,
+      record.TopUpId,
       record.SortCode,
       record.AccountNumber,
       record.FirstName + ' ' + record.LastName,
@@ -26,7 +26,7 @@ function directPaymentsReturn (results) {
 function payoutPaymentsReturn (results) {
   return _.map(results, record => {
     return [
-      record.ClaimId,
+      record.TopUpId,
       record.PaymentAmount.toFixed(2),
       record.FirstName,
       record.LastName,

@@ -94,14 +94,14 @@ function updateAllClaimsProcessedPayment (claimIds, paymentData) {
   return Promise.all(promises)
 }
 
-function updateAllTopupsProcessedPayment (claimIds) {
+function updateAllTopupsProcessedPayment (topUpIds) {
   var promises = []
 
   var now = dateFormatter.now().toDate()
 
-  for (var i = 0; i < claimIds.length; i++) {
-    var claimId = claimIds[i]
-    promises.push(updateTopupsProcessedPayment(claimId, now))
+  for (var i = 0; i < topUpIds.length; i++) {
+    var topUpId = topUpIds[i]
+    promises.push(updateTopupsProcessedPayment(topUpId, now))
   }
 
   return Promise.all(promises)
