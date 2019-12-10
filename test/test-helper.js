@@ -1,8 +1,7 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
-const logger = require('../app/services/log');
-
+const logger = require('../app/services/log')
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -36,13 +35,13 @@ function getClaimIDFromReference (reference) {
   var ClaimIDs = []
   return knex('IntSchema.Claim')
     .where({
-      'Reference': reference,
+      'Reference': reference
     })
     .select('ClaimId')
-    .then(function (ReturnedClaimIDs){
+    .then(function (ReturnedClaimIDs) {
       ReturnedClaimIDs.forEach(element => {
         ClaimIDs.push(element.ClaimId)
-      });
+      })
       return ClaimIDs
     })
 }
@@ -122,10 +121,10 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
-      
+
       insertedClaimIds.forEach(element => {
         return knex(`${schema}.TopUp`).insert(data.TopUp)
-      });
+      })
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
         data.ClaimBankDetail.EligibilityId = newEligibilityId

@@ -19,12 +19,12 @@ module.exports.execute = function (task) {
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-        .then(function (topupData) {       
+        .then(function (topupData) {
           if (paymentData.length + topupData.length > 0) {
             var claimIdIndex = 0
             claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
             topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
-            topupData.forEach(function(topup){
+            topupData.forEach(function (topup) {
               paymentData.push(topup)
             })
             var missingData = checkForAccountNumberAndSortCode(paymentData)
@@ -33,9 +33,9 @@ module.exports.execute = function (task) {
               return Promise.reject('Data is missing')
             }
             removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
-    
+
             total = getTotalFromPaymentData(paymentData)
-    
+
             return createPaymentFile(paymentData, false)
               .then(function (result) {
                 return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
@@ -45,7 +45,7 @@ module.exports.execute = function (task) {
               })
               .then(function (result) {
                 return insertDirectPaymentFile(result, fileTypes.APVU_ACCESSPAY_FILE)
-              })              
+              })
               .then(function () {
                 return createAdiJournalFile(total)
               })
@@ -55,13 +55,11 @@ module.exports.execute = function (task) {
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData)
               })
-              .then(function(){
+              .then(function () {
                 return updateAllTopupsProcessedPayment(topUpClaimIds)
               })
           }
-
         })
-
     })
 }
 

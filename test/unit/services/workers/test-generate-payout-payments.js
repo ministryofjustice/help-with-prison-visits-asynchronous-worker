@@ -34,7 +34,7 @@ var combinedPayments = [
 var testPath = 'data/payments/test.csv'
 
 var getClaimsPendingPayment = sinon.stub().resolves(claimsPendingPayment)
-var getTopUpsPendingPayment =  sinon.stub().resolves(topUpsPendingPayment)
+var getTopUpsPendingPayment = sinon.stub().resolves(topUpsPendingPayment)
 
 var createPayoutFile = sinon.stub().resolves(testPath)
 var sftpSendPayoutPaymentFile = sinon.stub().resolves()
