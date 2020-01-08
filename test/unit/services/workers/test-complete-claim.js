@@ -19,8 +19,7 @@ var claimData = {
 }
 
 var getAllClaimData = sinon.stub().resolves(claimData)
-var copyClaimDataToInternal = sinon.stub().resolves()
-var deleteClaimFromExternal = sinon.stub().resolves()
+var migrateClaimToInternalAsTransaction = sinon.stub().resolves()
 var calculateCarExpenseCosts = sinon.stub().resolves()
 // autoApprovalProcess Removed in APVS0115
 var insertTask = sinon.stub().resolves()
@@ -28,8 +27,7 @@ var getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
 
 const completeClaim = proxyquire('../../../../app/services/workers/complete-claim', {
   '../data/get-all-claim-data': getAllClaimData,
-  '../data/copy-claim-data-to-internal': copyClaimDataToInternal,
-  '../data/delete-claim-from-external': deleteClaimFromExternal,
+  '../data/migrate-claim-to-internal-as-transaction': migrateClaimToInternalAsTransaction,
   '../distance-checker/calculate-car-expense-costs': calculateCarExpenseCosts,
   // autoApprovalProcess Removed in APVS0115
   '../data/insert-task': insertTask,
@@ -40,12 +38,12 @@ describe('services/workers/complete-claim', function () {
   it('should call to retrieve, copy and delete first time claim, calculate car expenses, run auto-approval checks, insert notification and DWP check tasks', function () {
     return completeClaim.execute({
       reference: reference,
+      additionalData: null,
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
-      expect(copyClaimDataToInternal.calledWith(claimData)).to.be.true
-      expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+      expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).to.be.true
       expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true
       // autoApprovalProcess Removed in APVS0115
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true

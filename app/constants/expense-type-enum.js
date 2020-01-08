@@ -3,6 +3,8 @@ module.exports = {
   'toll': { displayValue: 'Toll', isJourney: false },
   'parking charge': { displayValue: 'Parking Charge', isJourney: false },
   'car hire': { displayValue: 'Car hire', isJourney: false },
+  'parking': { displayValue: 'Parking Charge', isJourney: false },
+  'hire': { displayValue: 'Car hire', isJourney: false },
   'bus': { displayValue: 'Bus journey', isJourney: true },
   'train': { displayValue: 'Train journey', isJourney: true },
   'taxi': { displayValue: 'Taxi journey', isJourney: true },

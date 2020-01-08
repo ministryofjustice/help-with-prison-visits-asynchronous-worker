@@ -30,7 +30,7 @@ module.exports.execute = function (task) {
     .then(function (claimData) {
       status = getStatusForUpdatedClaim(claimData)
       originalStatus = claimData.Claim.Status
-      if (claimData.Claim.PaymentMethod !== paymentMethodEnum.PAYOUT.value) {
+      if (claimData.Claim.PaymentMethod === paymentMethodEnum.DIRECT_BANK_PAYMENT.value) {
         claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
       }
     })
