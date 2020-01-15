@@ -19,7 +19,10 @@ describe('services/data/delete-claim-from-external', function () {
   })
 
   it('should delete the first time claim from external', function () {
-    return deleteClaimFromExternal(eligibilityId, claimId).then(function () {
+    return knex.transaction(function (trx) {
+      return deleteClaimFromExternal(eligibilityId, claimId, trx)
+    })
+    .then(function () {
       return knex('ExtSchema.Eligibility')
       .join('ExtSchema.Prisoner', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Prisoner.Reference')
       .join('ExtSchema.Visitor', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Visitor.Reference')
@@ -41,11 +44,13 @@ describe('services/data/delete-claim-from-external', function () {
   })
 
   it('should not throw an error when only eligibility id is supplied', function () {
-    return deleteClaimFromExternal(eligibilityId, null)
-      .then(function () {
-      }).catch(function (err) {
-        expect.fail(err)
-      })
+    return knex.transaction(function (trx) {
+      return deleteClaimFromExternal(eligibilityId, null, trx)
+    })
+    .then(function () {
+    }).catch(function (err) {
+      expect.fail(err)
+    })
   })
 
   afterEach(function () {

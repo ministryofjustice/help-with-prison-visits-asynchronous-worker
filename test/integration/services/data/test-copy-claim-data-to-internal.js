@@ -23,7 +23,10 @@ describe('services/data/copy-claim-data-to-internal', function () {
     var firstTimeClaimData = testHelper.getClaimData(reference)
 
     it('should copy the first time claim data to internal and set status to new', function () {
-      return copyClaimDataToInternal(firstTimeClaimData, 'first-time').then(function () {
+      return knex.transaction(function (trx) {
+        return copyClaimDataToInternal(firstTimeClaimData, 'first-time', trx)
+      })
+      .then(function () {
         return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
@@ -67,7 +70,10 @@ describe('services/data/copy-claim-data-to-internal', function () {
       firstTimeClaimData.ClaimDocument[0].DocumentStatus = 'post-later'
       firstTimeClaimData.ClaimDocument[1].DocumentStatus = 'upload-later'
 
-      return copyClaimDataToInternal(firstTimeClaimData).then(function () {
+      return knex.transaction(function (trx) {
+        return copyClaimDataToInternal(firstTimeClaimData, null, trx)
+      })
+      .then(function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .select('Claim.Status')
           .then(function (results) {
@@ -89,7 +95,10 @@ describe('services/data/copy-claim-data-to-internal', function () {
     })
 
     it('should copy repeat claim data without external schema eligibility', function () {
-      return copyClaimDataToInternal(repeatClaimData).then(function () {
+      return knex.transaction(function (trx) {
+        return copyClaimDataToInternal(repeatClaimData, null, trx)
+      })
+      .then(function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .join('IntSchema.ClaimChild', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimChild.ClaimId')
           .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
