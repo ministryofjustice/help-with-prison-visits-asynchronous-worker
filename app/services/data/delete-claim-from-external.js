@@ -30,6 +30,9 @@ module.exports = function (eligibilityId, claimId, trx) {
       return trx('ExtSchema.Benefit').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
+      return trx('ExtSchema.EligibleChild').where('EligibilityId', eligibilityId).del()
+    })
+    .then(function () {
       return trx('ExtSchema.Eligibility').where('EligibilityId', eligibilityId).del()
     })
 }

@@ -20,6 +20,9 @@ function copyEligibilityDataIfPresent (data, trx) {
         return trx('IntSchema.Prisoner').insert(data.Prisoner)
       })
       .then(function () {
+        return trx('IntSchema.EligibleChild').insert(data.EligibleChild)
+      })
+      .then(function () {
         return trx('IntSchema.Benefit').insert(data.Benefit)
       })
   } else {
