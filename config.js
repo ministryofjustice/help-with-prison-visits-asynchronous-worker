@@ -108,5 +108,8 @@ module.exports = {
   DISTANCE_CALCULATION_DIRECTIONS_API_URL: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_URL || 'https://maps.googleapis.com/maps/api/directions/json',
   DISTANCE_CALCULATION_DIRECTIONS_API_KEY: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY, // generate key at https://developers.google.com/maps/documentation/distance-matrix/
 
-  PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator'
+  PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator',
+
+  // Azure App Insights
+  APP_INSIGHTS_INSTRUMENTATION_KEY: process.env.APVS_APP_INSIGHTS_INSTRUMENTATION_KEY
 }
