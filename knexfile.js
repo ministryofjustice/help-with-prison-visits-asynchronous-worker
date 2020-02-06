@@ -9,13 +9,15 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.DATABASE,
       options: {
-        encrypt: true
+        encrypt: true,
+        requestTimeout: 90000
       }
     },
     pool: {
       min: 2,
-      max: 10
-    }
+      max: 100
+    },
+    acquireConnectionTimeout: 300000
     //, debug: true // uncomment to debug
   },
   archive: {
@@ -26,13 +28,15 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.ARCHIVE_DATABASE,
       options: {
-        encrypt: true
+        encrypt: true,
+        requestTimeout: 90000
       }
     },
     pool: {
       min: 2,
       max: 10
-    }
+    },
+    acquireConnectionTimeout: 300000
     //, debug: true // uncomment to debug
   }
 

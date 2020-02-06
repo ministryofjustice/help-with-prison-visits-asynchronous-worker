@@ -10,9 +10,9 @@ const log = require('../log')
 const dataPath = config.DATA_FILE_PATH
 const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
-module.exports = function (payments) {
-  const filePath = path.join(outputPath, getFileName())
-  const data = formatPaymentsToCsvStandard(payments)
+module.exports = function (payments, isForApvu = false) {
+  const filePath = path.join(outputPath, getFileName(isForApvu))
+  const data = formatPaymentsToCsvStandard(payments, isForApvu)
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
 
@@ -28,18 +28,46 @@ module.exports = function (payments) {
   })
 }
 
-function formatPaymentsToCsvStandard (payments) {
+function formatPaymentsToCsvStandard (payments, isForApvu = false) {
   var csvFormattedPayments = []
 
+  var niTotal = 0
+  var engTotal = 0
+  var walTotal = 0
+  var scoTotal = 0
   payments.forEach(function (payment) {
+    var cost = parseFloat(payment[3])
+    switch (payment[5]) {
+      case 'England':
+        engTotal = engTotal + cost
+        break
+      case 'Northern Ireland':
+        niTotal = niTotal + cost
+        break
+      case 'Scotland':
+        scoTotal = scoTotal + cost
+        break
+      case 'Wales':
+        walTotal = walTotal + cost
+        break
+    }
     csvFormattedPayments.push([
       payment[0],                                         // sortcode
       payment[1],                                         // account number
       getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[4]                                          // reference
+      payment[4],                                         // reference
+      payment[5]                                          // country
     ])
   })
+  if (isForApvu) {
+    csvFormattedPayments.push([])
+    csvFormattedPayments.push(['Country', 'Total Amount'])
+    csvFormattedPayments.push(['England', engTotal.toFixed(2)])
+    csvFormattedPayments.push(['Northern Ireland', niTotal.toFixed(2)])
+    csvFormattedPayments.push(['Wales', walTotal.toFixed(2)])
+    csvFormattedPayments.push(['Scotland', scoTotal.toFixed(2)])
+  }
 
   return csvFormattedPayments
 }
@@ -60,7 +88,11 @@ function mkdirIfNotExists (dir) {
   }
 }
 
-function getFileName () {
+function getFileName (isForApvu = false) {
+  var filePrefix = 'apvs-payments'
+  if (isForApvu) {
+    filePrefix = 'apvu-' + filePrefix
+  }
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  return `apvs-payments-${datestamp}.csv`
+  return `${filePrefix}-${datestamp}.txt`
 }

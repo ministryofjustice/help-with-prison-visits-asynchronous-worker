@@ -18,7 +18,7 @@ module.exports = function (claimId) {
     })
     .then(function (numberOfClaims) {
       deleteEligibility = numberOfClaims === 1
-      return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
+      return getAllClaimData('IntSchema', reference, eligibilityId, claimId, true)
     })
     .then(function (result) {
       claimData = result

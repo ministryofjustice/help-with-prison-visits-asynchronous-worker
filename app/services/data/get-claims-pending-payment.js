@@ -8,10 +8,10 @@ const updateClaimManuallyProcessedAmount = require('./update-claim-manually-proc
 const paymentMethods = require('../../constants/payment-method-enum')
 
 const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
-  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney']
+  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country']
 
 var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
-  'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference']
+  'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney']
 
 function getManuallyProcessedExpenseCostsPerClaim (claimIds) {
   return knex('IntSchema.ClaimExpense')
@@ -53,7 +53,8 @@ function directPaymentsReturn (results) {
       record.AccountNumber,
       record.FirstName + ' ' + record.LastName,
       record.PaymentAmount.toFixed(2),
-      record.Reference
+      record.Reference,
+      record.Country
     ]
   })
 }
@@ -70,7 +71,8 @@ function payoutPaymentsReturn (results) {
       record.County,
       record.Country,
       record.PostCode,
-      record.Reference
+      record.Reference,
+      record.DateOfJourney
     ]
   })
 }

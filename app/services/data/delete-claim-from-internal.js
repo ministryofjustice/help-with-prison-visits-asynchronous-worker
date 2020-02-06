@@ -23,7 +23,9 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
         return Promise.all([
           deleteInternal('ClaimDocument', 'EligibilityId', eligibilityId),
           deleteInternal('Visitor', 'EligibilityId', eligibilityId),
-          deleteInternal('Prisoner', 'EligibilityId', eligibilityId)])
+          deleteInternal('Prisoner', 'EligibilityId', eligibilityId),
+          deleteInternal('EligibleChild', 'EligibilityId', eligibilityId),
+          deleteInternal('Benefit', 'EligibilityId', eligibilityId)])
           .then(function () {
             return deleteInternal('Eligibility', 'EligibilityId', eligibilityId)
           })
