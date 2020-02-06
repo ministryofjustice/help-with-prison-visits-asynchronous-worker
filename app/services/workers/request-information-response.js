@@ -13,6 +13,9 @@ const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const Promise = require('bluebird')
+const config = require('../../../knexfile').asyncworker
+const knex = require('knex')(config)
+const log = require('../log')
 
 module.exports.execute = function (task) {
   var reference = task.reference
@@ -79,9 +82,16 @@ function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, cl
     var newBankDetails
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
       .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
-      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber) })
+      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber, newBankDetails.NameOnAccount) })
       .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true) })
-      .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
+      .then(function () { return knex.transaction(function (trx) { return deleteClaimFromExternal(eligibilityId, claimId, trx) }) })
+      .then(function () {
+        log.info(`Bank Details for Claim with ClaimId: ${claimId} copied to internal`)
+      })
+      .catch(function (error) {
+        log.error(`ERROR copying Bank Details for Claim with ClaimId: ${claimId} to internal`)
+        throw error
+      })
   } else {
     return Promise.resolve()
   }
