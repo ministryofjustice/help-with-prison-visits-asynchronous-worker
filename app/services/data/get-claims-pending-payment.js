@@ -8,7 +8,7 @@ const updateClaimManuallyProcessedAmount = require('./update-claim-manually-proc
 const paymentMethods = require('../../constants/payment-method-enum')
 
 const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
-  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country']
+  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country', 'IntSchema.ClaimBankDetail.NameOnAccount']
 
 var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney']
@@ -51,7 +51,7 @@ function directPaymentsReturn (results) {
       record.ClaimId,
       record.SortCode,
       record.AccountNumber,
-      record.FirstName + ' ' + record.LastName,
+      record.NameOnAccount,
       record.PaymentAmount.toFixed(2),
       record.Reference,
       record.Country
