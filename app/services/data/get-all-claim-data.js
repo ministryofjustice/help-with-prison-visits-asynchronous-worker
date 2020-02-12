@@ -50,7 +50,7 @@ function getPrisoner (schema, reference, eligibilityId) {
 }
 
 function getEligibleChild (schema, reference, eligibilityId) {
-  return knex(`${schema}.EligibleChild`).first().where({'Reference': reference, 'EligibilityId': eligibilityId})
+  return knex(`${schema}.EligibleChild`).select().where({'Reference': reference, 'EligibilityId': eligibilityId})
 }
 
 function getBenefit (schema, reference, eligibilityId) {
