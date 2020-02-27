@@ -82,7 +82,7 @@ function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, cl
     var newBankDetails
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
       .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
-      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber, newBankDetails.NameOnAccount) })
+      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber, newBankDetails.NameOnAccount, newBankDetails.RollNumber) })
       .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true) })
       .then(function () { return knex.transaction(function (trx) { return deleteClaimFromExternal(eligibilityId, claimId, trx) }) })
       .then(function () {
