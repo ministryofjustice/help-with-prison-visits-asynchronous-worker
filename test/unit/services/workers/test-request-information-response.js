@@ -55,7 +55,7 @@ describe('services/workers/request-information-response', function () {
       '../data/update-bank-details': updateBankDetails,
       '../data/get-visitor-email-address': getVisitorEmailAddress,
       '../data/insert-task': insertTask,
-      '../transaction-helper': transactionHelper
+      './helpers/transaction-helper': transactionHelper
     })
   })
 
