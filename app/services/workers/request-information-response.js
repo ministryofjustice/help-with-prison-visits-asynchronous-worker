@@ -3,7 +3,6 @@ const getAllClaimData = require('../data/get-all-claim-data')
 const updateClaimStatus = require('../data/update-claim-status')
 const insertClaimEvent = require('../data/insert-claim-event')
 const updateBankDetails = require('../data/update-bank-details')
-const deleteClaimFromExternal = require('../data/delete-claim-from-external')
 const generateClaimUpdatedString = require('../notify/helpers/generate-claim-updated-string')
 const autoApprovalProcess = require('../auto-approval/auto-approval-process')
 const getVisitorEmailAddress = require('../data/get-visitor-email-address')
@@ -13,6 +12,7 @@ const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const Promise = require('bluebird')
+const transactionHelper = require('./helpers/transaction-helper')
 
 module.exports.execute = function (task) {
   var reference = task.reference
@@ -79,9 +79,9 @@ function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, cl
     var newBankDetails
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
       .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
-      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber) })
+      .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber, newBankDetails.NameOnAccount, newBankDetails.RollNumber) })
       .then(function () { return insertClaimEvent(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true) })
-      .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
+      .then(function () { return transactionHelper(eligibilityId, claimId) })
   } else {
     return Promise.resolve()
   }
