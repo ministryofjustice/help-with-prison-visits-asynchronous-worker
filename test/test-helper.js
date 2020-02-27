@@ -297,7 +297,9 @@ module.exports.getClaimData = function (reference, randomIds) {
       Reference: reference,
       ClaimId: uniqueId,
       AccountNumber: '00123456',
-      SortCode: '001122'
+      SortCode: '001122',
+      NameOnAccount: 'Joe Bloggs',
+      RollNumber: 'ROLL-1BE.R'
     },
     EligibilityVisitorUpdateContactDetail: {
       EligibilityId: uniqueId,

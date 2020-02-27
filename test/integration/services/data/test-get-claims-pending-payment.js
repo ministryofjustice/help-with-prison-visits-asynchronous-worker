@@ -84,13 +84,15 @@ describe('services/data/get-claims-pending-payment', function () {
             return result[0] === claimId
           })
           expect(filteredResults.length === 1).to.be.true
-          expect(filteredResults[0].length === 7, 'should contain 7 fields').to.be.true // updated to 7 as country is now included
+          expect(filteredResults[0].length === 8, 'should contain 8 fields').to.be.true
           expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
           expect(filteredResults[0][1], 'should contain the sort code').to.be.equal('001122')
           expect(filteredResults[0][2], 'should contain the account number').to.be.equal('00123456')
           expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
           expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10.00')
           expect(filteredResults[0][5], 'should contain the reference').to.be.equal(reference)
+          expect(filteredResults[0][6], 'should contain the country').to.be.equal('Northern Ireland')
+          expect(filteredResults[0][7], 'should contain the roll number').to.be.equal('ROLL-1BE.R')
         })
     })
 
