@@ -29,6 +29,7 @@ var updateBankDetails
 var deleteClaimFromExternal
 var getVisitorEmailAddress
 var insertTask
+var knex
 
 var requestInformationResponse
 
@@ -44,6 +45,7 @@ describe('services/workers/request-information-response', function () {
     deleteClaimFromExternal = sinon.stub().resolves()
     getVisitorEmailAddress = sinon.stub().resolves(EMAIL_ADDRESS)
     insertTask = sinon.stub().resolves()
+    knex = sinon.stub().resolves()
 
     requestInformationResponse = proxyquire('../../../../app/services/workers/request-information-response', {
       '../data/move-claim-documents-to-internal': moveClaimDocumentsToInternal,
@@ -55,7 +57,8 @@ describe('services/workers/request-information-response', function () {
       '../data/update-bank-details': updateBankDetails,
       '../data/delete-claim-from-external': deleteClaimFromExternal,
       '../data/get-visitor-email-address': getVisitorEmailAddress,
-      '../data/insert-task': insertTask
+      '../data/insert-task': insertTask,
+      'knex': knex
     })
   })
 
