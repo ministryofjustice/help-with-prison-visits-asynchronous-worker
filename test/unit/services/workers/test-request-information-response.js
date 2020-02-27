@@ -26,11 +26,9 @@ var insertClaimEvent
 var generateClaimUpdatedString
 var autoApprovalProcess
 var updateBankDetails
-var deleteClaimFromExternal
 var getVisitorEmailAddress
 var insertTask
-var knex = require('knex')
-var knexStub
+var transactionHelper
 
 var requestInformationResponse
 
@@ -43,10 +41,9 @@ describe('services/workers/request-information-response', function () {
     generateClaimUpdatedString = sinon.stub().returns('message')
     autoApprovalProcess = sinon.stub().resolves()
     updateBankDetails = sinon.stub().resolves()
-    deleteClaimFromExternal = sinon.stub().resolves()
     getVisitorEmailAddress = sinon.stub().resolves(EMAIL_ADDRESS)
     insertTask = sinon.stub().resolves()
-    knexStub = sinon.stub(knex, 'transaction').resolves()
+    transactionHelper = sinon.stub().resolves()
 
     requestInformationResponse = proxyquire('../../../../app/services/workers/request-information-response', {
       '../data/move-claim-documents-to-internal': moveClaimDocumentsToInternal,
@@ -56,10 +53,9 @@ describe('services/workers/request-information-response', function () {
       '../notify/helpers/generate-claim-updated-string': generateClaimUpdatedString,
       '../auto-approval/auto-approval-process': autoApprovalProcess,
       '../data/update-bank-details': updateBankDetails,
-      '../data/delete-claim-from-external': deleteClaimFromExternal,
       '../data/get-visitor-email-address': getVisitorEmailAddress,
       '../data/insert-task': insertTask,
-      'knex': knexStub
+      '../transaction-helper': transactionHelper
     })
   })
 
@@ -77,7 +73,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledOnce, 'should have inserted event for just the note, no document').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -95,7 +91,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledTwice, 'should have inserted event for note and update').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -112,7 +108,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledOnce).to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -151,7 +147,7 @@ describe('services/workers/request-information-response', function () {
       expect(updateBankDetails.called).to.be.true
       expect(updateBankDetails.calledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber)).to.be.true
       expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true))
-      expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+      expect(transactionHelper.calledWith(eligibilityId, claimId)).to.be.true
     })
   })
 
