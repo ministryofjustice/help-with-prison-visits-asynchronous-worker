@@ -41,6 +41,7 @@ run-unit-tests.sh
 
 # Files CSV output
 data/payments
+data/templates
 uploads
 archive
 
