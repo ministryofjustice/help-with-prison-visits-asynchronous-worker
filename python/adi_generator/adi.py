@@ -39,10 +39,10 @@ def update_journal_total(workbook, total, accountingDate):
 
     """ Update the two template rows to debit/credit the total amount """
     total_cell = journal_ws[config.ADI_TOTAL_CELL]
-    total_cell.value = total
+    total_cell.value = float(total)
 
     debit_cell = journal_ws[config.ADI_DEBIT_CELL]
-    debit_cell.value = total
+    debit_cell.value = float(total)
 
     accounting_date_cell = journal_ws[config.ADI_ACCOUNTING_DATE_CELL]
     accounting_date_cell.value = accountingDate
