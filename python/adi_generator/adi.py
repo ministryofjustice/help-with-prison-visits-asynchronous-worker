@@ -24,16 +24,21 @@ def main():
         help='Journal accounting date'
     )
 
-    args = parser.parse_args()
-    write_journal(args.total, args.filePath, args.accountingDate)
+    parser.add_argument(
+        'journalName',
+        help='Journal name'
+    )
 
-def write_journal(total, filepath, accountingDate):
+    args = parser.parse_args()
+    write_journal(args.total, args.filePath, args.accountingDate, args.journalName)
+
+def write_journal(total, filepath, accountingDate, journalName):
     """ Update and save ADI Journal file to disk """
     workbook = load_workbook(config.ADI_TEMPLATE_FILEPATH, keep_vba=True)
-    update_journal_total(workbook, total, accountingDate)
+    update_journal_total(workbook, total, accountingDate, journalName)
     workbook.save(filename=filepath)
 
-def update_journal_total(workbook, total, accountingDate):
+def update_journal_total(workbook, total, accountingDate, journalName):
     """ Update the Journal account date"""
     journal_ws = workbook[config.ADI_JOURNAL_SHEET]
 
@@ -46,6 +51,9 @@ def update_journal_total(workbook, total, accountingDate):
 
     accounting_date_cell = journal_ws[config.ADI_ACCOUNTING_DATE_CELL]
     accounting_date_cell.value = accountingDate
+
+    journal_name_cell = journal_ws[config.ADI_JORNAL_NAME_CELL]
+    journal_name_cell.value = journalName
 
 if __name__ == '__main__':
     main()
