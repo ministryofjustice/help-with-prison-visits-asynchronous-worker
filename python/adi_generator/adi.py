@@ -52,6 +52,9 @@ def update_journal_total(workbook, total, accountingDate, journalName):
     accounting_date_cell = journal_ws[config.ADI_ACCOUNTING_DATE_CELL]
     accounting_date_cell.value = accountingDate
 
+    journal_period_cell = journal_ws[config.ADI_PERIOD_CELL]
+    journal_period_cell.value = ''
+
     journal_name_cell = journal_ws[config.ADI_JORNAL_NAME_CELL]
     journal_name_cell.value = journalName
 
