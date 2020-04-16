@@ -14,7 +14,7 @@ const ADDITIONAL_DATA = 'Message from claimant'
 const CLAIM_DATA_FOR_UNREVIEWED_CLAIM = { Claim: { DateReviewed: null }, ClaimBankDetail: {} }
 const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: dateFormatter.now().toDate() }, ClaimBankDetail: {} }
 const BANK_DETAILS = {ClaimBankDetailId: 1, SortCode: '123456', AccountNumber: '12345678'}
-const CLAIM_DATA_FOR_BANK_DETAILS = { Claim: { DateReviewed: null, Status: 'REQUEST-INFO-PAYMENT' }, ClaimBankDetail: BANK_DETAILS }
+const CLAIM_DATA_FOR_BANK_DETAILS = { Claim: { PaymentMethod: 'bank', DateReviewed: null, Status: 'REQUEST-INFO-PAYMENT' }, ClaimBankDetail: BANK_DETAILS }
 const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
 const SINGLE_UPLOADED_DOCUMENT = [{ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded'}]
 const EMAIL_ADDRESS = 'test@test.com'
@@ -26,9 +26,9 @@ var insertClaimEvent
 var generateClaimUpdatedString
 var autoApprovalProcess
 var updateBankDetails
-var deleteClaimFromExternal
 var getVisitorEmailAddress
 var insertTask
+var transactionHelper
 
 var requestInformationResponse
 
@@ -41,9 +41,9 @@ describe('services/workers/request-information-response', function () {
     generateClaimUpdatedString = sinon.stub().returns('message')
     autoApprovalProcess = sinon.stub().resolves()
     updateBankDetails = sinon.stub().resolves()
-    deleteClaimFromExternal = sinon.stub().resolves()
     getVisitorEmailAddress = sinon.stub().resolves(EMAIL_ADDRESS)
     insertTask = sinon.stub().resolves()
+    transactionHelper = sinon.stub().resolves()
 
     requestInformationResponse = proxyquire('../../../../app/services/workers/request-information-response', {
       '../data/move-claim-documents-to-internal': moveClaimDocumentsToInternal,
@@ -53,9 +53,9 @@ describe('services/workers/request-information-response', function () {
       '../notify/helpers/generate-claim-updated-string': generateClaimUpdatedString,
       '../auto-approval/auto-approval-process': autoApprovalProcess,
       '../data/update-bank-details': updateBankDetails,
-      '../data/delete-claim-from-external': deleteClaimFromExternal,
       '../data/get-visitor-email-address': getVisitorEmailAddress,
-      '../data/insert-task': insertTask
+      '../data/insert-task': insertTask,
+      './helpers/transaction-helper': transactionHelper
     })
   })
 
@@ -73,7 +73,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledOnce, 'should have inserted event for just the note, no document').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -91,7 +91,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledTwice, 'should have inserted event for note and update').to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -108,7 +108,7 @@ describe('services/workers/request-information-response', function () {
       expect(insertClaimEvent.calledOnce).to.be.true
       expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true
       expect(updateBankDetails.called).to.be.false
-      expect(deleteClaimFromExternal.called).to.be.false
+      expect(transactionHelper.called).to.be.false
     })
   })
 
@@ -144,9 +144,10 @@ describe('services/workers/request-information-response', function () {
       claimId: claimId
     }).then(function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
+      expect(updateBankDetails.called).to.be.true
       expect(updateBankDetails.calledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber)).to.be.true
       expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true))
-      expect(deleteClaimFromExternal.calledWith(eligibilityId, claimId)).to.be.true
+      expect(transactionHelper.calledWith(eligibilityId, claimId)).to.be.true
     })
   })
 

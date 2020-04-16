@@ -9,7 +9,8 @@ const now = dateFormatter.now()
 
 describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-year', function () {
   it('should return true if the number of claims made for the current year is equal to 26', function () {
-    var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(26, now.clone().subtract(1, 'years'))
+    // 25 past plus 1 current
+    var autoApprovalData = generateAutoApprovalDataWithPreviousClaims(25, now.clone().subtract(1, 'years'))
 
     var checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
     expect(checkResult.result).to.equal(true)

@@ -21,6 +21,7 @@ module.exports = {
   ASYNC_WORKER_CRON: process.env.APVS_ASYNC_WORKER_CRON || '*/5 * * * * *', // default every 5 seconds
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '5',
   DAILY_TASKS_CRON: process.env.APVS_DAILY_TASKS_CRON || '00 30 04 * * *', // default every day at 0430
+  AUTO_APPROVAL_CRON: process.env.APVS_AUTO_APPROVAL_CRON || '00 00 10 * * 1-5', // default every working day at 1000
   NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: process.env.APVS_NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER || '1',
   NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER: process.env.APVS_NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER || '7',
   ARCHIVE_CLAIMS_AFTER_DAYS: process.env.APVS_ARCHIVE_CLAIMS_AFTER_DAYS || '365',
@@ -107,5 +108,8 @@ module.exports = {
   DISTANCE_CALCULATION_DIRECTIONS_API_URL: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_URL || 'https://maps.googleapis.com/maps/api/directions/json',
   DISTANCE_CALCULATION_DIRECTIONS_API_KEY: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY, // generate key at https://developers.google.com/maps/documentation/distance-matrix/
 
-  PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator'
+  PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator',
+
+  ADI_JORNAL_PREFIX: process.env.APVS_ADI_JORNAL_PREFIX || '578/APVU/',
+  ADI_JORNAL_SUFFIX: process.env.APVS_ADI_JORNAL_SUFFIX || '/EB'
 }

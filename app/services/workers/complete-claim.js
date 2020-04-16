@@ -1,6 +1,5 @@
 const getAllClaimData = require('../data/get-all-claim-data')
-const copyClaimDataToInternal = require('../data/copy-claim-data-to-internal')
-const deleteClaimFromExternal = require('../data/delete-claim-from-external')
+const migrateClaimToInternalAsTransaction = require('../data/migrate-claim-to-internal-as-transaction')
 const calculateCarExpenseCosts = require('../distance-checker/calculate-car-expense-costs')
 const insertTask = require('../data/insert-task')
 const getVisitorEmailAddress = require('../data/get-visitor-email-address')
@@ -14,8 +13,7 @@ module.exports.execute = function (task) {
 
   return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
     .then(function (data) { claimData = data })
-    .then(function () { return copyClaimDataToInternal(claimData, task.additionalData) })
-    .then(function () { return deleteClaimFromExternal(eligibilityId, claimId) })
+    .then(function () { return migrateClaimToInternalAsTransaction(claimData, task.additionalData, eligibilityId, claimId) })
     .then(function () { return calculateCarExpenseCosts(reference, eligibilityId, claimId) })
     // autoApprovalProcess Removed in APVS0115
     .then(function () { return insertTaskSendClaimNotification(reference, eligibilityId, claimId) })
