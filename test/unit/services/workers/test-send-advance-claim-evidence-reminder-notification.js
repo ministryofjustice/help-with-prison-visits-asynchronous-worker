@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 const config = require('../../../../config')
 

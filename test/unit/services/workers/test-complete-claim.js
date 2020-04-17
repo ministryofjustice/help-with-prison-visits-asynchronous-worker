@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const taskEnum = require('../../../../app/constants/tasks-enum')
 
 const reference = '1234567'

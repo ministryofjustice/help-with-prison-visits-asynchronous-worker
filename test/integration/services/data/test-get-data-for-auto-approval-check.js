@@ -4,7 +4,6 @@ const proxyquire = require('proxyquire')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-
 const REFERENCE = 'AUTOAPD'
 var eligibilityId
 var claimId

@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const OLD_PAYMENT_FILES = [{
   PaymentFileId: '1',
   FileType: 'TEST',

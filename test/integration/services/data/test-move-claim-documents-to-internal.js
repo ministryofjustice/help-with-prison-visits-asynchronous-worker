@@ -5,7 +5,6 @@ const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 var disableClaimDocument
 var insertClaimEvent
 

@@ -3,7 +3,6 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-
 const CLAIM_ID_1 = 1
 const CLAIM_ID_2 = 2
 

@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const claimPaymentAmount1 = 45.50
 const claimPaymentAmount2 = 22.22
 const claimPaymentAmount3 = 13.99

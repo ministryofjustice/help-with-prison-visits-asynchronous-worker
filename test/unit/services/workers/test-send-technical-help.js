@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 
-
 var stubZendesk = sinon.stub().resolves()
 
 describe('services/send-technical-help', function () {

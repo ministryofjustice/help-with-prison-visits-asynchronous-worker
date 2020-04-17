@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const REFERENCE = 'DELFILE'

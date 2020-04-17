@@ -5,7 +5,6 @@ const moment = require('moment')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 
-
 describe('services/send-all-advance-claim-reminders-for-day', function () {
   var sendAllAdvanceClaimRemindersForDay
 

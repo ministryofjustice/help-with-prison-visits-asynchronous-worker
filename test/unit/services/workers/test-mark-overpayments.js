@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 describe('services/workers/mark-overpayments', function () {
   var markOverpayments
   var getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub

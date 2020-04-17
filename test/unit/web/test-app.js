@@ -3,7 +3,6 @@ var sinon = require('sinon')
 var supertest = require('supertest')
 var expect = require('chai').expect
 
-
 describe('web/app', function () {
   describe('GET /status', function () {
     var request

@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-
 const REFERENCE = 'RECOVERY'
 const EMAIL = 'test@test.com'
 const PRISON_NUMBER = 'B123456'

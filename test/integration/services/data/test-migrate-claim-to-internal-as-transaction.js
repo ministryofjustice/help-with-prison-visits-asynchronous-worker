@@ -4,8 +4,6 @@ const knex = require('knex')(config)
 
 const testHelper = require('../../../test-helper')
 
-
-
 const migrateClaimToInternalAsTransaction = require('../../../../app/services/data/migrate-claim-to-internal-as-transaction')
 
 const reference = 'MIGR123'

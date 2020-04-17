@@ -3,7 +3,6 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-enum')
 
-
 var visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A' }
 var benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.YES }
 
