@@ -15,5 +15,6 @@ module.exports = [
   'is-prison-not-in-guernsey-jersey',
   'is-visit-in-past',
   'visit-date-different-to-previous-claims',
+  'is-release-date-set',
   'prisoner-not-visited-on-this-date'
 ]

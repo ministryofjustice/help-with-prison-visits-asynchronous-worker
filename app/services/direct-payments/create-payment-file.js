@@ -51,14 +51,20 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
         walTotal = walTotal + cost
         break
     }
-    csvFormattedPayments.push([
+    var thisPayment = [
       payment[0],                                         // sortcode
       payment[1],                                         // account number
       getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[4],                                         // reference
-      payment[5]                                          // country
-    ])
+      payment[6]                                          // roll number
+    ]
+    if (isForApvu) {
+      // reference
+      thisPayment.push(payment[4])
+      // country
+      thisPayment.push(payment[5])
+    }
+    csvFormattedPayments.push(thisPayment)
   })
   if (isForApvu) {
     csvFormattedPayments.push([])
