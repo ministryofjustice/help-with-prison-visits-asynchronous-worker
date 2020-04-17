@@ -71,21 +71,21 @@ function getPrisonPostCode (nameOfPrison) {
 
 function getDistanceInMilesAndCost (visitorPostCode, prisonPostCode) {
   return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode)
-      .then(function (distanceInKm) {
-        var cost = 0.0
-        var distanceInMiles = null
+    .then(function (distanceInKm) {
+      var cost = 0.0
+      var distanceInMiles = null
 
-        if (distanceInKm) {
-          distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
-          return getAutoApprovalConfig()
-            .then(function (config) {
-              var costPerMile = parseFloat(config.CostPerMile)
-              cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2') // accurate 2 decimal place rounding
+      if (distanceInKm) {
+        distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
+        return getAutoApprovalConfig()
+          .then(function (config) {
+            var costPerMile = parseFloat(config.CostPerMile)
+            cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2') // accurate 2 decimal place rounding
 
-              return {cost: cost, distanceInMiles: distanceInMiles}
-            })
-        } else {
-          return {cost: cost, distanceInMiles: distanceInMiles}
-        }
-      })
+            return { cost: cost, distanceInMiles: distanceInMiles }
+          })
+      } else {
+        return { cost: cost, distanceInMiles: distanceInMiles }
+      }
+    })
 }

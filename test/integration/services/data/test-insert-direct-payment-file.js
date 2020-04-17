@@ -15,13 +15,13 @@ describe('services/data/insert-direct-payment-file', function () {
     return insertDirectPaymentFile(path, fileTypeEnum.ACCESSPAY_FILE)
       .then(function () {
         return knex.table('IntSchema.DirectPaymentFile')
-          .where({'Filepath': path, 'FileType': fileTypeEnum.ACCESSPAY_FILE})
+          .where({ Filepath: path, FileType: fileTypeEnum.ACCESSPAY_FILE })
           .first()
           .then(function (result) {
             expect(result.Filepath).to.be.equal(path)
             expect(result.FileType).to.be.equal(fileTypeEnum.ACCESSPAY_FILE)
             expect(result.DateCreated).to.be.within(twoMinutesAgo, twoMinutesAhead)
-            expect(result.IsEnabled).to.be.true
+            expect(result.IsEnabled).to.be.true //eslint-disable-line
           })
       })
   })

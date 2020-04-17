@@ -42,7 +42,7 @@ function copyClaimDocumentsToInternal (claimDocuments) {
 
 function deleteClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
   return knex('ExtSchema.ClaimDocument')
-    .where({'Reference': reference, 'EligibilityId': eligibilityId}).del()
+    .where({ Reference: reference, EligibilityId: eligibilityId }).del()
 }
 
 function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updatedDocuments) {

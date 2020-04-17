@@ -5,9 +5,9 @@ module.exports = function (claimExpenseId, fromPostCode, toPostCode, distance, c
   return knex('IntSchema.ClaimExpense')
     .where('ClaimExpenseId', claimExpenseId)
     .update({
-      'FromPostCode': fromPostCode,
-      'ToPostCode': toPostCode,
-      'Distance': Number(distance).toFixed(2),
-      'Cost': Number(cost).toFixed(2)
+      FromPostCode: fromPostCode,
+      ToPostCode: toPostCode,
+      Distance: Number(distance).toFixed(2),
+      Cost: Number(cost).toFixed(2)
     })
 }

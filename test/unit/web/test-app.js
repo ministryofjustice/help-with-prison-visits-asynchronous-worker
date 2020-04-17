@@ -2,7 +2,7 @@ var proxyquire = require('proxyquire')
 var sinon = require('sinon')
 var supertest = require('supertest')
 var expect = require('chai').expect
-require('sinon-bluebird')
+
 
 describe('web/app', function () {
   describe('GET /status', function () {
@@ -22,8 +22,8 @@ describe('web/app', function () {
         .get('/status')
         .expect(200)
         .end(function (error, response) {
-          expect(error).to.be.null
-          expect(stubGetTaskCountsByStatus.calledOnce).to.be.true
+          expect(error).to.be.null //eslint-disable-line
+          expect(stubGetTaskCountsByStatus.calledOnce).to.be.true //eslint-disable-line
           done()
         })
     })

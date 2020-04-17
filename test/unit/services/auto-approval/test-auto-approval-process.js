@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
@@ -77,11 +76,11 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should not execute auto approval process if AutoApprovalEnabled is set to false', function () {
-    getAutoApprovalConfigStub.resolves({AutoApprovalEnabled: false})
+    getAutoApprovalConfigStub.resolves({ AutoApprovalEnabled: false })
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result).to.be.null
+        expect(result).to.be.null //eslint-disable-line
         sinon.assert.calledOnce(getAutoApprovalConfigStub)
         sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
         sinon.assert.notCalled(autoApproveClaimStub)
@@ -89,32 +88,32 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should return claimApproved false for FIRST_TIME claim', function () {
-    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.FIRST_TIME}}
+    var firstTimeData = { Claim: { ClaimType: claimTypeEnum.FIRST_TIME } }
     getDataForAutoApprovalCheckStub.resolves(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for REPEAT_NEW_ELIGIBILITY claim', function () {
-    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY}}
+    var firstTimeData = { Claim: { ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY } }
     getDataForAutoApprovalCheckStub.resolves(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for claims with status not equal to NEW', function () {
-    var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
+    var pendingClaimData = { Claim: { Status: statusEnum.PENDING } }
     getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false
+        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false //eslint-disable-line
       })
   })
 
@@ -133,11 +132,11 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     var newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
-    getLastSetNumberOfClaimsStatusStub.resolves([{Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}])
+    getLastSetNumberOfClaimsStatusStub.resolves([{ Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }])
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false
+        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false //eslint-disable-line
       })
   })
 
@@ -153,14 +152,14 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.true
+        expect(result.claimApproved).to.be.true //eslint-disable-line
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         var now = dateFormatter.now().toDate()
         var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
@@ -195,7 +194,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.false
+        expect(result.claimApproved).to.be.false //eslint-disable-line
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         sinon.assert.calledOnce(insertClaimEventStub)
         var keys = Object.keys(autoApprovalDependencies)
@@ -214,7 +213,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       getAutoApprovalConfigStub.resolves(validAutoApprovalConfig)
       return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
         .then(function (result) {
-          expect(result.claimApproved).to.be.true
+          expect(result.claimApproved).to.be.true //eslint-disable-line
           sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
           var now = dateFormatter.now().toDate()
           var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17

@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 
 const OLD_PAYMENT_FILES = [{
   PaymentFileId: '1',
@@ -24,8 +24,8 @@ const cleanupOldPaymentFiles = proxyquire('../../../../app/services/workers/clea
 describe('services/workers/cleanup-old-payment-files', function () {
   it('should get old payment files, delete them, and update their IsEnabled status', function () {
     return cleanupOldPaymentFiles.execute({}).then(function () {
-      expect(deleteOldPaymentFiles.calledWith(OLD_PAYMENT_FILES)).to.be.true
-      expect(getOldPaymentFiles.calledOnce).to.be.true
+      expect(deleteOldPaymentFiles.calledWith(OLD_PAYMENT_FILES)).to.be.true //eslint-disable-line
+      expect(getOldPaymentFiles.calledOnce).to.be.true //eslint-disable-line
       expect(updateOldPaymentFilesIsEnabledFalse.calledWith(OLD_PAYMENT_FILES[0].PaymentFileId))
     })
   })

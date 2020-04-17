@@ -37,8 +37,8 @@ describe('services/data/get-approved-claim-expense-data', function () {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
           .update({
-            'Status': 'APPROVED',
-            'ApprovedCost': 20
+            Status: 'APPROVED',
+            ApprovedCost: 20
           })
       })
   })

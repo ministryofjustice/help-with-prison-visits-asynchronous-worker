@@ -15,16 +15,16 @@ const dwpCheck = { name: 'dwpCheck' }
 const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
 const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
-const markOverpayments = {name: 'markOverpayments'}
-const sendFeedback = {name: 'sendFeedback'}
-const cleanupOldData = {name: 'cleanupOldData'}
-const sendTechnicalHelp = {name: 'sendTechnicalHelp'}
-const archiveOldClaims = {name: 'archiveOldClaims'}
-const archiveClaim = {name: 'archiveClaim'}
-const referenceRecovery = {name: 'referenceRecovery'}
-const generatePayoutPayments = {name: 'generatePayoutPayments'}
-const generateDirectPayments = {name: 'generateDirectPayments'}
-const sendMalwareAlert = {name: 'sendMalwareAlert'}
+const markOverpayments = { name: 'markOverpayments' }
+const sendFeedback = { name: 'sendFeedback' }
+const cleanupOldData = { name: 'cleanupOldData' }
+const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
+const archiveOldClaims = { name: 'archiveOldClaims' }
+const archiveClaim = { name: 'archiveClaim' }
+const referenceRecovery = { name: 'referenceRecovery' }
+const generatePayoutPayments = { name: 'generatePayoutPayments' }
+const generateDirectPayments = { name: 'generateDirectPayments' }
+const sendMalwareAlert = { name: 'sendMalwareAlert' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
   './workers/send-accepted-claim-notification': sendAcceptedClaimNotification,

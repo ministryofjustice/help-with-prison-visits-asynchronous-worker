@@ -12,11 +12,11 @@ describe('services/data/complete-task-with-status', function () {
 
   before(function () {
     return knex('ExtSchema.Task')
-    .insert(testHelper.getTaskObject('TEST-TASK', null, 'TEST'))
-    .returning('TaskId')
-    .then(function (taskId) {
-      id = taskId
-    })
+      .insert(testHelper.getTaskObject('TEST-TASK', null, 'TEST'))
+      .returning('TaskId')
+      .then(function (taskId) {
+        id = taskId
+      })
   })
 
   it('should set status and set DateProcessed', function () {

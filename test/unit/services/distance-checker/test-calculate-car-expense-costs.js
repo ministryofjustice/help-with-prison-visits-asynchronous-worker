@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 
 var getAllClaimData
 var callDistanceApiForPostcodes
@@ -35,7 +35,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     getAllClaimData = sinon.stub()
     callDistanceApiForPostcodes = sinon.stub().resolves(10.0)
     updateExpenseForDistanceCalculation = sinon.stub().resolves()
-    getAutoApprovalConfig = sinon.stub().resolves({CostPerMile: '13.00'})
+    getAutoApprovalConfig = sinon.stub().resolves({ CostPerMile: '13.00' })
 
     calculateCarExpenseCosts = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', {
       '../../../config': { DISTANCE_CALCULATION_ENABLED: 'true', DISTANCE_CALCULATION_MAX_MILES: '750' },
@@ -50,7 +50,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     var calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
     return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
       .then(function () {
-        expect(callDistanceApiForPostcodes.called).to.be.false
+        expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -59,7 +59,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.called).to.be.false
+        expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -74,9 +74,9 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
-        expect(getAutoApprovalConfig.called).to.be.true
-        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST)).to.be.true
+        expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true //eslint-disable-line
+        expect(getAutoApprovalConfig.called).to.be.true //eslint-disable-line
+        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST)).to.be.true //eslint-disable-line
       })
   })
 
@@ -90,7 +90,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0)).to.be.true
+        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0)).to.be.true //eslint-disable-line
       })
   })
 
@@ -101,7 +101,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.calledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode)).to.be.true
+        expect(callDistanceApiForPostcodes.calledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode)).to.be.true //eslint-disable-line
       })
   })
 
@@ -109,7 +109,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     getAllClaimData.resolves({})
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.called).to.be.false
+        expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -117,7 +117,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     getAllClaimData.resolves(CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES)
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.called).to.be.false
+        expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -125,7 +125,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     getAllClaimData.resolves(CLAIM_DATA_WITH_INCORRECT_PRISON)
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.called).to.be.false
+        expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -134,8 +134,8 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     callDistanceApiForPostcodes.resolves()
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true
-        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0)).to.be.true
+        expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).to.be.true //eslint-disable-line
+        expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0)).to.be.true //eslint-disable-line
       })
   })
 })

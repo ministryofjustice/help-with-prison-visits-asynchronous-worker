@@ -5,7 +5,7 @@ module.exports = function (visitorId, dwpBenefitCheckerResult, dwpCheckValue) {
   return knex('IntSchema.Visitor')
     .where('VisitorId', visitorId)
     .update({
-      'DWPBenefitCheckerResult': dwpBenefitCheckerResult,
-      'DWPCheck': dwpCheckValue
+      DWPBenefitCheckerResult: dwpBenefitCheckerResult,
+      DWPCheck: dwpCheckValue
     })
 }

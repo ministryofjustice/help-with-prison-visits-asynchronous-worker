@@ -52,11 +52,11 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
         break
     }
     var thisPayment = [
-      payment[0],                                         // sortcode
-      payment[1],                                         // account number
-      getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
+      payment[0], // sortcode
+      payment[1], // account number
+      getNameAs18CharactersPaddedWithSpaces(payment[2]), // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[6]                                          // roll number
+      payment[6] // roll number
     ]
     if (isForApvu) {
       // reference

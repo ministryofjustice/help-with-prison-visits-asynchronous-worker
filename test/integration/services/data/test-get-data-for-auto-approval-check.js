@@ -3,7 +3,7 @@ const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
-require('sinon-bluebird')
+
 
 const REFERENCE = 'AUTOAPD'
 var eligibilityId
@@ -22,8 +22,7 @@ describe('services/data/get-data-for-auto-approval-check', function () {
 
     getAllClaimDataStub = sinon.stub().resolves(claimData)
 
-    getDataForAutoApprovalCheck = proxyquire('../../../../app/services/data/get-data-for-auto-approval-check', {
-      './get-all-claim-data': getAllClaimDataStub })
+    getDataForAutoApprovalCheck = proxyquire('../../../../app/services/data/get-data-for-auto-approval-check', { './get-all-claim-data': getAllClaimDataStub })
 
     eligibilityId = claimData.Claim.EligibilityId
     claimId = claimData.Claim.ClaimId
@@ -120,8 +119,8 @@ describe('services/data/get-data-for-auto-approval-check', function () {
   it('should return all current and previous claim data associated to the claimant', function () {
     return getDataForAutoApprovalCheck(REFERENCE, eligibilityId, claimId)
       .then(function (result) {
-        expect(result.previousClaims).to.not.be.null
-        expect(result.latestManuallyApprovedClaim).to.not.be.null
+        expect(result.previousClaims).to.not.be.null //eslint-disable-line
+        expect(result.latestManuallyApprovedClaim).to.not.be.null //eslint-disable-line
         expect(result.latestManuallyApprovedClaim.ClaimId).to.equal(result.previousClaims[1].ClaimId)
       })
   })

@@ -11,11 +11,11 @@ module.exports = function (claimData, additionalData, eligibilityId, claimId) {
         return deleteClaimFromExternal(eligibilityId, claimId, trx)
       })
   })
-  .then(function () {
-    log.info(`Claim with ClaimId: ${claimData.Claim.ClaimId} copied to internal`)
-  })
-  .catch(function (error) {
-    log.error(`ERROR copying claim with ClaimId: ${claimData.Claim.ClaimId} to internal`)
-    throw error
-  })
+    .then(function () {
+      log.info(`Claim with ClaimId: ${claimData.Claim.ClaimId} copied to internal`)
+    })
+    .catch(function (error) {
+      log.error(`ERROR copying claim with ClaimId: ${claimData.Claim.ClaimId} to internal`)
+      throw error
+    })
 }

@@ -2,11 +2,11 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-enum')
-require('sinon-bluebird')
+
 const statusEnum = require('../../../../app/constants/status-enum')
 
-var visitorDwpBenefitCheckerData = {'visitorId': 1234, 'surname': 'YELLOW', 'dateOfBirth': '19681210', 'nino': 'PW556356A', 'benefit': 'employment-support'}
-var benefitCheckerResult = {'visitorId': 1234, 'result': dwpCheckResultEnum.NO}
+var visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A', benefit: 'employment-support' }
+var benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.NO }
 
 var getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
 var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
@@ -40,10 +40,10 @@ describe('services/workers/dwp-check', function () {
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true
-      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true
-      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION)).to.be.true
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.false
+      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
+      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true //eslint-disable-line
+      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION)).to.be.true //eslint-disable-line
+      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.false //eslint-disable-line
       sinon.assert.notCalled(autoApprovalProcess)
     })
   })

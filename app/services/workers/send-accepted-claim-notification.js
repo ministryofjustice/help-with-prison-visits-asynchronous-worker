@@ -29,7 +29,7 @@ module.exports.execute = function (task) {
       var town = claimantData.Town || ''
       var prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).displayName : ''
 
-      var personalisation = standardPersonalisationElements(personalisation, firstName, reference, town, prison, caseworkerNote)
+      var personalisation = standardPersonalisationElements(firstName, reference, town, prison, caseworkerNote)
       var emailTemplateId
 
       if (paymentMethod === paymentMethodEnum.DIRECT_BANK_PAYMENT.value) {
@@ -50,7 +50,7 @@ module.exports.execute = function (task) {
           emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID
         }
       } else {
-        return Promise.reject('No payment method found')
+        return Promise.reject(new Error('No payment method found'))
       }
 
       var emailAddress = task.additionalData
@@ -89,7 +89,7 @@ function formatCaseworkerNote (caseworkerNote) {
   }
 }
 
-function standardPersonalisationElements (personalisation, firstName, reference, town, prison, caseworkerNote) {
+function standardPersonalisationElements (firstName, reference, town, prison, caseworkerNote) {
   return {
     first_name: firstName,
     reference: reference,

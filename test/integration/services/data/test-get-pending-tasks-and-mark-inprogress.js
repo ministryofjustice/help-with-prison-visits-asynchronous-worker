@@ -17,10 +17,10 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
       testHelper.getTaskObject(taskType, '3'),
       testHelper.getTaskObject(taskType, '4')
     ]).returning('TaskId')
-    .then(function (taskIds) {
-      ids = taskIds
-      done()
-    })
+      .then(function (taskIds) {
+        ids = taskIds
+        done()
+      })
   })
 
   it('should return pending tasks and update task status to in progress', function (done) {

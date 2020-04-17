@@ -4,10 +4,10 @@ const dateFormatter = require('../date-formatter')
 
 module.exports = function (filePath, fileType) {
   var fileMetadata = {
-    'FileType': fileType,
-    'DateCreated': dateFormatter.now().toDate(),
-    'Filepath': filePath,
-    'IsEnabled': true
+    FileType: fileType,
+    DateCreated: dateFormatter.now().toDate(),
+    Filepath: filePath,
+    IsEnabled: true
   }
 
   return knex('IntSchema.DirectPaymentFile').insert(fileMetadata).returning('PaymentFileId')

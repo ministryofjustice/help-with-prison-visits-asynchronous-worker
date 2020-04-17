@@ -1,12 +1,12 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const REFERENCE = 'DELFILE'
-const CLAIM_DOCUMENT_FILEPATH = [{Filepath: '1'}]
+const CLAIM_DOCUMENT_FILEPATH = [{ Filepath: '1' }]
 const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
@@ -28,7 +28,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     }
 
     deleteOldFiles = proxyquire('../../../../app/services/cleanup-old-data/delete-old-files', {
-      'fs': fs,
+      fs: fs,
       '../data/get-claim-documents': getClaimDocuments
     })
   })
@@ -37,8 +37,8 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true
-        expect(calledFsUnlinkSync).to.be.true
+        expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true //eslint-disable-line
+        expect(calledFsUnlinkSync).to.be.true //eslint-disable-line
       })
   })
 
@@ -46,7 +46,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(calledFsUnlinkSync).to.be.false
+        expect(calledFsUnlinkSync).to.be.false //eslint-disable-line
       })
   })
 
@@ -54,7 +54,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_DATA)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(calledFsUnlinkSync).to.be.false
+        expect(calledFsUnlinkSync).to.be.false //eslint-disable-line
       })
   })
 })
