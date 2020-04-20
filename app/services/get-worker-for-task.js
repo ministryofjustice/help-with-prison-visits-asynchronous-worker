@@ -24,6 +24,7 @@ var referenceRecovery = require('./workers/reference-recovery')
 var generatePayoutPayments = require('./workers/generate-payout-payments')
 var dwpFailedNotification = require('./workers/send-claim-additional-information-required')
 var autoApproveClaims = require('./workers/auto-approve-claims')
+var autoRejectClaims = require('./workers/auto-reject-claims')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -53,6 +54,7 @@ module.exports = function (taskType) {
     case tasksEnum.GENERATE_PAYOUT_PAYMENTS: return generatePayoutPayments
     case tasksEnum.DWP_FAILED_NOTIFICATION: return dwpFailedNotification
     case tasksEnum.AUTO_APPROVE_CLAIMS: return autoApproveClaims
+    case tasksEnum.AUTO_REJECT_CLAIMS: return autoRejectClaims
   }
 
   return null
