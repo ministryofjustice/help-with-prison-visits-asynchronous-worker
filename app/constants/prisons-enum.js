@@ -400,9 +400,9 @@ module.exports = {
     postcode: 'HU9 5LS'
   },
 
-  HMP_HUMBER: {
-    value: 'hmp-humber',
-    displayName: 'Hmp Humber',
+  HUMBER: {
+    value: 'humber',
+    displayName: 'Humber',
     region: 'ENG/WAL',
     postcode: 'HU15 2JZ'
   },

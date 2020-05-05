@@ -10,11 +10,12 @@ const claimPaymentAmount3 = 13.99
 const topUpPaymentAmount1 = 19.99
 const topUpPaymentAmount2 = 20.01
 const topUpPaymentAmount3 = 20.02
+const dateOfVisit = '2017-09-28T00:00:00.000Z'
 
 var claimsPendingPayment = [
-  ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
-  ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
-  ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
+  ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234', dateOfVisit],
+  ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567', dateOfVisit],
+  ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910', dateOfVisit]
 ]
 
 var topUpsPendingPayment = [

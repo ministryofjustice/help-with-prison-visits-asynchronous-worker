@@ -8,6 +8,8 @@ const dateFormatter = require('../date-formatter')
 module.exports = function (totalPayment) {
   const dataPath = config.DATA_FILE_PATH
   const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
+  const adiPrefix = config.ADI_JORNAL_PREFIX
+  const adiSuffix = config.ADI_JORNAL_SUFFIX
 
   return new Promise(function (resolve, reject) {
     var options = {
@@ -19,8 +21,9 @@ module.exports = function (totalPayment) {
     var filePath = path.join(outputPath, getFileName())
 
     var accountingDate = dateFormatter.now().format('DD MMM YYYY')
+    var journalName = adiPrefix + dateFormatter.now().format('DDMMYY') + adiSuffix
 
-    options.args = [totalPayment, filePath, accountingDate]
+    options.args = [totalPayment, filePath, accountingDate, journalName]
     python.run('adi.py', options, function (error, results) {
       if (error) {
         log.error('Error calling python to generate ADI Journal')
