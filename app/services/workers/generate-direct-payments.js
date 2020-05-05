@@ -29,7 +29,7 @@ module.exports.execute = function (task) {
             })
             var missingData = checkForAccountNumberAndSortCode(paymentData)
             if (missingData) {
-              log.info(`Data is missing from direct payment ${paymentData}`)
+              log.error(`Data is missing from direct payment ${paymentData}`)
               return Promise.reject('Data is missing')
             }
             removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
