@@ -20,7 +20,7 @@ describe('services/data/insert-direct-payment-file', function () {
           .then(function (result) {
             expect(result.Filepath).to.be.equal(path)
             expect(result.FileType).to.be.equal(fileTypeEnum.ACCESSPAY_FILE)
-            expect(result.DateCreated).to.be.within(twoMinutesAgo, twoMinutesAhead)
+            expect(result.DateCreated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
             expect(result.IsEnabled).to.be.true //eslint-disable-line
           })
       })
