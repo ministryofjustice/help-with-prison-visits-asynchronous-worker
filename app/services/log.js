@@ -17,7 +17,7 @@ var log = bunyan.createLogger({
   name: 'asynchronous-worker',
   streams: [],
   serializers: {
-    'error': errorSerializer
+    error: errorSerializer
   }
 })
 

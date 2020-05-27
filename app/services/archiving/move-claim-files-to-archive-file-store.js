@@ -23,7 +23,7 @@ module.exports = function (archivedClaimData) {
     var claimDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}/${claimId}`
     var archiveClaimDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}/${claimId}`
 
-    return mv(claimDirectory, archiveClaimDirectory, {mkdirp: true})
+    return mv(claimDirectory, archiveClaimDirectory, { mkdirp: true })
       .then(function () {
         if (archiveEligibilityDocuments) {
           var eligibilityDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
@@ -38,7 +38,7 @@ module.exports = function (archivedClaimData) {
               var eligibilityFileOrFolderPath = path.join(eligibilityDirectory, eligibilityFileOrFolder)
               var targetFileOrFolderPath = path.join(targetDirectory, eligibilityFileOrFolder)
 
-              movePromises.push(mv(eligibilityFileOrFolderPath, targetFileOrFolderPath, {mkdirp: true}))
+              movePromises.push(mv(eligibilityFileOrFolderPath, targetFileOrFolderPath, { mkdirp: true }))
             })
             return Promise.all(movePromises)
               .then(function () {

@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
@@ -41,12 +40,12 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     deleteClaimFromInternal.resolves()
 
     return moveClaimDataToArchiveDatabase(CLAIM_ID).then(function (archivedClaimData) {
-      expect(getClaim.calledWith('IntSchema', CLAIM_ID)).to.be.true
-      expect(getNumberOfClaimsForEligibility.calledWith('IntSchema', ELIGIBILITY_ID)).to.be.true
-      expect(getAllClaimData.calledWith('IntSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true
-      expect(copyClaimDataToArchive.calledWith(CLAIM_DATA)).to.be.true
-      expect(deleteClaimFromInternal.calledWith(ELIGIBILITY_ID, CLAIM_ID, true)).to.be.true
-      expect(archivedClaimData.DeleteEligibility).to.be.true
+      expect(getClaim.calledWith('IntSchema', CLAIM_ID)).to.be.true //eslint-disable-line
+      expect(getNumberOfClaimsForEligibility.calledWith('IntSchema', ELIGIBILITY_ID)).to.be.true //eslint-disable-line
+      expect(getAllClaimData.calledWith('IntSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true //eslint-disable-line
+      expect(copyClaimDataToArchive.calledWith(CLAIM_DATA)).to.be.true //eslint-disable-line
+      expect(deleteClaimFromInternal.calledWith(ELIGIBILITY_ID, CLAIM_ID, true)).to.be.true //eslint-disable-line
+      expect(archivedClaimData.DeleteEligibility).to.be.true //eslint-disable-line
     })
   })
 
@@ -58,8 +57,8 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     deleteClaimFromInternal.resolves()
 
     return moveClaimDataToArchiveDatabase(CLAIM_ID).then(function (archivedClaimData) {
-      expect(deleteClaimFromInternal.calledWith(ELIGIBILITY_ID, CLAIM_ID, false)).to.be.true
-      expect(archivedClaimData.DeleteEligibility).to.be.false
+      expect(deleteClaimFromInternal.calledWith(ELIGIBILITY_ID, CLAIM_ID, false)).to.be.true //eslint-disable-line
+      expect(archivedClaimData.DeleteEligibility).to.be.false //eslint-disable-line
     })
   })
 })

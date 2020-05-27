@@ -24,7 +24,7 @@ describe('services/data/update-contact-details', function () {
     return updateContactDetails(updatedDetails)
       .then(function () {
         return knex.table('IntSchema.Visitor')
-          .where({'Reference': reference, 'EligibilityId': updatedDetails.EligibilityId})
+          .where({ Reference: reference, EligibilityId: updatedDetails.EligibilityId })
           .first()
           .then(function (result) {
             expect(result.EmailAddress).to.be.equal(updatedDetails.EmailAddress)

@@ -41,9 +41,9 @@ module.exports.execute = function (task) {
       return zendesk.tickets.create({
         submitter_id: '114198238551',
         requester: {
-          'name': personalisation.contactEmailAddress,
-          'email': personalisation.contactEmailAddress,
-          'verified': true
+          name: personalisation.contactEmailAddress,
+          email: personalisation.contactEmailAddress,
+          verified: true
         },
         subject: subjectText,
         comment: {

@@ -96,7 +96,7 @@ module.exports = function (paymentMethod) {
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
     .where(function () {
       this.whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED])
-      .orWhereNotNull('IntSchema.Claim.DateApproved')
+        .orWhereNotNull('IntSchema.Claim.DateApproved')
     })
     .whereIn('IntSchema.ClaimExpense.Status', [claimExpenseStatuses.APPROVED, claimExpenseStatuses.APPROVED_DIFF_AMOUNT, claimExpenseStatuses.MANUALLY_PROCESSED])
     .where('IntSchema.Claim.PaymentMethod', paymentMethod)

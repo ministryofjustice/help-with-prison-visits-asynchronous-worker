@@ -3,7 +3,7 @@ module.exports = function (eligibilityId, claimId, trx) {
     .then(function () {
       return trx('ExtSchema.ClaimDocument')
         .where('ClaimId', claimId).del()
-        .orWhere({'ClaimId': null, EligibilityId: eligibilityId})
+        .orWhere({ ClaimId: null, EligibilityId: eligibilityId })
     })
     .then(function () {
       return trx('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()

@@ -25,7 +25,7 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
     body: payload,
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${config.PERFORMANCE_PLATFORM_BEARER_TOKEN}`
+      Authorization: `Bearer ${config.PERFORMANCE_PLATFORM_BEARER_TOKEN}`
     },
     json: true
   }
@@ -34,5 +34,5 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
 }
 
 function getId (timestamp) {
-  return new Buffer(`${timestamp}-${SERVICE}-${PERIOD}-${DATA_TYPE}-${CHANNEL}`).toString('base64')
+  return Buffer.from(`${timestamp}-${SERVICE}-${PERIOD}-${DATA_TYPE}-${CHANNEL}`).toString('base64')
 }

@@ -22,12 +22,12 @@ describe('services/data/insert-claim-event', function () {
     return insertClaimEvent(REFERENCE, eligibilityId, claimId, null, event, null, null, true)
       .then(function () {
         return knex.table('IntSchema.ClaimEvent')
-          .where({'Reference': REFERENCE, 'EligibilityId': eligibilityId, 'ClaimId': claimId})
+          .where({ Reference: REFERENCE, EligibilityId: eligibilityId, ClaimId: claimId })
           .first()
           .then(function (result) {
             expect(result.Event).to.be.equal(event)
-            expect(result.IsInternal).to.be.true
-            expect(result.DateSubmitted).not.to.be.null
+            expect(result.IsInternal).to.be.true //eslint-disable-line
+            expect(result.DateSubmitted).not.to.be.null //eslint-disable-line
           })
       })
   })

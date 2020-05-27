@@ -20,6 +20,6 @@ asyncWorkerJob.start()
 
 function runProcessTasks () {
   return processTasks().then(function () {
-    log.info(`worker completed running task`)
+    log.info('worker completed running task')
   })
 }

@@ -27,7 +27,7 @@ describe('services/direct-payments/create-payment-file', function () {
   it('should generate valid APVU AccessPay file with correct header', function () {
     return createPaymentFile(data, true)
       .then(function (filePath) {
-        expect(filePath).to.be.not.null
+        expect(filePath).to.be.not.null //eslint-disable-line
         testFilePath = filePath
 
         return readFile(filePath).then(function (content) {
@@ -47,7 +47,7 @@ describe('services/direct-payments/create-payment-file', function () {
   it('should generate valid SSCL AccessPay file with correct header', function () {
     return createPaymentFile(data, false)
       .then(function (filePath) {
-        expect(filePath).to.be.not.null
+        expect(filePath).to.be.not.null //eslint-disable-line
         testFilePath = filePath
 
         return readFile(filePath).then(function (content) {
