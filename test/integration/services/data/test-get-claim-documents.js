@@ -16,7 +16,7 @@ describe('services/data/get-claim-documents', function () {
         eligibilityId = ids.eligibilityId
         claimId = ids.claimId
 
-        return knex.table('IntSchema.ClaimDocument').where({'Reference': REFERENCE}).select()
+        return knex.table('IntSchema.ClaimDocument').where({ Reference: REFERENCE }).select()
           .then(function (claimDocuments) {
             expectedCount = claimDocuments.length
           })
@@ -26,7 +26,7 @@ describe('services/data/get-claim-documents', function () {
     return getClaimDocuments('IntSchema', REFERENCE, eligibilityId, claimId)
       .then(function (claimDocuments) {
         expect(claimDocuments.length).to.equal(expectedCount)
-        expect(claimDocuments[0].IsEnabled).to.be.true
+        expect(claimDocuments[0].IsEnabled).to.be.true //eslint-disable-line
       })
   })
 

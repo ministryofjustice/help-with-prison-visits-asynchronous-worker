@@ -17,7 +17,7 @@ module.exports.execute = function (task) {
 
       return getFirstNameByClaimId('IntSchema', claimId)
         .then(function (firstName) {
-          var personalisation = {reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName}
+          var personalisation = { reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName }
           var additionalData = task.additionalData.split('~~')
           var emailAddress = additionalData[0]
           var reminder = additionalData[1]
@@ -27,7 +27,7 @@ module.exports.execute = function (task) {
           } else if (reminderEnum.SECOND === reminder) {
             emailTemplateId = config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID
           } else {
-            return Promise.reject('Not valid reminder type')
+            return Promise.reject(new Error('Not valid reminder type'))
           }
 
           return sendNotification(emailTemplateId, emailAddress, personalisation)

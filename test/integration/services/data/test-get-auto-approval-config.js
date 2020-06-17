@@ -32,7 +32,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.MaxDaysAfterAPVUVisit).to.equal(parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT))
         expect(result.MaxNumberOfClaimsPerYear).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
         expect(result.MaxNumberOfClaimsPerMonth).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
-        expect(result.RulesDisabled).to.be.null
+        expect(result.RulesDisabled).to.be.null //eslint-disable-line
         expect(result.CostPerMile).to.equal(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE))
         expect(result.NumberOfConsecutiveAutoApprovals).to.equal(parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
       })
@@ -40,14 +40,14 @@ describe('services/data/get-auto-approval-config', function () {
 
   it('should return the latest auto approval config record', function () {
     return insertTestData()
-    .then(function () {
-      return getAutoApprovalConfig()
-        .then(function (result) {
-          expect(result.Caseworker).to.equal('caseworker1@test.com')
-          expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
-          expect(result.IsEnabled).to.equal(true)
-        })
-    })
+      .then(function () {
+        return getAutoApprovalConfig()
+          .then(function (result) {
+            expect(result.Caseworker).to.equal('caseworker1@test.com')
+            expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
+            expect(result.IsEnabled).to.equal(true)
+          })
+      })
   })
 
   after(function () {

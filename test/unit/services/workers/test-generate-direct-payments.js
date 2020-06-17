@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const fileTypes = require('../../../../app/constants/payment-filetype-enum')
 
 const claimPaymentAmount1 = 45.50
@@ -47,25 +47,25 @@ describe('services/workers/generate-direct-payments', function () {
   it('should retrieve claim data and then call file generation', function () {
     getClaimsPendingPayment.resolves(claimsPendingPayment)
     return generateDirectPayments.execute({}).then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true
-      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.true
-      expect(createAdiJournalFile.calledWith(total)).to.be.true
-      expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).to.be.true
-      expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true
+      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
+      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
+      expect(createAdiJournalFile.calledWith(total)).to.be.true //eslint-disable-line
+      expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).to.be.true //eslint-disable-line
+      expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true //eslint-disable-line
     })
   })
 
   it('should retrieve claim data and then call file generation', function () {
     getClaimsPendingPayment.resolves(claimsMissingData)
     return generateDirectPayments.execute({}).then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true
-      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false
+      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
+      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
     })
       .catch(function (error) {
-        expect(error).to.equal('Data is missing')
+        expect(error.message).to.equal('Data is missing')
       })
   })
 })

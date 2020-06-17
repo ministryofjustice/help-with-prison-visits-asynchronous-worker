@@ -23,7 +23,7 @@ describe('services/data/update-bank-details', function () {
     return updateBankDetails(claimBankDetailId, reference, claimId, sortcode, accountNumber)
       .then(function () {
         return knex.table('IntSchema.ClaimBankDetail')
-          .where({'ClaimBankDetailId': claimBankDetailId, 'Reference': reference, 'ClaimId': claimId})
+          .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
           .first()
           .then(function (result) {
             expect(result.SortCode).to.be.equal(sortcode)

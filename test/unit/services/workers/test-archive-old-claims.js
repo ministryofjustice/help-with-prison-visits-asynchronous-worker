@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
-require('sinon-bluebird')
 
 const CLAIM_ID_1 = 1
 const CLAIM_ID_2 = 2
@@ -33,7 +32,7 @@ describe('services/workers/archive-old-claims', function () {
     getAllClaimsOlderThanDate.resolves([])
 
     return archiveOldClaims.execute({}).then(function () {
-      expect(getAllClaimsOlderThanDate.calledOnce).to.be.true
+      expect(getAllClaimsOlderThanDate.calledOnce).to.be.true //eslint-disable-line
       expect(getAllClaimsOlderThanDate.firstCall.args[0]).to.be.within(tenDaysAgoMinus5mins, tenDaysAgoPlus5mins)
     })
   })
@@ -43,7 +42,7 @@ describe('services/workers/archive-old-claims', function () {
     insertTask.resolves()
 
     return archiveOldClaims.execute({}).then(function () {
-      expect(insertTask.calledTwice).to.be.true
+      expect(insertTask.calledTwice).to.be.true //eslint-disable-line
     })
   })
 })

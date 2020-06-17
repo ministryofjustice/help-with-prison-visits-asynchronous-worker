@@ -10,7 +10,7 @@ describe('services/direct-payments/create-adi-journal-file', function () {
   it('should generate ADI Journal file', function () {
     return createAdiJournalFile(123.45)
       .then(function (filePath) {
-        expect(fs.existsSync(filePath), 'file must have been created (cannot verify content)').to.be.true
+        expect(fs.existsSync(filePath), 'file must have been created (cannot verify content)').to.be.true //eslint-disable-line
         testFilePath = filePath
       })
   })

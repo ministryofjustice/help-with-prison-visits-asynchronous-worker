@@ -22,7 +22,7 @@ describe('services/data/update-overpayment-status', function () {
       .then(function () {
         return knex('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {
-            expect(claim.IsOverpaid).to.be.true
+            expect(claim.IsOverpaid).to.be.true //eslint-disable-line
             expect(claim.OverpaymentAmount).to.equal(AMOUNT)
             expect(claim.RemainingOverpaymentAmount).to.equal(AMOUNT)
             expect(claim.OverpaymentReason).to.equal('Evidence not uploaded within 10 days')

@@ -9,28 +9,28 @@ module.exports = function (reference, eligibilityId, claimId) {
   var claimData
 
   return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
-  .then(function (data) { claimData = data })
-  .then(function () { return getPreviousClaims(claimId, eligibilityId) })
-  .then(function (previousClaims) { claimData.previousClaims = previousClaims })
-  .then(function () { return getLatestManuallyApprovedClaim(claimData.previousClaims) })
-  .then(function (latestManuallyApprovedClaim) {
-    claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
-    claimData.latestManualClaim = getLatestManualClaim(claimData.previousClaims)
-  })
-  .then(function () {
-    var visitDateMoment = moment(claimData.Claim.DateOfJourney)
-    var month = visitDateMoment.format('M')
-    var day = visitDateMoment.format('D')
-    var year = visitDateMoment.format('YYYY')
-    return getEligibilityIds(day, month, year)
-  })
-  .then(function (eligibilityIds) {
-    return getPrisonNumberFromEligibilityId(eligibilityIds)
-  })
-  .then(function (prisonNumbers) {
-    claimData.prisonNumbers = prisonNumbers
-    return claimData
-  })
+    .then(function (data) { claimData = data })
+    .then(function () { return getPreviousClaims(claimId, eligibilityId) })
+    .then(function (previousClaims) { claimData.previousClaims = previousClaims })
+    .then(function () { return getLatestManuallyApprovedClaim(claimData.previousClaims) })
+    .then(function (latestManuallyApprovedClaim) {
+      claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
+      claimData.latestManualClaim = getLatestManualClaim(claimData.previousClaims)
+    })
+    .then(function () {
+      var visitDateMoment = moment(claimData.Claim.DateOfJourney)
+      var month = visitDateMoment.format('M')
+      var day = visitDateMoment.format('D')
+      var year = visitDateMoment.format('YYYY')
+      return getEligibilityIds(day, month, year)
+    })
+    .then(function (eligibilityIds) {
+      return getPrisonNumberFromEligibilityId(eligibilityIds)
+    })
+    .then(function (prisonNumbers) {
+      claimData.prisonNumbers = prisonNumbers
+      return claimData
+    })
 }
 
 function getPreviousClaims (claimId, eligibilityId) {
@@ -111,7 +111,7 @@ function getClaimExpenses (claimId) {
 function getEligibilityIds (day, month, year) {
   var dateOfJourney = dateFormatter.buildFormatted(day, month, year)
 
-  return knex.raw(`SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)`, [ dateOfJourney ])
+  return knex.raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney])
     .then(function (results) {
       var eligibilityIds = []
 
