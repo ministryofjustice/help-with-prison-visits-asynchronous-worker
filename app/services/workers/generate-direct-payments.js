@@ -20,13 +20,10 @@ module.exports.execute = function (task) {
     .then(function (paymentData) {
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (topupData) {
-          if (paymentData.length + topupData.length > 0) {
+          paymentData = combinePaymentWithTopups(paymentData, topupData)
+          if (paymentData.length > 0) {
             var claimIdIndex = 0
             claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
-            topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
-            topupData.forEach(function (topup) {
-              paymentData.push(topup)
-            })
             var missingData = checkForAccountNumberAndSortCode(paymentData)
             if (missingData) {
               log.error(`Data is missing from direct payment ${paymentData}`)
@@ -56,7 +53,7 @@ module.exports.execute = function (task) {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData)
               })
               .then(function () {
-                return updateAllTopupsProcessedPayment(topUpClaimIds)
+                return updateAllTopupsProcessedPayment(claimIds)
               })
           }
         })
@@ -110,15 +107,40 @@ function getTotalFromPaymentData (paymentData) {
   return Number(total).toFixed(2)
 }
 
-function updateAllTopupsProcessedPayment (topUpIds) {
+function updateAllTopupsProcessedPayment (claimIds) {
   var promises = []
 
   var now = dateFormatter.now().toDate()
 
-  for (var i = 0; i < topUpIds.length; i++) {
-    var topUpId = topUpIds[i]
-    promises.push(updateTopupsProcessedPayment(topUpId, now))
+  for (var i = 0; i < claimIds.length; i++) {
+    var claimId = claimIds[i]
+    promises.push(updateTopupsProcessedPayment(claimId, now))
   }
 
   return Promise.all(promises)
+}
+
+function combinePaymentWithTopups (paymentData, topupData) {
+  var standaloneTopups = []
+  topupData.forEach(function (topup) {
+    var found = false
+    paymentData.forEach(function (claim) {
+      if (topup[0] === claim[0]) {
+        found = true
+        claim[4] = (parseFloat(claim[4]) + parseFloat(topup[4])).toFixed(2)
+      }
+    })
+    if (!found) {
+      standaloneTopups.push(topup)
+    }
+  })
+  standaloneTopups.forEach(function (topup) {
+    topup[4] = (parseFloat(topup[4]) - (topup[8] || 0)).toFixed(2)
+  })
+  standaloneTopups = standaloneTopups.filter(standaloneTopup => (parseFloat(standaloneTopup[4]) > 0))
+  topupData = standaloneTopups
+  topupData.forEach(function (topup) {
+    paymentData.push(topup)
+  })
+  return paymentData
 }

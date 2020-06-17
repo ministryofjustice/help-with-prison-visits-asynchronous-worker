@@ -2,25 +2,44 @@ const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
+const updateTopUpTotalAmount = require('./update-topup-total-amount')
 
-const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.TopUp.TopUpId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
+const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country', 'IntSchema.ClaimBankDetail.NameOnAccount',
   'IntSchema.ClaimBankDetail.RollNumber']
 
-var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.TopUp.TopUpId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
+var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney']
+
+function subtractOverpayment (topupResults) {
+  var promises = []
+
+  topupResults.forEach(function (topup) {
+    var totalAmount = (topup.PaymentAmount - (topup.TotalDeductionAmount || 0))
+    topup.PaymentAmount = totalAmount
+    promises.push(updateTopUpTotalAmount(topup.ClaimId, totalAmount, (topup.TotalDeductionAmount || 0)))
+  })
+  return Promise.all(promises)
+    .then(function () {
+      var claimsWithPositivePaymentAmount = topupResults.filter(function (topup) {
+        return topup.PaymentAmount > 0
+      })
+      return claimsWithPositivePaymentAmount
+    })
+}
 
 function directPaymentsReturn (results) {
   return _.map(results, record => {
     return [
-      record.TopUpId,
+      record.ClaimId,
       record.SortCode,
       record.AccountNumber,
       record.NameOnAccount,
       record.PaymentAmount.toFixed(2),
       record.Reference,
       record.Country,
-      record.RollNumber
+      record.RollNumber,
+      record.TotalDeductionAmount
     ]
   })
 }
@@ -28,7 +47,7 @@ function directPaymentsReturn (results) {
 function payoutPaymentsReturn (results) {
   return _.map(results, record => {
     return [
-      record.TopUpId,
+      record.ClaimId,
       record.PaymentAmount.toFixed(2),
       record.FirstName,
       record.LastName,
@@ -38,7 +57,8 @@ function payoutPaymentsReturn (results) {
       record.Country,
       record.PostCode,
       record.Reference,
-      record.DateOfJourney
+      record.DateOfJourney,
+      record.TotalDeductionAmount
     ]
   })
 }
@@ -57,17 +77,18 @@ module.exports = function (paymentMethod) {
     .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.TopUp', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.TopUp.ClaimId')
-    .where('IntSchema.TopUp.IsPaid', false)
+    .where('IntSchema.TopUp.PaymentStatus', 'PENDING')
     .where('IntSchema.Claim.PaymentMethod', paymentMethod)
     .whereNull('IntSchema.TopUp.PaymentDate')
     .groupBy(selectColumns)
-    .then(function (claims) {
-      var claimIds = []
-      claims.forEach(function (result) { return claimIds.push(result.ClaimId) })
-      if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
-        return directPaymentsReturn(claims)
-      } else {
-        return payoutPaymentsReturn(claims)
-      }
+    .then(function (topups) {
+      return subtractOverpayment(topups)
+        .then(function (topups) {
+          if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
+            return directPaymentsReturn(topups)
+          } else {
+            return payoutPaymentsReturn(topups)
+          }
+        })
     })
 }

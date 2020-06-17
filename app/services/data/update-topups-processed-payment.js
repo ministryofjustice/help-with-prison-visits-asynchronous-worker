@@ -1,11 +1,12 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
-module.exports = function (topUpId, paymentDate) {
+module.exports = function (claimId, paymentDate) {
   return knex('IntSchema.TopUp')
-    .where('TopUpId', topUpId)
+    .where('ClaimId', claimId)
+    .andWhere('PaymentStatus', 'PROCESSED')
     .update({
-      'IsPaid': true,
+      'PaymentStatus': 'PROCESSED',
       'PaymentDate': paymentDate
     })
 }

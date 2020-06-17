@@ -2,6 +2,7 @@ const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
 const logger = require('../app/services/log')
+const Promise = require('bluebird').Promise
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -104,13 +105,14 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
     .then(function () {
       return insertClaimData(schema, reference, newEligibilityId, data)
     })
-    .then(function (newClaimId) {
-      return { eligibilityId: newEligibilityId, claimId: newClaimId, claimBankDetailId: newClaimBankDetailId }
+    .then(function (ids) {
+      return { eligibilityId: newEligibilityId, claimId: ids.newClaimId, claimBankDetailId: newClaimBankDetailId, topUpId: ids.topUpId }
     })
 }
 
 module.exports.insertClaimData = function (schema, reference, newEligibilityId, data) {
   var newClaimId
+  var topUpId
   var isExtSchema = schema === 'ExtSchema'
 
   if (isExtSchema) {
@@ -121,10 +123,6 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
-
-      insertedClaimIds.forEach(element => {
-        return knex(`${schema}.TopUp`).insert(data.TopUp)
-      })
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
         data.ClaimBankDetail.EligibilityId = newEligibilityId
@@ -133,6 +131,10 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       return knex(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
     })
     .then(function () {
+      return knex(`${schema}.TopUp`).insert(data.TopUp).returning('TopUpId')
+    })
+    .then(function (TopUpId) {
+      topUpId = TopUpId[0]
       if (isExtSchema) {
         delete data.EligibilityVisitorUpdateContactDetail.EligibilityVisitorUpdateContactDetailId
         data.EligibilityVisitorUpdateContactDetail.EligibilityId = newEligibilityId
@@ -174,7 +176,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       }
     })
     .then(function () {
-      return newClaimId
+      return { newClaimId, topUpId }
     })
 }
 
@@ -335,7 +337,7 @@ module.exports.getClaimData = function (reference, randomIds) {
     },
     TopUp: {
       ClaimId: uniqueId,
-      IsPaid: false,
+      PaymentStatus: 'PENDING',
       Caseworker: 'test@test.com',
       TopUpAmount: 22.66,
       Reason: 'Test Reason',

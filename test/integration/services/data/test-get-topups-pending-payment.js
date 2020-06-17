@@ -2,28 +2,23 @@ const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 require('sinon-bluebird')
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
+const getTopUpsPendingPayment = require('../../../../app/services/data/get-topups-pending-payment')
 
 describe('services/data/get-claims-pending-payment', function () {
   var reference = 'TOPUP'
   var claimId
+  var topUpId
   var claimExpenseId1
   var claimExpenseId2
-
-  var updateClaimTotalAmountStub = sinon.stub().resolves()
-  var updateClaimManuallyProcessedAmountStub = sinon.stub().resolves()
-
-  const getTopUpsPendingPayment = proxyquire('../../../../app/services/data/get-topups-pending-payment', {
-  })
 
   function beforeDataCreation () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
+        topUpId = ids.topUpId
       })
       .then(function () {
         return knex('IntSchema.Claim')
@@ -89,101 +84,6 @@ describe('services/data/get-claims-pending-payment', function () {
           expect(filteredResults[0][3], 'should contain the visitor name').to.be.equal('Joe Bloggs')
           expect(filteredResults[0][4], 'should contain correct amount (including deductions)').to.be.equal('10.00')
           expect(filteredResults[0][5], 'should contain the reference').to.be.equal(reference)
-        })
-    })
-
-    it('should exclude manually processed expense costs from the amount paid', function () {
-      var update1 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId1)
-        .update({
-          ApprovedCost: '20.50',
-          Status: 'APPROVED-DIFF-AMOUNT'
-        })
-      var update2 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId2)
-        .update({
-          ApprovedCost: '4.55',
-          Status: 'MANUALLY-PROCESSED'
-        })
-
-      return Promise.all([update1, update2])
-        .then(function () {
-          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-            .then(function (results) {
-              var filteredResults = results.filter(function (result) {
-                return result[0] === claimId
-              })
-
-              // Total approved amount: £25.05. Payment amount: £25.05 - £15 (deduction) - £4.55 (Manually processed) = £5.50
-              expect(filteredResults[0][4], 'should return correct amount (excluding manually processed expenses)').to.equal('5.50')
-            })
-        })
-    })
-
-    it('should call update claim total amount with the correct value', function () {
-      var update1 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId1)
-        .update({
-          ApprovedCost: '15',
-          Status: 'APPROVED-DIFF-AMOUNT'
-        })
-      var update2 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId2)
-        .update({
-          ApprovedCost: '15',
-          Status: 'MANUALLY-PROCESSED'
-        })
-      return Promise.all([update1, update2])
-        .then(function () {
-          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-            .then(function () {
-              // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
-              expect(updateClaimTotalAmountStub.calledWith(claimId, 15), 'should update total amount with correct value').to.be.true
-            })
-        })
-    })
-
-    it('should call update claim manually processed amount the with correct value', function () {
-      var update1 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId1)
-        .update({
-          ApprovedCost: '10',
-          Status: 'MANUALLY-PROCESSED'
-        })
-      var update2 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId2)
-        .update({
-          ApprovedCost: '15',
-          Status: 'MANUALLY-PROCESSED'
-        })
-      return Promise.all([update1, update2])
-        .then(function () {
-          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-            .then(function () {
-              expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25), 'should update manually processed amount with correct value').to.be.true
-            })
-        })
-    })
-
-    it('should call update claim manually processed amount the with correct value given a decimal value', function () {
-      var update1 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId1)
-        .update({
-          ApprovedCost: '10.20',
-          Status: 'MANUALLY-PROCESSED'
-        })
-      var update2 = knex('IntSchema.ClaimExpense')
-        .where('ClaimExpenseId', claimExpenseId2)
-        .update({
-          ApprovedCost: '15',
-          Status: 'MANUALLY-PROCESSED'
-        })
-      return Promise.all([update1, update2])
-        .then(function () {
-          return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-            .then(function () {
-              expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20), 'should update manually processed amount with correct value').to.be.true
-            })
         })
     })
 
