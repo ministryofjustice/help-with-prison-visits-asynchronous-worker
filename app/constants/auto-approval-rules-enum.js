@@ -16,5 +16,6 @@ module.exports = [
   'is-visit-in-past',
   'visit-date-different-to-previous-claims',
   'is-release-date-set',
-  'prisoner-not-visited-on-this-date'
+  'prisoner-not-visited-on-this-date',
+  'is-benefit-expiry-date-in-future'
 ]
