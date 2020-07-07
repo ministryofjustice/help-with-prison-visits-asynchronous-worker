@@ -7,17 +7,17 @@ module.exports.execute = function (task) {
   var reference = task.reference
 
   return getFirstNameByClaimId('IntSchema', claimId)
-  .then(function (firstName) {
-    var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
-    var personalisation = {
-      first_name: firstName,
-      reference: reference,
-      requestInfoUrl: requestInfoUrl
-    }
+    .then(function (firstName) {
+      var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
+      var personalisation = {
+        first_name: firstName,
+        reference: reference,
+        requestInfoUrl: requestInfoUrl
+      }
 
-    var emailAddress = task.additionalData
-    var emailTemplateId = config.NOTIFY_REQUEST_INFORMATION_REMINDER_EMAIL_TEMPLATE_ID
+      var emailAddress = task.additionalData
+      var emailTemplateId = config.NOTIFY_REQUEST_INFORMATION_REMINDER_EMAIL_TEMPLATE_ID
 
-    return sendNotification(emailTemplateId, emailAddress, personalisation)
-  })
+      return sendNotification(emailTemplateId, emailAddress, personalisation)
+    })
 }

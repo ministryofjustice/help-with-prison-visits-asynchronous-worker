@@ -61,13 +61,13 @@ function getClaimantData (claimId) {
         : '')
 
       return {
-        'VisitorFirstName': visitorFirstName,
-        'PaymentMethod': paymentMethod,
-        'AccountNumberLastFourDigits': accountNumberLastFourDigits,
-        'CaseworkerNote': caseworkerNote,
-        'Town': town,
-        'Prison': prison,
-        'IsAdvanceClaim': isAdvanceClaim
+        VisitorFirstName: visitorFirstName,
+        PaymentMethod: paymentMethod,
+        AccountNumberLastFourDigits: accountNumberLastFourDigits,
+        CaseworkerNote: caseworkerNote,
+        Town: town,
+        Prison: prison,
+        IsAdvanceClaim: isAdvanceClaim
       }
     })
 }

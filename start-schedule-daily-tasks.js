@@ -18,7 +18,7 @@ var dailyTasksJob = new CronJob({
       insertTask(null, null, null, taskTypes.SEND_REQUEST_INFORMATION_REMINDERS_FOR_DAY),
       insertTask(null, null, null, taskTypes.MARK_ALL_OVERPAYMENTS),
       insertTask(null, null, null, taskTypes.CLEANUP_OLD_DATA),
-      insertTask(null, null, null, taskTypes.ARCHIVE_OLD_CLAIMS)])
+      insertTask(null, null, null, taskTypes.AUTO_REJECT_CLAIMS)])
       .then(function () {
         log.info('daily tasks created')
       })

@@ -1,38 +1,38 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
-
-module.exports = function (eligibilityId, claimId) {
-  return knex('ExtSchema.ClaimBankDetail').where('ClaimId', claimId).del()
+module.exports = function (eligibilityId, claimId, trx) {
+  return trx('ExtSchema.ClaimBankDetail').where('ClaimId', claimId).del()
     .then(function () {
-      return knex('ExtSchema.ClaimDocument')
+      return trx('ExtSchema.ClaimDocument')
         .where('ClaimId', claimId).del()
-        .orWhere({'ClaimId': null, EligibilityId: eligibilityId})
+        .orWhere({ ClaimId: null, EligibilityId: eligibilityId })
     })
     .then(function () {
-      return knex('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()
+      return trx('ExtSchema.ClaimExpense').where('ClaimId', claimId).del()
     })
     .then(function () {
-      return knex('ExtSchema.ClaimChild').where('ClaimId', claimId).del()
+      return trx('ExtSchema.ClaimChild').where('ClaimId', claimId).del()
     })
     .then(function () {
-      return knex('ExtSchema.ClaimEscort').where('ClaimId', claimId).del()
+      return trx('ExtSchema.ClaimEscort').where('ClaimId', claimId).del()
     })
     .then(function () {
-      return knex('ExtSchema.EligibilityVisitorUpdateContactDetail').where('EligibilityId', eligibilityId).del()
+      return trx('ExtSchema.EligibilityVisitorUpdateContactDetail').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
-      return knex('ExtSchema.Claim').where('ClaimId', claimId).del()
+      return trx('ExtSchema.Claim').where('ClaimId', claimId).del()
     })
     .then(function () {
-      return knex('ExtSchema.Visitor').where('EligibilityId', eligibilityId).del()
+      return trx('ExtSchema.Visitor').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
-      return knex('ExtSchema.Prisoner').where('EligibilityId', eligibilityId).del()
+      return trx('ExtSchema.Prisoner').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
-      return knex('ExtSchema.Benefit').where('EligibilityId', eligibilityId).del()
+      return trx('ExtSchema.Benefit').where('EligibilityId', eligibilityId).del()
     })
     .then(function () {
-      return knex('ExtSchema.Eligibility').where('EligibilityId', eligibilityId).del()
+      return trx('ExtSchema.EligibleChild').where('EligibilityId', eligibilityId).del()
+    })
+    .then(function () {
+      return trx('ExtSchema.Eligibility').where('EligibilityId', eligibilityId).del()
     })
 }

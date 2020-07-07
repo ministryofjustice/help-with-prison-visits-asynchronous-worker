@@ -5,8 +5,8 @@ module.exports = function (claimId, paymentAmount, paymentDate) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claimId)
     .update({
-      'PaymentStatus': 'PROCESSED',
-      'PaymentAmount': Number(paymentAmount).toFixed(2),
-      'PaymentDate': paymentDate
+      PaymentStatus: 'PROCESSED',
+      PaymentAmount: Number(paymentAmount).toFixed(2),
+      PaymentDate: paymentDate
     })
 }

@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 module.exports = function (claimId) {
   return knex('IntSchema.ClaimDeduction')
     .where({
-      'ClaimId': claimId,
-      'IsEnabled': true
+      ClaimId: claimId,
+      IsEnabled: true
     })
 }

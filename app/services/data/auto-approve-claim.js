@@ -19,5 +19,5 @@ module.exports = function (reference, eligibilityId, claimId, visitorEmailAddres
 function setClaimStatusToAutoApproved (claimId) {
   return knex('IntSchema.Claim')
     .where('ClaimId', claimId)
-    .update({'Status': statusEnum.AUTOAPPROVED, VisitConfirmationCheck: statusEnum.APPROVED, 'DateReviewed': dateFormatter.now().toDate(), 'DateApproved': dateFormatter.now().toDate()})
+    .update({ Status: statusEnum.AUTOAPPROVED, VisitConfirmationCheck: statusEnum.APPROVED, DateReviewed: dateFormatter.now().toDate(), DateApproved: dateFormatter.now().toDate() })
 }

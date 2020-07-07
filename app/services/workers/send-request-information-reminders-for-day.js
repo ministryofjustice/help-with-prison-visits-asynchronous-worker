@@ -46,12 +46,11 @@ module.exports.execute = function (task) {
 function sendReminderOrRejectClaim (openClaims, reminder) {
   var promises = []
 
-  if(reminder === reminderEnum.SECOND){
+  if (reminder === reminderEnum.SECOND) {
     openClaims.forEach(function (claim) {
       promises.push(rejectClaim(claim, reminder))
     })
-
-  }else{
+  } else {
     openClaims.forEach(function (claim) {
       promises.push(insertTaskToSendClaimReminderNotification(claim, reminder))
     })
@@ -62,11 +61,11 @@ function sendReminderOrRejectClaim (openClaims, reminder) {
 
 function insertTaskToSendClaimReminderNotification (claim, reminder) {
   updateClaimReminderSentStatus(claim.ClaimId)
-    .then(function(){
+    .then(function () {
       return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.SEND_REQUEST_INFORMATION_REMINDER_NOTIFICATION, `${claim.EmailAddress}~~${reminder}`)
     })
 }
 
-function rejectClaim(claim, reminder) {
+function rejectClaim (claim, reminder) {
   return updateClaimStatus(claim.ClaimId, statusEnum.REJECTED)
 }

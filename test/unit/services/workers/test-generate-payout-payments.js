@@ -1,16 +1,17 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const claimPaymentAmount1 = 45.50
 const claimPaymentAmount2 = 22.22
 const claimPaymentAmount3 = 13.99
 
+const dateOfVisit = '2017-09-28T00:00:00.000Z'
+
 var claimsPendingPayment = [
-  ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
-  ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
-  ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
+  ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234', dateOfVisit],
+  ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567', dateOfVisit],
+  ['999999', claimPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910', dateOfVisit]
 ]
 
 var testPath = 'data/payments/test.csv'
@@ -32,12 +33,12 @@ const generateDirectPayments = proxyquire('../../../../app/services/workers/gene
 describe('services/workers/generate-payout-payments', function () {
   it('should retrieve claim data, format it, then call file generation', function () {
     return generateDirectPayments.execute({}).then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true
-      expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true
-      expect(sftpSendPayoutPaymentFile.calledWith(testPath, './test.csv')).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true
-      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true
+      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
+      expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
+      expect(sftpSendPayoutPaymentFile.calledWith(testPath, './test.csv')).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true //eslint-disable-line
+      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true //eslint-disable-line
     })
   })
 })

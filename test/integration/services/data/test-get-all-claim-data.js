@@ -55,9 +55,9 @@ describe('services/data/get-all-claim-data', function () {
     it('should return all repeat claim data', function () {
       return getAllClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, claimId)
         .then(function (data) {
-          expect(data.Eligibility).to.be.undefined
-          expect(data.Prisoner).to.be.undefined
-          expect(data.Visitor).to.be.undefined
+          expect(data.Eligibility).to.be.undefined //eslint-disable-line
+          expect(data.Prisoner).to.be.undefined //eslint-disable-line
+          expect(data.Visitor).to.be.undefined //eslint-disable-line
           expect(data.Claim.Reference).to.be.equal(REFERENCE)
           expect(data.Claim.EligibilityId).to.be.equal(ELIGIBILITYID)
           expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)

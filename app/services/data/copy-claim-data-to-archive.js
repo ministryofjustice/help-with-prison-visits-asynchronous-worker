@@ -22,6 +22,7 @@ function copyEligibilityDataIfNotPresent (data) {
             return Promise.all([
               insertInternal('Visitor', data.Visitor),
               insertInternal('Prisoner', data.Prisoner),
+              insertInternal('EligibleChild', data.EligibleChild),
               insertInternal('Benefit', data.Benefit)])
           })
       } else {
@@ -58,16 +59,16 @@ function insertInternal (table, tableData) {
       tableId = tableData[table + 'Id']
     }
     return knex(`IntSchema.${table}`)
-    .where(table + 'Id', tableId)
-    .count(table + 'Id as count')
-    .then(function (countResult) {
-      var dataNotPresent = countResult[0].count === 0
-      if (dataNotPresent) {
-        return knex(`IntSchema.${table}`).insert(tableData)
-      } else {
-        return Promise.resolve()
-      }
-    })
+      .where(table + 'Id', tableId)
+      .count(table + 'Id as count')
+      .then(function (countResult) {
+        var dataNotPresent = countResult[0].count === 0
+        if (dataNotPresent) {
+          return knex(`IntSchema.${table}`).insert(tableData)
+        } else {
+          return Promise.resolve()
+        }
+      })
   } else {
     return Promise.resolve()
   }
