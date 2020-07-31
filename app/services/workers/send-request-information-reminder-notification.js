@@ -1,6 +1,8 @@
 const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
 const getFirstNameByClaimId = require('../data/get-first-name-by-claimId')
+const updateClaimReminderSentStatus = require('../data/update-claim-reminder-sent-status')
+const moment = require('moment')
 
 module.exports.execute = function (task) {
   var claimId = task.claimId
@@ -19,5 +21,9 @@ module.exports.execute = function (task) {
       var emailTemplateId = config.NOTIFY_REQUEST_INFORMATION_REMINDER_EMAIL_TEMPLATE_ID
 
       return sendNotification(emailTemplateId, emailAddress, personalisation)
+        .then(function () {
+          const now = moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+          return updateClaimReminderSentStatus(claimId, now)
+        })
     })
 }
