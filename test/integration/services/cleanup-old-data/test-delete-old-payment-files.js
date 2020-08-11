@@ -5,7 +5,7 @@ const writeFile = Promise.promisify(require('fs').writeFile)
 const fs = require('fs')
 
 const TEST_FILE_PATH = 'test.csv'
-const PAYMENT_FILE = { 'Filepath': TEST_FILE_PATH }
+const PAYMENT_FILE = { Filepath: TEST_FILE_PATH }
 
 describe('services/cleanup-old-data/delete-old-payment-files', function () {
   before(function () {
@@ -15,7 +15,7 @@ describe('services/cleanup-old-data/delete-old-payment-files', function () {
   it('should delete test payment files', function () {
     return deleteOldPaymentFiles([PAYMENT_FILE])
       .then(function () {
-        expect(fs.existsSync(TEST_FILE_PATH)).to.be.false
+        expect(fs.existsSync(TEST_FILE_PATH)).to.be.false //eslint-disable-line
       })
   })
 })

@@ -53,8 +53,8 @@ describe('services/data/get-old-claim-data', function () {
         var claim1Found = claimExists(claimId1, results)
         var claim2Found = claimExists(claimId2, results)
 
-        expect(claim1Found).to.be.true
-        expect(claim2Found).to.be.true
+        expect(claim1Found).to.be.true //eslint-disable-line
+        expect(claim2Found).to.be.true //eslint-disable-line
       })
   })
 
@@ -64,8 +64,8 @@ describe('services/data/get-old-claim-data', function () {
         var claim3Found = claimExists(claimId3, results)
         var claim4Found = claimExists(claimId4, results)
 
-        expect(claim3Found).to.be.false
-        expect(claim4Found).to.be.false
+        expect(claim3Found).to.be.false //eslint-disable-line
+        expect(claim4Found).to.be.false //eslint-disable-line
       })
   })
 
@@ -90,7 +90,7 @@ function createTestData (ref, dateCreated, deleteEligibility) {
       return knex('ExtSchema.Claim')
         .where('ClaimId', returnObject.claimId)
         .update({
-          'DateCreated': dateCreated
+          DateCreated: dateCreated
         })
         .then(function () {
           if (deleteEligibility) {
@@ -98,9 +98,9 @@ function createTestData (ref, dateCreated, deleteEligibility) {
               deleteFromTable(returnObject.eligibilityId, 'Prisoner'),
               deleteFromTable(returnObject.eligibilityId, 'Visitor')
             ])
-            .then(function () {
-              return deleteFromTable(returnObject.eligibilityId, 'Eligibility')
-            })
+              .then(function () {
+                return deleteFromTable(returnObject.eligibilityId, 'Eligibility')
+              })
           }
         })
     })

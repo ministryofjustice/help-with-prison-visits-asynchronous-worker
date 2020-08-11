@@ -10,7 +10,6 @@ const getTopUpsPendingPayment = require('../../../../app/services/data/get-topup
 describe('services/data/get-claims-pending-payment', function () {
   var reference = 'TOPUP'
   var claimId
-  var topUpId
   var claimExpenseId1
   var claimExpenseId2
 
@@ -18,14 +17,13 @@ describe('services/data/get-claims-pending-payment', function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
-        topUpId = ids.topUpId
       })
       .then(function () {
         return knex('IntSchema.Claim')
           .where('ClaimId', claimId)
           .update({
-            'Status': 'APPROVED',
-            'DateApproved': dateFormatter.now().toDate()
+            Status: 'APPROVED',
+            DateApproved: dateFormatter.now().toDate()
           })
       })
       .then(function () {
@@ -47,8 +45,8 @@ describe('services/data/get-claims-pending-payment', function () {
         return knex('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
           .update({
-            'Status': 'APPROVED',
-            'ApprovedCost': 25
+            Status: 'APPROVED',
+            ApprovedCost: 25
           })
       })
   }
@@ -76,8 +74,8 @@ describe('services/data/get-claims-pending-payment', function () {
           var filteredResults = results.filter(function (result) {
             return result[0] === claimId
           })
-          expect(filteredResults.length === 1).to.be.true
-          expect(filteredResults[0].length === 7, 'should contain 7 fields').to.be.true // updated to 7 as country is now included
+          expect(filteredResults.length === 1).to.be.true  //eslint-disable-line
+          expect(filteredResults[0].length === 7, 'should contain 7 fields').to.be.true //eslint-disable-line
           expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
           expect(filteredResults[0][1], 'should contain the sort code').to.be.equal('001122')
           expect(filteredResults[0][2], 'should contain the account number').to.be.equal('00123456')
@@ -146,7 +144,7 @@ describe('services/data/get-claims-pending-payment', function () {
     it('should retrieve not retrieve claims with a PaymentMethod of manually processed', function () {
       return knex('IntSchema.Claim')
         .where('ClaimId', claimId)
-        .update({'PaymentMethod': paymentMethods.MANUALLY_PROCESSED.value})
+        .update({ PaymentMethod: paymentMethods.MANUALLY_PROCESSED.value })
         .then(function () {
           return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         })
@@ -185,8 +183,8 @@ describe('services/data/get-claims-pending-payment', function () {
           var filteredResults = results.filter(function (result) {
             return result[0] === claimId
           })
-          expect(filteredResults.length === 1).to.be.true
-          expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
+          expect(filteredResults.length === 1).to.be.true //eslint-disable-line
+          expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true //eslint-disable-line
           expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
           expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
           expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
@@ -209,8 +207,8 @@ describe('services/data/get-claims-pending-payment', function () {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
               })
-              expect(filteredResults.length === 1).to.be.true
-              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
+              expect(filteredResults.length === 1).to.be.true //eslint-disable-line
+              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true //eslint-disable-line
               expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
               expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
               expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
@@ -234,8 +232,8 @@ describe('services/data/get-claims-pending-payment', function () {
               var filteredResults = results.filter(function (result) {
                 return result[0] === claimId
               })
-              expect(filteredResults.length === 1).to.be.true
-              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true
+              expect(filteredResults.length === 1).to.be.true //eslint-disable-line
+              expect(filteredResults[0].length === 10, 'should contain 10 fields').to.be.true //eslint-disable-line
               expect(filteredResults[0][0], 'should contain the claim id').to.be.equal(claimId)
               expect(filteredResults[0][1], 'should contain correct amount (including deductions)').to.be.equal('10.00')
               expect(filteredResults[0][2], 'should contain the visitor first name').to.be.equal(claimData.Visitor.FirstName)
@@ -260,7 +258,7 @@ describe('services/data/get-claims-pending-payment', function () {
                   var filteredResults = results.filter(function (result) {
                     return result[0] === claimId
                   })
-                  expect(filteredResults.length === 0).to.be.true
+                  expect(filteredResults.length === 0).to.be.true//eslint-disable-line
                 })
             })
         })

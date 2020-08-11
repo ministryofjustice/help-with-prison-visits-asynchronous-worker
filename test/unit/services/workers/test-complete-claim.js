@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const taskEnum = require('../../../../app/constants/tasks-enum')
 
@@ -42,13 +41,13 @@ describe('services/workers/complete-claim', function () {
       eligibilityId: eligibilityId,
       claimId: claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true
-      expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).to.be.true
-      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true
+      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
+      expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).to.be.true //eslint-disable-line
+      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       // autoApprovalProcess Removed in APVS0115
-      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true
+      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true //eslint-disable-line
+      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true //eslint-disable-line
+      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true //eslint-disable-line
     })
   })
 })

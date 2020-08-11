@@ -22,7 +22,7 @@ describe('services/payout-payments/create-payout-file', function () {
 
     return createPaymentFile(formattedData)
       .then(function (filePath) {
-        expect(filePath).to.be.not.null
+        expect(filePath).to.be.not.null //eslint-disable-line
         expect(filePath).to.contain(config.PAYOUT_FILENAME_PREFIX)
         expect(filePath).to.contain(config.PAYOUT_FILENAME_POSTFIX)
         testFilePath = filePath

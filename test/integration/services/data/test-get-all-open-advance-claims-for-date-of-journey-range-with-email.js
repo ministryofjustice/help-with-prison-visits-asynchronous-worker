@@ -22,7 +22,7 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
         var claim1DateOfJourney = new Date('1930-12-08 10:00')
 
         return knex('IntSchema.Claim')
-          .update({'DateOfJourney': claim1DateOfJourney, 'IsAdvanceClaim': true, 'Status': 'APPROVED'})
+          .update({ DateOfJourney: claim1DateOfJourney, IsAdvanceClaim: true, Status: 'APPROVED' })
           .where('ClaimId', claimId)
           .then(function () {
             var claim2 = testHelper.getClaimData(REFERENCE).Claim

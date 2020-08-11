@@ -2,14 +2,14 @@ const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
 const getTopUpsPendingPayment = require('../data/get-topups-pending-payment')
 const createPaymentFile = require('../direct-payments/create-payment-file')
 const createAdiJournalFile = require('../direct-payments/create-adi-journal-file')
-const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
-const updateTopupsProcessedPayment = require('../data/update-topups-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 const log = require('../log')
-const dateFormatter = require('../date-formatter')
+const combinePaymentWithTopups = require('./helpers/combine-payments-with-topups')
+const updateAllTopupsProcessedPayment = require('./helpers/update-all-topups-processed-payment')
+const updateAllClaimsProcessedPayment = require('./helpers/update-all-claims-processed-payment')
 
 module.exports.execute = function (task) {
   var claimIds
@@ -18,16 +18,21 @@ module.exports.execute = function (task) {
 
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
+      var claimIdIndex = 0
+      if (paymentData.length > 0) {
+        claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
+      }
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (topupData) {
+          if (topupData.length > 0) {
+            topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
+          }
           paymentData = combinePaymentWithTopups(paymentData, topupData)
           if (paymentData.length > 0) {
-            var claimIdIndex = 0
-            claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
             var missingData = checkForAccountNumberAndSortCode(paymentData)
             if (missingData) {
               log.error(`Data is missing from direct payment ${paymentData}`)
-              return Promise.reject('Data is missing')
+              return Promise.reject(new Error('Data is missing'))
             }
             removeClaimIdsFromPaymentData(paymentData, claimIdIndex)
 
@@ -50,10 +55,10 @@ module.exports.execute = function (task) {
                 return insertDirectPaymentFile(result, fileTypes.ADI_JOURNAL_FILE)
               })
               .then(function () {
-                return updateAllClaimsProcessedPayment(claimIds, paymentData)
+                return updateAllClaimsProcessedPayment(claimIds, paymentData, true)
               })
               .then(function () {
-                return updateAllTopupsProcessedPayment(claimIds)
+                return updateAllTopupsProcessedPayment(topUpClaimIds)
               })
           }
         })
@@ -68,22 +73,6 @@ function removeClaimIdsFromPaymentData (paymentData, claimIdIndex) {
   paymentData.forEach(function (data) { data.splice(claimIdIndex, 1) })
 
   return paymentData
-}
-
-function updateAllClaimsProcessedPayment (claimIds, paymentData) {
-  var promises = []
-
-  var now = dateFormatter.now().toDate()
-
-  for (var i = 0; i < claimIds.length; i++) {
-    var claimPaymentData = paymentData[i]
-    var claimId = claimIds[i]
-
-    var totalApprovedCostIndex = 3
-    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), now))
-  }
-
-  return Promise.all(promises)
 }
 
 function checkForAccountNumberAndSortCode (paymentData) {
@@ -105,42 +94,4 @@ function getTotalFromPaymentData (paymentData) {
   paymentData.forEach(function (data) { total += parseFloat(data[totalApprovedCostIndex]) })
 
   return Number(total).toFixed(2)
-}
-
-function updateAllTopupsProcessedPayment (claimIds) {
-  var promises = []
-
-  var now = dateFormatter.now().toDate()
-
-  for (var i = 0; i < claimIds.length; i++) {
-    var claimId = claimIds[i]
-    promises.push(updateTopupsProcessedPayment(claimId, now))
-  }
-
-  return Promise.all(promises)
-}
-
-function combinePaymentWithTopups (paymentData, topupData) {
-  var standaloneTopups = []
-  topupData.forEach(function (topup) {
-    var found = false
-    paymentData.forEach(function (claim) {
-      if (topup[0] === claim[0]) {
-        found = true
-        claim[4] = (parseFloat(claim[4]) + parseFloat(topup[4])).toFixed(2)
-      }
-    })
-    if (!found) {
-      standaloneTopups.push(topup)
-    }
-  })
-  standaloneTopups.forEach(function (topup) {
-    topup[4] = (parseFloat(topup[4]) - (topup[8] || 0)).toFixed(2)
-  })
-  standaloneTopups = standaloneTopups.filter(standaloneTopup => (parseFloat(standaloneTopup[4]) > 0))
-  topupData = standaloneTopups
-  topupData.forEach(function (topup) {
-    paymentData.push(topup)
-  })
-  return paymentData
 }

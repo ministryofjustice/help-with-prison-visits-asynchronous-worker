@@ -4,7 +4,6 @@ const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 var disableClaimDocument
 var insertClaimEvent

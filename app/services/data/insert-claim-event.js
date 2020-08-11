@@ -4,15 +4,15 @@ const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, claimDocumentId, event, additionalData, note, isInternal, trx) {
   var claimEvent = {
-    'EligibilityId': eligibilityId,
-    'Reference': reference,
-    'ClaimId': claimId,
-    'ClaimDocumentId': claimDocumentId,
-    'DateAdded': dateFormatter.now().toDate(),
-    'Event': event,
-    'additionalData': additionalData,
-    'note': note,
-    'isInternal': isInternal
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    ClaimId: claimId,
+    ClaimDocumentId: claimDocumentId,
+    DateAdded: dateFormatter.now().toDate(),
+    Event: event,
+    additionalData: additionalData,
+    note: note,
+    isInternal: isInternal
   }
 
   if (trx) {

@@ -3,7 +3,7 @@ const config = require('../../../../config')
 
 const callDwpBenefitCheckerSoapService = require('../../../../app/services/benefit-checker/call-dwp-benefit-checker-soap-service')
 
-var visitorDwpBenefitCheckerData = {'visitorId': 1234, 'surname': 'YELLOW', 'dateOfBirth': '19681210', 'nino': 'PW556356A'}
+var visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A' }
 
 // NOTE: THIS TEST WILL FAIL IF CALLED FROM UNWHITELISTED IP AND DWP_BENEFIT_CHECKER_ENABLED true
 describe('services/benefit-checker/call-dwp-benefit-checker-soap-service', function () {

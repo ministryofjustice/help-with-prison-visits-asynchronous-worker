@@ -2,15 +2,17 @@ const getClaimsPendingPayment = require('../data/get-claims-pending-payment')
 const getTopUpsPendingPayment = require('../data/get-topups-pending-payment')
 const createPayoutFile = require('../payout-payments/create-payout-file')
 const sftpSendPayoutPaymentFile = require('../sftp/sftp-send-payout-payment-file')
-const updateClaimsProcessedPayment = require('../data/update-claims-processed-payment')
-const updateTopupsProcessedPayment = require('../data/update-topups-processed-payment')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
 const paymentMethods = require('../../constants/payment-method-enum')
 const config = require('../../../config')
 const _ = require('lodash')
 const path = require('path')
-const dateFormatter = require('../date-formatter')
+const combinePaymentWithTopups = require('./helpers/combine-payments-with-topups')
+const updateAllTopupsProcessedPayment = require('./helpers/update-all-topups-processed-payment')
+const updateAllClaimsProcessedPayment = require('./helpers/update-all-claims-processed-payment')
+
+const log = require('../log')
 
 module.exports._test_formatCSVData = formatCSVData
 
@@ -21,15 +23,18 @@ module.exports.execute = function (task) {
 
   return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
+      var claimIdIndex = 0
+      if (paymentData.length > 0) {
+        claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
+      }
       return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
         .then(function (topupData) {
-          if (paymentData.length + topupData.length > 0) {
-            var claimIdIndex = 0
-            claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
+          if (topupData.length > 0) {
+            log.info(topupData)
             topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
-            topupData.forEach(function (topup) {
-              paymentData.push(topup)
-            })
+          }
+          paymentData = combinePaymentWithTopups(paymentData, topupData)
+          if (paymentData.length > 0) {
             formatCSVData(paymentData, claimIdIndex)
             return createPayoutFile(paymentData)
               .then(function (filePath) {
@@ -42,7 +47,7 @@ module.exports.execute = function (task) {
               .then(function () {
                 return insertDirectPaymentFile(paymentCsvFilePath, fileTypes.PAYOUT_FILE)
                   .then(function () {
-                    return updateAllClaimsProcessedPayment(claimIds, paymentData)
+                    return updateAllClaimsProcessedPayment(claimIds, paymentData, false)
                       .then(function () {
                         return updateAllTopupsProcessedPayment(topUpClaimIds)
                       })
@@ -84,35 +89,4 @@ function formatCSVData (paymentData, claimIdIndex) {
   })
 
   return paymentData
-}
-
-// Makes it specific layout for post office payout
-
-function updateAllClaimsProcessedPayment (claimIds, paymentData) {
-  var promises = []
-
-  var now = dateFormatter.now().toDate()
-
-  for (var i = 0; i < claimIds.length; i++) {
-    var claimPaymentData = paymentData[i]
-    var claimId = claimIds[i]
-
-    var totalApprovedCostIndex = 0
-    promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), now))
-  }
-
-  return Promise.all(promises)
-}
-
-function updateAllTopupsProcessedPayment (topUpIds) {
-  var promises = []
-
-  var now = dateFormatter.now().toDate()
-
-  for (var i = 0; i < topUpIds.length; i++) {
-    var topUpId = topUpIds[i]
-    promises.push(updateTopupsProcessedPayment(topUpId, now))
-  }
-
-  return Promise.all(promises)
 }

@@ -29,7 +29,7 @@ describe('services/data/update-claims-processed-payment', function () {
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
             expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
-            expect(claims[0].PaymentDate).to.not.be.null
+            expect(claims[0].PaymentDate).to.not.be.null //eslint-disable-line
           })
       })
   })

@@ -6,6 +6,6 @@ module.exports = function (startDateOfJourney, endDateOfJourney) {
   return knex('IntSchema.Claim')
     .join('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .whereBetween('Claim.DateOfJourney', [startDateOfJourney, endDateOfJourney])
-    .andWhere({'Claim.IsAdvanceClaim': true, 'Claim.Status': claimStatusEnum.APPROVED})
+    .andWhere({ 'Claim.IsAdvanceClaim': true, 'Claim.Status': claimStatusEnum.APPROVED })
     .select('IntSchema.Claim.*', 'IntSchema.Visitor.EmailAddress')
 }
