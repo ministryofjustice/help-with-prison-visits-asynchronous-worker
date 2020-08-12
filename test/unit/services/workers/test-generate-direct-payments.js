@@ -18,10 +18,20 @@ var claimsPendingPayment = [
   ['999999', '998877', '54321678', 'Grace Hopper', claimPaymentAmount3.toString(), 'REF9876']
 ]
 var topUpsPendingPayment = [
-  ['999997', '223344', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234'],
-  ['999998', '334455', '87654321', 'Ada Lovelace', topUpPaymentAmount2.toString(), 'REF4567'],
-  ['999999', '998877', '54321678', 'Grace Hopper', topUpPaymentAmount3.toString(), 'REF9876']
+  ['123456', '223344', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234'],
+  ['123457', '334455', '87654321', 'Ada Lovelace', topUpPaymentAmount2.toString(), 'REF4567'],
+  ['123458', '998877', '54321678', 'Grace Hopper', topUpPaymentAmount3.toString(), 'REF9876']
 ]
+
+var payments = [
+  ['223344', '12345678', 'Alan Turing', '45.5', 'REF1234'],
+  ['334455', '87654321', 'Ada Lovelace', '22.22', 'REF4567'],
+  ['998877', '54321678', 'Grace Hopper', '13.99', 'REF9876'],
+  ['223344', '12345678', 'Alan Turing', '42.5', 'REF1234'],
+  ['334455', '87654321', 'Ada Lovelace', '20.22', 'REF4567'],
+  ['998877', '54321678', 'Grace Hopper', '10.99', 'REF9876']
+]
+
 var claimsMissingData = [['', '', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234']]
 var topUpMissingData = [['', '', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234']]
 
@@ -32,29 +42,29 @@ var generateDirectPayments
 var getClaimsPendingPayment
 var createPaymentFile
 var createAdiJournalFile
-var updateClaimsProcessedPaymentResult
 var insertDirectBankPayments
 var getTopUpsPendingPayment
-var updateTopUpsPendingPayment
+var updateAllTopupsProcessedPayment
+var updateAllClaimsProcessedPayment
 
 describe('services/workers/generate-direct-payments', function () {
   beforeEach(function () {
     getClaimsPendingPayment = sinon.stub()
     createPaymentFile = sinon.stub().resolves(testPath)
     createAdiJournalFile = sinon.stub().resolves(testAdiPath)
-    updateClaimsProcessedPaymentResult = sinon.stub().resolves()
     insertDirectBankPayments = sinon.stub().resolves()
     getTopUpsPendingPayment = sinon.stub()
-    updateTopUpsPendingPayment = sinon.stub().resolves()
+    updateAllTopupsProcessedPayment = sinon.stub().resolves()
+    updateAllClaimsProcessedPayment = sinon.stub().resolves()
 
     generateDirectPayments = proxyquire('../../../../app/services/workers/generate-direct-payments', {
       '../data/get-claims-pending-payment': getClaimsPendingPayment,
       '../direct-payments/create-payment-file': createPaymentFile,
       '../direct-payments/create-adi-journal-file': createAdiJournalFile,
-      '../data/update-claims-processed-payment': updateClaimsProcessedPaymentResult,
       '../data/insert-direct-payment-file': insertDirectBankPayments,
       '../data/get-topups-pending-payment': getTopUpsPendingPayment,
-      '../data/update-topups-processed-payment': updateTopUpsPendingPayment
+      './helpers/payments/update-all-topups-processed-payment': updateAllTopupsProcessedPayment,
+      './helpers/payments/update-all-claims-processed-payment': updateAllClaimsProcessedPayment
     })
   })
 
@@ -67,9 +77,8 @@ describe('services/workers/generate-direct-payments', function () {
       expect(createAdiJournalFile.calledWith(total)).to.be.true //eslint-disable-line
       expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).to.be.true //eslint-disable-line
       expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true //eslint-disable-line
+      expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, true)).to.be.true //eslint-disable-line
+      expect(updateAllTopupsProcessedPayment.calledWith(['123456', '123457', '123458'])).to.be.true //eslint-disable-line
     })
   })
 
@@ -81,7 +90,7 @@ describe('services/workers/generate-direct-payments', function () {
       expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
     })
       .catch(function (error) {
-        expect(error).to.equal('Data is missing')
+        expect(error.message).to.equal('Data is missing')
       })
   })
 

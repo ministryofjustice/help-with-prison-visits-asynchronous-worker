@@ -5,7 +5,7 @@ const readFile = Promise.promisify(require('fs').readFile)
 const unlink = Promise.promisify(require('fs').unlink)
 
 const createPaymentFile = require('../../../../app/services/payout-payments/create-payout-file')
-const generatePayoutPayments = require('../../../../app/services/workers/generate-payout-payments')
+const formatCSVData = require('../../../../app/services/workers/helpers/format-csv-data')
 var testFilePath
 
 var data = [
@@ -15,7 +15,7 @@ var data = [
 
 describe('services/payout-payments/create-payout-file', function () {
   it('should generate valid file', function () {
-    var formattedData = generatePayoutPayments._test_formatCSVData(data, 9)
+    var formattedData = formatCSVData(data, 9)
     formattedData.forEach(function (row) {
       row[row.length - 1] = 'TEST089-LET-001'
     })

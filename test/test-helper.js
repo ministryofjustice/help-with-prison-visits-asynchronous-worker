@@ -1,7 +1,6 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
-const logger = require('../app/services/log')
 const Promise = require('bluebird').Promise
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
@@ -60,7 +59,7 @@ module.exports.deleteAll = function (reference, schema) {
         return deleteByReference(`${schema}.ClaimEvent`, reference)
           .then(function () { return deleteByReference(`${schema}.ClaimDeduction`, reference) })
           .then(function () { return getClaimIDFromReference(reference) })
-          .then(function (ReturnedClaimIDs) { logger.info(ReturnedClaimIDs); return deleteByClaimID(`${schema}.TopUp`, ReturnedClaimIDs) })
+          .then(function (ReturnedClaimIDs) { return deleteByClaimID('IntSchema.TopUp', ReturnedClaimIDs) })
       }
     })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })

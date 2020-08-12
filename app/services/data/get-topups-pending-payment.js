@@ -46,16 +46,6 @@ function payoutPaymentsReturn (results) {
 module.exports = function (paymentMethod) {
   var selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
 
-  console.log(knex('IntSchema.Claim')
-    .sum('IntSchema.TopUp.TopUpAmount as PaymentAmount')
-    .select(selectColumns)
-    .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
-    .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
-    .innerJoin('IntSchema.TopUp', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.TopUp.ClaimId')
-    .where('IntSchema.TopUp.PaymentStatus', 'PENDING')
-    .where('IntSchema.Claim.PaymentMethod', paymentMethod)
-    .whereNull('IntSchema.TopUp.PaymentDate')
-    .groupBy(selectColumns).toString())
   return knex('IntSchema.Claim')
     .sum('IntSchema.TopUp.TopUpAmount as PaymentAmount')
     .select(selectColumns)

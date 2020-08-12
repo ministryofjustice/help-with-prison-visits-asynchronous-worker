@@ -23,6 +23,14 @@ var topUpsPendingPayment = [
   ['999992', topUpPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910', dateOfVisit]
 ]
 
+var payments = [
+  ['45.5', '', 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT12 3BT', '2', '', '', 'REF1234', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017'],
+  ['22.22', '', 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT45 6BT', '2', '', '', 'REF4567', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017'],
+  ['13.99', '', 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT78 9BT', '2', '', '', 'REF8910', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017'],
+  ['19.99', '', 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT12 3BT', '2', '', '', 'REF1234', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017'],
+  ['20.01', '', 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT45 6BT', '2', '', '', 'REF4567', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017'],
+  ['20.02', '', 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT78 9BT', '2', '', '', 'REF8910', '', '', '', '', '', 'NOMS1086-LET-003', '', '', '28 09 2017']
+]
 // var combinedPayments = [
 //   ['999997', claimPaymentAmount1.toString(), 'Alan', 'Turing', '123 Test Street', 'Test Town', 'Test County', 'Test Country', 'BT123BT', 'REF1234'],
 //   ['999998', claimPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
@@ -41,6 +49,8 @@ var sftpSendPayoutPaymentFile = sinon.stub().resolves()
 var updateClaimsProcessedPaymentResult = sinon.stub().resolves()
 var updateTopupsProcessedPaymentResult = sinon.stub().resolves()
 var insertDirectBankPayments = sinon.stub().resolves()
+var updateAllTopupsProcessedPayment = sinon.stub().resolves()
+var updateAllClaimsProcessedPayment = sinon.stub().resolves()
 
 const generateDirectPayments = proxyquire('../../../../app/services/workers/generate-payout-payments', {
   '../data/get-claims-pending-payment': getClaimsPendingPayment,
@@ -49,7 +59,9 @@ const generateDirectPayments = proxyquire('../../../../app/services/workers/gene
   '../sftp/sftp-send-payout-payment-file': sftpSendPayoutPaymentFile,
   '../data/update-claims-processed-payment': updateClaimsProcessedPaymentResult,
   '../data/update-topups-processed-payment': updateTopupsProcessedPaymentResult,
-  '../data/insert-direct-payment-file': insertDirectBankPayments
+  '../data/insert-direct-payment-file': insertDirectBankPayments,
+  './helpers/payments/update-all-topups-processed-payment': updateAllTopupsProcessedPayment,
+  './helpers/payments/update-all-claims-processed-payment': updateAllClaimsProcessedPayment
 })
 
 describe('services/workers/generate-payout-payments', function () {
@@ -59,12 +71,8 @@ describe('services/workers/generate-payout-payments', function () {
       expect(getTopUpsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
       expect(sftpSendPayoutPaymentFile.calledWith(testPath, './test.csv')).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999997', claimPaymentAmount1)).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999998', claimPaymentAmount2)).to.be.true //eslint-disable-line
-      expect(updateClaimsProcessedPaymentResult.calledWith('999999', claimPaymentAmount3)).to.be.true //eslint-disable-line
-      expect(updateTopupsProcessedPaymentResult.calledWith('999990')).to.be.true //eslint-disable-line
-      expect(updateTopupsProcessedPaymentResult.calledWith('999991')).to.be.true //eslint-disable-line
-      expect(updateTopupsProcessedPaymentResult.calledWith('999992')).to.be.true //eslint-disable-line
+      expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, false)).to.be.true //eslint-disable-line
+      expect(updateAllTopupsProcessedPayment.calledWith(['999990', '999991', '999992'])).to.be.true //eslint-disable-line
     })
   })
 })

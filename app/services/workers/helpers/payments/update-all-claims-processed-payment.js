@@ -1,4 +1,4 @@
-const updateClaimsProcessedPayment = require('../../data/update-claims-processed-payment')
+const updateClaimsProcessedPayment = require('../../../data/update-claims-processed-payment')
 const moment = require('moment')
 
 module.exports = function updateAllClaimsProcessedPayment (claimIds, paymentData, isBankPayment) {
@@ -17,8 +17,6 @@ module.exports = function updateAllClaimsProcessedPayment (claimIds, paymentData
       } else {
         totalApprovedCostIndex = 0
       }
-      console.log(totalApprovedCostIndex)
-      console.log(parseFloat(claimPaymentData[totalApprovedCostIndex]))
       promises.push(updateClaimsProcessedPayment(claimId, parseFloat(claimPaymentData[totalApprovedCostIndex]), now))
     }
   }

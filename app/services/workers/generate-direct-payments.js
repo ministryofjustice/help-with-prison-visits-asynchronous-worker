@@ -4,14 +4,17 @@ const createPaymentFile = require('../direct-payments/create-payment-file')
 const createAdiJournalFile = require('../direct-payments/create-adi-journal-file')
 const insertDirectPaymentFile = require('../data/insert-direct-payment-file')
 const fileTypes = require('../../constants/payment-filetype-enum')
-const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 const log = require('../log')
-const combinePaymentWithTopups = require('./helpers/combine-payments-with-topups')
-const updateAllTopupsProcessedPayment = require('./helpers/update-all-topups-processed-payment')
-const updateAllClaimsProcessedPayment = require('./helpers/update-all-claims-processed-payment')
+const combinePaymentWithTopups = require('./helpers/payments/combine-payments-with-topups')
+const updateAllTopupsProcessedPayment = require('./helpers/payments/update-all-topups-processed-payment')
+const updateAllClaimsProcessedPayment = require('./helpers/payments/update-all-claims-processed-payment')
+const getClaimIdsFromPaymentData = require('./helpers/payments/get-claim-ids-from-payment-data')
+const removeClaimIdsFromPaymentData = require('./helpers/payments/direct/remove-claim-ids-from-payment-data')
+const checkForAccountNumberAndSortCode = require('./helpers/payments/direct/check-for-account-number-and-sort-code')
+const getTotalFromPaymentData = require('./helpers/payments/direct/get-total-from-payment-data')
 
-module.exports.execute = function (task) {
+module.exports.execute = function () {
   var claimIds
   var topUpClaimIds
   var total
@@ -63,35 +66,4 @@ module.exports.execute = function (task) {
           }
         })
     })
-}
-
-function getClaimIdsFromPaymentData (paymentData, claimIdIndex) {
-  return _.map(paymentData, p => { return p[claimIdIndex] })
-}
-
-function removeClaimIdsFromPaymentData (paymentData, claimIdIndex) {
-  paymentData.forEach(function (data) { data.splice(claimIdIndex, 1) })
-
-  return paymentData
-}
-
-function checkForAccountNumberAndSortCode (paymentData) {
-  var missingData = false
-  paymentData.forEach(function (data) {
-    // Checks Account Number and Sort Code
-    if (!data[0] || !data[1]) {
-      missingData = true
-    }
-  })
-
-  return missingData
-}
-
-function getTotalFromPaymentData (paymentData) {
-  var totalApprovedCostIndex = 3
-  var total = 0.0
-
-  paymentData.forEach(function (data) { total += parseFloat(data[totalApprovedCostIndex]) })
-
-  return Number(total).toFixed(2)
 }

@@ -1,4 +1,4 @@
-const updateTopupsProcessedPayment = require('../../data/update-topups-processed-payment')
+const updateTopupsProcessedPayment = require('../../../data/update-topups-processed-payment')
 const moment = require('moment')
 
 module.exports = function updateAllTopupsProcessedPayment (claimIds) {
