@@ -5,7 +5,7 @@ const readFile = Promise.promisify(require('fs').readFile)
 const unlink = Promise.promisify(require('fs').unlink)
 
 const createPaymentFile = require('../../../../app/services/payout-payments/create-payout-file')
-const formatCSVData = require('../../../../app/services/workers/helpers/format-csv-data')
+const formatCSVData = require('../../../../app/services/workers/helpers/payments/payout/format-csv-data')
 var testFilePath
 
 var data = [

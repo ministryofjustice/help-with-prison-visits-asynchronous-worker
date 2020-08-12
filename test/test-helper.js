@@ -27,25 +27,6 @@ function deleteByReference (schemaTable, reference) {
   return knex(schemaTable).where('Reference', reference).del()
 }
 
-function deleteByClaimID (schemaTable, ReturnedClaimIDs) {
-  return knex(schemaTable).whereIn('ClaimID', ReturnedClaimIDs).del()
-}
-
-function getClaimIDFromReference (reference) {
-  var ClaimIDs = []
-  return knex('IntSchema.Claim')
-    .where({
-      Reference: reference
-    })
-    .select('ClaimId')
-    .then(function (ReturnedClaimIDs) {
-      ReturnedClaimIDs.forEach(element => {
-        ClaimIDs.push(element.ClaimId)
-      })
-      return ClaimIDs
-    })
-}
-
 module.exports.deleteAll = function (reference, schema) {
   return deleteByReference(`${schema}.Task`, reference)
     .then(function () { return deleteByReference(`${schema}.ClaimBankDetail`, reference) })
@@ -58,8 +39,6 @@ module.exports.deleteAll = function (reference, schema) {
       } else {
         return deleteByReference(`${schema}.ClaimEvent`, reference)
           .then(function () { return deleteByReference(`${schema}.ClaimDeduction`, reference) })
-          .then(function () { return getClaimIDFromReference(reference) })
-          .then(function (ReturnedClaimIDs) { return deleteByClaimID('IntSchema.TopUp', ReturnedClaimIDs) })
       }
     })
     .then(function () { return deleteByReference(`${schema}.Claim`, reference) })
@@ -104,14 +83,13 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
     .then(function () {
       return insertClaimData(schema, reference, newEligibilityId, data)
     })
-    .then(function (ids) {
-      return { eligibilityId: newEligibilityId, claimId: ids.newClaimId, claimBankDetailId: newClaimBankDetailId, topUpId: ids.topUpId }
+    .then(function (newClaimId) {
+      return { eligibilityId: newEligibilityId, claimId: newClaimId, claimBankDetailId: newClaimBankDetailId }
     })
 }
 
 module.exports.insertClaimData = function (schema, reference, newEligibilityId, data) {
   var newClaimId
-  var topUpId
   var isExtSchema = schema === 'ExtSchema'
 
   if (isExtSchema) {
@@ -130,10 +108,6 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       return knex(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
     })
     .then(function () {
-      return knex(`${schema}.TopUp`).insert(data.TopUp).returning('TopUpId')
-    })
-    .then(function (TopUpId) {
-      topUpId = TopUpId[0]
       if (isExtSchema) {
         delete data.EligibilityVisitorUpdateContactDetail.EligibilityVisitorUpdateContactDetailId
         data.EligibilityVisitorUpdateContactDetail.EligibilityId = newEligibilityId
@@ -175,7 +149,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       }
     })
     .then(function () {
-      return { newClaimId, topUpId }
+      return newClaimId
     })
 }
 
@@ -334,14 +308,6 @@ module.exports.getClaimData = function (reference, randomIds) {
       EmailAddress: 'newEmail@test.com',
       PhoneNumber: '0123456789',
       DateSubmitted: dateFormatter.now().toDate()
-    },
-    TopUp: {
-      ClaimId: uniqueId,
-      PaymentStatus: 'PENDING',
-      Caseworker: 'test@test.com',
-      TopUpAmount: 22.66,
-      Reason: 'Test Reason',
-      PaymentDate: null
     },
     ClaimDeduction: [
       {
@@ -583,4 +549,20 @@ function insertClaimDocuments (schema, eligibilityId, claimId, data) {
     data[1].ClaimId = claimId
   }
   return knex(`${schema}.ClaimDocument`).insert(data)
+}
+
+module.exports.insertTopUp = function (claimId) {
+  var topUp = {
+    ClaimId: claimId,
+    PaymentStatus: 'PENDING',
+    Caseworker: 'test@test.com',
+    TopUpAmount: 22.66,
+    Reason: 'Test Reason',
+    PaymentDate: null
+  }
+  return knex('IntSchema.TopUp').insert(topUp).returning('TopUpId')
+}
+
+module.exports.deleteTopUp = function (claimId) {
+  return knex('IntSchema.TopUp').where('ClaimId', claimId).del()
 }

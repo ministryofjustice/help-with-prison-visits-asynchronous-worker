@@ -23,6 +23,7 @@ describe('services/data/get-topups-pending-payment', function () {
         expectedVoucherTopups = [
           [claimId, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP']
         ]
+        return testHelper.insertTopUp(claimId)
       })
   }
 
@@ -39,7 +40,10 @@ describe('services/data/get-topups-pending-payment', function () {
     })
 
     after(function () {
-      return testHelper.deleteAll(reference, 'IntSchema')
+      return testHelper.deleteTopUp(claimId)
+        .then(function () {
+          return testHelper.deleteAll(reference, 'IntSchema')
+        })
     })
   })
 
@@ -67,7 +71,10 @@ describe('services/data/get-topups-pending-payment', function () {
     })
 
     after(function () {
-      return testHelper.deleteAll(reference, 'IntSchema')
+      return testHelper.deleteTopUp(claimId)
+        .then(function () {
+          return testHelper.deleteAll(reference, 'IntSchema')
+        })
     })
   })
 })
