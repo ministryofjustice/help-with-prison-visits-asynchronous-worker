@@ -1,6 +1,7 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
+const Promise = require('bluebird').Promise
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   var reference = '1234567'
@@ -99,7 +100,6 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
-
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
         data.ClaimBankDetail.EligibilityId = newEligibilityId
@@ -549,4 +549,20 @@ function insertClaimDocuments (schema, eligibilityId, claimId, data) {
     data[1].ClaimId = claimId
   }
   return knex(`${schema}.ClaimDocument`).insert(data)
+}
+
+module.exports.insertTopUp = function (claimId) {
+  var topUp = {
+    ClaimId: claimId,
+    PaymentStatus: 'PENDING',
+    Caseworker: 'test@test.com',
+    TopUpAmount: 22.66,
+    Reason: 'Test Reason',
+    PaymentDate: null
+  }
+  return knex('IntSchema.TopUp').insert(topUp).returning('TopUpId')
+}
+
+module.exports.deleteTopUp = function (claimId) {
+  return knex('IntSchema.TopUp').where('ClaimId', claimId).del()
 }
