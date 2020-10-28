@@ -11,7 +11,7 @@ module.exports = function (totalPayment) {
   var fullOutputFilePath = path.join(outputPath, getFileName())
 
   var accountingDate = dateFormatter.now().format('DD-MMM-YYYY')
-  var journalName = config.ADI_JORNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JORNAL_SUFFIX
+  var journalName = config.ADI_JOURNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JOURNAL_SUFFIX
   return XlsxPopulate.fromFileAsync(config.ADI_TEMPLATE_PATH)
     .then(workbook => {
       // Update the two template rows to debit/credit the total amount
@@ -20,8 +20,8 @@ module.exports = function (totalPayment) {
       adiJournalSheet.cell(config.ADI_DEBIT_CELL).value(Number(totalPayment))
       adiJournalSheet.cell(config.ADI_ACCOUNTING_DATE_CELL).value(accountingDate)
       adiJournalSheet.cell(config.ADI_PERIOD_CELL).value('')
-      adiJournalSheet.cell(config.ADI_JORNAL_NAME_CELL).value(journalName)
-      adiJournalSheet.cell(config.ADI_JORNAL_DESCRIPTION_CELL).value(journalName)
+      adiJournalSheet.cell(config.ADI_JOURNAL_NAME_CELL).value(journalName)
+      adiJournalSheet.cell(config.ADI_JOURNAL_DESCRIPTION_CELL).value(journalName)
       // Modify the workbook
       return workbook.toFileAsync(fullOutputFilePath)
         .then(function () {
