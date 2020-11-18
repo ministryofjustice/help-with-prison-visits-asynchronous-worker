@@ -1,5 +1,9 @@
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
+const knexConfig = require('../../../knexfile').asyncworker
+const knex = require('knex')(knexConfig)
+const log = require('../log')
+const Promise = require('bluebird').Promise
 
 const getOldEligibilityData = require('../data/get-old-eligibility-data')
 const getOldClaimData = require('../data/get-old-claim-data')
@@ -23,10 +27,19 @@ module.exports.execute = function (task) {
 function cleanEligibilityData (dateThreshold) {
   return getOldEligibilityData(dateThreshold)
     .then(function (oldEligibilityData) {
-      oldEligibilityData.forEach(function (eligibilityData) {
+      return Promise.each(oldEligibilityData, function (eligibilityData) {
         return deleteOldFiles(eligibilityData.EligibilityId, eligibilityData.ClaimId, eligibilityData.Reference)
           .then(function () {
-            return deleteClaimFromExternal(eligibilityData.EligibilityId, eligibilityData.ClaimId)
+            return knex.transaction(function (trx) {
+              return deleteClaimFromExternal(eligibilityData.EligibilityId, eligibilityData.ClaimId, trx)
+            })
+              .then(function () {
+                log.info(`Claim with ClaimId: ${eligibilityData.ClaimId} removed from external`)
+              })
+              .catch(function (error) {
+                log.error(`ERROR removing claim with ClaimId: ${eligibilityData.ClaimId} from external 1`)
+                throw error
+              })
           })
       })
     })
@@ -35,10 +48,19 @@ function cleanEligibilityData (dateThreshold) {
 function cleanClaimData (dateThreshold) {
   return getOldClaimData(dateThreshold)
     .then(function (oldClaimData) {
-      oldClaimData.forEach(function (claimData) {
+      return Promise.each(oldClaimData, function (claimData) {
         return deleteOldFiles(claimData.EligibilityId, claimData.ClaimId, claimData.Reference)
           .then(function () {
-            return deleteClaimFromExternal(claimData.EligibilityId, claimData.ClaimId)
+            return knex.transaction(function (trx) {
+              return deleteClaimFromExternal(claimData.EligibilityId, claimData.ClaimId, trx)
+            })
+              .then(function () {
+                log.info(`Claim with ClaimId: ${claimData.ClaimId} removed from external`)
+              })
+              .catch(function (error) {
+                log.error(`ERROR removing claim with ClaimId: ${claimData.ClaimId} from external 2`)
+                throw error
+              })
           })
       })
     })
@@ -47,10 +69,19 @@ function cleanClaimData (dateThreshold) {
 function cleanClaimDocumentData (dateThreshold) {
   return getOldClaimDocumentData(dateThreshold)
     .then(function (oldClaimDocumentData) {
-      oldClaimDocumentData.forEach(function (documentData) {
+      return Promise.each(oldClaimDocumentData, function (documentData) {
         return deleteOldFiles(documentData.EligibilityId, documentData.ClaimId, documentData.Reference)
           .then(function () {
-            return deleteClaimFromExternal(documentData.EligibilityId, documentData.ClaimId)
+            return knex.transaction(function (trx) {
+              return deleteClaimFromExternal(documentData.EligibilityId, documentData.ClaimId, trx)
+            })
+              .then(function () {
+                log.info(`Claim with ClaimId: ${documentData.ClaimId} removed from external`)
+              })
+              .catch(function (error) {
+                log.error(`ERROR removing claim with ClaimId: ${documentData.ClaimId} from external 3`)
+                throw error
+              })
           })
       })
     })
