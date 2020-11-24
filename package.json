@@ -53,7 +53,7 @@
     "knex": "^0.20.15",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "mssql": "^6.2.0",
+    "mssql": "^6.2.3",
     "mv": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
     "notifications-node-client": "2.1.0",
     "python-shell": "^0.4.0",
