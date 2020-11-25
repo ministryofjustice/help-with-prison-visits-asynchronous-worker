@@ -26,6 +26,7 @@ errorShots
 
 # coverage reports
 coverage
+.nyc_output/
 
 # Ignore IntelliJ files
 .idea/
