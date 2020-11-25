@@ -7,9 +7,9 @@ const DATA_TYPE = 'transactions-by-channel'
 const PERIOD = 'day'
 
 module.exports = function (startOfDayDate, submittedClaimCount) {
-  var timestamp = startOfDayDate.toJSON()
+  const timestamp = startOfDayDate.toJSON()
 
-  var payload = {
+  const payload = {
     _id: getId(timestamp),
     _timestamp: timestamp,
     service: SERVICE,
@@ -19,7 +19,7 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
     period: PERIOD
   }
 
-  var options = {
+  const options = {
     method: 'POST',
     uri: config.PERFORMANCE_PLATFORM_URL,
     body: payload,

@@ -4,9 +4,9 @@ const testHelper = require('../../../test-helper')
 const getVisitorEmailAddress = require('../../../../app/services/data/get-visitor-email-address')
 
 describe('services/data/get-visitor-email-address', function () {
-  var reference = 'GETVEML'
-  var eligibilityId
-  var claimData = testHelper.getClaimData(reference)
+  const reference = 'GETVEML'
+  let eligibilityId
+  const claimData = testHelper.getClaimData(reference)
 
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)

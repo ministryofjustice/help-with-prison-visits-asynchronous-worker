@@ -3,10 +3,10 @@ module.exports = function (claimExpenses) {
     return {}
   }
 
-  var result = { }
-  for (var i = 0; i < claimExpenses.length; i++) {
-    var claimExpense = claimExpenses[i]
-    var list = result[claimExpense.ExpenseType]
+  const result = { }
+  for (let i = 0; i < claimExpenses.length; i++) {
+    const claimExpense = claimExpenses[i]
+    const list = result[claimExpense.ExpenseType]
 
     if (list) {
       list.push(claimExpense)

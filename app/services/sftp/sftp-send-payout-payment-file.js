@@ -7,14 +7,14 @@ module.exports = function (paymentFilePathLocal, paymentFilePathRemote) {
   log.info(`sftp-send-payout-payment-file PAYOUT_SFTP_ENABLED: ${config.PAYOUT_SFTP_ENABLED}`)
 
   if (config.PAYOUT_SFTP_ENABLED === 'true') {
-    var sftpConfig = {
+    const sftpConfig = {
       host: config.PAYOUT_SFTP_HOST,
       port: parseInt(config.PAYOUT_SFTP_PORT),
       username: config.PAYOUT_SFTP_USER,
       password: config.PAYOUT_SFTP_PASSWORD
     }
 
-    var sftp = new SFTPClient(sftpConfig)
+    const sftp = new SFTPClient(sftpConfig)
 
     log.info(`Sending file ${paymentFilePathLocal} to remote ${sftpConfig.host}:${paymentFilePathRemote}`)
 

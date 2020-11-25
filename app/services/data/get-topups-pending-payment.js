@@ -7,7 +7,7 @@ const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country', 'IntSchema.ClaimBankDetail.NameOnAccount',
   'IntSchema.ClaimBankDetail.RollNumber', 'IntSchema.TopUp.TopUpId']
 
-var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
+const payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.TopUp.TopUpId']
 
 function directPaymentsReturn (results) {
@@ -44,7 +44,7 @@ function payoutPaymentsReturn (results) {
 }
 
 module.exports = function (paymentMethod) {
-  var selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
+  const selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
 
   return knex('IntSchema.Claim')
     .sum('IntSchema.TopUp.TopUpAmount as PaymentAmount')

@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const isClaimTotalUnderLimit = require('../../../../../app/services/auto-approval/checks/is-claim-total-under-limit')
 
-var validAutoApprovalData = {
+const validAutoApprovalData = {
   ClaimExpenses: [
     {
       Cost: 0
@@ -13,7 +13,7 @@ var validAutoApprovalData = {
   maxClaimTotal: '250'
 }
 
-var invalidAutoApprovalData = {
+const invalidAutoApprovalData = {
   ClaimExpenses: [
     {
       Cost: 150
@@ -27,12 +27,12 @@ var invalidAutoApprovalData = {
 
 describe('services/auto-approval/checks/is-claim-total-under-limit', function () {
   it('should return false if claim total exceeds the max claim total', function () {
-    var checkResult = isClaimTotalUnderLimit(invalidAutoApprovalData)
+    const checkResult = isClaimTotalUnderLimit(invalidAutoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 
   it('should return true if claim total is less than the max claim total', function () {
-    var checkResult = isClaimTotalUnderLimit(validAutoApprovalData)
+    const checkResult = isClaimTotalUnderLimit(validAutoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 })

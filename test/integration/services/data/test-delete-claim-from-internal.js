@@ -7,8 +7,8 @@ const deleteClaimFromInternal = require('../../../../app/services/data/delete-cl
 
 const REFERENCE = 'DELINTC'
 
-var claimId
-var eligibilityId
+let claimId
+let eligibilityId
 
 describe('services/data/delete-claim-from-internal', function () {
   beforeEach(function () {

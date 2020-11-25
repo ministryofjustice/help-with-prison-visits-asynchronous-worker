@@ -3,7 +3,7 @@ const autoApproveClaim = require('../data/auto-approve-claim')
 const deleteAutoApproveClaim = require('../data/delete-auto-approve-claim')
 
 module.exports.execute = function (task) {
-  var claimData
+  let claimData
 
   return getAutoApproveClaims()
     .then(function (data) {

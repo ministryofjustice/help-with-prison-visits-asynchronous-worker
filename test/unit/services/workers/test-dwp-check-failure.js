@@ -5,18 +5,18 @@ const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-e
 
 const statusEnum = require('../../../../app/constants/status-enum')
 
-var visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A', benefit: 'employment-support' }
-var benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.NO }
+const visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A', benefit: 'employment-support' }
+const benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.NO }
 
-var getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
-var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
-var updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
-var autoApprovalProcess = sinon.stub().resolves()
+const getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
+const callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
+const updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
+const autoApprovalProcess = sinon.stub().resolves()
 
-var insertTask = sinon.stub().resolves()
-var insertDummyUploadLaterBenefitDocument = sinon.stub().resolves()
-var insertClaimEventSystemMessage = sinon.stub().resolves()
-var updateClaimStatus = sinon.stub().resolves()
+const insertTask = sinon.stub().resolves()
+const insertDummyUploadLaterBenefitDocument = sinon.stub().resolves()
+const insertClaimEventSystemMessage = sinon.stub().resolves()
+const updateClaimStatus = sinon.stub().resolves()
 
 const dwpCheck = proxyquire('../../../../app/services/workers/dwp-check', {
   '../data/get-visitor-dwp-benefit-checker-data': getVisitorDwpBenefitCheckerData,

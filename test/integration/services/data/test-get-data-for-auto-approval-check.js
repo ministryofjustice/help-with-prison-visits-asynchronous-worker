@@ -5,18 +5,18 @@ const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const REFERENCE = 'AUTOAPD'
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
-var claimData
-var previousClaims
+let claimData
+let previousClaims
 
-var getAllClaimDataStub
-var getDataForAutoApprovalCheck
+let getAllClaimDataStub
+let getDataForAutoApprovalCheck
 
 describe('services/data/get-data-for-auto-approval-check', function () {
   before(function () {
-    var uniqueId = Math.floor(Date.now() / 100) - 13999999999
+    const uniqueId = Math.floor(Date.now() / 100) - 13999999999
     claimData = testHelper.getClaimData(REFERENCE)
 
     getAllClaimDataStub = sinon.stub().resolves(claimData)
@@ -107,7 +107,7 @@ describe('services/data/get-data-for-auto-approval-check', function () {
       }
     ]
 
-    var createClaims = []
+    const createClaims = []
     previousClaims.forEach(function (previousClaim) {
       createClaims.push(testHelper.insertClaimData('IntSchema', REFERENCE, uniqueId + 1, previousClaim))
     })

@@ -1,5 +1,5 @@
-var expect = require('chai').expect
-var log = require('../../../app/services/log')
+const expect = require('chai').expect
+const log = require('../../../app/services/log')
 
 describe('services/log', function () {
   describe('create logger', function () {

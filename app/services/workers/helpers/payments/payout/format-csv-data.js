@@ -11,18 +11,18 @@ module.exports = function formatCSVData (paymentData, claimIdIndex) {
     data.splice(19, 0, '', '')
 
     // Ensures there is a space in the postcode
-    var postCodeIndex = 8
+    const postCodeIndex = 8
     if (data[postCodeIndex].indexOf(' ') < 0) {
       data[postCodeIndex] = data[postCodeIndex].replace(/^(.*)(.{3})$/, '$1 $2')
     }
 
     // Formats the date of visit
-    var dateOfVisitIndex = 21
-    var dateOfVisitRaw = JSON.stringify(data[dateOfVisitIndex])
-    var year = dateOfVisitRaw.substring(1, 5)
-    var month = dateOfVisitRaw.substring(6, 8)
-    var day = dateOfVisitRaw.substring(9, 11)
-    var dateOfVisit = day + ' ' + month + ' ' + year
+    const dateOfVisitIndex = 21
+    const dateOfVisitRaw = JSON.stringify(data[dateOfVisitIndex])
+    const year = dateOfVisitRaw.substring(1, 5)
+    const month = dateOfVisitRaw.substring(6, 8)
+    const day = dateOfVisitRaw.substring(9, 11)
+    const dateOfVisit = day + ' ' + month + ' ' + year
     data[dateOfVisitIndex] = dateOfVisit
   })
 

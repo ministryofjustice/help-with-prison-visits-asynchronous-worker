@@ -7,8 +7,8 @@ const testHelper = require('../../../test-helper')
 const REFERENCE = 'EVENT458'
 const event = 'TEST'
 
-var claimId
-var eligibilityId
+let claimId
+let eligibilityId
 
 describe('services/data/insert-claim-event', function () {
   before(function () {

@@ -6,9 +6,9 @@ const testHelper = require('../../../test-helper')
 const deleteClaimFromExternal = require('../../../../app/services/data/delete-claim-from-external')
 
 describe('services/data/delete-claim-from-external', function () {
-  var reference = 'DELETE1'
-  var eligibilityId
-  var claimId
+  const reference = 'DELETE1'
+  let eligibilityId
+  let claimId
 
   beforeEach(function () {
     return testHelper.insertClaimEligibilityData('ExtSchema', reference)

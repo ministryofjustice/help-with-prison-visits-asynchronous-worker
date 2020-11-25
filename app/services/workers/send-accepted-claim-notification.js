@@ -8,10 +8,10 @@ const enumHelper = require('../../constants/helpers/enum-helper')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 
 module.exports.execute = function (task) {
-  var claimId = task.claimId
-  var reference = task.reference
-  var claimExpenseData
-  var claimantData
+  const claimId = task.claimId
+  const reference = task.reference
+  let claimExpenseData
+  let claimantData
 
   return getApprovedClaimExpenseData(claimId)
     .then(function (expenseData) {
@@ -21,16 +21,16 @@ module.exports.execute = function (task) {
       return getEnabledClaimDeductions(claimId)
     })
     .then(function (claimDeductions) {
-      var firstName = claimantData.VisitorFirstName || ''
-      var accountLastFourDigits = claimantData.AccountNumberLastFourDigits || ''
-      var caseworkerNote = claimantData.CaseworkerNote || ''
-      var paymentMethod = claimantData.PaymentMethod || ''
-      var isAdvanceClaim = claimantData.IsAdvanceClaim
-      var town = claimantData.Town || ''
-      var prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).displayName : ''
+      const firstName = claimantData.VisitorFirstName || ''
+      const accountLastFourDigits = claimantData.AccountNumberLastFourDigits || ''
+      const caseworkerNote = claimantData.CaseworkerNote || ''
+      const paymentMethod = claimantData.PaymentMethod || ''
+      const isAdvanceClaim = claimantData.IsAdvanceClaim
+      const town = claimantData.Town || ''
+      const prison = claimantData.Prison ? enumHelper.getKeyByValue(prisonsEnum, claimantData.Prison).displayName : ''
 
-      var personalisation = standardPersonalisationElements(firstName, reference, town, prison, caseworkerNote)
-      var emailTemplateId
+      const personalisation = standardPersonalisationElements(firstName, reference, town, prison, caseworkerNote)
+      let emailTemplateId
 
       if (paymentMethod === paymentMethodEnum.DIRECT_BANK_PAYMENT.value) {
         personalisation.account_last_four_digits = accountLastFourDigits
@@ -53,13 +53,13 @@ module.exports.execute = function (task) {
         return Promise.reject(new Error('No payment method found'))
       }
 
-      var emailAddress = task.additionalData
+      const emailAddress = task.additionalData
       return sendNotification(emailTemplateId, emailAddress, personalisation)
     })
 }
 
 function getTotalApprovedAmount (claimExpenses, claimDeductions) {
-  var totalApprovedAmount = 0
+  let totalApprovedAmount = 0
 
   claimExpenses.forEach(function (claimExpense) {
     totalApprovedAmount += claimExpense.ApprovedCost
@@ -74,8 +74,8 @@ function getTotalApprovedAmount (claimExpenses, claimDeductions) {
 
 function formatCaseworkerNote (caseworkerNote) {
   if (caseworkerNote) {
-    var result = []
-    var newLine = '\r\n'
+    const result = []
+    const newLine = '\r\n'
 
     // Extra new line at start and end to create gap between note and adjacent sections
     result.push(newLine)

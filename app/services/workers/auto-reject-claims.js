@@ -10,9 +10,9 @@ const config = require('../../../config')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
-  var claimData
-  var numberOfDaysAfterFinalReminderForRejection = parseInt(config.NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION)
-  var autoRejectClaimsOlderThan = moment().startOf('day').subtract(numberOfDaysAfterFinalReminderForRejection, 'days').format('YYYY-MM-DD')
+  let claimData
+  const numberOfDaysAfterFinalReminderForRejection = parseInt(config.NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION)
+  const autoRejectClaimsOlderThan = moment().startOf('day').subtract(numberOfDaysAfterFinalReminderForRejection, 'days').format('YYYY-MM-DD')
 
   return getAutoRejectClaims(autoRejectClaimsOlderThan)
     .then(function (data) {

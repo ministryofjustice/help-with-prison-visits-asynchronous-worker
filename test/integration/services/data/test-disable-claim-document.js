@@ -5,7 +5,7 @@ const disableClaimDocument = require('../../../../app/services/data/disable-clai
 const testHelper = require('../../../test-helper')
 
 const REFERENCE = 'DISDOC1'
-var claimDocumentId
+let claimDocumentId
 
 describe('services/data/disable-claim-document', function () {
   before(function () {

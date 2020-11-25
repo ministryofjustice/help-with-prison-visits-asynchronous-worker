@@ -6,7 +6,7 @@ const testHelper = require('../../../test-helper')
 
 const reference = 'CONTACT'
 
-var updatedDetails = {
+const updatedDetails = {
   Reference: reference,
   EmailAddress: 'newTestEmail@test.com',
   PhoneNumber: '12334567'

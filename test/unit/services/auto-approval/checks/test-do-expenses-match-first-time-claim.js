@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 
-var autoApprovalData = {
+const autoApprovalData = {
   latestManuallyApprovedClaim: {
     claimExpenses: [
       {
@@ -47,7 +47,7 @@ describe('services/auto-approval/checks/do-expenses-match-first-time-claim', fun
       }
     ]
 
-    var checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
+    const checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 
@@ -70,7 +70,7 @@ describe('services/auto-approval/checks/do-expenses-match-first-time-claim', fun
       }
     ]
 
-    var checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
+    const checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 
@@ -90,14 +90,14 @@ describe('services/auto-approval/checks/do-expenses-match-first-time-claim', fun
       }
     ]
 
-    var checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
+    const checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 
   it('should return false if there is no first time claim expenses', function () {
     autoApprovalData.latestManuallyApprovedClaim.claimExpenses = []
 
-    var checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
+    const checkResult = doExpensesMatchFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 })

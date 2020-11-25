@@ -7,7 +7,7 @@ const updateOverpaymentStatus = require('../../../../app/services/data/update-ov
 
 const AMOUNT = 100
 const REFERENCE = 'OVERPAY'
-var claimId
+let claimId
 
 describe('services/data/update-overpayment-status', function () {
   beforeEach(function () {

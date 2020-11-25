@@ -3,7 +3,7 @@ const getOldPaymentFiles = require('../data/get-old-payment-files')
 const updateOldPaymentFilesIsEnabledFalse = require('../data/update-old-payment-files-is-enabled-false')
 
 module.exports.execute = function (task) {
-  var oldPaymentIds
+  let oldPaymentIds
   return getOldPaymentFiles()
     .then(function (oldPaymentFiles) {
       if (oldPaymentFiles.length > 0) {

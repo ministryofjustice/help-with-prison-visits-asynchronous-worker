@@ -7,7 +7,7 @@ const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
 
 const reference = 'AUTOAPV'
-var claimId
+let claimId
 
 describe('services/data/auto-approve-claim-expenses', function () {
   before(function () {

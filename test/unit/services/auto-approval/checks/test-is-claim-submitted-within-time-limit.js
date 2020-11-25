@@ -26,12 +26,12 @@ const invalidAutoApprovalData = {
 
 describe('services/auto-approval/checks/is-claim-submitted-within-time-limit', function () {
   it('should return true if the submission date is less than or equal to maxDayAfterAPVUVisit days after the date of journey of last manually approved claim', function () {
-    var checkResult = isClaimSubmittedWithinTimeLimit(validAutoApprovalData)
+    const checkResult = isClaimSubmittedWithinTimeLimit(validAutoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 
   it('should return false if the submission date is greater than maxDayAfterAPVUVisit days after the date of journey of last manually approved claim', function () {
-    var checkResult = isClaimSubmittedWithinTimeLimit(invalidAutoApprovalData)
+    const checkResult = isClaimSubmittedWithinTimeLimit(invalidAutoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 })

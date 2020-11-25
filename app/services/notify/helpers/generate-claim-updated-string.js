@@ -1,8 +1,9 @@
 module.exports = function (updatedDocuments) {
   const NEWLINE = '<br />'
 
+  let message
   if (updatedDocuments && updatedDocuments.length > 0) {
-    var message = 'Claimant updated claim:'
+    message = 'Claimant updated claim:'
 
     message = message + NEWLINE
     updatedDocuments.forEach(function (document) {

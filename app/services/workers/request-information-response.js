@@ -15,14 +15,14 @@ const Promise = require('bluebird')
 const transactionHelper = require('./helpers/transaction-helper')
 
 module.exports.execute = function (task) {
-  var reference = task.reference
-  var eligibilityId = task.eligibilityId
-  var claimId = task.claimId
-  var note = task.additionalData
-  var updatedDocuments
-  var status
-  var originalStatus
-  var claimBankDetailId
+  const reference = task.reference
+  const eligibilityId = task.eligibilityId
+  const claimId = task.claimId
+  const note = task.additionalData
+  let updatedDocuments
+  let status
+  let originalStatus
+  let claimBankDetailId
 
   return moveClaimDocumentsToInternal(reference, eligibilityId, claimId)
     .then(function (newDocuments) { updatedDocuments = newDocuments })
@@ -76,7 +76,7 @@ function callAutoApprovalIfClaimIsNew (reference, eligibilityId, claimId, status
 
 function updateBankDetailsAndRemoveOldFromExternal (reference, eligibilityId, claimId, status, claimBankDetailId) {
   if (status === statusEnum.REQUEST_INFO_PAYMENT) {
-    var newBankDetails
+    let newBankDetails
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
       .then(function (claimData) { newBankDetails = claimData.ClaimBankDetail })
       .then(function () { return updateBankDetails(claimBankDetailId, reference, claimId, newBankDetails.SortCode, newBankDetails.AccountNumber, newBankDetails.NameOnAccount, newBankDetails.RollNumber) })

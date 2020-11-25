@@ -63,17 +63,17 @@ const validAutoApprovalData = {
 
 describe('services/auto-approval/checks/has-uploaded-prison-visit-confirmation', function () {
   it('should return true if the claimant has uploaded all required documents', function () {
-    var checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(validAutoApprovalData)
+    const checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(validAutoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 
   it('should return false if the claimant has not uploaded all required documents', function () {
-    var checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withVisitConfirmation)
+    const checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withVisitConfirmation)
     expect(checkResult.result).to.equal(false)
   })
 
   it('should return false if the claimant uploaded all required documents except the prison visit confirmation', function () {
-    var checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withoutVisitConfirmation)
+    const checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withoutVisitConfirmation)
     expect(checkResult.result).to.equal(false)
   })
 })

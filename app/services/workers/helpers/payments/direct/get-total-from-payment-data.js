@@ -1,6 +1,6 @@
 module.exports = function getTotalFromPaymentData (paymentData) {
-  var totalApprovedCostIndex = 3
-  var total = 0.0
+  const totalApprovedCostIndex = 3
+  let total = 0.0
 
   paymentData.forEach(function (data) { total += parseFloat(data[totalApprovedCostIndex]) })
 

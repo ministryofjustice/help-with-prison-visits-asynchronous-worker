@@ -6,12 +6,12 @@ const getAdvanceClaimsTotalExpenseApprovedCostBeforeDate = require('../../../../
 
 describe('services/data/get-advance-claims-total-expense-approved-cost-before-date', function () {
   const REFERENCE = 'AMOUNTO'
-  var claimId
-  var date = dateFormatter.now().add('1', 'd').toDate()
-  var amount
+  let claimId
+  const date = dateFormatter.now().add('1', 'd').toDate()
+  let amount
 
   before(function () {
-    var data = testHelper.getClaimData(REFERENCE)
+    const data = testHelper.getClaimData(REFERENCE)
     amount = data.ClaimExpenses[0].ApprovedCost + data.ClaimExpenses[1].ApprovedCost
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, 'TESTING')
       .then(function (ids) {

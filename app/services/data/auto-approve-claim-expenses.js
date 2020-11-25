@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 const statusEnum = require('../../constants/status-enum')
 
 module.exports = function (claimId) {
-  var updates = []
+  const updates = []
   return getClaimExpenses(claimId)
     .then(function (claimExpenses) {
       claimExpenses.forEach(function (claimExpense) {
@@ -22,7 +22,7 @@ function getClaimExpenses (claimId) {
 }
 
 function updateClaimExpenseToApproved (claimExpense) {
-  var updatedClaimExpense = {
+  const updatedClaimExpense = {
     Status: statusEnum.APPROVED,
     ApprovedCost: parseFloat(claimExpense.Cost).toFixed(2)
   }

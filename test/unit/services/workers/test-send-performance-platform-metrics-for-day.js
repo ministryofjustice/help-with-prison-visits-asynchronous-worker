@@ -8,11 +8,11 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const SUBMITTED_CLAIM_COUNT = 100
 
 describe('services/workers/send-performance-platform-metrics-for-day', function () {
-  var sendPerformancePlatformMetricsForDay
+  let sendPerformancePlatformMetricsForDay
 
-  var configStub
-  var getNumberOfSubmittedClaimsForDateRangeStub
-  var sendPerformancePlatformMetricsForDayStub
+  let configStub
+  let getNumberOfSubmittedClaimsForDateRangeStub
+  let sendPerformancePlatformMetricsForDayStub
 
   beforeEach(function () {
     configStub = { PERFORMANCE_PLATFORM_SEND_ENABLED: 'true' }
@@ -36,10 +36,10 @@ describe('services/workers/send-performance-platform-metrics-for-day', function 
   })
 
   it('should call send-performance-platform-metrics-for-day with submittedClaimCount', function () {
-    var dateCreated = moment('2016-12-08 05:00')
+    const dateCreated = moment('2016-12-08 05:00')
 
-    var startDateString = '2016-12-07 00:00'
-    var endDateString = '2016-12-07 23:59'
+    const startDateString = '2016-12-07 00:00'
+    const endDateString = '2016-12-07 23:59'
 
     return sendPerformancePlatformMetricsForDay.execute({ dateCreated: dateCreated })
       .then(function () {

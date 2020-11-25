@@ -21,8 +21,8 @@ const autoApproveClaim = proxyquire('../../../../app/services/data/auto-approve-
 
 const REFERENCE = 'AUTOAPP'
 const EMAIL_ADDRESS = 'donotsend@apvs.com'
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
 describe('services/data/auto-approve-claim', function () {
   before(function () {

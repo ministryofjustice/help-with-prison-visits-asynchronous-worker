@@ -8,14 +8,14 @@ module.exports = function (totalPayment) {
   const dataPath = config.DATA_FILE_PATH
   const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
 
-  var fullOutputFilePath = path.join(outputPath, getFileName())
+  const fullOutputFilePath = path.join(outputPath, getFileName())
 
-  var accountingDate = dateFormatter.now().format('DD-MMM-YYYY')
-  var journalName = config.ADI_JOURNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JOURNAL_SUFFIX
+  const accountingDate = dateFormatter.now().format('DD-MMM-YYYY')
+  const journalName = config.ADI_JOURNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JOURNAL_SUFFIX
   return XlsxPopulate.fromFileAsync(config.ADI_TEMPLATE_PATH)
     .then(workbook => {
       // Update the two template rows to debit/credit the total amount
-      var adiJournalSheet = workbook.sheet(config.ADI_JOURNAL_SHEET)
+      const adiJournalSheet = workbook.sheet(config.ADI_JOURNAL_SHEET)
       adiJournalSheet.cell(config.ADI_TOTAL_CELL).value(Number(totalPayment))
       adiJournalSheet.cell(config.ADI_DEBIT_CELL).value(Number(totalPayment))
       adiJournalSheet.cell(config.ADI_ACCOUNTING_DATE_CELL).value(accountingDate)

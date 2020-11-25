@@ -5,10 +5,10 @@ const sinon = require('sinon')
 
 const statusEnum = require('../../app/constants/status-enum')
 
-var processTasks
-var getPendingTasksAndMarkInProgress
-var completeTaskWithStatus
-var getWorkerForTask
+let processTasks
+let getPendingTasksAndMarkInProgress
+let completeTaskWithStatus
+let getWorkerForTask
 const batchSize = 3
 
 describe('process-tasks', function () {

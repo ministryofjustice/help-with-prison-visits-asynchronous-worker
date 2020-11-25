@@ -6,22 +6,22 @@ const FAILURE_MESSAGE = 'Claim expense costs are outside of the accepted varianc
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.claimExpenses) {
-    var groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
-    var groupedCurrentExpenses = groupExpensesByType(autoApprovalData.ClaimExpenses)
+    const groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
+    const groupedCurrentExpenses = groupExpensesByType(autoApprovalData.ClaimExpenses)
 
     // Loop through current expense types, get total, and compare against first time expenses of the same types
-    for (var i = 0; i < Object.keys(groupedCurrentExpenses).length; i++) {
-      var index = Object.keys(groupedCurrentExpenses)[i]
-      var currentExpenseType = groupedCurrentExpenses[index]
-      var firstTimeExpenses = groupedFirstTimeClaimExpenses[index]
+    for (let i = 0; i < Object.keys(groupedCurrentExpenses).length; i++) {
+      const index = Object.keys(groupedCurrentExpenses)[i]
+      const currentExpenseType = groupedCurrentExpenses[index]
+      const firstTimeExpenses = groupedFirstTimeClaimExpenses[index]
 
-      var currentExpenseTypeTotal = getTotal(currentExpenseType, 'Cost')
-      var firstTimeExpenseTypeTotal = getTotal(firstTimeExpenses, 'ApprovedCost')
+      const currentExpenseTypeTotal = getTotal(currentExpenseType, 'Cost')
+      const firstTimeExpenseTypeTotal = getTotal(firstTimeExpenses, 'ApprovedCost')
 
       if (currentExpenseTypeTotal !== firstTimeExpenseTypeTotal) {
-        var variance = firstTimeExpenseTypeTotal * (Math.abs(autoApprovalData.costVariancePercentage) / 100)
-        var lowerThreshold = firstTimeExpenseTypeTotal - variance
-        var upperThreshold = firstTimeExpenseTypeTotal + variance
+        const variance = firstTimeExpenseTypeTotal * (Math.abs(autoApprovalData.costVariancePercentage) / 100)
+        const lowerThreshold = firstTimeExpenseTypeTotal - variance
+        const upperThreshold = firstTimeExpenseTypeTotal + variance
 
         if (currentExpenseTypeTotal < lowerThreshold || currentExpenseTypeTotal > upperThreshold) {
           return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
@@ -34,12 +34,12 @@ module.exports = function (autoApprovalData) {
 }
 
 function getTotal (claimExpenses, fieldName) {
-  var expenseTypeTotal = 0
+  let expenseTypeTotal = 0
   if (!claimExpenses) {
     return expenseTypeTotal
   }
 
-  for (var i = 0; i < claimExpenses.length; i++) {
+  for (let i = 0; i < claimExpenses.length; i++) {
     expenseTypeTotal += claimExpenses[i][fieldName]
   }
 

@@ -5,11 +5,11 @@ const fs = require('fs')
 const path = require('path')
 
 module.exports = function (archivedClaimData) {
-  var archiveEligibilityDocuments = archivedClaimData.DeleteEligibility
-  var reference = archivedClaimData.Claim.Reference
-  var eligibilityId = archivedClaimData.Claim.EligibilityId
-  var claimId = archivedClaimData.Claim.ClaimId
-  var hasDocuments = false
+  const archiveEligibilityDocuments = archivedClaimData.DeleteEligibility
+  const reference = archivedClaimData.Claim.Reference
+  const eligibilityId = archivedClaimData.Claim.EligibilityId
+  const claimId = archivedClaimData.Claim.ClaimId
+  let hasDocuments = false
 
   if (archivedClaimData.ClaimDocument) {
     archivedClaimData.ClaimDocument.forEach(function (claimDocument) {
@@ -20,23 +20,23 @@ module.exports = function (archivedClaimData) {
   }
 
   if (hasDocuments) {
-    var claimDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}/${claimId}`
-    var archiveClaimDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}/${claimId}`
+    const claimDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}/${claimId}`
+    const archiveClaimDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}/${claimId}`
 
     return mv(claimDirectory, archiveClaimDirectory, { mkdirp: true })
       .then(function () {
         if (archiveEligibilityDocuments) {
-          var eligibilityDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
-          var targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
+          const eligibilityDirectory = `${config.FILE_UPLOAD_LOCATION}/${reference}-${eligibilityId}`
+          const targetDirectory = `${config.FILE_ARCHIVE_LOCATION}/${reference}-${eligibilityId}`
 
-          var allEligibilityFilesFolders = fs.readdirSync(eligibilityDirectory)
+          const allEligibilityFilesFolders = fs.readdirSync(eligibilityDirectory)
 
           if (allEligibilityFilesFolders && allEligibilityFilesFolders.length > 0) {
-            var movePromises = []
+            const movePromises = []
 
             allEligibilityFilesFolders.forEach(function (eligibilityFileOrFolder) {
-              var eligibilityFileOrFolderPath = path.join(eligibilityDirectory, eligibilityFileOrFolder)
-              var targetFileOrFolderPath = path.join(targetDirectory, eligibilityFileOrFolder)
+              const eligibilityFileOrFolderPath = path.join(eligibilityDirectory, eligibilityFileOrFolder)
+              const targetFileOrFolderPath = path.join(targetDirectory, eligibilityFileOrFolder)
 
               movePromises.push(mv(eligibilityFileOrFolderPath, targetFileOrFolderPath, { mkdirp: true }))
             })

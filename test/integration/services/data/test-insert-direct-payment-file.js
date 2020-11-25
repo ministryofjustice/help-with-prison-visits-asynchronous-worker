@@ -9,9 +9,9 @@ const path = 'data/payments/test' + Math.floor(Math.random() * 20) + '.csv'
 
 describe('services/data/insert-direct-payment-file', function () {
   it('should create DirectPaymentFile with path and AccessPay file type', function () {
-    var currentDate = dateFormatter.now()
-    var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-    var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+    const currentDate = dateFormatter.now()
+    const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+    const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
     return insertDirectPaymentFile(path, fileTypeEnum.ACCESSPAY_FILE)
       .then(function () {
         return knex.table('IntSchema.DirectPaymentFile')

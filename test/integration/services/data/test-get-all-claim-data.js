@@ -10,8 +10,8 @@ const INTSCHEMA = 'IntSchema'
 describe('services/data/get-all-claim-data', function () {
   describe('get first time claim data', function () {
     const REFERENCE = 'FIRST12'
-    var eligibilityId
-    var claimId
+    let eligibilityId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimEligibilityData(EXTSCHEMA, REFERENCE)
@@ -43,7 +43,7 @@ describe('services/data/get-all-claim-data', function () {
   describe('get repeat claim data', function () {
     const REFERENCE = 'REPEAT5'
     const ELIGIBILITYID = 4321
-    var claimId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
@@ -75,8 +75,8 @@ describe('services/data/get-all-claim-data', function () {
 
   describe('get internal claim data', function () {
     const REFERENCE = 'INTCLMD'
-    var eligibilityId
-    var claimId
+    let eligibilityId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimEligibilityData(INTSCHEMA, REFERENCE)

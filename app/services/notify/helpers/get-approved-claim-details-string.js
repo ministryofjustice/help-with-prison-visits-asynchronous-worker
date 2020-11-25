@@ -5,16 +5,16 @@ const enumHelper = require('../../../constants/helpers/enum-helper')
 const newLine = '\r\n'
 
 module.exports = function (claimExpenses, claimDeductions) {
-  var paymentBreakdownString = buildPaymentBreakdown(claimExpenses)
-  var deductionBreakdownString = buildDeductionBreakdown(claimDeductions)
+  const paymentBreakdownString = buildPaymentBreakdown(claimExpenses)
+  const deductionBreakdownString = buildDeductionBreakdown(claimDeductions)
 
   return paymentBreakdownString +
     deductionBreakdownString
 }
 
 function getClaimHeader (claimExpense) {
-  var claimHeader = ''
-  var claimType = EXPENSE_TYPE[claimExpense.ExpenseType]
+  let claimHeader = ''
+  const claimType = EXPENSE_TYPE[claimExpense.ExpenseType]
 
   if (claimType) {
     if (claimType.isJourney) {
@@ -30,7 +30,7 @@ function getClaimHeader (claimExpense) {
 }
 
 function buildPaymentBreakdown (claimExpenses) {
-  var result = []
+  const result = []
 
   // Append "Your claim details" to top of string if there are any claims expenses to show
   if (claimExpenses.length > 0) {
@@ -41,7 +41,7 @@ function buildPaymentBreakdown (claimExpenses) {
   }
 
   claimExpenses.forEach(function (claimExpense) {
-    var claimHeader = getClaimHeader(claimExpense)
+    const claimHeader = getClaimHeader(claimExpense)
 
     result.push(claimHeader)
     if (claimExpense.Status !== EXPENSE_STATUS.MANUALLY_PROCESSED) {
@@ -56,7 +56,7 @@ function buildPaymentBreakdown (claimExpenses) {
 }
 
 function buildDeductionBreakdown (claimDeductions) {
-  var result = []
+  const result = []
 
   if (claimDeductions.length > 0) {
     result.push(newLine)
@@ -67,7 +67,7 @@ function buildDeductionBreakdown (claimDeductions) {
   }
 
   claimDeductions.forEach(function (claimDeduction) {
-    var deductionType = enumHelper.getKeyByValue(DEDUCTION_TYPE, claimDeduction.DeductionType)
+    const deductionType = enumHelper.getKeyByValue(DEDUCTION_TYPE, claimDeduction.DeductionType)
 
     result.push(`Type: ${deductionType.displayName}`)
     result.push(`Amount: £${claimDeduction.Amount.toFixed(2)}`)

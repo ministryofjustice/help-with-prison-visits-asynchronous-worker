@@ -7,7 +7,7 @@ const updateClaimStatus = require('../../../../app/services/data/update-claim-st
 
 const STATUS = 'TEST'
 const REFERENCE = 'UPCLMSD'
-var claimId
+let claimId
 
 describe('services/data/update-claim-status', function () {
   beforeEach(function () {

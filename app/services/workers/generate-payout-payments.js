@@ -14,13 +14,13 @@ const getClaimIdsFromPaymentData = require('./helpers/payments/get-claim-ids-fro
 const formatCSVData = require('./helpers/payments/payout/format-csv-data')
 
 module.exports.execute = function () {
-  var claimIds
-  var topUpClaimIds
-  var paymentCsvFilePath
+  let claimIds
+  let topUpClaimIds
+  let paymentCsvFilePath
 
   return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
-      var claimIdIndex = 0
+      const claimIdIndex = 0
       if (paymentData.length > 0) {
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
       }
@@ -35,8 +35,8 @@ module.exports.execute = function () {
             return createPayoutFile(paymentData)
               .then(function (filePath) {
                 paymentCsvFilePath = filePath
-                var filename = path.basename(paymentCsvFilePath)
-                var remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
+                const filename = path.basename(paymentCsvFilePath)
+                const remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
 
                 return sftpSendPayoutPaymentFile(paymentCsvFilePath, remotePaypitCsvFilePath)
               })

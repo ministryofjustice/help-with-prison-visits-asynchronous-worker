@@ -9,7 +9,7 @@ const STATUS_RETURN = 'TEST_RETURNED'
 const STATUS_NOT_RETURN = 'TEST_NOT_RETURNED'
 const STATUS_CURRENT_CLAIM = 'CURRENT_CLAIM'
 
-var claimId
+let claimId
 
 describe('services/data/get-last-set-number-of-claims-status', function () {
   before(function () {

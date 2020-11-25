@@ -5,9 +5,9 @@ const getClaimDocuments = require('../../../../app/services/data/get-claim-docum
 const testHelper = require('../../../test-helper')
 
 const REFERENCE = 'GETDOCS'
-var eligibilityId
-var claimId
-var expectedCount
+let eligibilityId
+let claimId
+let expectedCount
 
 describe('services/data/get-claim-documents', function () {
   before(function () {

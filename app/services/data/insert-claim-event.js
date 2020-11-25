@@ -3,7 +3,7 @@ const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, claimDocumentId, event, additionalData, note, isInternal, trx) {
-  var claimEvent = {
+  const claimEvent = {
     EligibilityId: eligibilityId,
     Reference: reference,
     ClaimId: claimId,

@@ -100,18 +100,6 @@ See [call-distance-api-for-postcodes.js](https://github.com/ministryofjustice/ap
 
 ## Notes
 
-### Python
-
-This node application uses [python-shell](https://www.npmjs.com/package/python-shell) to call a number of python scripts as part of the `GENERATE-DIRECT-PAYMENTS` task. This is required as node libraries for generating XSLM files do not support preserving macros, which are included in supplied template for the ADI Journal.
-
-This project uses Python major [Version 2.7](https://www.python.org/download/releases/2.7/)
-
-To install the required python dependencies run:
-
-```
-pip install -r python/requirements.txt
-```
-
 ### Updating dependencies
 
 This node application uses [npm shrinkwrap](https://docs.npmjs.com/cli/shrinkwrap) to fix dependencies and peer dependencies to specific versions. This prevents node modules from automatically updating on new releases without developers knowledge.

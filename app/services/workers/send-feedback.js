@@ -3,17 +3,17 @@ const Config = require('../../../config')
 const Zendesk = require('zendesk-node-api')
 
 module.exports.execute = function (task) {
-  var feedback = task.additionalData.split('~~')
-  var subjectText = 'Help With Prison Visits - Feedback'
-  var tagText = ['HelpWithPrisonVisits']
-  var personalisation = {
+  const feedback = task.additionalData.split('~~')
+  let subjectText = 'Help With Prison Visits - Feedback'
+  let tagText = ['HelpWithPrisonVisits']
+  const personalisation = {
     rating: RatingEnum[feedback[0]].displayName,
     improvements: feedback[1],
     contactEmailAddress: feedback[2]
   }
 
   if (Config.ZENDESK_ENABLED === 'true') {
-    var zendesk = new Zendesk({
+    const zendesk = new Zendesk({
       url: Config.ZENDESK_API_URL,
       email: Config.ZENDESK_EMAIL_ADDRESS,
       token: Config.ZENDESK_API_KEY

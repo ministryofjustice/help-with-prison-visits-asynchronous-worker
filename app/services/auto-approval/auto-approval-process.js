@@ -11,7 +11,7 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const getLastSetNumberOfClaimsStatus = require('../data/get-last-set-number-of-claims-status')
 const dateFormatter = require('../date-formatter')
 
-var autoApprovalChecks = {}
+const autoApprovalChecks = {}
 
 autoApprovalRulesEnum.forEach(function (check) {
   autoApprovalChecks[check] = require(`./checks/${check}`)
@@ -23,12 +23,12 @@ module.exports = function (reference, eligibilityId, claimId) {
       if (config.AutoApprovalEnabled) {
         return getDataForAutoApprovalChecks(reference, eligibilityId, claimId)
           .then(function (autoApprovalData) {
-            var result = {
+            const result = {
               checks: [],
               claimApproved: true
             }
 
-            var disabledRules = config.RulesDisabled || []
+            const disabledRules = config.RulesDisabled || []
 
             if (failBasedOnPreRequisiteChecks(result, autoApprovalData)) {
               result.claimApproved = false
@@ -36,7 +36,7 @@ module.exports = function (reference, eligibilityId, claimId) {
             }
 
             // This rule is not in enum as it does not have a dedicated check assosiated with it like the other rules that can be disabled
-            var forceManualCheck = !disabledRules.includes('force-manual-check-after-number-of-auto-approvals')
+            const forceManualCheck = !disabledRules.includes('force-manual-check-after-number-of-auto-approvals')
 
             return exceedConsecutiveAutoApprovalLimit(reference, claimId, config.NumberOfConsecutiveAutoApprovals, forceManualCheck)
               .then(function (exceedAutoApprovalLimit) {
@@ -53,7 +53,7 @@ module.exports = function (reference, eligibilityId, claimId) {
                 runEnabledChecks(result, autoApprovalData, disabledRules)
 
                 if (result.claimApproved) {
-                  var now = dateFormatter.now().toDate()
+                  const now = dateFormatter.now().toDate()
 
                   if (now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17) {
                     return autoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress)
@@ -91,7 +91,7 @@ function failBasedOnPreRequisiteChecks (result, autoApprovalData) {
 function exceedConsecutiveAutoApprovalLimit (reference, claimId, numberOfConsecutiveAutoApprovals, forceManualCheck) {
   return getLastSetNumberOfClaimsStatus(reference, claimId, numberOfConsecutiveAutoApprovals)
     .then(function (claims) {
-      var numberOfAutoApprovals = 0
+      let numberOfAutoApprovals = 0
       if (forceManualCheck) {
         claims.forEach(function (claim) {
           if (claim.Status === statusEnum.AUTOAPPROVED) {
@@ -114,7 +114,7 @@ function addAutoApprovalConfigToData (autoApprovalData, config) {
 function runEnabledChecks (result, autoApprovalData, disabledRules) {
   autoApprovalRulesEnum.forEach(function (checkName) {
     if (disabledRules.indexOf(checkName) === -1) {
-      var checkResult = autoApprovalChecks[checkName](autoApprovalData)
+      const checkResult = autoApprovalChecks[checkName](autoApprovalData)
       result.checks.push(checkResult)
       if (!checkResult.result) {
         result.claimApproved = false

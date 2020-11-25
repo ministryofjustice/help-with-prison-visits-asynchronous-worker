@@ -12,17 +12,17 @@ const REFERENCE = '1234567'
 const ELIGIBILITY_ID = 4321
 const CLAIM_ID = 1234
 
-var stubSendNotification
-var stubGetApprovedClaimExpenseData
-var stubGetApprovedClaimDetailsString
-var stubGetEnabledClaimDeductions
+let stubSendNotification
+let stubGetApprovedClaimExpenseData
+let stubGetApprovedClaimDetailsString
+let stubGetEnabledClaimDeductions
 
 const BANK_DATA_PAST = { VisitorFirstName: 'Joe', AccountNumberLastFourDigits: '1234', PaymentMethod: paymentMethodEnum.DIRECT_BANK_PAYMENT.value, IsAdvanceClaim: false }
 const PAYOUT_DATA_PAST = { VisitorFirstName: 'Joe', PaymentMethod: paymentMethodEnum.PAYOUT.value, Town: 'Town', Prison: prisonsEnum.HEWELL.value, IsAdvanceClaim: false }
 const BANK_DATA_ADVANCE = { VisitorFirstName: 'Joe', AccountNumberLastFourDigits: '1234', PaymentMethod: paymentMethodEnum.DIRECT_BANK_PAYMENT.value, IsAdvanceClaim: true }
 const PAYOUT_DATA_ADVANCE = { VisitorFirstName: 'Joe', PaymentMethod: paymentMethodEnum.PAYOUT.value, Town: 'Town', Prison: prisonsEnum.HEWELL.value, IsAdvanceClaim: true }
 
-var sendAcceptedClaimNotification
+let sendAcceptedClaimNotification
 
 describe('services/send-accepted-claim-notification', function () {
   beforeEach(function () {

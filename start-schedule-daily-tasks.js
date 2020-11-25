@@ -2,13 +2,13 @@ const config = require('./config')
 const log = require('./app/services/log')
 const Promise = require('bluebird')
 
-var CronJob = require('cron').CronJob
-var insertTask = require('./app/services/data/insert-task')
-var dailyTasksCron = config.DAILY_TASKS_CRON
-var taskTypes = require('./app/constants/tasks-enum')
+const CronJob = require('cron').CronJob
+const insertTask = require('./app/services/data/insert-task')
+const dailyTasksCron = config.DAILY_TASKS_CRON
+const taskTypes = require('./app/constants/tasks-enum')
 
 // This script inserts daily tasks according to a CRON config value (e.g. every morning at 5am)
-var dailyTasksJob = new CronJob({
+const dailyTasksJob = new CronJob({
   cronTime: dailyTasksCron,
   onTick: function () {
     log.info('CRON triggered - initiating run of daily tasks generation...')

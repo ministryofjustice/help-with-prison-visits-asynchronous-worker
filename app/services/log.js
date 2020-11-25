@@ -6,11 +6,11 @@ const logsPath = config.LOGGING_PATH || 'logs/asynchronous-worker.log'
 const logsLevel = config.LOGGING_LEVEL
 
 // Stream to handle pretty printing of Bunyan logs to stdout.
-var prettyStream = new PrettyStream()
+const prettyStream = new PrettyStream()
 prettyStream.pipe(process.stdout)
 
 // Create a base logger for the application.
-var log = bunyan.createLogger({
+const log = bunyan.createLogger({
   name: 'asynchronous-worker',
   streams: [],
   serializers: {

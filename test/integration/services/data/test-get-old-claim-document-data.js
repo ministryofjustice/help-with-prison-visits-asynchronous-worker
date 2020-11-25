@@ -8,19 +8,19 @@ const testHelper = require('../../../test-helper')
 const getOldClaimDocumentData = require('../../../../app/services/data/get-old-claim-document-data')
 
 describe('services/data/get-old-claim-document-data', function () {
-  var maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
-  var reference1 = 'GETDOC1'
-  var reference2 = 'GETDOC2'
-  var reference3 = 'GETDOC3'
-  var reference4 = 'GETDOC4'
-  var claimId1
-  var claimId2
-  var claimId3
-  var claimId4
+  const maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
+  const reference1 = 'GETDOC1'
+  const reference2 = 'GETDOC2'
+  const reference3 = 'GETDOC3'
+  const reference4 = 'GETDOC4'
+  let claimId1
+  let claimId2
+  let claimId3
+  let claimId4
 
-  var dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
-  var olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
-  var lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
+  const dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
+  const olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
+  const lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
   before(function () {
     return Promise.all([
@@ -50,8 +50,8 @@ describe('services/data/get-old-claim-document-data', function () {
   it('should retrieve claim document records past the date threshold', function () {
     return getOldClaimDocumentData(dateThreshold)
       .then(function (results) {
-        var claimDocument1Found = claimDocumentsExist(claimId1, results)
-        var claimDocument2Found = claimDocumentsExist(claimId2, results)
+        const claimDocument1Found = claimDocumentsExist(claimId1, results)
+        const claimDocument2Found = claimDocumentsExist(claimId2, results)
 
         expect(claimDocument1Found).to.be.true //eslint-disable-line
         expect(claimDocument2Found).to.be.true //eslint-disable-line
@@ -61,8 +61,8 @@ describe('services/data/get-old-claim-document-data', function () {
   it('should not retrieve claim records within the date threshold', function () {
     return getOldClaimDocumentData(dateThreshold)
       .then(function (results) {
-        var claimDocument3Found = claimDocumentsExist(claimId3, results)
-        var claimDocument4Found = claimDocumentsExist(claimId4, results)
+        const claimDocument3Found = claimDocumentsExist(claimId3, results)
+        const claimDocument4Found = claimDocumentsExist(claimId4, results)
 
         expect(claimDocument3Found).to.be.false //eslint-disable-line
         expect(claimDocument4Found).to.be.false //eslint-disable-line
@@ -80,7 +80,7 @@ describe('services/data/get-old-claim-document-data', function () {
 })
 
 function createTestData (ref, dateSubmitted, deleteEligibility) {
-  var returnObject = {}
+  const returnObject = {}
 
   return testHelper.insertClaimEligibilityData('ExtSchema', ref)
     .then(function (ids) {
@@ -116,7 +116,7 @@ function deleteFromTable (eligibilityId, tableName) {
 }
 
 function claimDocumentsExist (value, collection) {
-  var result = collection.filter(function (item) {
+  const result = collection.filter(function (item) {
     return item.ClaimId === value
   })
 

@@ -19,18 +19,18 @@ const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
 const SINGLE_UPLOADED_DOCUMENT = [{ ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded' }]
 const EMAIL_ADDRESS = 'test@test.com'
 
-var moveClaimDocumentsToInternal
-var getAllClaimData
-var updateClaimStatus
-var insertClaimEvent
-var generateClaimUpdatedString
-var autoApprovalProcess
-var updateBankDetails
-var getVisitorEmailAddress
-var insertTask
-var transactionHelper
+let moveClaimDocumentsToInternal
+let getAllClaimData
+let updateClaimStatus
+let insertClaimEvent
+let generateClaimUpdatedString
+let autoApprovalProcess
+let updateBankDetails
+let getVisitorEmailAddress
+let insertTask
+let transactionHelper
 
-var requestInformationResponse
+let requestInformationResponse
 
 describe('services/workers/request-information-response', function () {
   beforeEach(function () {

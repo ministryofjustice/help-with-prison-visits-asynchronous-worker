@@ -6,11 +6,11 @@ const paymentMethods = require('../../../../app/constants/payment-method-enum')
 const getTopUpsPendingPayment = require('../../../../app/services/data/get-topups-pending-payment')
 
 describe('services/data/get-topups-pending-payment', function () {
-  var reference = 'TOPUP'
-  var claimId
+  const reference = 'TOPUP'
+  let claimId
 
-  var expectedBankTopups
-  var expectedVoucherTopups = [
+  let expectedBankTopups
+  let expectedVoucherTopups = [
     [1971804226, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP']
   ]
   function beforeDataCreation () {
@@ -64,7 +64,7 @@ describe('services/data/get-topups-pending-payment', function () {
     it('should retrieve only APPROVED claim records with payment status of NULL', function () {
       return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
         .then(function (results) {
-          var result = results.pop()
+          const result = results.pop()
           results.push(result.slice(0, result.length - 1))
           expect(results).to.eql(expectedVoucherTopups)
         })

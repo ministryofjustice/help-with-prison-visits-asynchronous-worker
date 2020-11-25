@@ -6,15 +6,15 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const CLAIM_ID_1 = 1
 const CLAIM_ID_2 = 2
 
-var config = { ARCHIVE_CLAIMS_AFTER_DAYS: '10' }
-var tenDaysAgo = dateFormatter.now().subtract(10, 'day')
-var tenDaysAgoMinus5mins = tenDaysAgo.subtract(5, 'minute').toDate()
-var tenDaysAgoPlus5mins = tenDaysAgo.add(10, 'minute').toDate()
+const config = { ARCHIVE_CLAIMS_AFTER_DAYS: '10' }
+const tenDaysAgo = dateFormatter.now().subtract(10, 'day')
+const tenDaysAgoMinus5mins = tenDaysAgo.subtract(5, 'minute').toDate()
+const tenDaysAgoPlus5mins = tenDaysAgo.add(10, 'minute').toDate()
 
-var getAllClaimsOlderThanDate
-var insertTask
+let getAllClaimsOlderThanDate
+let insertTask
 
-var archiveOldClaims
+let archiveOldClaims
 
 describe('services/workers/archive-old-claims', function () {
   beforeEach(function () {

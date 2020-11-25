@@ -12,14 +12,14 @@ const END_DATE = new Date('1930-12-08 23:59')
 
 describe('services/data/get-number-of-submitted-claims-for-date-range', function () {
   before(function () {
-    var claim1 = testHelper.getClaimData(REFERENCE).Claim
+    const claim1 = testHelper.getClaimData(REFERENCE).Claim
     claim1.DateSubmitted = new Date('1930-12-08 10:00')
 
-    var claim2 = testHelper.getClaimData(REFERENCE).Claim
+    const claim2 = testHelper.getClaimData(REFERENCE).Claim
     claim2.ClaimId = claim1.ClaimId + 1
     claim2.DateSubmitted = new Date('1930-12-08 23:00')
 
-    var claim3 = testHelper.getClaimData(REFERENCE).Claim
+    const claim3 = testHelper.getClaimData(REFERENCE).Claim
     claim3.ClaimId = claim1.ClaimId + 2
     claim3.DateSubmitted = new Date('1930-12-07 20:00')
 
@@ -36,8 +36,8 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
   })
 
   it('should return zero when no claims', function () {
-    var noClaimsStartDate = new Date('1900-01-01')
-    var noClaimsEndDate = new Date('1900-01-01 23:59')
+    const noClaimsStartDate = new Date('1900-01-01')
+    const noClaimsEndDate = new Date('1900-01-01 23:59')
 
     return getNumberOfSubmittedClaimsForDateRange(noClaimsStartDate, noClaimsEndDate)
       .then(function (submittedClaimCount) {

@@ -12,18 +12,18 @@ const topUpPaymentAmount2 = 20.22
 const topUpPaymentAmount3 = 10.99
 const total = '155.42'
 
-var claimsPendingPayment = [
+const claimsPendingPayment = [
   ['999997', '223344', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234'],
   ['999998', '334455', '87654321', 'Ada Lovelace', claimPaymentAmount2.toString(), 'REF4567'],
   ['999999', '998877', '54321678', 'Grace Hopper', claimPaymentAmount3.toString(), 'REF9876']
 ]
-var topUpsPendingPayment = [
+const topUpsPendingPayment = [
   ['123456', '223344', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234'],
   ['123457', '334455', '87654321', 'Ada Lovelace', topUpPaymentAmount2.toString(), 'REF4567'],
   ['123458', '998877', '54321678', 'Grace Hopper', topUpPaymentAmount3.toString(), 'REF9876']
 ]
 
-var payments = [
+const payments = [
   ['223344', '12345678', 'Alan Turing', '45.5', 'REF1234'],
   ['334455', '87654321', 'Ada Lovelace', '22.22', 'REF4567'],
   ['998877', '54321678', 'Grace Hopper', '13.99', 'REF9876'],
@@ -32,20 +32,20 @@ var payments = [
   ['998877', '54321678', 'Grace Hopper', '10.99', 'REF9876']
 ]
 
-var claimsMissingData = [['', '', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234']]
-var topUpMissingData = [['', '', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234']]
+const claimsMissingData = [['', '', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234']]
+const topUpMissingData = [['', '', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234']]
 
-var testPath = 'data/payments/test.csv'
-var testAdiPath = 'data/payments/adi.xlsm'
+const testPath = 'data/payments/test.csv'
+const testAdiPath = 'data/payments/adi.xlsm'
 
-var generateDirectPayments
-var getClaimsPendingPayment
-var createPaymentFile
-var createAdiJournalFile
-var insertDirectBankPayments
-var getTopUpsPendingPayment
-var updateAllTopupsProcessedPayment
-var updateAllClaimsProcessedPayment
+let generateDirectPayments
+let getClaimsPendingPayment
+let createPaymentFile
+let createAdiJournalFile
+let insertDirectBankPayments
+let getTopUpsPendingPayment
+let updateAllTopupsProcessedPayment
+let updateAllClaimsProcessedPayment
 
 describe('services/workers/generate-direct-payments', function () {
   beforeEach(function () {

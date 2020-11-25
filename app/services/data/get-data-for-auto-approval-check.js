@@ -6,7 +6,7 @@ const moment = require('moment')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId) {
-  var claimData
+  let claimData
 
   return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
     .then(function (data) { claimData = data })
@@ -18,10 +18,10 @@ module.exports = function (reference, eligibilityId, claimId) {
       claimData.latestManualClaim = getLatestManualClaim(claimData.previousClaims)
     })
     .then(function () {
-      var visitDateMoment = moment(claimData.Claim.DateOfJourney)
-      var month = visitDateMoment.format('M')
-      var day = visitDateMoment.format('D')
-      var year = visitDateMoment.format('YYYY')
+      const visitDateMoment = moment(claimData.Claim.DateOfJourney)
+      const month = visitDateMoment.format('M')
+      const day = visitDateMoment.format('D')
+      const year = visitDateMoment.format('YYYY')
       return getEligibilityIds(day, month, year)
     })
     .then(function (eligibilityIds) {
@@ -42,11 +42,11 @@ function getPreviousClaims (claimId, eligibilityId) {
 
 function getLatestManuallyApprovedClaim (previousClaims) {
   if (previousClaims.length > 0) {
-    var result = {}
-    var latestManuallyApprovedClaim = null
+    let result = {}
+    let latestManuallyApprovedClaim = null
 
     previousClaims.forEach(function (previousClaim) {
-      var previousClaimIsApproved = previousClaim.DateReviewed &&
+      const previousClaimIsApproved = previousClaim.DateReviewed &&
         previousClaim.Status === statusEnum.APPROVED &&
         !previousClaim.IsAdvanceClaim
 
@@ -78,12 +78,12 @@ function getLatestManuallyApprovedClaim (previousClaims) {
 }
 
 function getLatestManualClaim (previousClaims) {
-  var result = {}
+  let result = {}
   if (previousClaims.length > 0) {
-    var latestManualClaim = null
+    let latestManualClaim = null
 
     previousClaims.forEach(function (previousClaim) {
-      var previousClaimIsApprovedOrRejected = previousClaim.DateReviewed &&
+      const previousClaimIsApprovedOrRejected = previousClaim.DateReviewed &&
         (previousClaim.Status === statusEnum.APPROVED || previousClaim.Status === 'REJECTED') &&
         !previousClaim.IsAdvanceClaim
 
@@ -109,11 +109,11 @@ function getClaimExpenses (claimId) {
 }
 
 function getEligibilityIds (day, month, year) {
-  var dateOfJourney = dateFormatter.buildFormatted(day, month, year)
+  const dateOfJourney = dateFormatter.buildFormatted(day, month, year)
 
   return knex.raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney])
     .then(function (results) {
-      var eligibilityIds = []
+      const eligibilityIds = []
 
       results.forEach(function (result) {
         eligibilityIds.push(result.EligibilityId)
@@ -126,7 +126,7 @@ function getEligibilityIds (day, month, year) {
 function getPrisonNumberFromEligibilityId (eligibilityIds) {
   return knex('IntSchema.Prisoner').whereIn('EligibilityId', eligibilityIds).select('PrisonNumber')
     .then(function (results) {
-      var prisonNumbers = []
+      const prisonNumbers = []
 
       results.forEach(function (result) {
         prisonNumbers.push(result.PrisonNumber)

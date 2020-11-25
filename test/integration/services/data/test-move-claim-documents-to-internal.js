@@ -5,14 +5,14 @@ const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-var disableClaimDocument
-var insertClaimEvent
+let disableClaimDocument
+let insertClaimEvent
 
-var moveClaimDocumentsToInternal
+let moveClaimDocumentsToInternal
 
 const REFERENCE = 'MOVDOCU'
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
 describe('services/data/move-claim-documents-to-internal', function () {
   beforeEach(function () {
@@ -21,7 +21,7 @@ describe('services/data/move-claim-documents-to-internal', function () {
         eligibilityId = ids.eligibilityId
         claimId = ids.claimId
 
-        var claimData = testHelper.getClaimData(REFERENCE)
+        const claimData = testHelper.getClaimData(REFERENCE)
         claimData.ClaimDocument[1].IsEnabled = false
 
         disableClaimDocument = sinon.stub().resolves()

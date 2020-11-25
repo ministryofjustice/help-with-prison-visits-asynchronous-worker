@@ -5,7 +5,7 @@ const testHelper = require('../../../test-helper')
 const updateClaimTotalAmount = require('../../../../app/services/data/update-claim-total-amount')
 describe('services/data/update-claim-total-amount', function () {
   const REFERENCE = 'UPDATE12'
-  var claimId
+  let claimId
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
