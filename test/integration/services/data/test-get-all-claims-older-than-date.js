@@ -9,11 +9,11 @@ const getAllClaimsOldersThanDate = require('../../../../app/services/data/get-al
 
 const REFERENCE = 'OLDCLMS'
 
-var claimId
-var eligibilityId
-var claim2
-var claim3
-var olderThanDate = dateFormatter.now().subtract(365, 'days').toDate()
+let claimId
+let eligibilityId
+let claim2
+let claim3
+const olderThanDate = dateFormatter.now().subtract(365, 'days').toDate()
 
 describe('services/data/get-all-claims-older-than-date', function () {
   before(function () {
@@ -41,7 +41,7 @@ describe('services/data/get-all-claims-older-than-date', function () {
   it('should return claims with date reviewed older than date', function () {
     return getAllClaimsOldersThanDate(olderThanDate)
       .then(function (claimIds) {
-        var expectedClaimIds = claimIds.filter(function (result) { // filter to remove old test claims
+        const expectedClaimIds = claimIds.filter(function (result) { // filter to remove old test claims
           return result.ClaimId === claim2.ClaimId || result.ClaimId === claim3.ClaimId
         })
 

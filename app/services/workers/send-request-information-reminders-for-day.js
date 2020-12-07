@@ -6,11 +6,11 @@ const tasksEnum = require('../../constants/tasks-enum')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
-  var dateCreated = task.dateCreated
-  var numberOfDaysPendingForFinalReminder = parseInt(config.NUMBER_OF_DAYS_PENDING_FOR_FINAL_REMINDER)
+  const dateCreated = task.dateCreated
+  const numberOfDaysPendingForFinalReminder = parseInt(config.NUMBER_OF_DAYS_PENDING_FOR_FINAL_REMINDER)
 
   // Get date range of Advance Claims with DateOfJourney which require reminders
-  var reminderCutoffDate = moment(dateCreated).clone().startOf('day').subtract(numberOfDaysPendingForFinalReminder, 'days').format('YYYY-MM-DD')
+  const reminderCutoffDate = moment(dateCreated).clone().startOf('day').subtract(numberOfDaysPendingForFinalReminder, 'days').format('YYYY-MM-DD')
 
   return getAllClaimsPendingForFiveWeeks(reminderCutoffDate)
     .then(function (openClaims) {
@@ -19,7 +19,7 @@ module.exports.execute = function (task) {
 }
 
 function sendReminder (openClaims) {
-  var promises = []
+  const promises = []
 
   openClaims.forEach(function (claim) {
     promises.push(insertTaskToSendClaimReminderNotification(claim))

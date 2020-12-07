@@ -1,7 +1,7 @@
 module.exports.getKeyByValue = function (enumeration, value) {
-  var result = null
+  let result = null
   Object.keys(enumeration).forEach(function (key) {
-    var element = enumeration[key]
+    const element = enumeration[key]
     if (typeof element === 'object' && element.value === value) {
       result = element
     }

@@ -2,12 +2,12 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-var getAllClaimData
-var callDistanceApiForPostcodes
-var updateExpenseForDistanceCalculation
-var getAutoApprovalConfig
+let getAllClaimData
+let callDistanceApiForPostcodes
+let updateExpenseForDistanceCalculation
+let getAutoApprovalConfig
 
-var calculateCarExpenseCosts
+let calculateCarExpenseCosts
 
 const REFERENCE = '1234567'
 const ELIGIBILITY_ID = '4321'
@@ -46,7 +46,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   })
 
   it('should not call if config is disabled', function () {
-    var calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
+    const calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
     return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).to.be.false //eslint-disable-line
@@ -65,7 +65,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   it('should call distance API and update claim for car expense', function () {
     const COST = 80.78
     const DISTANCE = 6.21371
-    var distanceInKm = 10.0
+    const distanceInKm = 10.0
 
     getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
     callDistanceApiForPostcodes.resolves(distanceInKm)
@@ -81,7 +81,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
   it('should not set cost if distance over max', function () {
     const DISTANCE = 776.71375
-    var distanceInKm = 1250
+    const distanceInKm = 1250
 
     getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
     callDistanceApiForPostcodes.resolves(distanceInKm)

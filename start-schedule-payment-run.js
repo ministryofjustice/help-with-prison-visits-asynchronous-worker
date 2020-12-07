@@ -1,12 +1,12 @@
 const config = require('./config')
 const log = require('./app/services/log')
-var CronJob = require('cron').CronJob
-var insertTask = require('./app/services/data/insert-task')
-var paymentCron = config.PAYMENT_GENERATION_CRON
-var taskTypes = require('./app/constants/tasks-enum')
+const CronJob = require('cron').CronJob
+const insertTask = require('./app/services/data/insert-task')
+const paymentCron = config.PAYMENT_GENERATION_CRON
+const taskTypes = require('./app/constants/tasks-enum')
 
 // This script inserts a payment run task according to a CRON config value (e.g. every morning at 5am)
-var directPaymentJob = new CronJob({
+const directPaymentJob = new CronJob({
   cronTime: paymentCron,
   onTick: function () {
     log.info('CRON triggered - initiating run of payments generation...')

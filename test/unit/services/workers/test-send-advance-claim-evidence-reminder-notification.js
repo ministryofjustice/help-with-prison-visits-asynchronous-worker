@@ -14,11 +14,11 @@ const FIRST_NAME = 'Joe'
 const dateOfJourney = new Date('2016-02-01')
 const dateOfJourneyString = '1 February 2016'
 
-var stubGetClaim
-var stubSendNotification
-var stubGetFirstNameByClaimId
+let stubGetClaim
+let stubSendNotification
+let stubGetFirstNameByClaimId
 
-var sendRequestInformationClaimNotification
+let sendRequestInformationClaimNotification
 
 describe('services/send-advance-claim-evidence-reminder-notification', function () {
   beforeEach(function () {

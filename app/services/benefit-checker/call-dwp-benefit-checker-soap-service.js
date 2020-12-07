@@ -16,7 +16,7 @@ module.exports = function (visitorDwpBenefitCheckerData) {
     })
   }
 
-  var options = {
+  const options = {
     method: 'POST',
     uri: config.DWP_BENEFIT_CHECKER_URL,
     rejectUnauthorized: false, // Would require injecting valid certificate subject to change
@@ -31,10 +31,10 @@ module.exports = function (visitorDwpBenefitCheckerData) {
     .then(function (responseBody) {
       return parseStringAsync(responseBody)
         .then(function (xml) {
-          var result = xpath.find(xml, '//ns2:benefitCheckerStatus')
+          const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
 
           if (result && result[0] && result[0]._) {
-            var status = result[0]._.toString().toUpperCase()
+            const status = result[0]._.toString().toUpperCase()
             return {
               visitorId: visitorDwpBenefitCheckerData.visitorId,
               result: status

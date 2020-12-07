@@ -7,12 +7,13 @@ const VISIT_CONFIRMATION_DOC_TYPE = 'VISIT-CONFIRMATION'
 const UPLOADED_DOC_STATUS = 'uploaded'
 
 module.exports = function (autoApprovalData) {
+  let checkPassed
   if (autoApprovalData.ClaimDocument) {
-    var prisonVisitConfirmationUploaded = false
-    var allRequiredDocumentsUploaded = true
+    let prisonVisitConfirmationUploaded = false
+    let allRequiredDocumentsUploaded = true
 
-    for (var i = 0; i < autoApprovalData.ClaimDocument.length; i++) {
-      var claimDocument = autoApprovalData.ClaimDocument[i]
+    for (let i = 0; i < autoApprovalData.ClaimDocument.length; i++) {
+      const claimDocument = autoApprovalData.ClaimDocument[i]
 
       if (claimDocument.DocumentType === VISIT_CONFIRMATION_DOC_TYPE) {
         prisonVisitConfirmationUploaded = claimDocument.DocumentStatus === UPLOADED_DOC_STATUS
@@ -21,7 +22,7 @@ module.exports = function (autoApprovalData) {
       }
     }
 
-    var checkPassed = prisonVisitConfirmationUploaded && allRequiredDocumentsUploaded
+    checkPassed = prisonVisitConfirmationUploaded && allRequiredDocumentsUploaded
   }
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)

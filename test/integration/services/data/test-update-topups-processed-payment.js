@@ -9,12 +9,12 @@ const getTopUpsPendingPayment = require('../../../../app/services/data/get-topup
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
 const processedStatus = 'PROCESSED'
-var paymentDate = moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+const paymentDate = moment().format('YYYY-MM-DD HH:mm:ss.SSS')
 
 describe('services/data/update-topups-processed-payment', function () {
   // TODO update to test methods processes multiple claim by ClaimId not Reference
-  var referenceA = 'PROCESS'
-  var claimId
+  const referenceA = 'PROCESS'
+  let claimId
 
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', referenceA)

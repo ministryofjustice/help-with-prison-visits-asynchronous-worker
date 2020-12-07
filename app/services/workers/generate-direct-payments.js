@@ -15,13 +15,13 @@ const checkForAccountNumberAndSortCode = require('./helpers/payments/direct/chec
 const getTotalFromPaymentData = require('./helpers/payments/direct/get-total-from-payment-data')
 
 module.exports.execute = function () {
-  var claimIds
-  var topUpClaimIds
-  var total
+  let claimIds
+  let topUpClaimIds
+  let total
 
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
-      var claimIdIndex = 0
+      const claimIdIndex = 0
       if (paymentData.length > 0) {
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
       }
@@ -32,7 +32,7 @@ module.exports.execute = function () {
           }
           paymentData = combinePaymentWithTopups(paymentData, topupData)
           if (paymentData.length > 0) {
-            var missingData = checkForAccountNumberAndSortCode(paymentData)
+            const missingData = checkForAccountNumberAndSortCode(paymentData)
             if (missingData) {
               log.error(`Data is missing from direct payment ${paymentData}`)
               return Promise.reject(new Error('Data is missing'))

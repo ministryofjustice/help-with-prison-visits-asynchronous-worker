@@ -7,16 +7,16 @@ const reminderEnum = require('../../constants/advance-claim-reminder-enum')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
-  var dateCreated = task.dateCreated
-  var numberOfDaysAfterDateOfJourneyForReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER)
-  var numberOfDaysAfterDateOfJourneyForSecondReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER)
+  const dateCreated = task.dateCreated
+  const numberOfDaysAfterDateOfJourneyForReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER)
+  const numberOfDaysAfterDateOfJourneyForSecondReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER)
 
   // Get date range of Advance Claims with DateOfJourney which require reminders
-  var startDateFirst = moment(dateCreated).startOf('day').subtract(numberOfDaysAfterDateOfJourneyForReminder, 'days').toDate()
-  var endDateFirst = moment(dateCreated).endOf('day').subtract(numberOfDaysAfterDateOfJourneyForReminder, 'days').toDate()
+  const startDateFirst = moment(dateCreated).startOf('day').subtract(numberOfDaysAfterDateOfJourneyForReminder, 'days').toDate()
+  const endDateFirst = moment(dateCreated).endOf('day').subtract(numberOfDaysAfterDateOfJourneyForReminder, 'days').toDate()
 
-  var startDateSecond = moment(dateCreated).startOf('day').subtract(numberOfDaysAfterDateOfJourneyForSecondReminder, 'days').toDate()
-  var endDateSecond = moment(dateCreated).endOf('day').subtract(numberOfDaysAfterDateOfJourneyForSecondReminder, 'days').toDate()
+  const startDateSecond = moment(dateCreated).startOf('day').subtract(numberOfDaysAfterDateOfJourneyForSecondReminder, 'days').toDate()
+  const endDateSecond = moment(dateCreated).endOf('day').subtract(numberOfDaysAfterDateOfJourneyForSecondReminder, 'days').toDate()
 
   return Promise.all([
     getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(startDateFirst, endDateFirst)
@@ -31,7 +31,7 @@ module.exports.execute = function (task) {
 }
 
 function insertTasksToSendAdvanceClaimEvidenceReminderNotification (openAdvanceClaims, reminder) {
-  var promises = []
+  const promises = []
 
   openAdvanceClaims.forEach(function (claim) {
     promises.push(insertTaskToSendAdvanceClaimEvidenceReminderNotification(claim, reminder))

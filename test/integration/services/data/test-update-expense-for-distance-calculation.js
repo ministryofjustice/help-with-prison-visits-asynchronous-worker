@@ -12,8 +12,8 @@ describe('services/data/update-expense-for-distance-calculation', function () {
   const DISTANCE = 123.33
   const COST = 10.45
 
-  var claimId
-  var claimExpenseId
+  let claimId
+  let claimExpenseId
 
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)

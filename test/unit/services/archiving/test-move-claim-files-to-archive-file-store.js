@@ -14,15 +14,15 @@ const ARCHIVE_LOCATION = '/archive'
 
 const ELIGIBILITY_DIR = 'penson-credit'
 
-var moveClaimFilesToArchiveFileStore
+let moveClaimFilesToArchiveFileStore
 
-var mv
-var fs
-var sourceDirectory
-var targetDirectory
-var calledMove = false
-var calledFsReaddirSync = false
-var calledFsRmdirSync = false
+let mv
+let fs
+let sourceDirectory
+let targetDirectory
+let calledMove = false
+let calledFsReaddirSync = false
+let calledFsRmdirSync = false
 
 describe('services/archiving/move-claim-files-to-archive-file-store', function () {
   beforeEach(function () {
@@ -47,7 +47,7 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
       }
     }
 
-    var config = { FILE_UPLOAD_LOCATION: UPLOAD_LOCATION, FILE_ARCHIVE_LOCATION: ARCHIVE_LOCATION }
+    const config = { FILE_UPLOAD_LOCATION: UPLOAD_LOCATION, FILE_ARCHIVE_LOCATION: ARCHIVE_LOCATION }
 
     moveClaimFilesToArchiveFileStore = proxyquire('../../../../app/services/archiving/move-claim-files-to-archive-file-store', {
       mv: mv,

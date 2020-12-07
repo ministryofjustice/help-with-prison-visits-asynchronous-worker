@@ -3,7 +3,7 @@ const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const areChildrenUnder18 = require('../../../../../app/services/auto-approval/checks/are-children-under-18')
 
-var autoApprovalDataClaimChildrenOver18 = {
+const autoApprovalDataClaimChildrenOver18 = {
   ClaimChildren: [
     {
       DateOfBirth: dateFormatter.now().subtract(17, 'years').toDate()
@@ -14,7 +14,7 @@ var autoApprovalDataClaimChildrenOver18 = {
   ]
 }
 
-var autoApprovalDataClaimChildrenUnder18 = {
+const autoApprovalDataClaimChildrenUnder18 = {
   ClaimChildren: [
     {
       ClaimChildId: 798118115,
@@ -41,23 +41,23 @@ var autoApprovalDataClaimChildrenUnder18 = {
   ]
 }
 
-var childlessAutoApprovalClaimData = {
+const childlessAutoApprovalClaimData = {
   ClaimChildren: []
 }
 
 describe('services/auto-approval/checks/are-children-under-18', function () {
   it('should return false if any children associated to the claim are over 18 years old', function () {
-    var checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenOver18)
+    const checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenOver18)
     expect(checkResult.result).to.equal(false)
   })
 
   it('should return true if all children associated to the claim are under 18 years old', function () {
-    var checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenUnder18)
+    const checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenUnder18)
     expect(checkResult.result).to.equal(true)
   })
 
   it('should return true if no children associated to the claim', function () {
-    var checkResult = areChildrenUnder18(childlessAutoApprovalClaimData)
+    const checkResult = areChildrenUnder18(childlessAutoApprovalClaimData)
     expect(checkResult.result).to.equal(true)
   })
 })

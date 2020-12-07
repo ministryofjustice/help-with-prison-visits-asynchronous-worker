@@ -6,8 +6,8 @@ const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-var insertClaimEventStub = sinon.stub().resolves()
-var updateContactDetailsStub = sinon.stub().resolves()
+const insertClaimEventStub = sinon.stub().resolves()
+const updateContactDetailsStub = sinon.stub().resolves()
 
 const copyClaimDataToInternal = proxyquire('../../../../app/services/data/copy-claim-data-to-internal', {
   './insert-claim-event': insertClaimEventStub,
@@ -19,7 +19,7 @@ const claimId = 123
 
 describe('services/data/copy-claim-data-to-internal', function () {
   describe('first time claim', function () {
-    var firstTimeClaimData = testHelper.getClaimData(reference)
+    const firstTimeClaimData = testHelper.getClaimData(reference)
 
     it('should copy the first time claim data to internal and set status to new', function () {
       return knex.transaction(function (trx) {

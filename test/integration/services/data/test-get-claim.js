@@ -3,7 +3,7 @@ const getClaim = require('../../../../app/services/data/get-claim')
 const testHelper = require('../../../test-helper')
 
 const REFERENCE = 'GETCLM1'
-var claimId
+let claimId
 
 describe('services/data/get-claim', function () {
   before(function () {

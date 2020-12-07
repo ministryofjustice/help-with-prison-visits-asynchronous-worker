@@ -31,13 +31,13 @@ const OLD_CLAIM_DOCUMENT_DATA = [
   }
 ]
 
-var getOldEligibilityDataStub
-var getOldClaimDataStub
-var getOldClaimDocumentDataStub
-var deleteClaimFromExternalAsTransactionStub
-var deleteOldFilesStub
+let getOldEligibilityDataStub
+let getOldClaimDataStub
+let getOldClaimDocumentDataStub
+let deleteClaimFromExternalAsTransactionStub
+let deleteOldFilesStub
 
-var cleanupOldData
+let cleanupOldData
 
 describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {

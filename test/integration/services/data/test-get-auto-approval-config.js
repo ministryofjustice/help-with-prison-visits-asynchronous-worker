@@ -1,15 +1,15 @@
-var expect = require('chai').expect
-var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
+const expect = require('chai').expect
+const getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
 
-var knexConfig = require('../../../../knexfile').asyncworker
-var knex = require('knex')(knexConfig)
-var config = require('../../../../config')
-var dateFormatter = require('../../../../app/services/date-formatter')
+const knexConfig = require('../../../../knexfile').asyncworker
+const knex = require('knex')(knexConfig)
+const config = require('../../../../config')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
-var insertedIds
+let insertedIds
 
 describe('services/data/get-auto-approval-config', function () {
-  var existingAutoApprovalId
+  let existingAutoApprovalId
 
   before(function () {
     return getCurrentAutoApprovalConfigId()

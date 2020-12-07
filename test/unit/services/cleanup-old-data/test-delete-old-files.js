@@ -9,11 +9,11 @@ const CLAIM_DOCUMENT_FILEPATH = [{ Filepath: '1' }]
 const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
-var fs
-var getClaimDocuments
-var calledFsUnlinkSync = false
+let fs
+let getClaimDocuments
+let calledFsUnlinkSync = false
 
-var deleteOldFiles
+let deleteOldFiles
 
 describe('services/cleanup-old-data/delete-old-files', function () {
   beforeEach(function () {

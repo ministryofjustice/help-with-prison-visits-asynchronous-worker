@@ -6,13 +6,13 @@ const CHECK_NAME = 'is-benefit-expiry-date-in-future'
 const FAILURE_MESSAGE = 'The visit date is after the benefit expiry date'
 
 module.exports = function (autoApprovalData) {
-  var benefitExpiryDate = null
+  let benefitExpiryDate = null
   if (autoApprovalData.Visitor.BenefitExpiryDate) {
     benefitExpiryDate = moment(autoApprovalData.Visitor.BenefitExpiryDate)
   }
-  var dateOfJourney = moment(autoApprovalData.Claim.DateOfJourney)
+  const dateOfJourney = moment(autoApprovalData.Claim.DateOfJourney)
 
-  var checkPassed = false
+  let checkPassed = false
   if (benefitExpiryDate) {
     checkPassed = benefitExpiryDate.isAfter(dateOfJourney)
   } else {

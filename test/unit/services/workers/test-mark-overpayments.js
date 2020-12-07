@@ -3,11 +3,11 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 describe('services/workers/mark-overpayments', function () {
-  var markOverpayments
-  var getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub
-  var updateOverpaymentStatusStub
+  let markOverpayments
+  let getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub
+  let updateOverpaymentStatusStub
 
-  var config = { MARK_AS_OVERPAYMENT_DAYS: '10' }
+  const config = { MARK_AS_OVERPAYMENT_DAYS: '10' }
 
   const claim1 = { ClaimId: 1, Reference: 'MARKING', Amount: 100 }
   const claim2 = { ClaimId: 2, Reference: 'M@RKING', Amount: 104 }

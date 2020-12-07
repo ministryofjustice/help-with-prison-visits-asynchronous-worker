@@ -10,8 +10,8 @@ const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const FIRST_NAME = 'Joe'
 
-var stubSendNotification = sinon.stub().resolves()
-var stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
+const stubSendNotification = sinon.stub().resolves()
+const stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
 
 const sendUpdatedContactDetailsClaimNotification = proxyquire('../../../../app/services/workers/send-updated-contact-details-claim-notification', {
   '../notify/send-notification': stubSendNotification,

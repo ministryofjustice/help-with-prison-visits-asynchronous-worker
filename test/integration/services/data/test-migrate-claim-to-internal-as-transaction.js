@@ -7,7 +7,7 @@ const testHelper = require('../../../test-helper')
 const migrateClaimToInternalAsTransaction = require('../../../../app/services/data/migrate-claim-to-internal-as-transaction')
 
 const reference = 'MIGR123'
-var claimData
+let claimData
 const log = require('../../../../app/services/log')
 
 describe('services/data/migrate-claim-to-internal-as-transaction', function () {

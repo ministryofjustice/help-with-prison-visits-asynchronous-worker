@@ -9,10 +9,10 @@ module.exports.execute = function (task) {
   log.info(`send-performance-platform-metrics-for-day PERFORMANCE_PLATFORM_SEND_ENABLED: ${config.PERFORMANCE_PLATFORM_SEND_ENABLED}`)
 
   if (config.PERFORMANCE_PLATFORM_SEND_ENABLED === 'true') {
-    var dateCreated = task.dateCreated
+    const dateCreated = task.dateCreated
 
-    var startOfPreviousDayDateCreated = moment(dateCreated).startOf('day').subtract(1, 'days').toDate()
-    var endOfPreviousDayDateCreated = moment(dateCreated).endOf('day').subtract(1, 'days').toDate()
+    const startOfPreviousDayDateCreated = moment(dateCreated).startOf('day').subtract(1, 'days').toDate()
+    const endOfPreviousDayDateCreated = moment(dateCreated).endOf('day').subtract(1, 'days').toDate()
 
     return getNumberOfSubmittedClaimsForDateRange(startOfPreviousDayDateCreated, endOfPreviousDayDateCreated)
       .then(function (submittedClaimCount) {

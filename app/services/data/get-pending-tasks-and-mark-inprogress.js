@@ -9,10 +9,10 @@ module.exports = function (schema, batchSize) {
     .orderBy('DateCreated', 'asc')
     .limit(batchSize)
     .then(function (results) {
-      var tasks = []
-      var ids = []
+      const tasks = []
+      const ids = []
       if (results) {
-        for (var result of results) {
+        for (const result of results) {
           ids.push(result.TaskId)
           tasks.push(new Task(
             result.TaskId,

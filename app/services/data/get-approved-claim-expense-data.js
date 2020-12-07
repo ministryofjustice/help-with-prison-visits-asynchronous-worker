@@ -2,7 +2,7 @@ const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 
 module.exports = function (claimId) {
-  var claimExpenses
+  let claimExpenses
 
   // Get all Claim expenses from database for specified claim id
   return knex('IntSchema.ClaimExpense')
@@ -21,7 +21,7 @@ module.exports = function (claimId) {
 }
 
 function getClaimantData (claimId) {
-  var visitor
+  let visitor
 
   return knex('IntSchema.Visitor')
     .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
@@ -38,25 +38,25 @@ function getClaimantData (claimId) {
         .first()
     })
     .then(function (bankDetails) {
-      var accountNumberLastFourDigits = (bankDetails && bankDetails.AccountNumber
+      const accountNumberLastFourDigits = (bankDetails && bankDetails.AccountNumber
         ? bankDetails.AccountNumber.substr(bankDetails.AccountNumber.length - 4)
         : '')
-      var visitorFirstName = (visitor && visitor.FirstName
+      const visitorFirstName = (visitor && visitor.FirstName
         ? visitor.FirstName
         : '')
-      var paymentMethod = (visitor && visitor.PaymentMethod
+      const paymentMethod = (visitor && visitor.PaymentMethod
         ? visitor.PaymentMethod
         : '')
-      var caseworkerNote = (visitor && visitor.Note
+      const caseworkerNote = (visitor && visitor.Note
         ? visitor.Note
         : '')
-      var town = (visitor && visitor.Town
+      const town = (visitor && visitor.Town
         ? visitor.Town
         : '')
-      var prison = (visitor && visitor.NameOfPrison
+      const prison = (visitor && visitor.NameOfPrison
         ? visitor.NameOfPrison
         : '')
-      var isAdvanceClaim = (visitor && visitor.IsAdvanceClaim
+      const isAdvanceClaim = (visitor && visitor.IsAdvanceClaim
         ? visitor.IsAdvanceClaim
         : '')
 

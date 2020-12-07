@@ -7,12 +7,12 @@ const EMAIL = 'test@test.com'
 const PRISON_NUMBER = 'B123456'
 const FIRST_NAME = 'test'
 
-var additionalData = `${EMAIL}~~${PRISON_NUMBER}`
-var config = { EXTERNAL_SERVICE_URL: 'https://test.com', EXTERNAL_PATH_ALREADY_REGISTERED: '/start-already-registered' }
+const additionalData = `${EMAIL}~~${PRISON_NUMBER}`
+const config = { EXTERNAL_SERVICE_URL: 'https://test.com', EXTERNAL_PATH_ALREADY_REGISTERED: '/start-already-registered' }
 
-var stubReferenceNumberRecovery
-var stubSendNotification
-var referenceRecovery
+let stubReferenceNumberRecovery
+let stubSendNotification
+let referenceRecovery
 
 describe('services/reference-recovery', function () {
   beforeEach(function () {

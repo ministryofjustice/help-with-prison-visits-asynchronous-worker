@@ -3,7 +3,7 @@ const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
-  var autoApproval = {
+  const autoApproval = {
     EligibilityId: eligibilityId,
     Reference: reference,
     ClaimId: claimId,

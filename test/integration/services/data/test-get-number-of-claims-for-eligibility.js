@@ -8,15 +8,15 @@ const getNumberOfClaimsForEligibility = require('../../../../app/services/data/g
 
 const REFERENCE = 'GETNUME'
 
-var eligibilityId
+let eligibilityId
 
 describe('services/data/get-number-of-claims-for-eligibility', function () {
   before(function () {
-    var claim1 = testHelper.getClaimData(REFERENCE).Claim
+    const claim1 = testHelper.getClaimData(REFERENCE).Claim
 
     eligibilityId = claim1.EligibilityId
 
-    var claim2 = testHelper.getClaimData(REFERENCE).Claim
+    const claim2 = testHelper.getClaimData(REFERENCE).Claim
     claim2.ClaimId = claim1.ClaimId + 1
 
     return Promise.all([knex('IntSchema.Claim').insert(claim1), knex('IntSchema.Claim').insert(claim2)])

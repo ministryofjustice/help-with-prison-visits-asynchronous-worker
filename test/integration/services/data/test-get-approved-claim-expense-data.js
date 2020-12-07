@@ -6,11 +6,11 @@ const testHelper = require('../../../test-helper')
 const getApprovedClaimExpenseData = require('../../../../app/services/data/get-approved-claim-expense-data')
 
 describe('services/data/get-approved-claim-expense-data', function () {
-  var reference = 'DWPVISI'
-  var claimId
-  var claimExpenseId1
-  var claimExpenseId2
-  var testData
+  const reference = 'DWPVISI'
+  let claimId
+  let claimExpenseId1
+  let claimExpenseId2
+  let testData
 
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)

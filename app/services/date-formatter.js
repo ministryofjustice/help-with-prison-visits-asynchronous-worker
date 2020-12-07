@@ -10,18 +10,18 @@ exports.format = function (date) {
 }
 
 exports.now = function () {
-  var now = moment()
+  const now = moment()
   return applyDST(now)
 }
 
 exports.build = function (day, month, year) {
   month = month - 1
-  var date = moment([year, month, day])
+  const date = moment([year, month, day])
   return applyDST(date)
 }
 
 exports.buildFormatted = function (day, month, year) {
-  var date = this.build(day, month, year)
+  const date = this.build(day, month, year)
   if (!isValidDate(date)) {
     return INVALID_DATE_ERROR
   }
@@ -32,10 +32,10 @@ exports.buildFromDateString = function (date) {
   if (typeof date !== 'string') {
     return false
   }
-  var dateSplit = date.split('-')
-  var year = dateSplit[0]
-  var month = dateSplit[1]
-  var day = dateSplit[2]
+  const dateSplit = date.split('-')
+  const year = dateSplit[0]
+  const month = dateSplit[1]
+  const day = dateSplit[2]
 
   return this.build(day, month, year)
 }

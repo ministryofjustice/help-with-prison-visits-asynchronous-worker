@@ -2,13 +2,13 @@ const config = require('./config')
 const log = require('./app/services/log')
 const Promise = require('bluebird')
 
-var CronJob = require('cron').CronJob
-var insertTask = require('./app/services/data/insert-task')
-var autoApprovalCron = config.AUTO_APPROVAL_CRON
-var taskTypes = require('./app/constants/tasks-enum')
+const CronJob = require('cron').CronJob
+const insertTask = require('./app/services/data/insert-task')
+const autoApprovalCron = config.AUTO_APPROVAL_CRON
+const taskTypes = require('./app/constants/tasks-enum')
 
 // This script inserts auto approval, according to a CRON config value (e.g. every morning at 5am)
-var autoApprovalJob = new CronJob({
+const autoApprovalJob = new CronJob({
   cronTime: autoApprovalCron,
   onTick: function () {
     log.info('CRON triggered - initiating run of auto approval check')

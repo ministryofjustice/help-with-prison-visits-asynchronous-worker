@@ -4,7 +4,7 @@ const CHECK_NAME = 'claimant-has-not-been-overpaid'
 const FAILURE_MESSAGE = 'This claimant has been flagged as being overpaid on a previous claim'
 
 module.exports = function (autoApprovalData) {
-  var checkPassed = true
+  let checkPassed = true
 
   autoApprovalData.previousClaims.forEach(function (previousClaim) {
     if (previousClaim.IsOverpaid === true) {

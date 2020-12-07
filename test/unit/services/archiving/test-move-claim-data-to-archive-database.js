@@ -7,13 +7,13 @@ const ELIGIBILITY_ID = 4321
 const REFERENCE = 'MOVECLM'
 const CLAIM_DATA = { Claim: { ClaimId: CLAIM_ID } }
 
-var moveClaimDataToArchiveDatabase
+let moveClaimDataToArchiveDatabase
 
-var getClaim
-var getNumberOfClaimsForEligibility
-var getAllClaimData
-var copyClaimDataToArchive
-var deleteClaimFromInternal
+let getClaim
+let getNumberOfClaimsForEligibility
+let getAllClaimData
+let copyClaimDataToArchive
+let deleteClaimFromInternal
 
 describe('services/archiving/move-claim-data-to-archive-database', function () {
   beforeEach(function () {

@@ -7,10 +7,10 @@ const INTSCHEMA = 'IntSchema'
 const EXTSCHEMA = 'ExtSchema'
 
 module.exports = function () {
-  var getCountForStatus = function (schema, status) {
+  const getCountForStatus = function (schema, status) {
     return knex(`${schema}.Task`).count('Status as count').where('Status', status)
       .then(function (countResult) {
-        var count = countResult[0].count
+        const count = countResult[0].count
         return `${schema}-${status}: ${count}`
       })
   }

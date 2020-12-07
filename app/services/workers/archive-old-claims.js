@@ -5,12 +5,12 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 
 module.exports.execute = function (task) {
-  var archiveClaimsAfterDays = parseInt(config.ARCHIVE_CLAIMS_AFTER_DAYS)
-  var archiveClaimsOlderThan = dateFormatter.now().subtract(archiveClaimsAfterDays, 'days').toDate()
+  const archiveClaimsAfterDays = parseInt(config.ARCHIVE_CLAIMS_AFTER_DAYS)
+  const archiveClaimsOlderThan = dateFormatter.now().subtract(archiveClaimsAfterDays, 'days').toDate()
 
   return getAllClaimsOlderThanDate(archiveClaimsOlderThan)
     .then(function (claimIdsToArchive) {
-      var insertArchiveClaimTasks = []
+      const insertArchiveClaimTasks = []
 
       if (claimIdsToArchive) {
         claimIdsToArchive.forEach(function (result) {

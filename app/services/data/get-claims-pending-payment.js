@@ -11,7 +11,7 @@ const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail
   'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country', 'IntSchema.ClaimBankDetail.NameOnAccount',
   'IntSchema.ClaimBankDetail.RollNumber']
 
-var payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
+const payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney']
 
 function getManuallyProcessedExpenseCostsPerClaim (claimIds) {
@@ -24,10 +24,10 @@ function getManuallyProcessedExpenseCostsPerClaim (claimIds) {
 }
 
 function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPerClaim, claimResults) {
-  var promises = []
+  const promises = []
 
   claimResults.forEach(function (claim) {
-    var totalAmount = (claim.TotalApprovedCost - (claim.TotalDeductionAmount || 0))
+    const totalAmount = (claim.TotalApprovedCost - (claim.TotalDeductionAmount || 0))
     claim.PaymentAmount = totalAmount
     manuallyProcessedExpenseCostsPerClaim.forEach(function (manuallyProcessedExpenseCost) {
       if (claim.ClaimId === manuallyProcessedExpenseCost.ClaimId) {
@@ -39,7 +39,7 @@ function subtractManuallyProcessedExpenseCosts (manuallyProcessedExpenseCostsPer
   })
   return Promise.all(promises)
     .then(function () {
-      var claimsWithPositivePaymentAmount = claimResults.filter(function (claim) {
+      const claimsWithPositivePaymentAmount = claimResults.filter(function (claim) {
         return claim.PaymentAmount > 0
       })
       return claimsWithPositivePaymentAmount
@@ -80,12 +80,12 @@ function payoutPaymentsReturn (results) {
 }
 
 module.exports = function (paymentMethod) {
-  var claimResults
-  var rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
+  let claimResults
+  const rawDeductionTotalQuery = '(SELECT SUM(Amount) FROM IntSchema.ClaimDeduction ' +
     'WHERE IntSchema.ClaimDeduction.ClaimId = IntSchema.Claim.ClaimId ' +
     'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
     'AS TotalDeductionAmount'
-  var selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
+  const selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
 
   return knex('IntSchema.Claim')
     .column(knex.raw(rawDeductionTotalQuery))
@@ -103,7 +103,7 @@ module.exports = function (paymentMethod) {
     .whereNull('IntSchema.Claim.PaymentStatus')
     .groupBy(selectColumns)
     .then(function (claims) {
-      var claimIds = []
+      const claimIds = []
       claims.forEach(function (result) { return claimIds.push(result.ClaimId) })
       claimResults = claims
       return getManuallyProcessedExpenseCostsPerClaim(claimIds)

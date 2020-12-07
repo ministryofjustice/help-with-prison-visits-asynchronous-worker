@@ -6,11 +6,11 @@ const tasksEnum = require('../../../../app/constants/tasks-enum')
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 
 describe('services/send-all-advance-claim-reminders-for-day', function () {
-  var sendAllAdvanceClaimRemindersForDay
+  let sendAllAdvanceClaimRemindersForDay
 
-  var config = { NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: '1' }
-  var getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail
-  var insertTask
+  const config = { NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: '1' }
+  let getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail
+  let insertTask
 
   const CLAIMS_WITH_EMAIL = [
     { Reference: 'REF1234', EligibilityId: 1, ClaimId: 1, EmailAddress: 'test1@test.com' },
@@ -29,10 +29,10 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
   })
 
   it('should get open advanced claim reminders within one day of DateOfJourney and create notification tasks', function () {
-    var dateCreated = moment('2016-12-08 05:00')
+    const dateCreated = moment('2016-12-08 05:00')
 
-    var startDateString = '2016-12-07 00:00'
-    var endDateString = '2016-12-07 23:59'
+    const startDateString = '2016-12-07 00:00'
+    const endDateString = '2016-12-07 23:59'
 
     return sendAllAdvanceClaimRemindersForDay.execute({ dateCreated: dateCreated })
       .then(function () {

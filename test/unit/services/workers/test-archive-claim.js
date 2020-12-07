@@ -5,10 +5,10 @@ const sinon = require('sinon')
 const CLAIM_ID = 1234
 const CLAIM_DATA = { DeleteEligibility: false, Claim: { ClaimId: CLAIM_ID } }
 
-var archiveClaim
+let archiveClaim
 
-var moveClaimDataToArchiveDatabase
-var moveClaimFilesToArchiveFileStore
+let moveClaimDataToArchiveDatabase
+let moveClaimFilesToArchiveFileStore
 
 describe('services/workers/archive-claim', function () {
   beforeEach(function () {

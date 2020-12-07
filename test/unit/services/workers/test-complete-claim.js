@@ -9,7 +9,7 @@ const eligibilityId = '1234'
 const claimId = 123
 const emailAddress = 'test@test.com'
 
-var claimData = {
+const claimData = {
   Claim: {
     ClaimId: 1,
     EligibilityId: 1,
@@ -17,12 +17,12 @@ var claimData = {
   }
 }
 
-var getAllClaimData = sinon.stub().resolves(claimData)
-var migrateClaimToInternalAsTransaction = sinon.stub().resolves()
-var calculateCarExpenseCosts = sinon.stub().resolves()
+const getAllClaimData = sinon.stub().resolves(claimData)
+const migrateClaimToInternalAsTransaction = sinon.stub().resolves()
+const calculateCarExpenseCosts = sinon.stub().resolves()
 // autoApprovalProcess Removed in APVS0115
-var insertTask = sinon.stub().resolves()
-var getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
+const insertTask = sinon.stub().resolves()
+const getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
 
 const completeClaim = proxyquire('../../../../app/services/workers/complete-claim', {
   '../data/get-all-claim-data': getAllClaimData,

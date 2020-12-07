@@ -4,7 +4,7 @@ const statusEnum = require('../../constants/status-enum')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, taskType, additionalData) {
-  var task = {
+  const task = {
     Task: taskType,
     Reference: reference,
     EligibilityId: eligibilityId,

@@ -26,9 +26,9 @@ describe('services/data/insert-task', function () {
   })
 
   it('should create Generate Direct Payments Task', function () {
-    var currentDate = dateFormatter.now()
-    var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-    var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+    const currentDate = dateFormatter.now()
+    const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+    const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
     return insertTask(reference, '', '', tasksEnum.GENERATE_DIRECT_PAYMENTS)
       .then(function () {
         return knex.table('IntSchema.Task')
@@ -43,7 +43,7 @@ describe('services/data/insert-task', function () {
   })
 
   it('should set the AdditionalData field when an AdditionalData parameter is supplied', function () {
-    var emailAddress = 'donotsend@apvs.com'
+    const emailAddress = 'donotsend@apvs.com'
     return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, emailAddress)
       .then(function () {
         return knex.table('IntSchema.Task')

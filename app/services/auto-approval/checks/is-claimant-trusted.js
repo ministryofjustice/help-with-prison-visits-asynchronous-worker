@@ -4,7 +4,7 @@ const CHECK_NAME = 'is-claimant-trusted'
 const FAILURE_MESSAGE = 'This claimant has been marked as untrusted by a case worker'
 
 module.exports = function (autoApprovalData) {
-  var checkResult = autoApprovalData.Eligibility.IsTrusted === true
+  const checkResult = autoApprovalData.Eligibility.IsTrusted === true
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkResult, checkResult ? '' : FAILURE_MESSAGE)
 }

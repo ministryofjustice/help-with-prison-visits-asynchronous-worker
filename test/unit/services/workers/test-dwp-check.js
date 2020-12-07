@@ -3,13 +3,13 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-enum')
 
-var visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A' }
-var benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.YES }
+const visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A' }
+const benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.YES }
 
-var getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
-var callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
-var updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
-var autoApprovalProcess = sinon.stub().resolves()
+const getVisitorDwpBenefitCheckerData = sinon.stub().resolves(visitorDwpBenefitCheckerData)
+const callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerResult)
+const updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
+const autoApprovalProcess = sinon.stub().resolves()
 
 const dwpCheck = proxyquire('../../../../app/services/workers/dwp-check', {
   '../data/get-visitor-dwp-benefit-checker-data': getVisitorDwpBenefitCheckerData,

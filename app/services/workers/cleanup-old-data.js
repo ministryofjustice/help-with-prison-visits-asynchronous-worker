@@ -9,8 +9,8 @@ const deleteOldFiles = require('../cleanup-old-data/delete-old-files')
 const deleteFilesFromExternalAsTransaction = require('../data/delete-claim-from-external-as-transaction')
 
 module.exports.execute = function (task) {
-  var maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
-  var dateThreshold = dateFormatter.now().subtract(maxDaysBeforeDeleteData, 'days').toDate()
+  const maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
+  const dateThreshold = dateFormatter.now().subtract(maxDaysBeforeDeleteData, 'days').toDate()
 
   return cleanEligibilityData(dateThreshold)
     .then(function () {

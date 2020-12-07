@@ -1,11 +1,11 @@
 const config = require('./config')
 const log = require('./app/services/log')
-var CronJob = require('cron').CronJob
-var processTasks = require('./app/process-tasks')
+const CronJob = require('cron').CronJob
+const processTasks = require('./app/process-tasks')
 
-var asyncWorkerCron = config.ASYNC_WORKER_CRON
+const asyncWorkerCron = config.ASYNC_WORKER_CRON
 
-var asyncWorkerJob = new CronJob({
+const asyncWorkerJob = new CronJob({
   cronTime: asyncWorkerCron,
   onTick: function () {
     runProcessTasks()

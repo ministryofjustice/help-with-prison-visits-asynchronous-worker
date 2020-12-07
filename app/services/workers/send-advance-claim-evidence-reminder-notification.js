@@ -7,21 +7,21 @@ const reminderEnum = require('../../constants/advance-claim-reminder-enum')
 const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
-  var claimId = task.claimId
-  var reference = task.reference
-  var requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
+  const claimId = task.claimId
+  const reference = task.reference
+  const requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
 
   return getClaim('IntSchema', claimId)
     .then(function (claim) {
-      var dateOfJourneyString = moment(claim.DateOfJourney).format('D MMMM YYYY')
+      const dateOfJourneyString = moment(claim.DateOfJourney).format('D MMMM YYYY')
 
       return getFirstNameByClaimId('IntSchema', claimId)
         .then(function (firstName) {
-          var personalisation = { reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName }
-          var additionalData = task.additionalData.split('~~')
-          var emailAddress = additionalData[0]
-          var reminder = additionalData[1]
-          var emailTemplateId
+          const personalisation = { reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName }
+          const additionalData = task.additionalData.split('~~')
+          const emailAddress = additionalData[0]
+          const reminder = additionalData[1]
+          let emailTemplateId
           if (reminderEnum.FIRST === reminder) {
             emailTemplateId = config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID
           } else if (reminderEnum.SECOND === reminder) {
