@@ -4,7 +4,7 @@ const testHelper = require('../../../test-helper')
 
 const REFERENCE = '1STNAME'
 
-var claimId
+let claimId
 
 describe('services/data/get-first-name-by-claimId', function () {
   before(function () {

@@ -7,7 +7,7 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const Promise = require('bluebird')
 
 module.exports = function (reference, eligibilityId, claimId) {
-  var claimDocuments
+  let claimDocuments
 
   return getUpdatedClaimDocumentsFromExternal(reference, eligibilityId, claimId)
     .then(function (documents) { claimDocuments = documents })
@@ -24,8 +24,8 @@ function getUpdatedClaimDocumentsFromExternal (reference, eligibilityId, claimId
 function disableOldClaimDocumentsInInternal (reference, eligibilityId, claimId, claimDocuments) {
   return getClaimDocuments('IntSchema', reference, eligibilityId, claimId)
     .then(function (internalDocuments) {
-      var oldDocumentsToDisable = matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, claimDocuments)
-      var promises = []
+      const oldDocumentsToDisable = matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, claimDocuments)
+      const promises = []
 
       oldDocumentsToDisable.forEach(function (oldDocumentToDisable) {
         promises.push(disableClaimDocument('IntSchema', oldDocumentToDisable.ClaimDocumentId))
@@ -42,16 +42,18 @@ function copyClaimDocumentsToInternal (claimDocuments) {
 
 function deleteClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
   return knex('ExtSchema.ClaimDocument')
-    .where({'Reference': reference, 'EligibilityId': eligibilityId}).del()
+    .where({ Reference: reference, EligibilityId: eligibilityId }).del()
 }
 
 function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updatedDocuments) {
-  var oldDocuments = []
+  const oldDocuments = []
   internalDocuments.forEach(function (internalDocument) {
-    var matchingNewDocuments = updatedDocuments.filter(function (newDocument) {
+    const matchingNewDocuments = updatedDocuments.filter(function (newDocument) {
       if (internalDocument.DocumentType === newDocument.DocumentType &&
         internalDocument.ClaimExpenseId === newDocument.ClaimExpenseId) {
         return true
+      } else {
+        return false
       }
     })
     if (matchingNewDocuments && matchingNewDocuments.length > 0) {

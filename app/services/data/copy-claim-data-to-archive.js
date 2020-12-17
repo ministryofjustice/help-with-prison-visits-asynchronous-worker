@@ -14,7 +14,7 @@ function copyEligibilityDataIfNotPresent (data) {
     .where('EligibilityId', data.Eligibility.EligibilityId)
     .count('EligibilityId as count')
     .then(function (countResult) {
-      var eligibilityNotPresent = countResult[0].count === 0
+      const eligibilityNotPresent = countResult[0].count === 0
 
       if (eligibilityNotPresent) {
         return insertInternal('Eligibility', data.Eligibility)
@@ -53,29 +53,29 @@ function copyClaimData (data) {
 }
 
 function insertInternal (table, tableData) {
-  var tableId = null
+  let tableId = null
   if (tableData) {
     if (tableData[table + 'Id']) {
       tableId = tableData[table + 'Id']
     }
     return knex(`IntSchema.${table}`)
-    .where(table + 'Id', tableId)
-    .count(table + 'Id as count')
-    .then(function (countResult) {
-      var dataNotPresent = countResult[0].count === 0
-      if (dataNotPresent) {
-        return knex(`IntSchema.${table}`).insert(tableData)
-      } else {
-        return Promise.resolve()
-      }
-    })
+      .where(table + 'Id', tableId)
+      .count(table + 'Id as count')
+      .then(function (countResult) {
+        const dataNotPresent = countResult[0].count === 0
+        if (dataNotPresent) {
+          return knex(`IntSchema.${table}`).insert(tableData)
+        } else {
+          return Promise.resolve()
+        }
+      })
   } else {
     return Promise.resolve()
   }
 }
 
 function insertInternalAll (table, tableDataArray) {
-  var inserts = []
+  const inserts = []
 
   if (tableDataArray) {
     tableDataArray.forEach(function (tableData) {
@@ -87,12 +87,12 @@ function insertInternalAll (table, tableDataArray) {
 }
 
 function insertClaimDocuments (allClaimDocuments) {
-  var claimDocumentInserts = []
-  var eligibilityDocumentInserts = []
-  var eligibilityDocuments = allClaimDocuments.filter(function (claimDocument) {
+  const claimDocumentInserts = []
+  const eligibilityDocumentInserts = []
+  const eligibilityDocuments = allClaimDocuments.filter(function (claimDocument) {
     return !claimDocument.ClaimId
   })
-  var claimDocuments = allClaimDocuments.filter(function (claimDocument) {
+  const claimDocuments = allClaimDocuments.filter(function (claimDocument) {
     return claimDocument.ClaimId
   })
 

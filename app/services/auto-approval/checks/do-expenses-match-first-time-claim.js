@@ -6,12 +6,12 @@ const FAILURE_MESSAGE = 'The number or type of expenses for this claim don\'t ma
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.claimExpenses) {
-    var groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
-    var groupedCurrentExpenses = groupExpensesByType(autoApprovalData.ClaimExpenses)
+    const groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
+    const groupedCurrentExpenses = groupExpensesByType(autoApprovalData.ClaimExpenses)
 
-    for (var i = 0; i < Object.keys(groupedCurrentExpenses).length; i++) {
-      var index = Object.keys(groupedCurrentExpenses)[i]
-      var currentExpenseTypeGroup = groupedCurrentExpenses[index]
+    for (let i = 0; i < Object.keys(groupedCurrentExpenses).length; i++) {
+      const index = Object.keys(groupedCurrentExpenses)[i]
+      const currentExpenseTypeGroup = groupedCurrentExpenses[index]
 
       // For each expense type, check that the first time claim contains the same expense type
       // with the same or less number of claim expenses

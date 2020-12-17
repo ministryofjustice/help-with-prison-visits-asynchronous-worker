@@ -3,8 +3,8 @@ const log = require('../log')
 const requestPromise = require('request-promise')
 
 module.exports = function (originPostCode, destinationPostCode) {
-  var distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
-  var options = {
+  const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
+  const options = {
     method: 'GET',
     uri: distanceApiUrl,
     json: true
@@ -12,7 +12,7 @@ module.exports = function (originPostCode, destinationPostCode) {
 
   return requestPromise(options)
     .then(function (result) {
-      var distance = null
+      let distance = null
 
       if (result && result.routes && result.routes[0] &&
         result.routes[0].legs && result.routes[0].legs[0] &&

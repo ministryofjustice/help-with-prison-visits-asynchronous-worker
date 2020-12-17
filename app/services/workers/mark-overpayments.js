@@ -5,7 +5,7 @@ const updateOverpaymentStatus = require('../data/update-overpayment-status')
 const Promise = require('bluebird')
 
 module.exports.execute = function () {
-  var date = dateFormatter.now().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()
+  const date = dateFormatter.now().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()
   return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'APPROVED')
     .then(function (claims) {
       return updateAllAdvanceClaimThatAreOverpaid(claims)
@@ -13,7 +13,7 @@ module.exports.execute = function () {
 }
 
 function updateAllAdvanceClaimThatAreOverpaid (claims) {
-  var promises = []
+  const promises = []
 
   claims.forEach(function (claim) {
     promises.push(updateIndividualStatusToOverpaid(claim))

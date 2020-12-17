@@ -7,7 +7,7 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const OLD_FILE_DATE = dateFormatter.now().subtract('40', 'days')
 
 describe('services/data/get-old-payment-files', function () {
-  var paymentFileIds
+  let paymentFileIds
 
   before(function () {
     return knex('IntSchema.DirectPaymentFile')
@@ -35,7 +35,7 @@ describe('services/data/get-old-payment-files', function () {
     return getOldPaymentFiles()
       .then(function (results) {
         // Find files that were inserted
-        var testFiles = results.filter(function (result) {
+        const testFiles = results.filter(function (result) {
           return paymentFileIds.indexOf(result.PaymentFileId) !== -1
         })
 

@@ -1,19 +1,18 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const REFERENCE = 'RECOVERY'
 const EMAIL = 'test@test.com'
 const PRISON_NUMBER = 'B123456'
 const FIRST_NAME = 'test'
 
-var additionalData = `${EMAIL}~~${PRISON_NUMBER}`
-var config = { EXTERNAL_SERVICE_URL: 'https://test.com', EXTERNAL_PATH_ALREADY_REGISTERED: '/start-already-registered' }
+const additionalData = `${EMAIL}~~${PRISON_NUMBER}`
+const config = { EXTERNAL_SERVICE_URL: 'https://test.com', EXTERNAL_PATH_ALREADY_REGISTERED: '/start-already-registered' }
 
-var stubReferenceNumberRecovery
-var stubSendNotification
-var referenceRecovery
+let stubReferenceNumberRecovery
+let stubSendNotification
+let referenceRecovery
 
 describe('services/reference-recovery', function () {
   beforeEach(function () {
@@ -28,11 +27,11 @@ describe('services/reference-recovery', function () {
   })
 
   it('should call reference number recovery send email with recovered reference number', function () {
-    stubReferenceNumberRecovery.resolves({Reference: REFERENCE, FirstName: FIRST_NAME})
-    return referenceRecovery.execute({additionalData: additionalData})
+    stubReferenceNumberRecovery.resolves({ Reference: REFERENCE, FirstName: FIRST_NAME })
+    return referenceRecovery.execute({ additionalData: additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
-        expect(stubSendNotification.called).to.be.true
+        expect(stubSendNotification.called).to.be.true //eslint-disable-line
         expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_SEND_REFERENCE_RECOVERY_EMAIL_TEMPLATE_ID)
         expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL)
         expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
@@ -43,10 +42,10 @@ describe('services/reference-recovery', function () {
 
   it('should only call reference recover, get nothing and send no email', function () {
     stubReferenceNumberRecovery.resolves()
-    return referenceRecovery.execute({additionalData: additionalData})
+    return referenceRecovery.execute({ additionalData: additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
-        expect(stubSendNotification.called).to.be.false
+        expect(stubSendNotification.called).to.be.false //eslint-disable-line
       })
   })
 })

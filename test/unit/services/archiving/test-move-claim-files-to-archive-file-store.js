@@ -5,24 +5,24 @@ const path = require('path')
 const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const REFERENCE = 'MOVEFIL'
-const CLAIM_DATA = { DeleteEligibility: false, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{Filepath: '1'}] }
-const CLAIM_DATA_DELETE_ELIGIBILTIY = { DeleteEligibility: true, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{Filepath: '1'}] }
-const CLAIM_DATA_NO_FILES = { DeleteEligibility: false, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{Filepath: null}] }
+const CLAIM_DATA = { DeleteEligibility: false, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{ Filepath: '1' }] }
+const CLAIM_DATA_DELETE_ELIGIBILTIY = { DeleteEligibility: true, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{ Filepath: '1' }] }
+const CLAIM_DATA_NO_FILES = { DeleteEligibility: false, Claim: { Reference: REFERENCE, EligibilityId: ELIGIBILITY_ID, ClaimId: CLAIM_ID }, ClaimDocument: [{ Filepath: null }] }
 
 const UPLOAD_LOCATION = '/uploads'
 const ARCHIVE_LOCATION = '/archive'
 
 const ELIGIBILITY_DIR = 'penson-credit'
 
-var moveClaimFilesToArchiveFileStore
+let moveClaimFilesToArchiveFileStore
 
-var mv
-var fs
-var sourceDirectory
-var targetDirectory
-var calledMove = false
-var calledFsReaddirSync = false
-var calledFsRmdirSync = false
+let mv
+let fs
+let sourceDirectory
+let targetDirectory
+let calledMove = false
+let calledFsReaddirSync = false
+let calledFsRmdirSync = false
 
 describe('services/archiving/move-claim-files-to-archive-file-store', function () {
   beforeEach(function () {
@@ -40,25 +40,25 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
     fs = {
       readdirSync: function () {
         calledFsReaddirSync = true
-        return [ ELIGIBILITY_DIR ]
+        return [ELIGIBILITY_DIR]
       },
       rmdirSync: function () {
         calledFsRmdirSync = true
       }
     }
 
-    var config = { FILE_UPLOAD_LOCATION: UPLOAD_LOCATION, FILE_ARCHIVE_LOCATION: ARCHIVE_LOCATION }
+    const config = { FILE_UPLOAD_LOCATION: UPLOAD_LOCATION, FILE_ARCHIVE_LOCATION: ARCHIVE_LOCATION }
 
     moveClaimFilesToArchiveFileStore = proxyquire('../../../../app/services/archiving/move-claim-files-to-archive-file-store', {
-      'mv': mv,
-      'fs': fs,
+      mv: mv,
+      fs: fs,
       '../../../config': config
     })
   })
 
   it('should copy claim directory to archive when not archiving eligibility', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA).then(function () {
-      expect(calledMove).to.be.true
+      expect(calledMove).to.be.true //eslint-disable-line
       expect(sourceDirectory).to.be.equal(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
       expect(targetDirectory).to.be.equal(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${CLAIM_ID}`)
     })
@@ -66,8 +66,8 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
 
   it('should copy eligibility directory to archive when archiving eligibility', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA_DELETE_ELIGIBILTIY).then(function () {
-      expect(calledFsReaddirSync).to.be.true
-      expect(calledFsRmdirSync).to.be.true
+      expect(calledFsReaddirSync).to.be.true //eslint-disable-line
+      expect(calledFsRmdirSync).to.be.true //eslint-disable-line
       expect(sourceDirectory).to.be.equal(path.normalize(`${UPLOAD_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`))
       expect(targetDirectory).to.be.equal(path.normalize(`${ARCHIVE_LOCATION}/${REFERENCE}-${ELIGIBILITY_ID}/${ELIGIBILITY_DIR}`))
     })
@@ -75,7 +75,7 @@ describe('services/archiving/move-claim-files-to-archive-file-store', function (
 
   it('should not call move for claims without files', function () {
     return moveClaimFilesToArchiveFileStore(CLAIM_DATA_NO_FILES).then(function () {
-      expect(calledMove).to.be.false
+      expect(calledMove).to.be.false //eslint-disable-line
     })
   })
 })

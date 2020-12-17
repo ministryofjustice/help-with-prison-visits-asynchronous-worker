@@ -52,17 +52,17 @@ const emptyAutoApprovalData = {
 
 describe('services/auto-approval/checks/visit-date-different-to-previous-claims', function () {
   it('should return true if none of the previous claims have the same visit date as the current claim', function () {
-    var checkResult = visitDateDifferentToPreviousClaims(validAutoApprovalData)
+    const checkResult = visitDateDifferentToPreviousClaims(validAutoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 
   it('should return false if any of the previous claims have the same visit date as the current claim', function () {
-    var checkResult = visitDateDifferentToPreviousClaims(invalidAutoApprovalData)
+    const checkResult = visitDateDifferentToPreviousClaims(invalidAutoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 
   it('should return true if there are no previous claims', function () {
-    var checkResult = visitDateDifferentToPreviousClaims(emptyAutoApprovalData)
+    const checkResult = visitDateDifferentToPreviousClaims(emptyAutoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 })

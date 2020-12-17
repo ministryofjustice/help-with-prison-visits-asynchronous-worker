@@ -11,33 +11,33 @@ module.exports = function (autoApprovalData) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
 
-  var firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
-  var now = dateFormatter.now().startOf('day')
+  const firstClaimDate = moment(getFirstClaimDate(autoApprovalData.previousClaims))
+  const now = dateFormatter.now().startOf('day')
 
-  var daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
-  var durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
-  var monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
-  var daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
+  const daysSinceFirstClaim = now.diff(firstClaimDate, 'days')
+  const durationSinceFirstClaim = moment.duration(daysSinceFirstClaim, 'days')
+  const monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
+  const daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
 
-  var startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
+  const startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
     .subtract(daysSinceStartOfClaimableYear, 'days')
-  var endOfClaimableYear = startOfClaimableYear.clone().add('1', 'years')
+  const endOfClaimableYear = startOfClaimableYear.clone().add('1', 'years')
 
-  var numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate(), endOfClaimableYear.toDate())
-  var checkPassed = numberOfClaimsThisYear <= autoApprovalData.maxNumberOfClaimsPerYear
+  const numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate(), endOfClaimableYear.toDate())
+  const checkPassed = numberOfClaimsThisYear <= autoApprovalData.maxNumberOfClaimsPerYear
 
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
 }
 
 function getNumberOfClaimsSinceDate (previousClaims, currentClaim, date, cutOffDate) {
-  var count = 0
+  let count = 0
 
   if (currentClaim.DateOfJourney >= date && currentClaim.DateOfJourney <= cutOffDate) {
     count++
   }
 
-  for (var i = 0; i < previousClaims.length; i++) {
-    var claim = previousClaims[i]
+  for (let i = 0; i < previousClaims.length; i++) {
+    const claim = previousClaims[i]
 
     if (claim.DateOfJourney >= date) {
       count++

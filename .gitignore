@@ -26,6 +26,7 @@ errorShots
 
 # coverage reports
 coverage
+.nyc_output/
 
 # Ignore IntelliJ files
 .idea/
@@ -41,6 +42,7 @@ run-unit-tests.sh
 
 # Files CSV output
 data/payments
+data/templates
 uploads
 archive
 

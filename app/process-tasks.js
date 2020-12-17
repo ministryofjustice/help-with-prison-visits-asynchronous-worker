@@ -7,7 +7,7 @@ const completeTaskWithStatus = require('./services/data/complete-task-with-statu
 const getWorkerForTask = require('./services/get-worker-for-task')
 
 module.exports = function () {
-  var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE)
+  const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE)
 
   return processTasksForSchema('ExtSchema', batchSize).then(function () {
     return processTasksForSchema('IntSchema', batchSize)
@@ -20,10 +20,10 @@ function processTasksForSchema (schema, batchSize) {
       log.info(`found ${tasks.length} ${schema} tasks`)
       if (tasks.length === 0) { return }
 
-      var promiseArray = []
+      const promiseArray = []
 
-      for (var task of tasks) {
-        var worker = getWorkerForTask(task.task)
+      for (const task of tasks) {
+        const worker = getWorkerForTask(task.task)
 
         if (worker) {
           promiseArray.push(executeWorkerForTask(schema, worker, task))
@@ -45,7 +45,7 @@ function executeWorkerForTask (schema, worker, task) {
       return completeTaskWithStatus(schema, task.taskId, statusEnum.COMPLETE)
     }).catch(function (error) {
       log.error(`error running task: ${schema}-${task.taskId}-${task.task}, error: ${error}`)
-      log.error({error: error})
+      log.error({ error: error })
       return completeTaskWithStatus(schema, task.taskId, statusEnum.FAILED)
     })
 }

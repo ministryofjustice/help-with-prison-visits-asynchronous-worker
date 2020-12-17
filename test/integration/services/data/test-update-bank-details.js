@@ -5,10 +5,10 @@ const updateBankDetails = require('../../../../app/services/data/update-bank-det
 const testHelper = require('../../../test-helper')
 
 const reference = 'NEWBANK'
-var claimId
-var claimBankDetailId
-var sortcode = '123456'
-var accountNumber = '12345678'
+let claimId
+let claimBankDetailId
+const sortcode = '123456'
+const accountNumber = '12345678'
 
 describe('services/data/update-bank-details', function () {
   before(function () {
@@ -23,7 +23,7 @@ describe('services/data/update-bank-details', function () {
     return updateBankDetails(claimBankDetailId, reference, claimId, sortcode, accountNumber)
       .then(function () {
         return knex.table('IntSchema.ClaimBankDetail')
-          .where({'ClaimBankDetailId': claimBankDetailId, 'Reference': reference, 'ClaimId': claimId})
+          .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
           .first()
           .then(function (result) {
             expect(result.SortCode).to.be.equal(sortcode)

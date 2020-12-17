@@ -16,23 +16,23 @@ describe('services/data/insert-task', function () {
     return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK)
       .then(function () {
         return knex.table('IntSchema.Task')
-          .where({'Reference': reference, 'EligibilityId': eligibilityId, 'ClaimId': claimId, 'Task': tasksEnum.DWP_CHECK})
+          .where({ Reference: reference, EligibilityId: eligibilityId, ClaimId: claimId, Task: tasksEnum.DWP_CHECK })
           .first()
           .then(function (result) {
             expect(result.Status).to.be.equal(statusEnum.PENDING)
-            expect(result.DateCreated).not.to.be.null
+            expect(result.DateCreated).not.to.be.null //eslint-disable-line
           })
       })
   })
 
   it('should create Generate Direct Payments Task', function () {
-    var currentDate = dateFormatter.now()
-    var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-    var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+    const currentDate = dateFormatter.now()
+    const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+    const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
     return insertTask(reference, '', '', tasksEnum.GENERATE_DIRECT_PAYMENTS)
       .then(function () {
         return knex.table('IntSchema.Task')
-          .where({'Task': tasksEnum.GENERATE_DIRECT_PAYMENTS, 'Status': statusEnum.PENDING})
+          .where({ Task: tasksEnum.GENERATE_DIRECT_PAYMENTS, Status: statusEnum.PENDING })
           .first()
           .then(function (result) {
             expect(result.Task).to.be.equal(tasksEnum.GENERATE_DIRECT_PAYMENTS)
@@ -43,11 +43,11 @@ describe('services/data/insert-task', function () {
   })
 
   it('should set the AdditionalData field when an AdditionalData parameter is supplied', function () {
-    var emailAddress = 'donotsend@apvs.com'
+    const emailAddress = 'donotsend@apvs.com'
     return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, emailAddress)
       .then(function () {
         return knex.table('IntSchema.Task')
-          .where({'Task': tasksEnum.ACCEPT_CLAIM_NOTIFICATION, 'Status': statusEnum.PENDING, 'Reference': reference, 'ClaimId': claimId})
+          .where({ Task: tasksEnum.ACCEPT_CLAIM_NOTIFICATION, Status: statusEnum.PENDING, Reference: reference, ClaimId: claimId })
           .first()
           .then(function (result) {
             expect(result.AdditionalData).to.be.equal(emailAddress)

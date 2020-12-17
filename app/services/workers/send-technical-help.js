@@ -2,17 +2,17 @@ const Config = require('../../../config')
 const Zendesk = require('zendesk-node-api')
 
 module.exports.execute = function (task) {
-  var technicalHelp = task.additionalData.split('~~')
-  var subjectText = 'Help With Prison Visits - Help'
-  var tagText = ['HelpWithPrisonVisits']
-  var personalisation = {
+  const technicalHelp = task.additionalData.split('~~')
+  let subjectText = 'Help With Prison Visits - Help'
+  let tagText = ['HelpWithPrisonVisits']
+  const personalisation = {
     name: technicalHelp[0],
     contactEmailAddress: technicalHelp[1],
     issue: technicalHelp[2]
   }
 
   if (Config.ZENDESK_ENABLED === 'true') {
-    var zendesk = new Zendesk({
+    const zendesk = new Zendesk({
       url: Config.ZENDESK_API_URL,
       email: Config.ZENDESK_EMAIL_ADDRESS,
       token: Config.ZENDESK_API_KEY
@@ -26,9 +26,9 @@ module.exports.execute = function (task) {
     return zendesk.tickets.create({
       submitter_id: '114198238551',
       requester: {
-        'name': personalisation.name,
-        'email': personalisation.contactEmailAddress,
-        'verified': true
+        name: personalisation.name,
+        email: personalisation.contactEmailAddress,
+        verified: true
       },
       subject: subjectText,
       comment: {

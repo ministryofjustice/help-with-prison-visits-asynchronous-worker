@@ -8,19 +8,19 @@ const testHelper = require('../../../test-helper')
 const getOldEligibilityData = require('../../../../app/services/data/get-old-eligibility-data')
 
 describe('services/data/get-old-eligibility-data', function () {
-  var maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
-  var reference1 = 'GETELIG1'
-  var reference2 = 'GETELIG2'
-  var reference3 = 'GETELIG3'
-  var reference4 = 'GETELIG4'
-  var eligibilityId1
-  var eligibilityId2
-  var eligibilityId3
-  var eligibilityId4
+  const maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
+  const reference1 = 'GETELIG1'
+  const reference2 = 'GETELIG2'
+  const reference3 = 'GETELIG3'
+  const reference4 = 'GETELIG4'
+  let eligibilityId1
+  let eligibilityId2
+  let eligibilityId3
+  let eligibilityId4
 
-  var dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
-  var olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
-  var lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
+  const dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
+  const olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
+  const lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
   before(function () {
     return Promise.all([
@@ -50,22 +50,22 @@ describe('services/data/get-old-eligibility-data', function () {
   it('should retrieve eligibility records past the date threshold', function () {
     return getOldEligibilityData(dateThreshold)
       .then(function (results) {
-        var eligibility1Found = eligibilityExists(eligibilityId1, results)
-        var eligibility2Found = eligibilityExists(eligibilityId2, results)
+        const eligibility1Found = eligibilityExists(eligibilityId1, results)
+        const eligibility2Found = eligibilityExists(eligibilityId2, results)
 
-        expect(eligibility1Found).to.be.true
-        expect(eligibility2Found).to.be.true
+        expect(eligibility1Found).to.be.true //eslint-disable-line
+        expect(eligibility2Found).to.be.true //eslint-disable-line
       })
   })
 
   it('should not retrieve eligibility records within the date threshold', function () {
     return getOldEligibilityData(dateThreshold)
       .then(function (results) {
-        var eligibility3Found = eligibilityExists(eligibilityId3, results)
-        var eligibility4Found = eligibilityExists(eligibilityId4, results)
+        const eligibility3Found = eligibilityExists(eligibilityId3, results)
+        const eligibility4Found = eligibilityExists(eligibilityId4, results)
 
-        expect(eligibility3Found).to.be.false
-        expect(eligibility4Found).to.be.false
+        expect(eligibility3Found).to.be.false //eslint-disable-line
+        expect(eligibility4Found).to.be.false //eslint-disable-line
       })
   })
 
@@ -80,7 +80,7 @@ describe('services/data/get-old-eligibility-data', function () {
 })
 
 function createTestData (ref, dateCreated, deleteClaim) {
-  var returnObject = {}
+  const returnObject = {}
 
   return testHelper.insertClaimEligibilityData('ExtSchema', ref)
     .then(function (ids) {
@@ -90,7 +90,7 @@ function createTestData (ref, dateCreated, deleteClaim) {
       return knex('ExtSchema.Eligibility')
         .where('EligibilityId', returnObject.eligibilityId)
         .update({
-          'DateCreated': dateCreated
+          DateCreated: dateCreated
         })
         .then(function () {
           if (deleteClaim) {
@@ -100,9 +100,9 @@ function createTestData (ref, dateCreated, deleteClaim) {
               deleteFromTable(returnObject.claimId, 'ClaimDocument'),
               deleteFromTable(returnObject.claimId, 'ClaimChild')
             ])
-            .then(function () {
-              return deleteFromTable(returnObject.claimId, 'Claim')
-            })
+              .then(function () {
+                return deleteFromTable(returnObject.claimId, 'Claim')
+              })
           }
         })
     })
@@ -118,7 +118,7 @@ function deleteFromTable (claimId, tableName) {
 }
 
 function eligibilityExists (value, collection) {
-  var result = collection.filter(function (item) {
+  const result = collection.filter(function (item) {
     return item.EligibilityId === value
   })
 

@@ -51,7 +51,7 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
       }
     ]
 
-    var checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
+    const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(true)
   })
 
@@ -75,7 +75,7 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
       }
     ]
 
-    var checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
+    const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).to.equal(false)
   })
 })

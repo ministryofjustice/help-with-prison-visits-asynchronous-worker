@@ -6,10 +6,10 @@ const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const tasksEnum = require('../../constants/tasks-enum')
 
 module.exports.execute = function (task) {
-  var reference = task.reference
-  var eligibilityId = task.eligibilityId
-  var claimId = task.claimId
-  var claimData
+  const reference = task.reference
+  const eligibilityId = task.eligibilityId
+  const claimId = task.claimId
+  let claimData
 
   return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
     .then(function (data) { claimData = data })

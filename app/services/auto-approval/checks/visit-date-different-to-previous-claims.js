@@ -7,11 +7,11 @@ const FAILURE_MESSAGE = 'The date of visit for this claim is the same as the dat
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.previousClaims && autoApprovalData.previousClaims.length > 0) {
-    var visitDateMoment = moment(autoApprovalData.Claim.DateOfJourney)
+    const visitDateMoment = moment(autoApprovalData.Claim.DateOfJourney)
 
-    for (var i = 0; i < autoApprovalData.previousClaims.length; i++) {
-      var previousClaim = autoApprovalData.previousClaims[i]
-      var dateOfJourney = moment(previousClaim.DateOfJourney)
+    for (let i = 0; i < autoApprovalData.previousClaims.length; i++) {
+      const previousClaim = autoApprovalData.previousClaims[i]
+      const dateOfJourney = moment(previousClaim.DateOfJourney)
 
       if (visitDateMoment.isSame(dateOfJourney)) {
         return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)

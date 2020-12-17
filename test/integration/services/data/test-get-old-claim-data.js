@@ -8,19 +8,19 @@ const testHelper = require('../../../test-helper')
 const getOldClaimData = require('../../../../app/services/data/get-old-claim-data')
 
 describe('services/data/get-old-claim-data', function () {
-  var maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
-  var reference1 = 'GETCLAIM1'
-  var reference2 = 'GETCLAIM2'
-  var reference3 = 'GETCLAIM3'
-  var reference4 = 'GETCLAIM4'
-  var claimId1
-  var claimId2
-  var claimId3
-  var claimId4
+  const maxAgeInDays = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
+  const reference1 = 'GETCLAIM1'
+  const reference2 = 'GETCLAIM2'
+  const reference3 = 'GETCLAIM3'
+  const reference4 = 'GETCLAIM4'
+  let claimId1
+  let claimId2
+  let claimId3
+  let claimId4
 
-  var dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
-  var olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
-  var lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
+  const dateThreshold = dateFormatter.now().subtract(maxAgeInDays, 'days').toDate()
+  const olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
+  const lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
   before(function () {
     return Promise.all([
@@ -50,22 +50,22 @@ describe('services/data/get-old-claim-data', function () {
   it('should retrieve claim records past the date threshold', function () {
     return getOldClaimData(dateThreshold)
       .then(function (results) {
-        var claim1Found = claimExists(claimId1, results)
-        var claim2Found = claimExists(claimId2, results)
+        const claim1Found = claimExists(claimId1, results)
+        const claim2Found = claimExists(claimId2, results)
 
-        expect(claim1Found).to.be.true
-        expect(claim2Found).to.be.true
+        expect(claim1Found).to.be.true //eslint-disable-line
+        expect(claim2Found).to.be.true //eslint-disable-line
       })
   })
 
   it('should not retrieve claim records within the date threshold', function () {
     return getOldClaimData(dateThreshold)
       .then(function (results) {
-        var claim3Found = claimExists(claimId3, results)
-        var claim4Found = claimExists(claimId4, results)
+        const claim3Found = claimExists(claimId3, results)
+        const claim4Found = claimExists(claimId4, results)
 
-        expect(claim3Found).to.be.false
-        expect(claim4Found).to.be.false
+        expect(claim3Found).to.be.false //eslint-disable-line
+        expect(claim4Found).to.be.false //eslint-disable-line
       })
   })
 
@@ -80,7 +80,7 @@ describe('services/data/get-old-claim-data', function () {
 })
 
 function createTestData (ref, dateCreated, deleteEligibility) {
-  var returnObject = {}
+  const returnObject = {}
 
   return testHelper.insertClaimEligibilityData('ExtSchema', ref)
     .then(function (ids) {
@@ -90,7 +90,7 @@ function createTestData (ref, dateCreated, deleteEligibility) {
       return knex('ExtSchema.Claim')
         .where('ClaimId', returnObject.claimId)
         .update({
-          'DateCreated': dateCreated
+          DateCreated: dateCreated
         })
         .then(function () {
           if (deleteEligibility) {
@@ -98,9 +98,9 @@ function createTestData (ref, dateCreated, deleteEligibility) {
               deleteFromTable(returnObject.eligibilityId, 'Prisoner'),
               deleteFromTable(returnObject.eligibilityId, 'Visitor')
             ])
-            .then(function () {
-              return deleteFromTable(returnObject.eligibilityId, 'Eligibility')
-            })
+              .then(function () {
+                return deleteFromTable(returnObject.eligibilityId, 'Eligibility')
+              })
           }
         })
     })
@@ -116,7 +116,7 @@ function deleteFromTable (eligibilityId, tableName) {
 }
 
 function claimExists (value, collection) {
-  var result = collection.filter(function (item) {
+  const result = collection.filter(function (item) {
     return item.ClaimId === value
   })
 

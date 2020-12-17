@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const OLD_ELIGIBILITY_DATA = [
   {
@@ -32,27 +31,27 @@ const OLD_CLAIM_DOCUMENT_DATA = [
   }
 ]
 
-var getOldEligibilityDataStub
-var getOldClaimDataStub
-var getOldClaimDocumentDataStub
-var deleteClaimFromExternalStub
-var deleteOldFilesStub
+let getOldEligibilityDataStub
+let getOldClaimDataStub
+let getOldClaimDocumentDataStub
+let deleteClaimFromExternalAsTransactionStub
+let deleteOldFilesStub
 
-var cleanupOldData
+let cleanupOldData
 
 describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {
     getOldEligibilityDataStub = sinon.stub()
     getOldClaimDataStub = sinon.stub()
     getOldClaimDocumentDataStub = sinon.stub()
-    deleteClaimFromExternalStub = sinon.stub().resolves()
+    deleteClaimFromExternalAsTransactionStub = sinon.stub().resolves()
     deleteOldFilesStub = sinon.stub().resolves()
 
     cleanupOldData = proxyquire('../../../../app/services/workers/cleanup-old-data', {
       '../data/get-old-eligibility-data': getOldEligibilityDataStub,
       '../data/get-old-claim-data': getOldClaimDataStub,
       '../data/get-old-claim-document-data': getOldClaimDocumentDataStub,
-      '../data/delete-claim-from-external': deleteClaimFromExternalStub,
+      '../data/delete-claim-from-external-as-transaction': deleteClaimFromExternalAsTransactionStub,
       '../cleanup-old-data/delete-old-files': deleteOldFilesStub
     })
   })
@@ -63,11 +62,11 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDocumentDataStub.resolves([])
 
     return cleanupOldData.execute({}).then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true
-      expect(getOldClaimDataStub.calledOnce).to.be.true
-      expect(deleteOldFilesStub.calledTwice).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_ELIGIBILITY_DATA[0].EligibilityId, OLD_ELIGIBILITY_DATA[0].ClaimId)).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_ELIGIBILITY_DATA[1].EligibilityId, OLD_ELIGIBILITY_DATA[1].ClaimId)).to.be.true
+      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[0].EligibilityId, OLD_ELIGIBILITY_DATA[0].ClaimId)).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[1].EligibilityId, OLD_ELIGIBILITY_DATA[1].ClaimId)).to.be.true //eslint-disable-line
     })
   })
 
@@ -77,11 +76,11 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDocumentDataStub.resolves([])
 
     return cleanupOldData.execute({}).then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true
-      expect(getOldClaimDataStub.calledOnce).to.be.true
-      expect(deleteOldFilesStub.calledTwice).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId)).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId)).to.be.true
+      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId)).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId)).to.be.true //eslint-disable-line
     })
   })
 
@@ -91,11 +90,11 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDocumentDataStub.resolves(OLD_CLAIM_DOCUMENT_DATA)
 
     return cleanupOldData.execute({}).then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true
-      expect(getOldClaimDataStub.calledOnce).to.be.true
-      expect(deleteOldFilesStub.calledTwice).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId)).to.be.true
-      expect(deleteClaimFromExternalStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId)).to.be.true
+      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
+      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId)).to.be.true //eslint-disable-line
+      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId)).to.be.true //eslint-disable-line
     })
   })
 })

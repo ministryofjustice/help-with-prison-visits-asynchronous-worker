@@ -1,9 +1,9 @@
 module.exports = function (claimData, autoApprovalData) {
-  var eligibilityData = claimData.Eligibility ? claimData.Eligibility : autoApprovalData.Eligibility
-  var visitorData = claimData.Visitor ? claimData.Visitor : autoApprovalData.Visitor
-  var prisonerData = claimData.Prisoner ? claimData.Prisoner : autoApprovalData.Prisoner
+  const eligibilityData = claimData.Eligibility ? claimData.Eligibility : autoApprovalData.Eligibility
+  const visitorData = claimData.Visitor ? claimData.Visitor : autoApprovalData.Visitor
+  const prisonerData = claimData.Prisoner ? claimData.Prisoner : autoApprovalData.Prisoner
 
-  var result = {
+  const result = {
     Eligibility: eligibilityData,
     Prisoner: prisonerData,
     Visitor: visitorData,

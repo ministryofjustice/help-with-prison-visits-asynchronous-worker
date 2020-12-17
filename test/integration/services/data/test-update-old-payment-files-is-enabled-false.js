@@ -5,7 +5,7 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const updateOldPaymentFilesIsEnabledFalse = require('../../../../app/services/data/update-old-payment-files-is-enabled-false')
 
 describe('services/data/update-old-payment-files-is-enabled-false', function () {
-  var paymentFileIds
+  let paymentFileIds
 
   before(function () {
     return knex('IntSchema.DirectPaymentFile')

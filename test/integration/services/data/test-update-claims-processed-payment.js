@@ -6,13 +6,13 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 
 const updateClaimsProcessedPayment = require('../../../../app/services/data/update-claims-processed-payment')
 const processedStatus = 'PROCESSED'
-var paymentTotal = 20
-var paymentDate
+let paymentTotal = 20
+let paymentDate
 
 describe('services/data/update-claims-processed-payment', function () {
   // TODO update to test methods processes multiple claim by ClaimId not Reference
-  var referenceA = 'PROCESS'
-  var claimId
+  const referenceA = 'PROCESS'
+  let claimId
 
   before(function () {
     paymentDate = dateFormatter.now().toDate()
@@ -29,7 +29,7 @@ describe('services/data/update-claims-processed-payment', function () {
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
             expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
-            expect(claims[0].PaymentDate).to.not.be.null
+            expect(claims[0].PaymentDate).to.not.be.null //eslint-disable-line
           })
       })
   })

@@ -7,7 +7,7 @@ const FAILURE_MESSAGE = 'The prison being visited by this claimant is located in
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.Prisoner) {
-    var prisonName = autoApprovalData.Prisoner.NameOfPrison
+    const prisonName = autoApprovalData.Prisoner.NameOfPrison
 
     if (enumHelper.getKeyByValue(guernseyJerseyPrisonsEnum, prisonName)) {
       return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)

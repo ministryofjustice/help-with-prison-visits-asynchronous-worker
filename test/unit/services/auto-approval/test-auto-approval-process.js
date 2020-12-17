@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
@@ -14,22 +13,22 @@ const REFERENCE = 'AUTOAPP'
 const ELIGIBILITY_ID = 1234
 const CLAIM_ID = 4321
 
-var validAutoApprovalData = testHelper.getAutoApprovalData(REFERENCE)
-var validCheckResult = new AutoApprovalCheckResult('', true, '')
-var invalidCheckResult = new AutoApprovalCheckResult('', false, '')
-var validAutoApprovalConfig
+const validAutoApprovalData = testHelper.getAutoApprovalData(REFERENCE)
+const validCheckResult = new AutoApprovalCheckResult('', true, '')
+const invalidCheckResult = new AutoApprovalCheckResult('', false, '')
+let validAutoApprovalConfig
 
-var autoApprovalDataConstructorStub
-var getDataForAutoApprovalCheckStub
-var insertClaimEventStub
-var getAutoApprovalConfigStub
-var insertTaskStub
-var autoApproveClaimStub
-var autoApprovalDependencies
-var getLastSetNumberOfClaimsStatusStub
-var insertAutoApproveClaimStub
+let autoApprovalDataConstructorStub
+let getDataForAutoApprovalCheckStub
+let insertClaimEventStub
+let getAutoApprovalConfigStub
+let insertTaskStub
+let autoApproveClaimStub
+let autoApprovalDependencies
+let getLastSetNumberOfClaimsStatusStub
+let insertAutoApproveClaimStub
 
-var autoApprovalProcess
+let autoApprovalProcess
 
 describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
@@ -77,11 +76,11 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should not execute auto approval process if AutoApprovalEnabled is set to false', function () {
-    getAutoApprovalConfigStub.resolves({AutoApprovalEnabled: false})
+    getAutoApprovalConfigStub.resolves({ AutoApprovalEnabled: false })
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result).to.be.null
+        expect(result).to.be.null //eslint-disable-line
         sinon.assert.calledOnce(getAutoApprovalConfigStub)
         sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
         sinon.assert.notCalled(autoApproveClaimStub)
@@ -89,40 +88,40 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should return claimApproved false for FIRST_TIME claim', function () {
-    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.FIRST_TIME}}
+    const firstTimeData = { Claim: { ClaimType: claimTypeEnum.FIRST_TIME } }
     getDataForAutoApprovalCheckStub.resolves(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for REPEAT_NEW_ELIGIBILITY claim', function () {
-    var firstTimeData = {Claim: {ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY}}
+    const firstTimeData = { Claim: { ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY } }
     getDataForAutoApprovalCheckStub.resolves(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for claims with status not equal to NEW', function () {
-    var pendingClaimData = {Claim: {Status: statusEnum.PENDING}}
+    const pendingClaimData = { Claim: { Status: statusEnum.PENDING } }
     getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false
+        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved true for NEW claims and those that are less than number of consecutive auto approvals', function () {
-    var newClaimData = validAutoApprovalData
+    const newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
-    var expectedResult = true
+    const expectedResult = true
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(expectedResult)
@@ -130,19 +129,19 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should return claimApproved false for NEW claims and those that exceed consecutive auto approvals limit', function () {
-    var newClaimData = validAutoApprovalData
+    const newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     getDataForAutoApprovalCheckStub.resolves(newClaimData)
-    getLastSetNumberOfClaimsStatusStub.resolves([{Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}, {Status: statusEnum.AUTOAPPROVED}])
+    getLastSetNumberOfClaimsStatusStub.resolves([{ Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }])
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false
+        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for Advance claim', function () {
-    var advanceClaimData = validAutoApprovalData
+    const advanceClaimData = validAutoApprovalData
     advanceClaimData.Claim = {
       ClaimType: claimTypeEnum.REPEAT_CLAIM,
       Status: statusEnum.NEW,
@@ -153,25 +152,25 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false
+        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false //eslint-disable-line
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.true
+        expect(result.claimApproved).to.be.true //eslint-disable-line
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        var now = dateFormatter.now().toDate()
-        var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+        const now = dateFormatter.now().toDate()
+        const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
         if (isInOfficeHours) {
           sinon.assert.calledOnce(autoApproveClaimStub)
         } else {
           sinon.assert.calledOnce(insertAutoApproveClaimStub)
         }
-        var keys = Object.keys(autoApprovalDependencies)
-        for (var i = 0; i < keys.length; i++) {
-          var key = keys[i]
+        const keys = Object.keys(autoApprovalDependencies)
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
           sinon.assert.called(autoApprovalDependencies[key])
@@ -180,11 +179,11 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
-    var inautoApprovalDependencies = autoApprovalDependencies
-    var keys = Object.keys(inautoApprovalDependencies)
+    const inautoApprovalDependencies = autoApprovalDependencies
+    const keys = Object.keys(inautoApprovalDependencies)
 
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i]
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
       // Ignore mocked data functions and only set some auto approval checks to true
       if (key.indexOf('data') > -1 || i % 2 === 0) {
         continue
@@ -195,12 +194,12 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.false
+        expect(result.claimApproved).to.be.false //eslint-disable-line
         sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
         sinon.assert.calledOnce(insertClaimEventStub)
-        var keys = Object.keys(autoApprovalDependencies)
-        for (var i = 0; i < keys.length; i++) {
-          var key = keys[i]
+        const keys = Object.keys(autoApprovalDependencies)
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
           sinon.assert.calledOnce(autoApprovalDependencies[key])
@@ -214,10 +213,10 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       getAutoApprovalConfigStub.resolves(validAutoApprovalConfig)
       return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
         .then(function (result) {
-          expect(result.claimApproved).to.be.true
+          expect(result.claimApproved).to.be.true //eslint-disable-line
           sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-          var now = dateFormatter.now().toDate()
-          var isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+          const now = dateFormatter.now().toDate()
+          const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
           if (isInOfficeHours) {
             sinon.assert.calledOnce(autoApproveClaimStub)
           } else {

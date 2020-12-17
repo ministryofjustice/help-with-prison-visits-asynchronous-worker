@@ -5,10 +5,10 @@ const copyClaimDataToArchive = require('../data/copy-claim-data-to-archive')
 const deleteClaimFromInternal = require('../data/delete-claim-from-internal')
 
 module.exports = function (claimId) {
-  var eligibilityId
-  var reference
-  var deleteEligibility
-  var claimData
+  let eligibilityId
+  let reference
+  let deleteEligibility
+  let claimData
 
   return getClaim('IntSchema', claimId)
     .then(function (claim) {

@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const statusEnum = require('../../../../../app/constants/status-enum')
 const isNoPreviousPendingClaim = require('../../../../../app/services/auto-approval/checks/is-no-previous-pending-claim')
 
-var previousClaimsWithPending = {
+const previousClaimsWithPending = {
   previousClaims: [
     {
       ClaimId: 798118115,
@@ -15,7 +15,7 @@ var previousClaimsWithPending = {
   ]
 }
 
-var previousClaimsNotPending = {
+const previousClaimsNotPending = {
   previousClaims: [
     {
       ClaimId: 798118117,
@@ -28,23 +28,23 @@ var previousClaimsNotPending = {
   ]
 }
 
-var noPreviousClaims = {
+const noPreviousClaims = {
   previousClaims: []
 }
 
 describe('services/auto-approval/checks/is-no-previous-pending-claim', function () {
   it('should return false if there is a previous pending claim', function () {
-    var check = isNoPreviousPendingClaim(previousClaimsWithPending)
+    const check = isNoPreviousPendingClaim(previousClaimsWithPending)
     expect(check.result).to.equal(false)
   })
 
   it('should return true if there is no previous pending claims', function () {
-    var check = isNoPreviousPendingClaim(previousClaimsNotPending)
+    const check = isNoPreviousPendingClaim(previousClaimsNotPending)
     expect(check.result).to.equal(true)
   })
 
   it('should return true if there is no previous claims', function () {
-    var check = isNoPreviousPendingClaim(noPreviousClaims)
+    const check = isNoPreviousPendingClaim(noPreviousClaims)
     expect(check.result).to.equal(true)
   })
 })

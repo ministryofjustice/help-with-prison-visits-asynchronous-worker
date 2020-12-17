@@ -10,8 +10,8 @@ const INTSCHEMA = 'IntSchema'
 describe('services/data/get-all-claim-data', function () {
   describe('get first time claim data', function () {
     const REFERENCE = 'FIRST12'
-    var eligibilityId
-    var claimId
+    let eligibilityId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimEligibilityData(EXTSCHEMA, REFERENCE)
@@ -43,7 +43,7 @@ describe('services/data/get-all-claim-data', function () {
   describe('get repeat claim data', function () {
     const REFERENCE = 'REPEAT5'
     const ELIGIBILITYID = 4321
-    var claimId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
@@ -55,9 +55,9 @@ describe('services/data/get-all-claim-data', function () {
     it('should return all repeat claim data', function () {
       return getAllClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, claimId)
         .then(function (data) {
-          expect(data.Eligibility).to.be.undefined
-          expect(data.Prisoner).to.be.undefined
-          expect(data.Visitor).to.be.undefined
+          expect(data.Eligibility).to.be.undefined //eslint-disable-line
+          expect(data.Prisoner).to.be.undefined //eslint-disable-line
+          expect(data.Visitor).to.be.undefined //eslint-disable-line
           expect(data.Claim.Reference).to.be.equal(REFERENCE)
           expect(data.Claim.EligibilityId).to.be.equal(ELIGIBILITYID)
           expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)
@@ -75,8 +75,8 @@ describe('services/data/get-all-claim-data', function () {
 
   describe('get internal claim data', function () {
     const REFERENCE = 'INTCLMD'
-    var eligibilityId
-    var claimId
+    let eligibilityId
+    let claimId
 
     before(function () {
       return testHelper.insertClaimEligibilityData(INTSCHEMA, REFERENCE)

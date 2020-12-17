@@ -5,13 +5,13 @@ const disableClaimDocument = require('../../../../app/services/data/disable-clai
 const testHelper = require('../../../test-helper')
 
 const REFERENCE = 'DISDOC1'
-var claimDocumentId
+let claimDocumentId
 
 describe('services/data/disable-claim-document', function () {
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function () {
-        return knex.table('IntSchema.ClaimDocument').where({'Reference': REFERENCE}).first()
+        return knex.table('IntSchema.ClaimDocument').where({ Reference: REFERENCE }).first()
           .then(function (claimDocument) {
             claimDocumentId = claimDocument.ClaimDocumentId
           })
@@ -21,10 +21,10 @@ describe('services/data/disable-claim-document', function () {
     return disableClaimDocument('IntSchema', claimDocumentId)
       .then(function () {
         return knex.table('IntSchema.ClaimDocument')
-          .where({'ClaimDocumentId': claimDocumentId})
+          .where({ ClaimDocumentId: claimDocumentId })
           .first()
           .then(function (result) {
-            expect(result.IsEnabled).to.be.false
+            expect(result.IsEnabled).to.be.false //eslint-disable-line
           })
       })
   })

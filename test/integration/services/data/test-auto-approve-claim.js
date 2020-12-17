@@ -3,7 +3,6 @@ const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
@@ -22,8 +21,8 @@ const autoApproveClaim = proxyquire('../../../../app/services/data/auto-approve-
 
 const REFERENCE = 'AUTOAPP'
 const EMAIL_ADDRESS = 'donotsend@apvs.com'
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
 describe('services/data/auto-approve-claim', function () {
   before(function () {
@@ -42,11 +41,11 @@ describe('services/data/auto-approve-claim', function () {
           .first()
           .then(function (claim) {
             expect(claim.Status).to.equal(statusEnum.AUTOAPPROVED)
-            expect(claim.DateApproved).not.to.be.null
-            expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED)
-            expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true
-            expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true
-            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).to.be.true
+            expect(claim.DateApproved).not.to.be.null //eslint-disable-line
+            expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED) //eslint-disable-line
+            expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true //eslint-disable-line
+            expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true //eslint-disable-line
+            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).to.be.true //eslint-disable-line
           })
       })
   })

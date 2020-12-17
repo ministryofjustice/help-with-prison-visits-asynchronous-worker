@@ -1,15 +1,14 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const CLAIM_ID = 1234
 const CLAIM_DATA = { DeleteEligibility: false, Claim: { ClaimId: CLAIM_ID } }
 
-var archiveClaim
+let archiveClaim
 
-var moveClaimDataToArchiveDatabase
-var moveClaimFilesToArchiveFileStore
+let moveClaimDataToArchiveDatabase
+let moveClaimFilesToArchiveFileStore
 
 describe('services/workers/archive-claim', function () {
   beforeEach(function () {
@@ -25,9 +24,9 @@ describe('services/workers/archive-claim', function () {
   it('should move claim data then claim files', function () {
     moveClaimDataToArchiveDatabase.resolves(CLAIM_DATA)
 
-    return archiveClaim.execute({claimId: CLAIM_ID}).then(function () {
-      expect(moveClaimDataToArchiveDatabase.calledWith(CLAIM_ID)).to.be.true
-      expect(moveClaimFilesToArchiveFileStore.calledWith(CLAIM_DATA)).to.be.true
+    return archiveClaim.execute({ claimId: CLAIM_ID }).then(function () {
+      expect(moveClaimDataToArchiveDatabase.calledWith(CLAIM_ID)).to.be.true //eslint-disable-line
+      expect(moveClaimFilesToArchiveFileStore.calledWith(CLAIM_DATA)).to.be.true //eslint-disable-line
     })
   })
 })

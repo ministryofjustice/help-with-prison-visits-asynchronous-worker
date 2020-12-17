@@ -7,9 +7,9 @@ const DATA_TYPE = 'transactions-by-channel'
 const PERIOD = 'day'
 
 module.exports = function (startOfDayDate, submittedClaimCount) {
-  var timestamp = startOfDayDate.toJSON()
+  const timestamp = startOfDayDate.toJSON()
 
-  var payload = {
+  const payload = {
     _id: getId(timestamp),
     _timestamp: timestamp,
     service: SERVICE,
@@ -19,13 +19,13 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
     period: PERIOD
   }
 
-  var options = {
+  const options = {
     method: 'POST',
     uri: config.PERFORMANCE_PLATFORM_URL,
     body: payload,
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${config.PERFORMANCE_PLATFORM_BEARER_TOKEN}`
+      Authorization: `Bearer ${config.PERFORMANCE_PLATFORM_BEARER_TOKEN}`
     },
     json: true
   }
@@ -34,5 +34,5 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
 }
 
 function getId (timestamp) {
-  return new Buffer(`${timestamp}-${SERVICE}-${PERIOD}-${DATA_TYPE}-${CHANNEL}`).toString('base64')
+  return Buffer.from(`${timestamp}-${SERVICE}-${PERIOD}-${DATA_TYPE}-${CHANNEL}`).toString('base64')
 }

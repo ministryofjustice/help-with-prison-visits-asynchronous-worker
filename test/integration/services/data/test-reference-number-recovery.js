@@ -5,14 +5,14 @@ const referenceNumberRecovery = require('../../../../app/services/data/reference
 
 const REFERENCE = 'RECOVER'
 
-var email
-var prisonNumber
+let email
+let prisonNumber
 
 describe('services/data/reference-number-recovery', function () {
   before(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function () {
-        var claimData = testHelper.getClaimData(REFERENCE)
+        const claimData = testHelper.getClaimData(REFERENCE)
         email = claimData.Visitor.EmailAddress
         prisonNumber = claimData.Prisoner.PrisonNumber
       })

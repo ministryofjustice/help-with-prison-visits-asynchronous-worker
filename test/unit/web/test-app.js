@@ -1,17 +1,16 @@
-var proxyquire = require('proxyquire')
-var sinon = require('sinon')
-var supertest = require('supertest')
-var expect = require('chai').expect
-require('sinon-bluebird')
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+const supertest = require('supertest')
+const expect = require('chai').expect
 
 describe('web/app', function () {
   describe('GET /status', function () {
-    var request
-    var stubGetTaskCountsByStatus
+    let request
+    let stubGetTaskCountsByStatus
 
     beforeEach(function () {
       stubGetTaskCountsByStatus = sinon.stub().resolves()
-      var app = proxyquire('../../../app/web/app', {
+      const app = proxyquire('../../../app/web/app', {
         '../services/data/get-task-counts-by-status': stubGetTaskCountsByStatus
       })
       request = supertest(app)
@@ -22,8 +21,8 @@ describe('web/app', function () {
         .get('/status')
         .expect(200)
         .end(function (error, response) {
-          expect(error).to.be.null
-          expect(stubGetTaskCountsByStatus.calledOnce).to.be.true
+          expect(error).to.be.null //eslint-disable-line
+          expect(stubGetTaskCountsByStatus.calledOnce).to.be.true //eslint-disable-line
           done()
         })
     })

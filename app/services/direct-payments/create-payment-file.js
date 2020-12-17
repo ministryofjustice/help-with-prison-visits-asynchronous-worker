@@ -16,7 +16,7 @@ module.exports = function (payments, isForApvu = false) {
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
 
-  var length = payments.length
+  const length = payments.length
   log.info(`Generating direct bank payments file with ${length} payments`)
 
   return stringify(data).then(function (content) {
@@ -29,14 +29,14 @@ module.exports = function (payments, isForApvu = false) {
 }
 
 function formatPaymentsToCsvStandard (payments, isForApvu = false) {
-  var csvFormattedPayments = []
+  const csvFormattedPayments = []
 
-  var niTotal = 0
-  var engTotal = 0
-  var walTotal = 0
-  var scoTotal = 0
+  let niTotal = 0
+  let engTotal = 0
+  let walTotal = 0
+  let scoTotal = 0
   payments.forEach(function (payment) {
-    var cost = parseFloat(payment[3])
+    const cost = parseFloat(payment[3])
     switch (payment[5]) {
       case 'England':
         engTotal = engTotal + cost
@@ -51,14 +51,20 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
         walTotal = walTotal + cost
         break
     }
-    csvFormattedPayments.push([
-      payment[0],                                         // sortcode
-      payment[1],                                         // account number
-      getNameAs18CharactersPaddedWithSpaces(payment[2]),  // payee
+    const thisPayment = [
+      payment[0], // sortcode
+      payment[1], // account number
+      getNameAs18CharactersPaddedWithSpaces(payment[2]), // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[4],                                         // reference
-      payment[5]                                          // country
-    ])
+      payment[6] // roll number
+    ]
+    if (isForApvu) {
+      // reference
+      thisPayment.push(payment[4])
+      // country
+      thisPayment.push(payment[5])
+    }
+    csvFormattedPayments.push(thisPayment)
   })
   if (isForApvu) {
     csvFormattedPayments.push([])
@@ -73,12 +79,12 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
 }
 
 function getNameAs18CharactersPaddedWithSpaces (name) {
-  var trimmedName = name.substring(0, 17)
+  const trimmedName = name.substring(0, 17)
   return trimmedName + Array(18 - trimmedName.length + 1).join(' ')
 }
 
 function getAmountAs11CharactersPaddedWithZeros (amount) {
-  var padded = '00000000000' + amount
+  const padded = '00000000000' + amount
   return padded.substring(padded.length - 11)
 }
 
@@ -89,7 +95,7 @@ function mkdirIfNotExists (dir) {
 }
 
 function getFileName (isForApvu = false) {
-  var filePrefix = 'apvs-payments'
+  let filePrefix = 'apvs-payments'
   if (isForApvu) {
     filePrefix = 'apvu-' + filePrefix
   }

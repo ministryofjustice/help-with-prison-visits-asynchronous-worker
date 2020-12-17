@@ -15,8 +15,8 @@ module.exports = function (payments) {
   const filePath = path.join(outputPath, getFileName())
   mkdirIfNotExists(dataPath)
   mkdirIfNotExists(outputPath)
-  var formattedPayments = stripSpecialCharacters(payments)
-  var length = formattedPayments.length
+  const formattedPayments = stripSpecialCharacters(payments)
+  const length = formattedPayments.length
 
   log.info(`Generating payout file with ${length} payments`)
   return stringify(formattedPayments).then(function (content) {
@@ -40,6 +40,6 @@ function getFileName () {
 }
 
 function stripSpecialCharacters (payments) {
-  var replaceCharacters = string => string.replace(/[^a-zA-Z0-9-. ]/g, '')
+  const replaceCharacters = string => string.replace(/[^a-zA-Z0-9-. ]/g, '')
   return _.map(payments, paymentRow => _.map(paymentRow, replaceCharacters))
 }
