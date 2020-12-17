@@ -49,6 +49,8 @@ module.exports.execute = function (task) {
           personalisation.approved_amount = getTotalApprovedAmount(claimExpenseData, claimDeductions)
           emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID
         }
+      } else if (paymentMethod === paymentMethodEnum.MANUALLY_PROCESSED.value) {
+        emailTemplateId = config.NOTIFY_ACCEPTED_CLAIM_MANUAL_EMAIL_TEMPLATE_ID
       } else {
         return Promise.reject(new Error('No payment method found'))
       }
