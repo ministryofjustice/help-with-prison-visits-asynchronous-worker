@@ -1,7 +1,7 @@
 const appInsights = require('applicationinsights')
 const config = require('./config')
 appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
-.setSendLiveMetrics(true)
+  .setSendLiveMetrics(true)
 appInsights.start()
 const log = require('./app/services/log')
 const Promise = require('bluebird')
