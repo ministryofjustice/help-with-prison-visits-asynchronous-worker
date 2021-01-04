@@ -114,6 +114,10 @@ module.exports = {
 
   PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator',
 
+  // Azure App Insights
+  APP_INSIGHTS_INSTRUMENTATION_KEY: process.env.APVS_APP_INSIGHTS_INSTRUMENTATION_KEY,
+
+  // ADI Journal
   ADI_JOURNAL_PREFIX: process.env.APVS_ADI_JOURNAL_PREFIX || '578/APVU/',
   ADI_JOURNAL_SUFFIX: process.env.APVS_ADI_JOURNAL_SUFFIX || '/EB',
   ADI_TEMPLATE_PATH: process.env.APVS_ADI_TEMPLATE_PATH || '/data/templates/adi_template.xlsm',

@@ -1,4 +1,8 @@
+const appInsights = require('applicationinsights')
 const config = require('./config')
+appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
+  .setSendLiveMetrics(true)
+appInsights.start()
 const log = require('./app/services/log')
 const CronJob = require('cron').CronJob
 const processTasks = require('./app/process-tasks')
