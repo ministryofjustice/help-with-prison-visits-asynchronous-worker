@@ -13,6 +13,7 @@ node_modules
 .tmuxp.*
 ~$*.xlsm
 *.pyc
+.env
 
 # Static managed assets
 app/views/govuk_template.html
