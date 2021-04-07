@@ -159,7 +159,7 @@ module.exports.getClaimData = function (reference, randomIds) {
   // Add random number to ID when generating muliple with same reference number
   const randomAddition = randomIds ? Math.floor((Math.random() * 10000) + 1) : 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  const uniqueId = Math.floor(Date.now() / 100) - 14000000000 + randomAddition
+  const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + randomAddition
   const uniqueId2 = uniqueId + 1
 
   return {
@@ -402,7 +402,7 @@ module.exports.orphanedClaimDocument = function (eligibilityId, claimId, referen
 }
 
 module.exports.getAutoApprovalData = function (reference) {
-  const uniqueId = Math.floor(Date.now() / 100) - 14000000000
+  const uniqueId = Math.floor(Date.now() / 100) - 15000000000
   const claimId1 = uniqueId + 1
   const claimId2 = claimId1 + 1
   const claimId3 = claimId2 + 1
