@@ -1,4 +1,5 @@
 const appInsights = require('applicationinsights')
+require('dotenv').config();
 const config = require('./config')
 appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
   .setSendLiveMetrics(true)
