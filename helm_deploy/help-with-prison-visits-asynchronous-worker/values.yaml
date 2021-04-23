@@ -1,0 +1,60 @@
+---
+# Values here are the same across all environments
+generic-service:
+  nameOverride: help-with-prison-visits-asynchronous-worker
+
+  image:
+    repository: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+    tag: app_version    # override at deployment time
+    port: 3999
+  
+  service:
+    type: ClusterIP
+    port: 3999
+    targetPort: 3999
+
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     kubernetes.io/ingress.class: "nginx"
+  #     nginx.ingress.kubernetes.io/custom-http-errors: "418"
+  #   tlsSecretName: help-with-prison-visits-cert
+  #   path: /
+
+  livenessProbe:
+    httpGet:
+      path: /status
+      port: http
+  
+  readinessProbe:
+    httpGet:
+      path: /status
+      port: http
+  
+  env:
+    PAYOUT_SFTP_HOST: "51.140.191.219"
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+
+  namespace_secrets:
+    help-with-prison-visits-asynchronous-worker:
+      APVS_APP_INSIGHTS_INSTRUMENTATION_KEY: "APVS_APP_INSIGHTS_INSTRUMENTATION_KEY"
+      APVS_NOTIFY_API_KEY: "APVS_NOTIFY_API_KEY"
+      APVS_NOTIFY_CLIENT_ID: "APVS_NOTIFY_CLIENT_ID"
+      PAYOUT_SFTP_USER: "PAYOUT_SFTP_USER"
+      PAYOUT_SFTP_PASSWORD: "PAYOUT_SFTP_PASSWORD"
+      APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY: "APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY"
+
+    #rds-instance-output:
+    #  APVS_DATABASE: "database_name"
+    #  APVS_DATABASE_SERVER: 'rds_instance_address'
+    #  APVS_ASYNC_WORKER_USERNAME: 'database_username'
+    #  APVS_ASYNC_WORKER_PASSWORD: 'database_password'
+    azure-sqlserver:
+      APVS_DATABASE: "APVS_DATABASE"
+      APVS_DATABASE_SERVER: "APVS_DATABASE_SERVER"
+      APVS_ASYNC_WORKER_USERNAME: "APVS_ASYNC_WORKER_USERNAME"
+      APVS_ASYNC_WORKER_PASSWORD: "APVS_ASYNC_WORKER_PASSWORD"
