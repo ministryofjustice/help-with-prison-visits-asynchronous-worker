@@ -6,7 +6,7 @@ const route = express.Router()
 app.use('/', route)
 
 route.get('/status', function (req, res) {
-  res.status(200).json({ status: 'OK', tasks: statusCounts })
+  res.status(200).json({ status: 'OK' })
 })
 
 // catch 404 and forward to error handler
