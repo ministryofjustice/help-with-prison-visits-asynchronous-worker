@@ -14,7 +14,7 @@ RUN npm ci --no-audit
 
 RUN npm prune --production
 
-FROM node:14-buster-slim
+FROM node:12-buster-slim
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 RUN apt-get update && \
