@@ -57,7 +57,7 @@ ENV PORT=3999
 EXPOSE 3999
 USER 2000
 
-HEALTHCHECK CMD curl --fail http://localhost:3001/status || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:3999/status || exit 1
 
 CMD npm run start && npm run start-daily-auto-approval-check && npm run start-schedule-daily-tasks && npm run start-schedule-payment-run
 # CMD npm install && npm run-script migrations && node_modules/.bin/nodemon --exec node_modules/.bin/gulp --config="nodemon.json"
