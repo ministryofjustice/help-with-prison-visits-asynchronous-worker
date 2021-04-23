@@ -6,7 +6,7 @@ orbs:
 # executors:
 #   integration-tests:
 #     docker:
-#       - image: cimg/node:14.15-browsers
+#       - image: cimg/node:12.22-browsers
 #       - image: circleci/redis:buster
 #     working_directory: ~/app
 
