@@ -8,7 +8,7 @@ app.use('/', route)
 
 route.get('/status', function (req, res) {
   // getTaskCountsByStatus().then(function (statusCounts) {
-    res.status(200).json({ status: 'OK' })
+  res.status(200).json({ status: 'OK' })
   // })
 })
 
