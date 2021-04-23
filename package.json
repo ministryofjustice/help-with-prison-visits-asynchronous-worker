@@ -19,9 +19,6 @@
     "test-coverage": "nyc npm run test-unit"
   },
   "standard": {
-    "ignore": [
-      "cache_node_modules/*"
-    ],
     "globals": [
       "describe",
       "before",
@@ -50,6 +47,7 @@
     "cron": "^1.8.2",
     "csv": "^5.3.2",
     "debug": "^4.3.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.15",
     "lodash": "^4.17.20",
