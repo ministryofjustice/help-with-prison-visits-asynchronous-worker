@@ -1,20 +1,59 @@
-# NOTE THIS IS NOT A PRODUCTION READY CONTAINER FOR DEVELOPMENT ONLY
-FROM node:6.5.0
+FROM node:14-buster as builder
 
-RUN mkdir -p /usr/src/app/app
-RUN mkdir /usr/src/app/data
-WORKDIR /usr/src/app
+ARG BUILD_NUMBER
+ARG GIT_REF
 
-COPY package.json /usr/src/app/
-COPY config.js /usr/src/app/
-COPY start.js /usr/src/app/
-COPY knexfile.js /usr/src/app/
-COPY nodemon.json /usr/src/app/
-COPY app /usr/src/app/app
+RUN apt-get update && \
+    apt-get upgrade -y
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm ci --no-audit
+
+RUN npm prune --production
+
+FROM node:14-buster-slim
+LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN addgroup --gid 2000 --system appgroup && \
+    adduser --uid 2000 --system appuser --gid 2000
+
+ENV TZ=Europe/London
+RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
+
+# Create app directory
+RUN mkdir /app && chown appuser:appgroup /app
+RUN mkdir /app/logs && chown appuser:appgroup /app/logs
+RUN mkdir /app/data && chown appuser:appgroup /app/data
+USER 2000
+WORKDIR /app
+
+COPY --from=builder --chown=appuser:appgroup \
+        /app/package.json \
+        /app/package-lock.json \
+        /app/knexfile.js \
+        /app/config.js \
+        ./
+
+COPY --from=builder --chown=appuser:appgroup \
+        /app/node_modules ./node_modules
+
+COPY --from=builder --chown=appuser:appgroup \
+        /app/app ./app
+
+ENV PORT=3999
 
 EXPOSE 3999
+USER 2000
 
-HEALTHCHECK CMD curl --fail http://localhost:3999/status || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:3001/status || exit 1
 
-# Resolve dependencies at container startup to allow caching
-CMD npm install && node_modules/.bin/nodemon start.js --config="nodemon.json"
+CMD npm run start && npm run start-daily-auto-approval-check && npm run start-schedule-daily-tasks && npm run start-schedule-payment-run
+# CMD npm install && npm run-script migrations && node_modules/.bin/nodemon --exec node_modules/.bin/gulp --config="nodemon.json"

@@ -1,33 +1,12 @@
-version: '2'
+version: '3'
 services:
-
-  node-asynchronous-worker-apvs:
-    build: .
+  help-with-prison-visits-async-worker:
+    build:
+      context: .
     volumes:
       - "./app:/usr/src/app/app"
-      - "./cache_node_modules:/usr/src/app/node_modules"
       - "./logs:/usr/src/app/logs"
       - "./payments:/usr/src/app/payments"
     ports:
       - "3999:3999"
-    environment:
-    - LOGGING_PATH=/usr/src/app/logs/asynchronous-worker.log
-    - APVS_DATABASE_SERVER
-    - APVS_ASYNC_WORKER_USERNAME
-    - APVS_ASYNC_WORKER_PASSWORD
-    - APVS_DATABASE
-    - APVS_ASYNC_WORKER_CONCURRENCY=1
-    - APVS_ASYNC_WORKER_FREQUENCY=10000
-    - APVS_ASYNC_WORKER_BATCH_SIZE=5
-    - APVS_NOTIFY_API_URL
-    - APVS_NOTIFY_API_KEY
-    - APVS_NOTIFY_CLIENT_ID
-    - APVS_NOTIFY_SUBMIT_CLAIM_EMAIL_TEMPLATE_ID
-    - APVS_DWP_BENEFIT_CHECKER_ENABLED
-    - APVS_DWP_BENEFIT_CHECKER_URL
-    - APVS_DWP_BENEFIT_CHECKER_LSCSERVICENAME
-    - APVS_DWP_BENEFIT_CHECKER_CLIENTORGID
-    - APVS_DWP_BENEFIT_CHECKER_CLIENTUSERID
-    - APVS_DWP_BENEFIT_CHECKER_CLIENTREFERENCE
-    - APVS_PAYMENT_GENERATION_CRON
-    - APVS_PAYMENT_FILE_PATH=/usr/src/app/data/
+    env_file: ./.env
