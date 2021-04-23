@@ -1,5 +1,5 @@
 const express = require('express')
-const getTaskCountsByStatus = require('../services/data/get-task-counts-by-status')
+// const getTaskCountsByStatus = require('../services/data/get-task-counts-by-status')
 
 const app = express()
 const route = express.Router()
@@ -7,9 +7,9 @@ const route = express.Router()
 app.use('/', route)
 
 route.get('/status', function (req, res) {
-  getTaskCountsByStatus().then(function (statusCounts) {
-    res.status(200).json({ status: 'OK', tasks: statusCounts })
-  })
+  // getTaskCountsByStatus().then(function (statusCounts) {
+    res.status(200).json({ status: 'OK' })
+  // })
 })
 
 // catch 404 and forward to error handler
