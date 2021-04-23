@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 const appInsights = require('applicationinsights')
 const config = require('./config')
 appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
