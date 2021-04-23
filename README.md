@@ -8,7 +8,7 @@ This allows the External/Internal web applications to offload long running or er
 
 ## Requirements
 
-* Node 6 (Including NPM) - If running locally
+* Node 12 (Including NPM) - If running locally
 * Docker (Including Docker Compose) (optional)
 * Python (for generating ADI Journal as part of payment run)
 
