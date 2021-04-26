@@ -13,14 +13,6 @@ generic-service:
     port: 3999
     targetPort: 3999
 
-  # ingress:
-  #   enabled: true
-  #   annotations:
-  #     kubernetes.io/ingress.class: "nginx"
-  #     nginx.ingress.kubernetes.io/custom-http-errors: "418"
-  #   tlsSecretName: help-with-prison-visits-cert
-  #   path: /
-
   livenessProbe:
     httpGet:
       path: /status
