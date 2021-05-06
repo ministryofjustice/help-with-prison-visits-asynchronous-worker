@@ -6,24 +6,47 @@ const path = require('path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
-
-const dataPath = config.DATA_FILE_PATH
-const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3({
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
+})
 
 module.exports = function (payments, isForApvu = false) {
-  const filePath = path.join(outputPath, getFileName(isForApvu))
+  const filename = getFileName(isForApvu)
+  const tempFilePath = path.join(config.FILE_TMP_DIR, filename)
   const data = formatPaymentsToCsvStandard(payments, isForApvu)
-  mkdirIfNotExists(dataPath)
-  mkdirIfNotExists(outputPath)
 
   const length = payments.length
   log.info(`Generating direct bank payments file with ${length} payments`)
 
   return stringify(data).then(function (content) {
-    return writeFile(filePath, content, {})
+    return writeFile(tempFilePath, content, {})
       .then(function () {
-        log.info(`Filepath for direct payment file = ${filePath}`)
-        return filePath
+        log.info(`Filepath for direct payment file = ${tempFilePath}`)
+        const uploadParams = {
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: filename,
+          Body: ''
+        }
+
+        const fileStream = fs.createReadStream(tempFilePath)
+          .on('error', function (error) {
+            log.error('Error occurred reading from file ' + tempFilePath)
+            throw new Error(error)
+          })
+
+        uploadParams.Body = fileStream
+
+        // call S3 to retrieve upload file to specified bucket
+        s3.upload(uploadParams, function (err, data) {
+          if (err) {
+            log.error('Error', err)
+          } if (data) {
+            log.info('Upload Success', data.Location)
+            return filename
+          }
+        })
       })
   })
 }
@@ -86,12 +109,6 @@ function getNameAs18CharactersPaddedWithSpaces (name) {
 function getAmountAs11CharactersPaddedWithZeros (amount) {
   const padded = '00000000000' + amount
   return padded.substring(padded.length - 11)
-}
-
-function mkdirIfNotExists (dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
 }
 
 function getFileName (isForApvu = false) {

@@ -4,6 +4,7 @@ module.exports = {
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
   LOGSTASH_HOST: process.env.LOGSTASH_HOST,
   LOGSTASH_PORT: process.env.LOGSTASH_PORT,
+  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
 
   // URL and paths
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://test-apvs-external-web.kainos.com',
@@ -125,5 +126,10 @@ module.exports = {
   ADI_ACCOUNTING_DATE_CELL: process.env.APVS_ADI_ACCOUNTING_DATE_CELL || 'E12',
   ADI_PERIOD_CELL: process.env.APVS_ADI_PERIOD_CELL || 'E13',
   ADI_JOURNAL_NAME_CELL: process.env.APVS_ADI_JOURNAL_NAME_CELL || 'E14',
-  ADI_JOURNAL_DESCRIPTION_CELL: process.env.APVS_ADI_JOURNAL_DESCRIPTION_CELL || 'E15'
+  ADI_JOURNAL_DESCRIPTION_CELL: process.env.APVS_ADI_JOURNAL_DESCRIPTION_CELL || 'E15',
+
+  // S3
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME
 }

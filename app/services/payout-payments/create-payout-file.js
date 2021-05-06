@@ -7,31 +7,48 @@ const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
 const _ = require('lodash')
-
-const dataPath = config.DATA_FILE_PATH
-const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3({
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
+})
 
 module.exports = function (payments) {
-  const filePath = path.join(outputPath, getFileName())
-  mkdirIfNotExists(dataPath)
-  mkdirIfNotExists(outputPath)
+  const filename = getFileName()
+  const tempFilePath = path.join(config.FILE_TMP_DIR, filename)
   const formattedPayments = stripSpecialCharacters(payments)
   const length = formattedPayments.length
 
   log.info(`Generating payout file with ${length} payments`)
   return stringify(formattedPayments).then(function (content) {
-    return writeFile(filePath, content, {})
+    return writeFile(tempFilePath, content, {})
       .then(function () {
-        log.info(`Filepath for payout payment file = ${filePath}`)
-        return filePath
+        log.info(`Filename for payout payment file = ${filename}`)
+        const uploadParams = {
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: filename,
+          Body: ''
+        }
+
+        const fileStream = fs.createReadStream(tempFilePath)
+          .on('error', function (error) {
+            log.error('Error occurred reading from file ' + tempFilePath)
+            throw new Error(error)
+          })
+
+        uploadParams.Body = fileStream
+
+        // call S3 to retrieve upload file to specified bucket
+        s3.upload(uploadParams, function (err, data) {
+          if (err) {
+            log.error('Error', err)
+          } if (data) {
+            log.info('Upload Success', data.Location)
+            return filename
+          }
+        })
       })
   })
-}
-
-function mkdirIfNotExists (dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
 }
 
 function getFileName () {

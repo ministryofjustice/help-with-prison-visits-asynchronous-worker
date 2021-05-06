@@ -42,20 +42,20 @@ module.exports.execute = function () {
             total = getTotalFromPaymentData(paymentData)
 
             return createPaymentFile(paymentData, false)
-              .then(function (result) {
-                return insertDirectPaymentFile(result, fileTypes.ACCESSPAY_FILE)
+              .then(function (apvsPaymentFilename) {
+                return insertDirectPaymentFile(apvsPaymentFilename, fileTypes.ACCESSPAY_FILE)
               })
               .then(function () {
                 return createPaymentFile(paymentData, true)
               })
-              .then(function (result) {
-                return insertDirectPaymentFile(result, fileTypes.APVU_ACCESSPAY_FILE)
+              .then(function (apvuPaymentFilename) {
+                return insertDirectPaymentFile(apvuPaymentFilename, fileTypes.APVU_ACCESSPAY_FILE)
               })
               .then(function () {
                 return createAdiJournalFile(total)
               })
-              .then(function (result) {
-                return insertDirectPaymentFile(result, fileTypes.ADI_JOURNAL_FILE)
+              .then(function (adiJournalFileName) {
+                return insertDirectPaymentFile(adiJournalFileName, fileTypes.ADI_JOURNAL_FILE)
               })
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData, true)
