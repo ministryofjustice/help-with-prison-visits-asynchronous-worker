@@ -9,32 +9,28 @@ const CLAIM_DOCUMENT_FILEPATH = [{ Filepath: '1' }]
 const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
-let s3
 let getClaimDocuments
 let AWS
 let deleteOldFiles
+let deleteFunction
 
-function S3 () {
-  return s3
-}
-
-describe('services/cleanup-old-data/delete-old-files', function () {
+describe.only('services/cleanup-old-data/delete-old-files', function () {
   beforeEach(function () {
     getClaimDocuments = sinon.stub()
+    deleteFunction = sinon.stub()
 
-    s3 = {
-      deleteObject: sinon.stub()
+    const helper = function () {
+      return {
+        delete: deleteFunction
+      }
     }
 
     AWS = {
-      config: {
-        update: sinon.stub()
-      },
-      S3: S3
+      AWSHelper: helper
     }
 
     deleteOldFiles = proxyquire('../../../../app/services/cleanup-old-data/delete-old-files', {
-      'aws-sdk': AWS,
+      '../aws-helper': AWS,
       '../data/get-claim-documents': getClaimDocuments
     })
   })
@@ -44,7 +40,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
         expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(s3.deleteObject.called).to.be.true //eslint-disable-line
+        expect(deleteFunction.called).to.be.true //eslint-disable-line
       })
   })
 
@@ -52,7 +48,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(s3.deleteObject.called).to.be.false //eslint-disable-line
+        expect(deleteFunction.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -60,7 +56,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_DATA)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(s3.deleteObject.called).to.be.false //eslint-disable-line
+        expect(deleteFunction.called).to.be.false //eslint-disable-line
       })
   })
 })
