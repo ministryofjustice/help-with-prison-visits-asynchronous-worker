@@ -1,6 +1,7 @@
+const AWS = require('aws-sdk')
+const fs = require('fs')
 const log = require('./log')
 const config = require('../../config')
-const AWS = require('aws-sdk')
 
 class AWSHelper {
   constructor ({ accessKeyId = config.AWS_ACCESS_KEY_ID, secretAccessKey = config.AWS_SECRET_ACCESS_KEY, bucketName = config.AWS_S3_BUCKET_NAME } = { }) {
@@ -18,12 +19,38 @@ class AWSHelper {
       Bucket: this.bucketName,
       Key: key
     }
-    this.s3.deleteObject(deleteParams, function (err) {
-      if (err) {
+    this.s3.deleteObject(deleteParams, function (error) {
+      if (error) {
         log.error(`Problem deleting file ${key}`)
-        throw new Error(err)
+        throw new Error(error)
       }
     })
+  }
+
+  upload (key, source) {
+    const uploadParams = {
+      Bucket: this.bucketName,
+      Key: key,
+      Body: ''
+    }
+
+    const fileStream = fs.createReadStream(source)
+      .on('error', function (error) {
+        log.error(`Error occurred reading from file ${source}`, error)
+        throw new Error(error)
+      })
+
+    uploadParams.Body = fileStream
+
+    this.s3.upload(uploadParams).promise()
+      .then(function (data) {
+        log.info('Upload Success', data.Location)
+        return key
+      })
+      .catch(function (error) {
+        log.error(`Error occurred uploading file to s3 ${key}`, error)
+        throw new Error(error)
+      })
   }
 }
 

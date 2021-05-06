@@ -14,7 +14,7 @@ let AWS
 let deleteOldFiles
 let deleteFunction
 
-describe.only('services/cleanup-old-data/delete-old-files', function () {
+describe('services/cleanup-old-data/delete-old-files', function () {
   beforeEach(function () {
     getClaimDocuments = sinon.stub()
     deleteFunction = sinon.stub()

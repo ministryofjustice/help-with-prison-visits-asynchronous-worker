@@ -2,13 +2,9 @@ const XlsxPopulate = require('xlsx-populate')
 const config = require('../../../config')
 const log = require('../log')
 const dateFormatter = require('../date-formatter')
-const fs = require('fs')
 const path = require('path')
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-})
+const { AWSHelper } = require('../aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (totalPayment) {
   const filename = getFileName()
@@ -29,28 +25,7 @@ module.exports = function (totalPayment) {
       // Modify the workbook
       return workbook.toFileAsync(fullOutputFilePath)
         .then(function () {
-          const uploadParams = {
-            Bucket: config.AWS_S3_BUCKET_NAME,
-            Key: filename,
-            Body: ''
-          }
-
-          const fileStream = fs.createReadStream(fullOutputFilePath)
-            .on('error', function (error) {
-              log.error('Error occurred reading from file ' + fullOutputFilePath)
-              throw new Error(error)
-            })
-
-          uploadParams.Body = fileStream
-
-          s3.upload(uploadParams, function (err, data) {
-            if (err) {
-              log.error('Error', err)
-            } if (data) {
-              log.info('Upload Success', data.Location)
-              return filename
-            }
-          })
+          return aws.upload(filename, fullOutputFilePath)
         })
         .catch(function (error) {
           log.error('An error occurred while writing the ADI journal to', fullOutputFilePath)

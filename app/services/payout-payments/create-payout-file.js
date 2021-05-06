@@ -1,17 +1,13 @@
 const Promise = require('bluebird')
 const stringify = Promise.promisify(require('csv-stringify'))
 const writeFile = Promise.promisify(require('fs').writeFile)
-const fs = require('fs')
 const path = require('path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
 const _ = require('lodash')
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-})
+const { AWSHelper } = require('../aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (payments) {
   const filename = getFileName()
@@ -24,29 +20,7 @@ module.exports = function (payments) {
     return writeFile(tempFilePath, content, {})
       .then(function () {
         log.info(`Filename for payout payment file = ${filename}`)
-        const uploadParams = {
-          Bucket: config.AWS_S3_BUCKET_NAME,
-          Key: filename,
-          Body: ''
-        }
-
-        const fileStream = fs.createReadStream(tempFilePath)
-          .on('error', function (error) {
-            log.error('Error occurred reading from file ' + tempFilePath)
-            throw new Error(error)
-          })
-
-        uploadParams.Body = fileStream
-
-        // call S3 to retrieve upload file to specified bucket
-        s3.upload(uploadParams, function (err, data) {
-          if (err) {
-            log.error('Error', err)
-          } if (data) {
-            log.info('Upload Success', data.Location)
-            return filename
-          }
-        })
+        return aws.upload(filename, tempFilePath)
       })
   })
 }
