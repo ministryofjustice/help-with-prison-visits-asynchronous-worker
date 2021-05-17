@@ -6,9 +6,9 @@ const aws = new AWSHelper()
 module.exports = function (eligibilityId, claimId, reference) {
   return getClaimDocuments('ExtSchema', reference, eligibilityId, claimId)
     .then(function (claimDocuments) {
-      claimDocuments.forEach(function (document) {
+      claimDocuments.forEach(async function (document) {
         if (document.Filepath) {
-          aws.delete(document.Filepath)
+          await aws.delete(document.Filepath)
         }
       })
       return Promise.resolve()
