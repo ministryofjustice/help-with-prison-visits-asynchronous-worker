@@ -18,9 +18,9 @@ module.exports = function (payments) {
   log.info(`Generating payout file with ${length} payments`)
   return stringify(formattedPayments).then(function (content) {
     return writeFile(tempFilePath, content, {})
-      .then(function () {
+      .then(async function () {
         log.info(`Filename for payout payment file = ${filename}`)
-        return aws.upload(filename, tempFilePath)
+        return await aws.upload(filename, tempFilePath)
       })
   })
 }

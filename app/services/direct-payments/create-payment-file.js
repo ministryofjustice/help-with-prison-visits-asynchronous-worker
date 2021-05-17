@@ -18,9 +18,9 @@ module.exports = function (payments, isForApvu = false) {
 
   return stringify(data).then(function (content) {
     return writeFile(tempFilePath, content, {})
-      .then(function () {
+      .then(async function () {
         log.info(`Filepath for direct payment file = ${tempFilePath}`)
-        return aws.upload(filename, tempFilePath)
+        return await aws.upload(filename, tempFilePath)
       })
   })
 }

@@ -24,8 +24,8 @@ module.exports = function (totalPayment) {
       adiJournalSheet.cell(config.ADI_JOURNAL_DESCRIPTION_CELL).value(journalName)
       // Modify the workbook
       return workbook.toFileAsync(fullOutputFilePath)
-        .then(function () {
-          return aws.upload(filename, fullOutputFilePath)
+        .then(async function () {
+          return await aws.upload(filename, fullOutputFilePath)
         })
         .catch(function (error) {
           log.error('An error occurred while writing the ADI journal to', fullOutputFilePath)
