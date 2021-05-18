@@ -60,9 +60,14 @@ class AWSHelper {
       Key: key
     }
     const randomFilename = uuidv4()
-    const data = await this.s3.getObject(downloadParams).promise()
     const tempFile = `${config.FILE_TMP_DIR}/${randomFilename}`
-    fs.writeFileSync(tempFile, data.Body)
+
+    try {
+      const data = await this.s3.getObject(downloadParams).promise()
+      fs.writeFileSync(tempFile, data.Body)
+    } catch (error) {
+      throw new Error(error)
+    }
 
     return tempFile
   }
