@@ -1,9 +1,6 @@
 require('dotenv').config()
-const appInsights = require('applicationinsights')
+require('./app/azure-appinsights')
 const config = require('./config')
-appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
-  .setSendLiveMetrics(true)
-appInsights.start()
 const log = require('./app/services/log')
 const CronJob = require('cron').CronJob
 const insertTask = require('./app/services/data/insert-task')
