@@ -1,0 +1,9 @@
+---
+# Environment specific values, override helm_deploy/help-with-prison-visits-asynchronous-worker/values.yaml
+generic-service:
+  replicaCount: 2
+
+  env:
+    APVS_DWP_BENEFIT_CHECKER_ENABLED: "false"
+    APVS_ZENDESK_ENABLED: "false"
+    APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-preprod.service.justice.gov.uk'
