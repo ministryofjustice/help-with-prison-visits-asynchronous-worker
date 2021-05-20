@@ -1,3 +1,4 @@
+require('../azure-appinsights')
 const express = require('express')
 
 const app = express()
