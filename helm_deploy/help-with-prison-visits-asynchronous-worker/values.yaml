@@ -51,3 +51,6 @@ generic-service:
       APVS_ZENDESK_EMAIL_ADDRESS: "APVS_ZENDESK_EMAIL_ADDRESS"    
     rds-sqlserver-instance-output:
       APVS_DATABASE_SERVER: 'rds_instance_address'
+
+generic-prometheus-alerts:
+  targetApplication: help-with-prison-visits-asynchronous-worker
