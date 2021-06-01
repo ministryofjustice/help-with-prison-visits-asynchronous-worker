@@ -55,7 +55,6 @@
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "mssql": "^6.3.1",
-    "mv": "http://registry.npmjs.org/mv/-/mv-2.1.1.tgz",
     "notifications-node-client": "5.1.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
