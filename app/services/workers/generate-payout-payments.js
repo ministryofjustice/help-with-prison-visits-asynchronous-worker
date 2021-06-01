@@ -16,7 +16,7 @@ const formatCSVData = require('./helpers/payments/payout/format-csv-data')
 module.exports.execute = function () {
   let claimIds
   let topUpClaimIds
-  let paymentCsvFilePath
+  let paymentCsvFilename
 
   return getClaimsPendingPayment(paymentMethods.PAYOUT.value)
     .then(function (paymentData) {
@@ -33,15 +33,15 @@ module.exports.execute = function () {
           if (paymentData.length > 0) {
             formatCSVData(paymentData, claimIdIndex)
             return createPayoutFile(paymentData)
-              .then(function (filePath) {
-                paymentCsvFilePath = filePath
-                const filename = path.basename(paymentCsvFilePath)
-                const remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${filename}`
+              .then(function (filename) {
+                paymentCsvFilename = filename
+                const localFilePath = path.join(config.FILE_TMP_DIR, paymentCsvFilename)
+                const remotePaypitCsvFilePath = `${config.PAYOUT_SFTP_REMOTE_PATH}${paymentCsvFilename}`
 
-                return sftpSendPayoutPaymentFile(paymentCsvFilePath, remotePaypitCsvFilePath)
+                return sftpSendPayoutPaymentFile(localFilePath, remotePaypitCsvFilePath)
               })
               .then(function () {
-                return insertDirectPaymentFile(paymentCsvFilePath, fileTypes.PAYOUT_FILE)
+                return insertDirectPaymentFile(paymentCsvFilename, fileTypes.PAYOUT_FILE)
               })
               .then(function () {
                 return updateAllClaimsProcessedPayment(claimIds, paymentData, false)

@@ -3,12 +3,12 @@ const config = require('../../../config')
 const log = require('../log')
 const dateFormatter = require('../date-formatter')
 const path = require('path')
+const { AWSHelper } = require('../aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (totalPayment) {
-  const dataPath = config.DATA_FILE_PATH
-  const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
-
-  const fullOutputFilePath = path.join(outputPath, getFileName())
+  const filename = getFileName()
+  const fullOutputFilePath = path.join(config.FILE_TMP_DIR, filename)
 
   const accountingDate = dateFormatter.now().format('DD-MMM-YYYY')
   const journalName = config.ADI_JOURNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JOURNAL_SUFFIX
@@ -24,8 +24,8 @@ module.exports = function (totalPayment) {
       adiJournalSheet.cell(config.ADI_JOURNAL_DESCRIPTION_CELL).value(journalName)
       // Modify the workbook
       return workbook.toFileAsync(fullOutputFilePath)
-        .then(function () {
-          return fullOutputFilePath
+        .then(async function () {
+          return await aws.upload(filename, fullOutputFilePath)
         })
         .catch(function (error) {
           log.error('An error occurred while writing the ADI journal to', fullOutputFilePath)

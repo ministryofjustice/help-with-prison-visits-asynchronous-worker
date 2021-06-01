@@ -1,9 +1,9 @@
 module.exports = {
   LOGGING_PATH: process.env.LOGGING_PATH,
-  DATA_FILE_PATH: process.env.APVS_DATA_FILE_PATH || './data',
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
   LOGSTASH_HOST: process.env.LOGSTASH_HOST,
   LOGSTASH_PORT: process.env.LOGSTASH_PORT,
+  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
 
   // URL and paths
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://test-apvs-external-web.kainos.com',
@@ -28,10 +28,6 @@ module.exports = {
   NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION: process.env.APVS_NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION || '7',
   ARCHIVE_CLAIMS_AFTER_DAYS: process.env.APVS_ARCHIVE_CLAIMS_AFTER_DAYS || '365',
   AUTO_REJECT_AFTER_WEEKS: process.env.APVS_AUTO_REJECT_AFTER_WEEKS || '6',
-
-  // File upload
-  FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
-  FILE_ARCHIVE_LOCATION: process.env.FILE_ARCHIVE_LOCATION || './archive',
 
   // ZenDesk
   ZENDESK_ENABLED: process.env.APVS_ZENDESK_ENABLED || 'false',
@@ -74,7 +70,6 @@ module.exports = {
 
   // Payment Generation
   PAYMENT_GENERATION_CRON: process.env.APVS_PAYMENT_GENERATION_CRON || '00 05 00 * * 1-5', // default Mon-Fri at 00:05
-  PAYMENT_FILE_PATH: process.env.APVS_PAYMENT_FILE_PATH || 'payments',
   PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS: process.env.APVS_PAYMENT_CLEANUP_FILE_NUMBER_OF_DAYS || '28',
   PAYOUT_TEMPLATE_CODE: process.env.APVS_PAYOUT_TEMPLATE_CODE || 'NOMS1086-LET-003',
   PAYOUT_FILENAME_PREFIX: process.env.APVS_PAYOUT_FILENAME_PREFIX || 'TESTDF_SANTANDERNOMS086_LETTER_',
@@ -113,7 +108,8 @@ module.exports = {
   DISTANCE_CALCULATION_DIRECTIONS_API_URL: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_URL || 'https://maps.googleapis.com/maps/api/directions/json',
   DISTANCE_CALCULATION_DIRECTIONS_API_KEY: process.env.APVS_DISTANCE_CALCULATION_DIRECTIONS_API_KEY, // generate key at https://developers.google.com/maps/documentation/distance-matrix/
 
-  PYTHON_SHELL_ADI_SCRIPT_PATH: process.env.PYTHON_SHELL_ADI_SCRIPT_PATH || '/usr/src/app/apvs-asynchronous-worker/python/adi_generator',
+  // Azure App Insights
+  APP_INSIGHTS_INSTRUMENTATION_KEY: process.env.APVS_APP_INSIGHTS_INSTRUMENTATION_KEY,
 
   // ADI Journal
   ADI_JOURNAL_PREFIX: process.env.APVS_ADI_JOURNAL_PREFIX || '578/APVU/',
@@ -125,5 +121,10 @@ module.exports = {
   ADI_ACCOUNTING_DATE_CELL: process.env.APVS_ADI_ACCOUNTING_DATE_CELL || 'E12',
   ADI_PERIOD_CELL: process.env.APVS_ADI_PERIOD_CELL || 'E13',
   ADI_JOURNAL_NAME_CELL: process.env.APVS_ADI_JOURNAL_NAME_CELL || 'E14',
-  ADI_JOURNAL_DESCRIPTION_CELL: process.env.APVS_ADI_JOURNAL_DESCRIPTION_CELL || 'E15'
+  ADI_JOURNAL_DESCRIPTION_CELL: process.env.APVS_ADI_JOURNAL_DESCRIPTION_CELL || 'E15',
+
+  // S3
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME
 }

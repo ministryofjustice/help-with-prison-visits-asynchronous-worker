@@ -1,29 +1,26 @@
 const Promise = require('bluebird')
 const stringify = Promise.promisify(require('csv-stringify'))
 const writeFile = Promise.promisify(require('fs').writeFile)
-const fs = require('fs')
 const path = require('path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
-
-const dataPath = config.DATA_FILE_PATH
-const outputPath = path.join(dataPath, config.PAYMENT_FILE_PATH)
+const { AWSHelper } = require('../aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (payments, isForApvu = false) {
-  const filePath = path.join(outputPath, getFileName(isForApvu))
+  const filename = getFileName(isForApvu)
+  const tempFilePath = path.join(config.FILE_TMP_DIR, filename)
   const data = formatPaymentsToCsvStandard(payments, isForApvu)
-  mkdirIfNotExists(dataPath)
-  mkdirIfNotExists(outputPath)
 
   const length = payments.length
   log.info(`Generating direct bank payments file with ${length} payments`)
 
   return stringify(data).then(function (content) {
-    return writeFile(filePath, content, {})
-      .then(function () {
-        log.info(`Filepath for direct payment file = ${filePath}`)
-        return filePath
+    return writeFile(tempFilePath, content, {})
+      .then(async function () {
+        log.info(`Filepath for direct payment file = ${tempFilePath}`)
+        return await aws.upload(filename, tempFilePath)
       })
   })
 }
@@ -86,12 +83,6 @@ function getNameAs18CharactersPaddedWithSpaces (name) {
 function getAmountAs11CharactersPaddedWithZeros (amount) {
   const padded = '00000000000' + amount
   return padded.substring(padded.length - 11)
-}
-
-function mkdirIfNotExists (dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
 }
 
 function getFileName (isForApvu = false) {

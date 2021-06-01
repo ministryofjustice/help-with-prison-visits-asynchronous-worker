@@ -39,7 +39,7 @@ const payments = [
 //   ['999991', topUpPaymentAmount2.toString(), 'Ada', 'Lovelace', '456 Test Street', 'Test Town2', 'Test County2', 'Test Country2', 'BT456BT', 'REF4567'],
 //   ['999992', topUpPaymentAmount3.toString(), 'Grace', 'Hopper', '789 Test Street', 'Test Town3', 'Test County3', 'Test Country3', 'BT789BT', 'REF8910']
 // ]
-const testPath = 'data/payments/test.csv'
+const testPath = 'test.csv'
 
 const getClaimsPendingPayment = sinon.stub().resolves(claimsPendingPayment)
 const getTopUpsPendingPayment = sinon.stub().resolves(topUpsPendingPayment)
@@ -70,7 +70,7 @@ describe('services/workers/generate-payout-payments', function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(getTopUpsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
-      expect(sftpSendPayoutPaymentFile.calledWith(testPath, './test.csv')).to.be.true //eslint-disable-line
+      expect(sftpSendPayoutPaymentFile.calledWith(`/tmp/${testPath}`, './test.csv')).to.be.true //eslint-disable-line
       expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, false)).to.be.true //eslint-disable-line
       expect(updateAllTopupsProcessedPayment.calledWith(['999990', '999991', '999992'])).to.be.true //eslint-disable-line
     })

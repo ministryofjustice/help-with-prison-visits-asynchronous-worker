@@ -9,25 +9,28 @@ const CLAIM_DOCUMENT_FILEPATH = [{ Filepath: '1' }]
 const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
-let fs
 let getClaimDocuments
-let calledFsUnlinkSync = false
-
+let AWS
 let deleteOldFiles
+let deleteFunction
 
 describe('services/cleanup-old-data/delete-old-files', function () {
   beforeEach(function () {
     getClaimDocuments = sinon.stub()
-    calledFsUnlinkSync = false
+    deleteFunction = sinon.stub()
 
-    fs = {
-      unlinkSync: function () {
-        calledFsUnlinkSync = true
+    const helper = function () {
+      return {
+        delete: deleteFunction
       }
     }
 
+    AWS = {
+      AWSHelper: helper
+    }
+
     deleteOldFiles = proxyquire('../../../../app/services/cleanup-old-data/delete-old-files', {
-      fs: fs,
+      '../aws-helper': AWS,
       '../data/get-claim-documents': getClaimDocuments
     })
   })
@@ -37,7 +40,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
         expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(calledFsUnlinkSync).to.be.true //eslint-disable-line
+        expect(deleteFunction.called).to.be.true //eslint-disable-line
       })
   })
 
@@ -45,7 +48,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(calledFsUnlinkSync).to.be.false //eslint-disable-line
+        expect(deleteFunction.called).to.be.false //eslint-disable-line
       })
   })
 
@@ -53,7 +56,7 @@ describe('services/cleanup-old-data/delete-old-files', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_DATA)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(calledFsUnlinkSync).to.be.false //eslint-disable-line
+        expect(deleteFunction.called).to.be.false //eslint-disable-line
       })
   })
 })
