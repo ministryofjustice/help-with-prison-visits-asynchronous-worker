@@ -26,6 +26,9 @@ generic-service:
   env:
     PAYOUT_SFTP_HOST: "51.140.191.219"
     BASIC_AUTH_ENABLED: "false"
+    APVS_PERFORMANCE_PLATFORM_URL: "https://www.performance.service.gov.uk/data/assisted-prison-visits/transactions-by-channel"
+    APVS_NOTIFY_API_URL: https://api.notifications.service.gov.uk
+    APVS_FILE_TMP_DIR: '/app/tmp'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -48,7 +51,7 @@ generic-service:
       APVS_DWP_BENEFIT_CHECKER_CLIENTUSERID: "APVS_DWP_BENEFIT_CHECKER_CLIENTUSERID"
       APVS_DWP_BENEFIT_CHECKER_LSCSERVICENAME: "APVS_DWP_BENEFIT_CHECKER_LSCSERVICENAME"
       APVS_ZENDESK_API_KEY: "APVS_ZENDESK_API_KEY"
-      APVS_ZENDESK_EMAIL_ADDRESS: "APVS_ZENDESK_EMAIL_ADDRESS"    
+      APVS_ZENDESK_EMAIL_ADDRESS: "APVS_ZENDESK_EMAIL_ADDRESS"
     rds-sqlserver-instance-output:
       APVS_DATABASE_SERVER: 'rds_instance_address'
 

@@ -3,10 +3,10 @@ module.exports = {
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
   LOGSTASH_HOST: process.env.LOGSTASH_HOST,
   LOGSTASH_PORT: process.env.LOGSTASH_PORT,
-  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
+  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/app/tmp',
 
   // URL and paths
-  EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://test-apvs-external-web.kainos.com',
+  EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://help-with-prison-visits-dev.service.justice.gov.uk',
   EXTERNAL_PATH_ALREADY_REGISTERED: process.env.APVS_EXTERNAL_PATH_ALREADY_REGISTERED || '/start-already-registered',
   EXTERNAL_PATH_TECHNICAL_HELP: process.env.APVS_EXTERNAL_PATH_TECHNICAL_HELP || '/technical-help',
 
@@ -61,7 +61,7 @@ module.exports = {
   NOTIFY_ACCEPTED_CLAIM_MANUAL_EMAIL_TEMPLATE_ID: process.env.APVS_NOTIFY_ACCEPTED_CLAIM_MANUAL_EMAIL_TEMPLATE_ID,
 
   // DWP Benefit Checker
-  DWP_BENEFIT_CHECKER_ENABLED: process.env.APVS_DWP_BENEFIT_CHECKER_ENABLED || 'true',
+  DWP_BENEFIT_CHECKER_ENABLED: process.env.APVS_DWP_BENEFIT_CHECKER_ENABLED || 'false',
   DWP_BENEFIT_CHECKER_URL: process.env.APVS_DWP_BENEFIT_CHECKER_URL,
   DWP_BENEFIT_CHECKER_LSCSERVICENAME: process.env.APVS_DWP_BENEFIT_CHECKER_LSCSERVICENAME,
   DWP_BENEFIT_CHECKER_CLIENTORGID: process.env.APVS_DWP_BENEFIT_CHECKER_CLIENTORGID,
@@ -114,7 +114,7 @@ module.exports = {
   // ADI Journal
   ADI_JOURNAL_PREFIX: process.env.APVS_ADI_JOURNAL_PREFIX || '578/APVU/',
   ADI_JOURNAL_SUFFIX: process.env.APVS_ADI_JOURNAL_SUFFIX || '/EB',
-  ADI_TEMPLATE_PATH: process.env.APVS_ADI_TEMPLATE_PATH || '/data/templates/adi_template.xlsm',
+  ADI_TEMPLATE_PATH: process.env.APVS_ADI_TEMPLATE_PATH || '/app/app/templates/adi_template.xlsm',
   ADI_JOURNAL_SHEET: process.env.APVS_ADI_JOURNAL_SHEET || 'WebADI',
   ADI_TOTAL_CELL: process.env.APVS_ADI_TOTAL_CELL || 'K20',
   ADI_DEBIT_CELL: process.env.APVS_ADI_DEBIT_CELL || 'J19',
