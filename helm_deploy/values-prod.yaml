@@ -9,6 +9,8 @@ generic-service:
     APVS_ZENDESK_ENABLED: "true"
     APVS_ZENDESK_API_URL: "https://ministryofjustice.zendesk.com"
     APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits.service.justice.gov.uk'
+    PAYOUT_SFTP_ENABLED: "true"
+    PAYOUT_SFTP_REMOTE_PATH: "data/"
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits
