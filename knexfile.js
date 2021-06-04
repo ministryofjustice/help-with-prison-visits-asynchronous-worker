@@ -9,7 +9,7 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.DATABASE,
       options: {
-        encrypt: true,
+        encrypt: false,
         requestTimeout: 90000,
         enableArithAbort: true
       }
@@ -29,7 +29,7 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.ARCHIVE_DATABASE,
       options: {
-        encrypt: true,
+        encrypt: false,
         requestTimeout: 90000,
         enableArithAbort: true
       }
