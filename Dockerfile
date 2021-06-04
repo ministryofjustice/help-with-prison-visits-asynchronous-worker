@@ -59,4 +59,4 @@ USER 2000
 
 HEALTHCHECK CMD curl --fail http://localhost:3999/status || exit 1
 
-CMD [ "node", "./app/web/bin/www" ]
+CMD [ "npm", "start-status" ]

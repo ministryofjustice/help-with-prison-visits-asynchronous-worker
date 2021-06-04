@@ -10,6 +10,7 @@
     "node": "12.x.x"
   },
   "scripts": {
+    "start-status": "node ./app/web/bin/www",
     "start-worker-tasks": "node start-worker-tasks.js",
     "start-schedule-daily-tasks": "node start-schedule-daily-tasks.js",
     "start-schedule-payment-run": "node start-schedule-payment-run.js",

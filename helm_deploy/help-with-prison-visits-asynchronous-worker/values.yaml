@@ -3,7 +3,7 @@
 generic-service:
   nameOverride: help-with-prison-visits-asynchronous-worker
 
-  image:
+  image: &image
     repository: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
     tag: app_version    # override at deployment time
     port: 3999
@@ -23,7 +23,7 @@ generic-service:
       path: /status
       port: http
   
-  env:
+  env: &env
     PAYOUT_SFTP_HOST: "51.140.191.219"
     BASIC_AUTH_ENABLED: "false"
     APVS_PERFORMANCE_PLATFORM_URL: "https://www.performance.service.gov.uk/data/assisted-prison-visits/transactions-by-channel"
@@ -51,7 +51,7 @@ generic-service:
   #   [name of kubernetes secret]:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
 
-  namespace_secrets:
+  namespace_secrets: &namespace_secrets
     help-with-prison-visits-asynchronous-worker:
       APVS_DATABASE: "APVS_DATABASE"
       APVS_ASYNC_WORKER_USERNAME: "APVS_ASYNC_WORKER_USERNAME"
@@ -73,3 +73,9 @@ generic-service:
 
 generic-prometheus-alerts:
   targetApplication: help-with-prison-visits-asynchronous-worker
+
+env: *env
+
+namespace_secrets: *namespace_secrets
+
+image: *image

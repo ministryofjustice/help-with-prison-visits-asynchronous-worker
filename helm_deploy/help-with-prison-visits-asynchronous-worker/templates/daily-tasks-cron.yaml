@@ -1,0 +1,25 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "generic-service.fullname" . }}-daily-tasks
+  labels:
+    {{- include "generic-service.labels" . | nindent 4 }}
+spec:
+  ttlSecondsAfterFinished: 3600
+  schedule: "30 4 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: daily-tasks
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            args:
+            - node
+            - start-schedule-daily-tasks
+{{ include "deployment.envs" . | nindent 12 }}
+          restartPolicy: Never
