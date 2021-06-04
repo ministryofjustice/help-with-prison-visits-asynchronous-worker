@@ -1,6 +1,6 @@
 ---
 # Values here are the same across all environments
-generic-service: &values
+generic-service:
   nameOverride: help-with-prison-visits-asynchronous-worker
 
   image: &image
