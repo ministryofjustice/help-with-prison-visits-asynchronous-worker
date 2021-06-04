@@ -18,6 +18,8 @@ spec:
           containers:
             - name: worker-tasks
               image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              command: ["npm"]
-              args: ["run", "start-worker-tasks"]
+              args:
+              - node
+              - start-worker-tasks
+{{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never

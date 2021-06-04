@@ -59,5 +59,4 @@ USER 2000
 
 HEALTHCHECK CMD curl --fail http://localhost:3999/status || exit 1
 
-ENTRYPOINT [ "npm", "run" ]
-CMD [ "start-status" ]
+CMD [ "npm", "start-status" ]
