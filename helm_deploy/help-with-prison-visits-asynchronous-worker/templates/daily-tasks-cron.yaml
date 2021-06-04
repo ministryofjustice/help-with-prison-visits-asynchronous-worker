@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: daily-tasks
-              image: quay.io/hmpps/dps-tools
+              image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
               args:
                 - start-schedule-daily-tasks
           restartPolicy: Never
