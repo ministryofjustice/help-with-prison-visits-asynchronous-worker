@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "app.fullname" . }}-cron-payment-run
+  name: {{ include "generic-service.fullname" . }}-payment-run
   labels:
-    {{- include "app.labels" . | nindent 4 }}
+    {{- include "generic-service.labels" . | nindent 4 }}
 spec:
   ttlSecondsAfterFinished: 3600
   schedule: "5 0 * * 1-5"
