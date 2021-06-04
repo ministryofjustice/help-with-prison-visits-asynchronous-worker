@@ -1,9 +1,9 @@
 ---
 # Values here are the same across all environments
-generic-service:
+generic-service: &values
   nameOverride: help-with-prison-visits-asynchronous-worker
 
-  image:
+  image: &image
     repository: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
     tag: app_version    # override at deployment time
     port: 3999
@@ -77,3 +77,5 @@ generic-prometheus-alerts:
 env: *env
 
 namespace_secrets: *namespace_secrets
+
+image: *image

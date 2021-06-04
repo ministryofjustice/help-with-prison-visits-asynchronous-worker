@@ -17,7 +17,7 @@ spec:
         spec:
           containers:
           - name: daily-tasks
-            image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node
             - start-schedule-daily-tasks
