@@ -16,10 +16,10 @@ spec:
       template:
         spec:
           containers:
-            - name: daily-tasks
-              image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-              - node
-              - start-schedule-daily-tasks
+          - name: daily-tasks
+            image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+            args:
+            - node
+            - start-schedule-daily-tasks
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never

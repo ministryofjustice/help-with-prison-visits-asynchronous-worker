@@ -16,10 +16,10 @@ spec:
       template:
         spec:
           containers:
-            - name: payment-run
-              image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-              - node
-              - start-schedule-payment-run
+          - name: payment-run
+            image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+            args:
+            - node
+            - start-schedule-payment-run
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never

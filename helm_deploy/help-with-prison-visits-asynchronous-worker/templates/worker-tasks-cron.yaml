@@ -16,10 +16,10 @@ spec:
       template:
         spec:
           containers:
-            - name: worker-tasks
-              image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-              - node
-              - start-worker-tasks
+          - name: worker-tasks
+            image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+            args:
+            - node
+            - start-worker-tasks
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never
