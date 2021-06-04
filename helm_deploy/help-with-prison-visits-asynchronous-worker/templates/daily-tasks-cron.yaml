@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 spec:
+  ttlSecondsAfterFinished: 3600
   schedule: "30 4 * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
