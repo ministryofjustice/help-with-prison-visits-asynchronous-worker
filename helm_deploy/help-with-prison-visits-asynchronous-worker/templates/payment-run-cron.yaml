@@ -18,6 +18,6 @@ spec:
           containers:
             - name: payment-run
               image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-                - start-schedule-payment-run
+              command: ["npm"]
+              args: ["run", "start-schedule-payment-run"]
           restartPolicy: Never

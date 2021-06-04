@@ -18,6 +18,6 @@ spec:
           containers:
             - name: worker-tasks
               image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-                - start-worker-tasks
+              command: ["npm"]
+              args: ["run", "start-worker-tasks"]
           restartPolicy: Never

@@ -18,6 +18,6 @@ spec:
           containers:
             - name: daily-tasks
               image: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
-              args:
-                - start-schedule-daily-tasks
+              command: ["npm"]
+              args: ["run", "start-schedule-daily-tasks"]
           restartPolicy: Never
