@@ -1,0 +1,22 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "app.fullname" . }}-cron-worker-tasks
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: worker-tasks
+              image: quay.io/hmpps/dps-tools
+              args:
+                - start-worker-tasks
+          restartPolicy: Never
