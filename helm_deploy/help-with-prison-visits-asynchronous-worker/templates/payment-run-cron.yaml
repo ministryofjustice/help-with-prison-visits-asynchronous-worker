@@ -17,7 +17,7 @@ spec:
         spec:
           containers:
           - name: hwpv-payment-run
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            image: "{{ .Values.image.repository }}:{{ .Values.generic-service.image.tag | default .Chart.AppVersion }}"
             args:
             - node
             - start-schedule-payment-run
