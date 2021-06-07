@@ -3,7 +3,7 @@
 generic-service:
   replicaCount: 2
 
-  env: &env
+  env:
     APVS_DWP_BENEFIT_CHECKER_ENABLED: "false"
     APVS_DWP_BENEFIT_CHECKER_URL: "https://benefitchecker.stg.legalservices.gov.uk/lsx/lsc-services/benefitChecker"
     APVS_ZENDESK_ENABLED: "false"
@@ -14,5 +14,3 @@ generic-service:
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits-devtest
-
-env: *env
