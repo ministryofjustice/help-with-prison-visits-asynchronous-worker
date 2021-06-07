@@ -1,16 +1,15 @@
 ---
 # Environment specific values, override helm_deploy/help-with-prison-visits-external/values.yaml
-generic-service:
-  replicaCount: 2
+replicaCount: 2
 
-  env:
-    APVS_DWP_BENEFIT_CHECKER_ENABLED: "false"
-    APVS_DWP_BENEFIT_CHECKER_URL: "https://benefitchecker.stg.legalservices.gov.uk/lsx/lsc-services/benefitChecker"
-    APVS_ZENDESK_ENABLED: "false"
-    APVS_ZENDESK_API_URL: "https://test.zendesk.com"
-    APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-dev.service.justice.gov.uk'
-    PAYOUT_SFTP_ENABLED: "true"
-    PAYOUT_SFTP_REMOTE_PATH: "uploads/"
+env:
+  APVS_DWP_BENEFIT_CHECKER_ENABLED: "false"
+  APVS_DWP_BENEFIT_CHECKER_URL: "https://benefitchecker.stg.legalservices.gov.uk/lsx/lsc-services/benefitChecker"
+  APVS_ZENDESK_ENABLED: "false"
+  APVS_ZENDESK_API_URL: "https://test.zendesk.com"
+  APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-dev.service.justice.gov.uk'
+  PAYOUT_SFTP_ENABLED: "true"
+  PAYOUT_SFTP_REMOTE_PATH: "uploads/"
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits-devtest
