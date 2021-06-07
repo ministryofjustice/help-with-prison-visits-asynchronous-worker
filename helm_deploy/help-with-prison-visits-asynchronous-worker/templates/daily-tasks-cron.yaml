@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "generic-service.fullname" . }}-daily-tasks
+  name: hwpv-daily-tasks
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
 spec:
@@ -16,7 +16,7 @@ spec:
       template:
         spec:
           containers:
-          - name: daily-tasks
+          - name: hwpv-daily-tasks
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node

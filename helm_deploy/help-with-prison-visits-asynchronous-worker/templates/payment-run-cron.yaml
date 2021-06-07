@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "generic-service.fullname" . }}-payment-run
+  name: hwpv-payment-run
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
 spec:
@@ -16,7 +16,7 @@ spec:
       template:
         spec:
           containers:
-          - name: payment-run
+          - name: hwpv-payment-run
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node
