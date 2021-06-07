@@ -73,6 +73,8 @@ generic-service:
 
 generic-prometheus-alerts:
   targetApplication: help-with-prison-visits-asynchronous-worker
+  jobTargetOverride: ".*"
+  cronjobTargetOverride: ".*"
 
 env: *env
 
