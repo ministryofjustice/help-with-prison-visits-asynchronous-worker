@@ -1,11 +1,10 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ include "generic-service.fullname" . }}-worker-tasks
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
 spec:
-  ttlSecondsAfterFinished: 3600
   schedule: "*/5 * * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
@@ -13,6 +12,7 @@ spec:
   successfulJobsHistoryLimit: 5
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 86400
       template:
         spec:
           containers:
