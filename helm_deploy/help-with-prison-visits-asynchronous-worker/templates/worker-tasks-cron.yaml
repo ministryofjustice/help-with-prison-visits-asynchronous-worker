@@ -17,7 +17,7 @@ spec:
         spec:
           containers:
           - name: hwpv-worker-tasks
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            image: "{{ .Values.image.repository }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
             args:
             - node
             - start-worker-tasks
