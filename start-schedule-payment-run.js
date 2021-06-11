@@ -23,3 +23,6 @@ insertTask('', '', '', taskTypes.GENERATE_DIRECT_PAYMENTS)
         log.info('Payout Payment Generation task created')
       })
   })
+  .then(function () {
+    process.exit()
+  })

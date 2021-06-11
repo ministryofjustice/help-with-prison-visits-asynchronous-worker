@@ -11,4 +11,5 @@ Promise.all([
   insertTask(null, null, null, taskTypes.AUTO_APPROVE_CLAIMS)])
   .then(function () {
     log.info('auto approval tasks created')
+    process.exit()
   })

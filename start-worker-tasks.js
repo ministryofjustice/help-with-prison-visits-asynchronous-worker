@@ -7,4 +7,5 @@ log.info('Started worker')
 
 processTasks().then(function () {
   log.info('worker completed running task')
+  process.exit()
 })

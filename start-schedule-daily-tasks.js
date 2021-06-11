@@ -16,4 +16,5 @@ Promise.all([
   insertTask(null, null, null, taskTypes.AUTO_REJECT_CLAIMS)])
   .then(function () {
     log.info('daily tasks created')
+    process.exit()
   })
