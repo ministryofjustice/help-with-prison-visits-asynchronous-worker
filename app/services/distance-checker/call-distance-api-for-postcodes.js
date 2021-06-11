@@ -1,6 +1,6 @@
 const config = require('../../../config')
 const log = require('../log')
-const requestPromise = require('request-promise')
+const axios = require('axios')
 
 module.exports = function (originPostCode, destinationPostCode) {
   const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
@@ -10,7 +10,7 @@ module.exports = function (originPostCode, destinationPostCode) {
     json: true
   }
 
-  return requestPromise(options)
+  return axios(options)
     .then(function (result) {
       let distance = null
 

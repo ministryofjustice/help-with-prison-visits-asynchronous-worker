@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const requestPromise = require('request-promise')
+const axios = require('axios')
 
 const SERVICE = 'assisted-prison-visits'
 const CHANNEL = 'digital'
@@ -30,7 +30,7 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
     json: true
   }
 
-  return requestPromise(options)
+  return axios(options)
 }
 
 function getId (timestamp) {
