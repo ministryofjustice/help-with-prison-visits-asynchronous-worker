@@ -1,7 +1,7 @@
 const log = require('../log')
 const config = require('../../../config')
 const Promise = require('bluebird')
-const requestPromise = require('request-promise')
+const axios = require('axios')
 const parseStringAsync = Promise.promisify(require('xml2js').parseString)
 const xpath = require('xml2js-xpath')
 
@@ -27,7 +27,7 @@ module.exports = function (visitorDwpBenefitCheckerData) {
     }
   }
 
-  return requestPromise(options)
+  return axios(options)
     .then(function (responseBody) {
       return parseStringAsync(responseBody)
         .then(function (xml) {

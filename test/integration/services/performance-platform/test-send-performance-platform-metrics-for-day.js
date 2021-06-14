@@ -3,7 +3,7 @@
 
 // describe('services/performance-platform/send-performance-platform-metrics-for-day', function () {
 //   it('should send performance metrics', function () {
-//     var dateOfMetrics = new Date('2016-12-03')
+//     var dateOfMetrics = new Date('2021-06-03')
 
 //     return sendPerformancePlatformMetricsForDay(dateOfMetrics, 102)
 //     // manual check to see if performance data was sent
