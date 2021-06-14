@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const config = require('../config')
 const log = require('./services/log')
 const statusEnum = require('./constants/status-enum')

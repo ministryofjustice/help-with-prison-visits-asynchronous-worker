@@ -1,7 +1,6 @@
 require('dotenv').config()
 require('./app/azure-appinsights')
 const log = require('./app/services/log')
-const Promise = require('bluebird')
 const insertTask = require('./app/services/data/insert-task')
 const taskTypes = require('./app/constants/tasks-enum')
 

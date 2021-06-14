@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const log = require('../log')
 const config = require('../../../config')
 const callDistanceApiForPostcodes = require('./call-distance-api-for-postcodes')

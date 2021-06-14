@@ -4,7 +4,6 @@ const getClaim = require('../data/get-claim')
 const sendNotification = require('../notify/send-notification')
 const getFirstNameByClaimId = require('../data/get-first-name-by-claimId')
 const reminderEnum = require('../../constants/advance-claim-reminder-enum')
-const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
   const claimId = task.claimId

@@ -1,7 +1,7 @@
 const expect = require('chai').expect
-const Promise = require('bluebird')
-const readFile = Promise.promisify(require('fs').readFile)
-const unlink = Promise.promisify(require('fs').unlink)
+const util = require('util')
+const readFile = util.promisify(require('fs').readFile)
+const unlink = util.promisify(require('fs').unlink)
 
 const createPaymentFile = require('../../../../app/services/direct-payments/create-payment-file')
 let testFilePath

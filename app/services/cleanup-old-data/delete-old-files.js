@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const getClaimDocuments = require('../data/get-claim-documents')
 const { AWSHelper } = require('../aws-helper')
 const aws = new AWSHelper()

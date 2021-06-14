@@ -2,7 +2,6 @@ const config = require('../../../config')
 const dateFormatter = require('../date-formatter')
 const getAdvanceClaimsTotalExpenseApprovedCostBeforeDate = require('../data/get-advance-claims-total-expense-approved-cost-before-date')
 const updateOverpaymentStatus = require('../data/update-overpayment-status')
-const Promise = require('bluebird')
 
 module.exports.execute = function () {
   const date = dateFormatter.now().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()

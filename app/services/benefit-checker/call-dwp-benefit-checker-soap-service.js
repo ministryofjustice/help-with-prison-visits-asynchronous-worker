@@ -1,8 +1,8 @@
 const log = require('../log')
 const config = require('../../../config')
-const Promise = require('bluebird')
 const axios = require('axios')
-const parseStringAsync = Promise.promisify(require('xml2js').parseString)
+const util = require('util')
+const parseStringAsync = util.promisify(require('xml2js').parseString)
 const xpath = require('xml2js-xpath')
 
 // Creating HTTP request rather than using SOAP client as node SOAP clients are unreliable

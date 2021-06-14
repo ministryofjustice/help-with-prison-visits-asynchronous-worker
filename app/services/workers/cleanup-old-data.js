@@ -1,6 +1,6 @@
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
-const Promise = require('bluebird').Promise
+require('../promise-each')
 
 const getOldEligibilityData = require('../data/get-old-eligibility-data')
 const getOldClaimData = require('../data/get-old-claim-data')

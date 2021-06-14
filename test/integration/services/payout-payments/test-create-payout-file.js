@@ -1,8 +1,8 @@
 const config = require('../../../../config')
 const expect = require('chai').expect
-const Promise = require('bluebird')
-const readFile = Promise.promisify(require('fs').readFile)
-const unlink = Promise.promisify(require('fs').unlink)
+const util = require('util')
+const readFile = util.promisify(require('fs').readFile)
+const unlink = util.promisify(require('fs').unlink)
 
 const createPaymentFile = require('../../../../app/services/payout-payments/create-payout-file')
 const formatCSVData = require('../../../../app/services/workers/helpers/payments/payout/format-csv-data')

@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
-const Promise = require('bluebird')
 
 const getNumberOfClaimsForEligibility = require('../../../../app/services/data/get-number-of-claims-for-eligibility')
 
