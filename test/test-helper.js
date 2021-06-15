@@ -1,7 +1,6 @@
 const config = require('../knexfile').asyncworker
 const knex = require('knex')(config)
 const dateFormatter = require('../app/services/date-formatter')
-const Promise = require('bluebird').Promise
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
   const reference = '1234567'

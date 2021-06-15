@@ -1,7 +1,7 @@
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
-const Promise = require('bluebird')
 const statusEnum = require('../../constants/status-enum')
+require('../promise-each')
 
 const INTSCHEMA = 'IntSchema'
 const EXTSCHEMA = 'ExtSchema'

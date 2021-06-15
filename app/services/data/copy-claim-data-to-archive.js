@@ -1,6 +1,5 @@
 const config = require('../../../knexfile').archive
 const knex = require('knex')(config)
-const Promise = require('bluebird')
 
 module.exports = function (data) {
   return copyEligibilityDataIfNotPresent(data)

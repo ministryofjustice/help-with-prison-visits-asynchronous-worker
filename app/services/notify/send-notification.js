@@ -1,6 +1,5 @@
 const config = require('../../../config')
 const NotifyClient = require('notifications-node-client').NotifyClient
-const Promise = require('bluebird')
 const log = require('../log')
 
 module.exports = function (emailTemplateId, emailAddress, personalisation) {

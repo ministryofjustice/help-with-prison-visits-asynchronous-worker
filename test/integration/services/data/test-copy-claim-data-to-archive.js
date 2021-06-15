@@ -3,7 +3,6 @@ const config = require('../../../../knexfile').archive
 const knex = require('knex')(config)
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
-const Promise = require('bluebird')
 
 const copyClaimDataToArchive = require('../../../../app/services/data/copy-claim-data-to-archive')
 

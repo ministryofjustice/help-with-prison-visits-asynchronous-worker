@@ -4,7 +4,6 @@ const getClaimDocuments = require('./get-claim-documents')
 const disableClaimDocument = require('./disable-claim-document')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
-const Promise = require('bluebird')
 
 module.exports = function (reference, eligibilityId, claimId) {
   let claimDocuments

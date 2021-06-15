@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const config = require('../../../knexfile').asyncworker
 const knex = require('knex')(config)
 

@@ -3,7 +3,6 @@ const moment = require('moment')
 const getAllClaimsPendingForFiveWeeks = require('../data/get-all-claims-pending-for-five-weeks')
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
-const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
   const dateCreated = task.dateCreated

@@ -11,7 +11,6 @@ const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
-const Promise = require('bluebird')
 const transactionHelper = require('./helpers/transaction-helper')
 
 module.exports.execute = function (task) {

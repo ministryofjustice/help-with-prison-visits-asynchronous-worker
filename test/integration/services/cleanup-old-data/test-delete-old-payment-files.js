@@ -1,7 +1,7 @@
-const Promise = require('bluebird')
 const expect = require('chai').expect
+const util = require('util')
 const deleteOldPaymentFiles = require('../../../../app/services/cleanup-old-data/delete-old-payment-files')
-const writeFile = Promise.promisify(require('fs').writeFile)
+const writeFile = util.promisify(require('fs').writeFile)
 const fs = require('fs')
 
 const TEST_FILE_PATH = 'test.csv'

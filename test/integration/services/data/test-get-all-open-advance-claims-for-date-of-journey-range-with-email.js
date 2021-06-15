@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const testHelper = require('../../../test-helper')
-const Promise = require('bluebird')
 
 const getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = require('../../../../app/services/data/get-all-open-advance-claims-for-date-of-journey-range-with-email')
 

@@ -4,7 +4,6 @@ const getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = require('../data/g
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const reminderEnum = require('../../constants/advance-claim-reminder-enum')
-const Promise = require('bluebird')
 
 module.exports.execute = function (task) {
   const dateCreated = task.dateCreated

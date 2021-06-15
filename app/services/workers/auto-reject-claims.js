@@ -7,7 +7,7 @@ const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const moment = require('moment')
 const config = require('../../../config')
-const Promise = require('bluebird')
+require('../promise-each')
 
 module.exports.execute = function (task) {
   let claimData
