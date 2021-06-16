@@ -112,10 +112,6 @@ module.exports = function (paymentMethod) {
       return subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerClaim, claimResults)
     })
     .then(function (results) {
-      if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
-        return directPaymentsReturn(results)
-      } else {
-        return payoutPaymentsReturn(results)
-      }
+      return paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directPaymentsReturn(results) : payoutPaymentsReturn(results)
     })
 }

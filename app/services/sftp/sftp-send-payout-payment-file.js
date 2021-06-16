@@ -5,7 +5,7 @@ const SFTPClient = require('sftp-promises')
 module.exports = function (paymentFilePathLocal, paymentFilePathRemote) {
   log.info(`sftp-send-payout-payment-file PAYOUT_SFTP_ENABLED: ${config.PAYOUT_SFTP_ENABLED}`)
 
-  if (config.PAYOUT_SFTP_ENABLED === 'true') {
+  if (config.PAYOUT_SFTP_ENABLED) {
     const sftpConfig = {
       host: config.PAYOUT_SFTP_HOST,
       port: parseInt(config.PAYOUT_SFTP_PORT),

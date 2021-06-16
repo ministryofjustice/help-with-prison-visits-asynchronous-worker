@@ -5,7 +5,7 @@ const insertTask = require('./app/services/data/insert-task')
 const taskTypes = require('./app/constants/tasks-enum')
 
 // This script inserts daily tasks according to a CRON config value (e.g. every morning at 5am)
-log.info('Starting daily tasks generation')
+log.info('Creating daily tasks')
 Promise.all([
   insertTask(null, null, null, taskTypes.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY),
   insertTask(null, null, null, taskTypes.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY),
@@ -14,6 +14,6 @@ Promise.all([
   insertTask(null, null, null, taskTypes.CLEANUP_OLD_DATA),
   insertTask(null, null, null, taskTypes.AUTO_REJECT_CLAIMS)])
   .then(function () {
-    log.info('daily tasks created')
+    log.info('Daily tasks created')
     process.exit()
   })

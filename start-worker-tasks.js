@@ -6,6 +6,6 @@ const processTasks = require('./app/process-tasks')
 log.info('Started worker')
 
 processTasks().then(function () {
-  log.info('worker completed running task')
+  log.info('Worker completed processing tasks')
   process.exit()
 })
