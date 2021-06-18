@@ -86,10 +86,7 @@ function getAmountAs11CharactersPaddedWithZeros (amount) {
 }
 
 function getFileName (isForApvu = false) {
-  let filePrefix = 'apvs-payments'
-  if (isForApvu) {
-    filePrefix = 'apvu-' + filePrefix
-  }
+  const filePrefix = isForApvu ? 'apvu-apvs-payments' : 'apvs-payments'
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
   return `${filePrefix}-${datestamp}.txt`
 }

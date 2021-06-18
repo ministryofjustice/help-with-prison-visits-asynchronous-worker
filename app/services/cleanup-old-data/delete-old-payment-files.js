@@ -1,9 +1,15 @@
 const { AWSHelper } = require('../aws-helper')
+const log = require('../../services/log')
 const aws = new AWSHelper()
 
 module.exports = function (oldPaymentFiles) {
   oldPaymentFiles.forEach(async function (paymentFile) {
-    await aws.delete(paymentFile.Filepath)
+    try {
+      await aws.delete(paymentFile.Filepath)
+    } catch (error) {
+      log.error(`Failed to delete payment file: ${paymentFile.Filepath}`, error)
+    }
   })
+
   return Promise.resolve()
 }
