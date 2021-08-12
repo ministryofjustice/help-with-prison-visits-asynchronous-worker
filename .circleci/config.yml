@@ -114,13 +114,6 @@ workflows:
           type: approval
           requires:
             - deploy_preprod
-      - run:
-          name: create_git_tag
-          command: |
-            git config user.name "Circle CI"
-            git config user.email "circle@circleci.com"
-            git tag -a "$APP_VERSION" $CIRCLE_SHA1 -m "$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=%B)"
-            git push origin "$APP_VERSION"
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
