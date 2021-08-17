@@ -14,9 +14,11 @@ module.exports = function () {
 }
 
 function processTasksForSchema (schema, batchSize) {
+  log.info(`Processing tasks for ${schema}`)
+
   return getPendingTasksAndMarkInProgress(schema, batchSize)
     .then(function (tasks) {
-      log.info(`found ${tasks.length} ${schema} tasks`)
+      log.info(`Found ${tasks.length} ${schema} tasks`)
       if (tasks.length === 0) { return }
 
       const promiseArray = []
@@ -27,7 +29,7 @@ function processTasksForSchema (schema, batchSize) {
         if (worker) {
           promiseArray.push(executeWorkerForTask(schema, worker, task))
         } else {
-          log.info(`unable to find worker for task: ${task.task}`)
+          log.info(`Unable to find worker for task: ${task.task}`)
         }
       }
 
@@ -36,15 +38,15 @@ function processTasksForSchema (schema, batchSize) {
 }
 
 function executeWorkerForTask (schema, worker, task) {
-  log.info(`started task: ${schema}-${task.taskId}-${task.task}`)
+  log.info(`Started task: ${schema}-${task.taskId}-${task.task}`)
 
   return worker.execute(task)
     .then(function () {
-      log.info(`completed task: ${schema}-${task.taskId}-${task.task}`)
+      log.info(`Completed running task: ${schema}-${task.taskId}-${task.task}`)
       return completeTaskWithStatus(schema, task.taskId, statusEnum.COMPLETE)
     }).catch(function (error) {
-      log.error(`error running task: ${schema}-${task.taskId}-${task.task}, error: ${error}`)
-      log.error({ error: error })
+      log.error(`Failed running task: ${schema}-${task.taskId}-${task.task}`)
+      log.error(error)
       return completeTaskWithStatus(schema, task.taskId, statusEnum.FAILED)
     })
 }
