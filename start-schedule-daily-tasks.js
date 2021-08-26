@@ -4,7 +4,6 @@ const log = require('./app/services/log')
 const insertTask = require('./app/services/data/insert-task')
 const taskTypes = require('./app/constants/tasks-enum')
 
-// This script inserts daily tasks according to a CRON config value (e.g. every morning at 5am)
 log.info('Creating daily tasks')
 Promise.all([
   insertTask(null, null, null, taskTypes.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY),
