@@ -13,6 +13,7 @@
     "start-worker-tasks": "node start-worker-tasks.js",
     "start-schedule-daily-tasks": "node start-schedule-daily-tasks.js",
     "start-schedule-payment-run": "node start-schedule-payment-run.js",
+    "start-daily-auto-approval-check": "node start-daily-auto-approval-check.js",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "test": "standard && mocha --recursive test/unit/ --exit",
     "test-unit": "mocha --recursive test/unit/ --exit",
