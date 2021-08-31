@@ -103,29 +103,9 @@ describe('services/getWorkerForTask', function () {
     expect(worker.name).to.be.equal('dwpCheck')
   })
 
-  it('should return send-performance-platform-metrics-for-day', function () {
-    const worker = getWorkerForTask(tasksEnum.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY)
-    expect(worker.name).to.be.equal('sendPerformancePlatformMetricsForDay')
-  })
-
-  it('should return send-all-advance-claim-reminders-for-day', function () {
-    const worker = getWorkerForTask(tasksEnum.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY)
-    expect(worker.name).to.be.equal('sendAllAdvanceClaimRemindersForDay')
-  })
-
-  it('should return mark-overpayments', function () {
-    const worker = getWorkerForTask(tasksEnum.MARK_ALL_OVERPAYMENTS)
-    expect(worker.name).to.be.equal('markOverpayments')
-  })
-
   it('should return send-feedback', function () {
     const worker = getWorkerForTask(tasksEnum.FEEDBACK_SUBMITTED)
     expect(worker.name).to.be.equal('sendFeedback')
-  })
-
-  it('should return cleanup-old-data', function () {
-    const worker = getWorkerForTask(tasksEnum.CLEANUP_OLD_DATA)
-    expect(worker.name).to.be.equal('cleanupOldData')
   })
 
   it('should return send-technical-help', function () {

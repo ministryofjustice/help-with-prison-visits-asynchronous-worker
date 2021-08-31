@@ -1,18 +1,22 @@
 require('dotenv').config()
 require('./app/azure-appinsights')
 const log = require('./app/services/log')
-const insertTask = require('./app/services/data/insert-task')
-const taskTypes = require('./app/constants/tasks-enum')
+const sendPerformancePlatformMetricsForDay = require('./workers/send-performance-platform-metrics-for-day')
+const sendAllAdvanceClaimRemindersForDay = require('./workers/send-all-advance-claim-reminders-for-day')
+const sendRequestInformationRemindersForDay = require('./workers/send-request-information-reminders-for-day')
+const markOverpayments = require('./workers/mark-overpayments')
+const cleanupOldData = require('./workers/cleanup-old-data')
+const autoRejectClaims = require('./workers/auto-reject-claims')
 
-log.info('Creating daily tasks')
+log.info('Starting daily tasks')
 Promise.all([
-  insertTask(null, null, null, taskTypes.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY),
-  insertTask(null, null, null, taskTypes.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY),
-  insertTask(null, null, null, taskTypes.SEND_REQUEST_INFORMATION_REMINDERS_FOR_DAY),
-  insertTask(null, null, null, taskTypes.MARK_ALL_OVERPAYMENTS),
-  insertTask(null, null, null, taskTypes.CLEANUP_OLD_DATA),
-  insertTask(null, null, null, taskTypes.AUTO_REJECT_CLAIMS)])
+  sendPerformancePlatformMetricsForDay(),
+  sendAllAdvanceClaimRemindersForDay(),
+  sendRequestInformationRemindersForDay(),
+  markOverpayments(),
+  cleanupOldData(),
+  autoRejectClaims()])
   .then(function () {
-    log.info('Daily tasks created')
+    log.info('Daily tasks completed')
     process.exit()
   })
