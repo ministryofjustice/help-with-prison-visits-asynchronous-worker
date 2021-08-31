@@ -11,8 +11,6 @@ const requestInformationResponse = require('./workers/request-information-respon
 const dwpCheck = require('./workers/dwp-check')
 const sendPerformancePlatformMetricsForDay = require('./workers/send-performance-platform-metrics-for-day')
 const sendAllAdvanceClaimRemindersForDay = require('./workers/send-all-advance-claim-reminders-for-day')
-const generateDirectPayments = require('./workers/generate-direct-payments')
-const cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
 const markOverpayments = require('./workers/mark-overpayments')
 const sendFeedback = require('./workers/send-feedback')
 const cleanupOldData = require('./workers/cleanup-old-data')
@@ -21,7 +19,6 @@ const sendTechnicalHelp = require('./workers/send-technical-help')
 const archiveOldClaims = require('./workers/archive-old-claims')
 const archiveClaim = require('./workers/archive-claim')
 const referenceRecovery = require('./workers/reference-recovery')
-const generatePayoutPayments = require('./workers/generate-payout-payments')
 const dwpFailedNotification = require('./workers/send-claim-additional-information-required')
 const autoApproveClaims = require('./workers/auto-approve-claims')
 const sendRequestInformationRemindersForDay = require('./workers/send-request-information-reminders-for-day')
@@ -43,8 +40,6 @@ module.exports = function (taskType) {
     case tasksEnum.DWP_CHECK: return dwpCheck
     case tasksEnum.SEND_PERFORMANCE_PLATFORM_METRICS_FOR_DAY: return sendPerformancePlatformMetricsForDay
     case tasksEnum.SEND_ALL_ADVANCE_CLAIM_REMINDERS_FOR_DAY: return sendAllAdvanceClaimRemindersForDay
-    case tasksEnum.GENERATE_DIRECT_PAYMENTS: return generateDirectPayments
-    case tasksEnum.CLEANUP_OLD_PAYMENT_FILES: return cleanupOldPaymentFiles
     case tasksEnum.MARK_ALL_OVERPAYMENTS: return markOverpayments
     case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
     case tasksEnum.CLEANUP_OLD_DATA: return cleanupOldData
@@ -53,7 +48,6 @@ module.exports = function (taskType) {
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
     case tasksEnum.ARCHIVE_CLAIM: return archiveClaim
     case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
-    case tasksEnum.GENERATE_PAYOUT_PAYMENTS: return generatePayoutPayments
     case tasksEnum.DWP_FAILED_NOTIFICATION: return dwpFailedNotification
     case tasksEnum.AUTO_APPROVE_CLAIMS: return autoApproveClaims
     case tasksEnum.SEND_REQUEST_INFORMATION_REMINDERS_FOR_DAY: return sendRequestInformationRemindersForDay

@@ -1,17 +1,18 @@
 require('dotenv').config()
 require('./app/azure-appinsights')
 const log = require('./app/services/log')
-const insertTask = require('./app/services/data/insert-task')
-const taskTypes = require('./app/constants/tasks-enum')
+const generateDirectPayments = require('./workers/generate-direct-payments')
+const cleanupOldPaymentFiles = require('./workers/cleanup-old-payment-files')
+const generatePayoutPayments = require('./workers/generate-payout-payments')
 
 // This script inserts a payment run task according to a CRON config value (e.g. every morning at 5am)
-log.info('Creating payment generation tasks')
+log.info('Running payment generation job')
 
 Promise.all([
-  insertTask(null, null, null, taskTypes.GENERATE_DIRECT_PAYMENTS),
-  insertTask(null, null, null, taskTypes.CLEANUP_OLD_PAYMENT_FILES),
-  insertTask(null, null, null, taskTypes.GENERATE_PAYOUT_PAYMENTS)])
+  generateDirectPayments(),
+  cleanupOldPaymentFiles(),
+  generatePayoutPayments()])
   .then(function () {
-    log.info('Payment generation tasks created')
+    log.info('Payment generation jobs completed')
     process.exit()
   })
