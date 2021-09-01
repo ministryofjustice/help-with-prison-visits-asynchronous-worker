@@ -71,7 +71,7 @@ describe('services/workers/generate-direct-payments', function () {
   it('should retrieve claim data and then call file generation', function () {
     getClaimsPendingPayment.resolves(claimsPendingPayment)
     getTopUpsPendingPayment.resolves(topUpsPendingPayment)
-    return generateDirectPayments.execute({}).then(function () {
+    return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
       expect(createAdiJournalFile.calledWith(total)).to.be.true //eslint-disable-line
@@ -85,7 +85,7 @@ describe('services/workers/generate-direct-payments', function () {
   it('should find no data and not call file generation', function () {
     getClaimsPendingPayment.resolves(claimsMissingData)
     getTopUpsPendingPayment.resolves(topUpMissingData)
-    return generateDirectPayments.execute({}).then(function () {
+    return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
     })
@@ -97,7 +97,7 @@ describe('services/workers/generate-direct-payments', function () {
   it('should find missing top up data and valid claim data and not call file generation', function () {
     getClaimsPendingPayment.resolves(claimsPendingPayment)
     getTopUpsPendingPayment.resolves(topUpMissingData)
-    return generateDirectPayments.execute({}).then(function () {
+    return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
     })

@@ -66,7 +66,7 @@ const generateDirectPayments = proxyquire('../../../../app/services/workers/gene
 
 describe('services/workers/generate-payout-payments', function () {
   it('should retrieve claim data, format it, then call file generation', function () {
-    return generateDirectPayments.execute({}).then(function () {
+    return generateDirectPayments.generatePayoutPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(getTopUpsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line

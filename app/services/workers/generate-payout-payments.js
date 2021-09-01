@@ -13,7 +13,7 @@ const updateAllClaimsProcessedPayment = require('./helpers/payments/update-all-c
 const getClaimIdsFromPaymentData = require('./helpers/payments/get-claim-ids-from-payment-data')
 const formatCSVData = require('./helpers/payments/payout/format-csv-data')
 
-module.exports.execute = function () {
+const generatePayoutPayments = function () {
   let claimIds
   let topUpClaimIds
   let paymentCsvFilename
@@ -52,4 +52,8 @@ module.exports.execute = function () {
           }
         })
     })
+}
+
+module.exports = {
+  generatePayoutPayments
 }

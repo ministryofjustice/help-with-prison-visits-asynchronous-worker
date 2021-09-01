@@ -1,12 +1,12 @@
 const config = require('../../../../knexfile').asyncworker
 const knex = require('knex')(config)
 const expect = require('chai').expect
-const getOldPaymentFiles = require('../../../../app/services/data/get-old-payment-files')
+const { getOldPaymentFiles } = require('../../../../app/services/workers/cleanup-old-payment-files')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const OLD_FILE_DATE = dateFormatter.now().subtract('40', 'days')
 
-describe('services/data/get-old-payment-files', function () {
+describe('services/workers/cleanup-old-payment-files (getOldPaymentFiles)', function () {
   let paymentFileIds
 
   before(function () {

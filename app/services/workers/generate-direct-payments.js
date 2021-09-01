@@ -14,7 +14,7 @@ const removeClaimIdsFromPaymentData = require('./helpers/payments/direct/remove-
 const checkForAccountNumberAndSortCode = require('./helpers/payments/direct/check-for-account-number-and-sort-code')
 const getTotalFromPaymentData = require('./helpers/payments/direct/get-total-from-payment-data')
 
-module.exports.execute = function () {
+const generateDirectPayments = function () {
   let claimIds
   let topUpClaimIds
   let total
@@ -66,4 +66,8 @@ module.exports.execute = function () {
           }
         })
     })
+}
+
+module.exports = {
+  generateDirectPayments
 }
