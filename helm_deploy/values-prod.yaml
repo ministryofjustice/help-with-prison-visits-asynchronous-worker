@@ -10,6 +10,7 @@ env:
   APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits.service.gov.uk'
   PAYOUT_SFTP_ENABLED: "true"
   PAYOUT_SFTP_REMOTE_PATH: "data/"
+  APVS_ARCHIVE_CLAIMS_AFTER_DAYS: '700'
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits
