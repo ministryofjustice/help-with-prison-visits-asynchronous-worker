@@ -22,7 +22,7 @@ const generateDirectPayments = function () {
 
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
-      log.info('Processing claims pending payment')
+      log.info('Processing direct payments claims pending')
       const claimIdIndex = 0
       if (paymentData.length > 0) {
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
