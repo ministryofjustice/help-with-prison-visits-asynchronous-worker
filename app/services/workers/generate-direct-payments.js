@@ -15,12 +15,14 @@ const checkForAccountNumberAndSortCode = require('./helpers/payments/direct/chec
 const getTotalFromPaymentData = require('./helpers/payments/direct/get-total-from-payment-data')
 
 const generateDirectPayments = function () {
+  log.info('Starting generate direct payments')
   let claimIds
   let topUpClaimIds
   let total
 
   return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
     .then(function (paymentData) {
+      log.info('Processing claims pending payment')
       const claimIdIndex = 0
       if (paymentData.length > 0) {
         claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
@@ -41,26 +43,34 @@ const generateDirectPayments = function () {
 
             total = getTotalFromPaymentData(paymentData)
 
+            log.info('Creating APVS payment file')
             return createPaymentFile(paymentData, false)
               .then(function (apvsPaymentFilename) {
+                log.info('Inserting APVS payment file url into database')
                 return insertDirectPaymentFile(apvsPaymentFilename, fileTypes.ACCESSPAY_FILE)
               })
               .then(function () {
+                log.info('Creating APVU payment file')
                 return createPaymentFile(paymentData, true)
               })
               .then(function (apvuPaymentFilename) {
+                log.info('Inserting APVU payment file url into database')
                 return insertDirectPaymentFile(apvuPaymentFilename, fileTypes.APVU_ACCESSPAY_FILE)
               })
               .then(function () {
+                log.info('Creating Adi Journal file')
                 return createAdiJournalFile(total)
               })
               .then(function (adiJournalFileName) {
+                log.info('Inserting Adi Journal file url into database')
                 return insertDirectPaymentFile(adiJournalFileName, fileTypes.ADI_JOURNAL_FILE)
               })
               .then(function () {
+                log.info('Setting all claims as payment processed')
                 return updateAllClaimsProcessedPayment(claimIds, paymentData, true)
               })
               .then(function () {
+                log.info('Setting all topups as payment processed')
                 return updateAllTopupsProcessedPayment(topUpClaimIds)
               })
           }

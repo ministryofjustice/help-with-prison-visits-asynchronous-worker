@@ -6,7 +6,7 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 
 const OLD_FILE_DATE = dateFormatter.now().subtract('40', 'days')
 
-describe('services/workers/cleanup-old-payment-files (getOldPaymentFiles)', function () {
+describe('services/data/get-old-payment-files', function () {
   let paymentFileIds
 
   before(function () {
