@@ -8,7 +8,8 @@ image:
   port: 3999
 
 env:
-  PAYOUT_SFTP_HOST: "51.140.191.219"
+  PAYOUT_SFTP_HOST: "37.152.49.212"
+  PAYOUT_SFTP_PORT: "52317"
   BASIC_AUTH_ENABLED: "false"
   APVS_PERFORMANCE_PLATFORM_URL: "https://www.performance.service.gov.uk/data/assisted-prison-visits/transactions-by-channel"
   APVS_NOTIFY_API_URL: https://api.notifications.service.gov.uk
