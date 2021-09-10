@@ -4,20 +4,16 @@ const axios = require('axios')
 
 module.exports = function (originPostCode, destinationPostCode) {
   const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
-  const options = {
-    method: 'GET',
-    uri: distanceApiUrl,
-    json: true
-  }
 
-  return axios(options)
+  return axios
+    .get(distanceApiUrl)
     .then(function (result) {
       let distance = null
 
-      if (result && result.routes && result.routes[0] &&
-        result.routes[0].legs && result.routes[0].legs[0] &&
-        result.routes[0].legs[0].distance && result.routes[0].legs[0].distance.value) {
-        distance = (result.routes[0].legs[0].distance.value / 1000.0) * 2 // distance is in metres and add return journey
+      if (result && result.data && result.data.routes && result.data.routes[0] &&
+        result.data.routes[0].legs && result.data.routes[0].legs[0] &&
+        result.data.routes[0].legs[0].distance && result.data.routes[0].legs[0].distance.value) {
+        distance = (result.data.routes[0].legs[0].distance.value / 1000.0) * 2 // distance is in metres and add return journey
       }
 
       return distance

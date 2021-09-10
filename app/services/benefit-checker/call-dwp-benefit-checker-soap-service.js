@@ -18,9 +18,9 @@ module.exports = function (visitorDwpBenefitCheckerData) {
 
   const options = {
     method: 'POST',
-    uri: config.DWP_BENEFIT_CHECKER_URL,
+    url: config.DWP_BENEFIT_CHECKER_URL,
     rejectUnauthorized: false, // Would require injecting valid certificate subject to change
-    body: getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData),
+    data: getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData),
     headers: {
       'content-type': 'text/xml',
       SOAPAction: config.DWP_BENEFIT_CHECKER_URL
