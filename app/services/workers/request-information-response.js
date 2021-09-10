@@ -12,6 +12,7 @@ const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const transactionHelper = require('./helpers/transaction-helper')
+const log = require('../log')
 
 module.exports.execute = function (task) {
   const reference = task.reference
@@ -25,7 +26,10 @@ module.exports.execute = function (task) {
 
   return moveClaimDocumentsToInternal(reference, eligibilityId, claimId)
     .then(function (newDocuments) { updatedDocuments = newDocuments })
-    .then(function () { return getAllClaimData('IntSchema', reference, eligibilityId, claimId) })
+    .then(function () {
+      log.info('getAllClaimData')
+      return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
+    })
     .then(function (claimData) {
       status = getStatusForUpdatedClaim(claimData)
       originalStatus = claimData.Claim.Status
@@ -33,12 +37,30 @@ module.exports.execute = function (task) {
         claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
       }
     })
-    .then(function () { return updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, claimId, originalStatus, claimBankDetailId) })
-    .then(function () { return updateClaimStatus(claimId, status) })
-    .then(function () { return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments) })
-    .then(function () { return insertClaimEventForNote(reference, eligibilityId, claimId, note) })
-    .then(function () { return insertTaskRequestInformationResponseSubmittedNotification(reference, eligibilityId, claimId) })
-    .then(function () { return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status) })
+    .then(function () {
+      log.info('updateBankDetailsAndRemoveOldFromExternal')
+      return updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, claimId, originalStatus, claimBankDetailId)
+    })
+    .then(function () {
+      log.info('updateClaimStatus')
+      return updateClaimStatus(claimId, status)
+    })
+    .then(function () {
+      log.info('insertClaimEventForUpdate')
+      return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments)
+    })
+    .then(function () {
+      log.info('insertClaimEventForNote')
+      return insertClaimEventForNote(reference, eligibilityId, claimId, note)
+    })
+    .then(function () {
+      log.info('insertTaskRequestInformationResponseSubmittedNotification')
+      return insertTaskRequestInformationResponseSubmittedNotification(reference, eligibilityId, claimId)
+    })
+    .then(function () {
+      log.info('callAutoApprovalIfClaimIsNew')
+      return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status)
+    })
 }
 
 function getStatusForUpdatedClaim (claimData) {
