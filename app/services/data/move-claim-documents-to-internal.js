@@ -15,6 +15,9 @@ module.exports = function (reference, eligibilityId, claimId) {
     .then(function () { return copyClaimDocumentsToInternal(claimDocuments) })
     .then(function () { return deleteClaimDocumentsFromExternal(reference, eligibilityId, claimId) })
     .then(function () { return claimDocuments })
+    .catch(function (error) {
+      log.error(error)
+    })
 }
 
 function getUpdatedClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
