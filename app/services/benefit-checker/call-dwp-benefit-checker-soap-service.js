@@ -42,7 +42,11 @@ module.exports = function (visitorDwpBenefitCheckerData) {
           } else {
             throw new Error(`Could not parse response: ${responseBody}`)
           }
+        }).catch(function (error) {
+          log.error('Error parsing XML', error)
         })
+    }).catch(function (error) {
+      log.error('Error calling Benefit checker', error)
     })
 }
 
