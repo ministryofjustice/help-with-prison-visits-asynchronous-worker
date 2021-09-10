@@ -21,13 +21,12 @@ module.exports = function (startOfDayDate, submittedClaimCount) {
 
   const options = {
     method: 'POST',
-    uri: config.PERFORMANCE_PLATFORM_URL,
-    body: payload,
+    url: config.PERFORMANCE_PLATFORM_URL,
+    data: payload,
     headers: {
       'content-type': 'application/json',
       Authorization: `Bearer ${config.PERFORMANCE_PLATFORM_BEARER_TOKEN}`
-    },
-    json: true
+    }
   }
 
   return axios(options)
