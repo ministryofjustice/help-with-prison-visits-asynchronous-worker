@@ -20,6 +20,6 @@ spec:
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node
-            - start-schedule-daily-tasks
+            - start-daily-tasks
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never
