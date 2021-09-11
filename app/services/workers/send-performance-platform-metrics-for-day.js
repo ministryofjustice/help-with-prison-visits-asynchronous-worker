@@ -3,12 +3,13 @@ const log = require('../log')
 const moment = require('moment')
 const getNumberOfSubmittedClaimsForDateRange = require('../data/get-number-of-submitted-claims-for-date-range')
 const sendPerformancePlatformMetricsForDay = require('../performance-platform/send-performance-platform-metrics-for-day')
+const dateFormatter = require('../date-formatter')
 
-module.exports.execute = function (task) {
+const sendPerformancePlatformMetricsForDay = function () {
   log.info(`send-performance-platform-metrics-for-day PERFORMANCE_PLATFORM_SEND_ENABLED: ${config.PERFORMANCE_PLATFORM_SEND_ENABLED}`)
 
   if (config.PERFORMANCE_PLATFORM_SEND_ENABLED === 'true') {
-    const dateCreated = task.dateCreated
+    const dateCreated = dateFormatter.now().toDate()
 
     const startOfPreviousDayDateCreated = moment(dateCreated).startOf('day').subtract(1, 'days').toDate()
     const endOfPreviousDayDateCreated = moment(dateCreated).endOf('day').subtract(1, 'days').toDate()
@@ -21,4 +22,8 @@ module.exports.execute = function (task) {
   } else {
     return Promise.resolve()
   }
+}
+
+module.exports = {
+  sendPerformancePlatformMetricsForDay
 }

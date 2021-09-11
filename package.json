@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start-worker-tasks": "node start-worker-tasks.js",
-    "start-schedule-daily-tasks": "node start-schedule-daily-tasks.js",
+    "start-daily-tasks": "node start-daily-tasks.js",
     "start-payment-run": "node start-payment-run.js",
     "start-daily-auto-approval-check": "node start-daily-auto-approval-check.js",
     "security_audit": "npx audit-ci --config audit-ci.json",

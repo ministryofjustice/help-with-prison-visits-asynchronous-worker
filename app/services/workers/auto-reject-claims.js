@@ -9,14 +9,12 @@ const moment = require('moment')
 const config = require('../../../config')
 require('../promise-each')
 
-module.exports.execute = function (task) {
-  let claimData
+const autoRejectClaims = function () {
   const numberOfDaysAfterFinalReminderForRejection = parseInt(config.NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION)
   const autoRejectClaimsOlderThan = moment().startOf('day').subtract(numberOfDaysAfterFinalReminderForRejection, 'days').format('YYYY-MM-DD')
 
   return getAutoRejectClaims(autoRejectClaimsOlderThan)
-    .then(function (data) {
-      claimData = data
+    .then(function (claimData) {
       return Promise.each(claimData, function (claim) {
         return insertClaimEventSystemMessage(claim.Reference, claim.EligibilityId, claim.ClaimId, null, claimEventEnum.CLAIM_REJECTED.value, null, 'We have not had an update for 6 weeks or more. Rejecting the claim.', false)
           .then(function () {
@@ -27,4 +25,8 @@ module.exports.execute = function (task) {
           })
       })
     })
+}
+
+module.exports = {
+  autoRejectClaims
 }
