@@ -20,6 +20,6 @@ spec:
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node
-            - start-schedule-payment-run
+            - start-payment-run
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never

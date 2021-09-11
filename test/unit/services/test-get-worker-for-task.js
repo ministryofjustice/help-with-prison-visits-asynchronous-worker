@@ -113,11 +113,6 @@ describe('services/getWorkerForTask', function () {
     expect(worker.name).to.be.equal('sendAllAdvanceClaimRemindersForDay')
   })
 
-  it('should return cleanup-old-payment-files', function () {
-    const worker = getWorkerForTask(tasksEnum.CLEANUP_OLD_PAYMENT_FILES)
-    expect(worker.name).to.be.equal('cleanupOldPaymentFiles')
-  })
-
   it('should return mark-overpayments', function () {
     const worker = getWorkerForTask(tasksEnum.MARK_ALL_OVERPAYMENTS)
     expect(worker.name).to.be.equal('markOverpayments')
@@ -151,16 +146,6 @@ describe('services/getWorkerForTask', function () {
   it('should return reference-recovery', function () {
     const worker = getWorkerForTask(tasksEnum.REFERENCE_RECOVERY)
     expect(worker.name).to.be.equal('referenceRecovery')
-  })
-
-  it('should return generate-payout-payments', function () {
-    const worker = getWorkerForTask(tasksEnum.GENERATE_PAYOUT_PAYMENTS)
-    expect(worker.name).to.be.equal('generatePayoutPayments')
-  })
-
-  it('should return generate-direct-payments', function () {
-    const worker = getWorkerForTask(tasksEnum.GENERATE_DIRECT_PAYMENTS)
-    expect(worker.name).to.be.equal('generateDirectPayments')
   })
 
   it('should return send-malware-alert', function () {

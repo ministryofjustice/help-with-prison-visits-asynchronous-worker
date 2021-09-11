@@ -42,7 +42,7 @@ COPY --from=builder --chown=appuser:appgroup \
         /app/knexfile.js \
         /app/config.js \
         /app/start-worker-tasks.js \
-        /app/start-schedule-payment-run.js \
+        /app/start-payment-run.js \
         /app/start-schedule-daily-tasks.js \
         /app/start-daily-auto-approval-check.js \
         ./

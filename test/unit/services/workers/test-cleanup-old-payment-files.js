@@ -11,7 +11,7 @@ const OLD_PAYMENT_FILES = [{
 }]
 
 const deleteOldPaymentFiles = sinon.stub().resolves()
-const getOldPaymentFiles = sinon.stub().resolves(OLD_PAYMENT_FILES)
+const getOldPaymentFiles = { getOldPaymentFiles: sinon.stub().resolves(OLD_PAYMENT_FILES) }
 const updateOldPaymentFilesIsEnabledFalse = sinon.stub().resolves()
 
 const cleanupOldPaymentFiles = proxyquire('../../../../app/services/workers/cleanup-old-payment-files', {
@@ -22,9 +22,9 @@ const cleanupOldPaymentFiles = proxyquire('../../../../app/services/workers/clea
 
 describe('services/workers/cleanup-old-payment-files', function () {
   it('should get old payment files, delete them, and update their IsEnabled status', function () {
-    return cleanupOldPaymentFiles.execute({}).then(function () {
+    return cleanupOldPaymentFiles.cleanupOldPaymentFiles().then(function () {
       expect(deleteOldPaymentFiles.calledWith(OLD_PAYMENT_FILES)).to.be.true //eslint-disable-line
-      expect(getOldPaymentFiles.calledOnce).to.be.true //eslint-disable-line
+      expect(getOldPaymentFiles.getOldPaymentFiles.calledOnce).to.be.true //eslint-disable-line
       expect(updateOldPaymentFilesIsEnabledFalse.calledWith(OLD_PAYMENT_FILES[0].PaymentFileId))
     })
   })
