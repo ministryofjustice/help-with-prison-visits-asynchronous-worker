@@ -34,7 +34,7 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
     const startDateString = '2016-12-07 00:00'
     const endDateString = '2016-12-07 23:59'
 
-    return sendAllAdvanceClaimRemindersForDay.execute({ dateCreated: dateCreated })
+    return sendAllAdvanceClaimRemindersForDay.sendAllAdvanceClaimRemindersForDay(dateCreated)
       .then(function () {
         expect(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.calledTwice).to.be.true //eslint-disable-line
         expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.firstCall.args[0]).format('YYYY-MM-DD HH:mm')).to.be.equal(startDateString)

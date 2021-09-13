@@ -5,8 +5,7 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const dateFormatter = require('../date-formatter')
 
-const sendRequestInformationRemindersForDay = function () {
-  const dateCreated = dateFormatter.now().toDate()
+const sendRequestInformationRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
   const numberOfDaysPendingForFinalReminder = parseInt(config.NUMBER_OF_DAYS_PENDING_FOR_FINAL_REMINDER)
 
   // Get date range of Advance Claims with DateOfJourney which require reminders

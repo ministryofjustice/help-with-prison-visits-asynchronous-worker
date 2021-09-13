@@ -5,12 +5,10 @@ const getNumberOfSubmittedClaimsForDateRange = require('../data/get-number-of-su
 const perfSendPerformancePlatformMetricsForDay = require('../performance-platform/send-performance-platform-metrics-for-day')
 const dateFormatter = require('../date-formatter')
 
-const sendPerformancePlatformMetricsForDay = function () {
+const sendPerformancePlatformMetricsForDay = function (dateCreated = dateFormatter.now().toDate()) {
   log.info(`send-performance-platform-metrics-for-day PERFORMANCE_PLATFORM_SEND_ENABLED: ${config.PERFORMANCE_PLATFORM_SEND_ENABLED}`)
 
   if (config.PERFORMANCE_PLATFORM_SEND_ENABLED === 'true') {
-    const dateCreated = dateFormatter.now().toDate()
-
     const startOfPreviousDayDateCreated = moment(dateCreated).startOf('day').subtract(1, 'days').toDate()
     const endOfPreviousDayDateCreated = moment(dateCreated).endOf('day').subtract(1, 'days').toDate()
 

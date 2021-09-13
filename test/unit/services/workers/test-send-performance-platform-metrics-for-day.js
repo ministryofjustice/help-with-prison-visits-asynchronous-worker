@@ -2,9 +2,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const moment = require('moment')
-
-const dateFormatter = require('../../../../app/services/date-formatter')
-
 const SUBMITTED_CLAIM_COUNT = 100
 
 describe('services/workers/send-performance-platform-metrics-for-day', function () {
@@ -28,7 +25,7 @@ describe('services/workers/send-performance-platform-metrics-for-day', function 
 
   it('should do nothing if disabled by config', function () {
     configStub.PERFORMANCE_PLATFORM_SEND_ENABLED = 'false'
-    return sendPerformancePlatformMetricsForDay.execute({ dateCreated: dateFormatter.now().toDate() })
+    return sendPerformancePlatformMetricsForDay.sendPerformancePlatformMetricsForDay()
       .then(function () {
         expect(getNumberOfSubmittedClaimsForDateRangeStub.called).to.be.false //eslint-disable-line
         expect(sendPerformancePlatformMetricsForDayStub.called).to.be.false //eslint-disable-line
@@ -37,11 +34,10 @@ describe('services/workers/send-performance-platform-metrics-for-day', function 
 
   it('should call send-performance-platform-metrics-for-day with submittedClaimCount', function () {
     const dateCreated = moment('2016-12-08 05:00')
-
     const startDateString = '2016-12-07 00:00'
     const endDateString = '2016-12-07 23:59'
 
-    return sendPerformancePlatformMetricsForDay.execute({ dateCreated: dateCreated })
+    return sendPerformancePlatformMetricsForDay.sendPerformancePlatformMetricsForDay(dateCreated)
       .then(function () {
         expect(getNumberOfSubmittedClaimsForDateRangeStub.calledOnce).to.be.true //eslint-disable-line
         expect(moment(getNumberOfSubmittedClaimsForDateRangeStub.firstCall.args[0]).format('YYYY-MM-DD HH:mm')).to.be.equal(startDateString)
