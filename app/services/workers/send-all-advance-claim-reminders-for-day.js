@@ -4,9 +4,9 @@ const getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = require('../data/g
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const reminderEnum = require('../../constants/advance-claim-reminder-enum')
+const dateFormatter = require('../date-formatter')
 
-module.exports.execute = function (task) {
-  const dateCreated = task.dateCreated
+const sendAllAdvanceClaimRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
   const numberOfDaysAfterDateOfJourneyForReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER)
   const numberOfDaysAfterDateOfJourneyForSecondReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER)
 
@@ -41,4 +41,8 @@ function insertTasksToSendAdvanceClaimEvidenceReminderNotification (openAdvanceC
 
 function insertTaskToSendAdvanceClaimEvidenceReminderNotification (claim, reminder) {
   return insertTask(claim.Reference, claim.EligibilityId, claim.ClaimId, tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION, `${claim.EmailAddress}~~${reminder}`)
+}
+
+module.exports = {
+  sendAllAdvanceClaimRemindersForDay
 }

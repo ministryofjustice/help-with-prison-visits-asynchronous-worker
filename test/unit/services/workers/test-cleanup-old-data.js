@@ -61,7 +61,7 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDataStub.resolves([])
     getOldClaimDocumentDataStub.resolves([])
 
-    return cleanupOldData.execute({}).then(function () {
+    return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
@@ -75,7 +75,7 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDataStub.resolves(OLD_CLAIM_DATA)
     getOldClaimDocumentDataStub.resolves([])
 
-    return cleanupOldData.execute({}).then(function () {
+    return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
@@ -89,7 +89,7 @@ describe('services/workers/cleanup-old-data', function () {
     getOldClaimDataStub.resolves([])
     getOldClaimDocumentDataStub.resolves(OLD_CLAIM_DOCUMENT_DATA)
 
-    return cleanupOldData.execute({}).then(function () {
+    return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
       expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
