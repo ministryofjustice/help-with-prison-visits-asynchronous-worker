@@ -20,3 +20,7 @@ Promise.all([
     log.info('Daily tasks completed')
     process.exit()
   })
+  .catch(function (error) {
+    log.error('Failed daily tasks run', error)
+    process.exit()
+  })

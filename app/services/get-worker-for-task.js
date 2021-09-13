@@ -22,22 +22,27 @@ const sendRequestInformationReminderNotification = require('./workers/send-reque
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
   switch (taskType) {
+    // From internal app
     case tasksEnum.ACCEPT_CLAIM_NOTIFICATION: return sendAcceptedClaimNotification
     case tasksEnum.REJECT_CLAIM_NOTIFICATION: return sendRejectedClaimNotification
     case tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION: return sendRequestInformationClaimNotification
     case tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION: return sendRequestInformationResponseSubmittedNotification
+
+    // From external app
+    case tasksEnum.COMPLETE_CLAIM: return completeClaim
+    case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
+    case tasksEnum.SEND_MALWARE_ALERT: return sendMalwareUploadNotification
+    case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
+    case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
+    case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
+
+    // Everything else
     case tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION: return sendAdvanceClaimEvidenceReminderNotification
     case tasksEnum.UPDATED_CONTACT_DETAILS_CLAIM_NOTIFICATION: return sendUpdatedContactDetailsClaimNotification
     case tasksEnum.SEND_CLAIM_NOTIFICATION: return sendClaimNotification
-    case tasksEnum.COMPLETE_CLAIM: return completeClaim
-    case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
     case tasksEnum.DWP_CHECK: return dwpCheck
-    case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
-    case tasksEnum.SEND_MALWARE_ALERT: return sendMalwareUploadNotification
-    case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
     case tasksEnum.ARCHIVE_CLAIM: return archiveClaim
-    case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
     case tasksEnum.DWP_FAILED_NOTIFICATION: return dwpFailedNotification
     case tasksEnum.AUTO_APPROVE_CLAIMS: return autoApproveClaims
     case tasksEnum.SEND_REQUEST_INFORMATION_REMINDER_NOTIFICATION: return sendRequestInformationReminderNotification
