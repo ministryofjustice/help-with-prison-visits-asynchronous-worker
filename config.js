@@ -4,6 +4,7 @@ module.exports = {
   LOGSTASH_HOST: process.env.LOGSTASH_HOST,
   LOGSTASH_PORT: process.env.LOGSTASH_PORT,
   FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/app/tmp',
+  PAYMENT_FILE_FOLDER: process.env.APVS_PAYMENT_FILE_FOLDER || 'payments',
 
   // URL and paths
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'https://help-with-prison-visits-dev.service.justice.gov.uk',

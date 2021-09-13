@@ -42,5 +42,5 @@ module.exports = function (totalPayment) {
 
 function getFileName () {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  return `apvs-adi-journal-${datestamp}.xlsm`
+  return `${config.PAYMENT_FILE_FOLDER}/apvs-adi-journal-${datestamp}.xlsm`
 }
