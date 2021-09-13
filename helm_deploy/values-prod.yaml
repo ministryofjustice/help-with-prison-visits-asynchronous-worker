@@ -11,6 +11,7 @@ env:
   PAYOUT_SFTP_ENABLED: "true"
   PAYOUT_SFTP_REMOTE_PATH: "data/"
   APVS_ARCHIVE_CLAIMS_AFTER_DAYS: '700'
+  APVS_PAYOUT_FILENAME_PREFIX: 'DF_SANTANDERNOMS086_LETTER_'
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits
