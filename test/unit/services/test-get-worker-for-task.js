@@ -12,18 +12,11 @@ const sendClaimNotification = { name: 'sendClaimNotification' }
 const completeClaim = { name: 'completeClaim' }
 const requestInformationResponse = { name: 'requestInformationResponse' }
 const dwpCheck = { name: 'dwpCheck' }
-const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
-const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
-const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
-const markOverpayments = { name: 'markOverpayments' }
 const sendFeedback = { name: 'sendFeedback' }
-const cleanupOldData = { name: 'cleanupOldData' }
 const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
 const archiveOldClaims = { name: 'archiveOldClaims' }
 const archiveClaim = { name: 'archiveClaim' }
 const referenceRecovery = { name: 'referenceRecovery' }
-const generatePayoutPayments = { name: 'generatePayoutPayments' }
-const generateDirectPayments = { name: 'generateDirectPayments' }
 const sendMalwareAlert = { name: 'sendMalwareAlert' }
 
 const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task', {
@@ -37,18 +30,11 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/complete-claim': completeClaim,
   './workers/request-information-response': requestInformationResponse,
   './workers/dwp-check': dwpCheck,
-  './workers/send-performance-platform-metrics-for-day': sendPerformancePlatformMetricsForDay,
-  './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
-  './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
-  './workers/mark-overpayments': markOverpayments,
   './workers/send-feedback': sendFeedback,
-  './workers/cleanup-old-data': cleanupOldData,
   './workers/send-technical-help': sendTechnicalHelp,
   './workers/archive-old-claims': archiveOldClaims,
   './workers/archive-claim': archiveClaim,
   './workers/reference-recovery': referenceRecovery,
-  './workers/generate-payout-payments': generatePayoutPayments,
-  './workers/generate-direct-payments': generateDirectPayments,
   './workers/send-malware-notification': sendMalwareAlert
 })
 
