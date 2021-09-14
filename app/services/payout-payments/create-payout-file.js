@@ -27,7 +27,7 @@ module.exports = function (payments) {
 
 function getFileName () {
   const datestamp = dateFormatter.now().format('DDMMYYYY')
-  return `${config.PAYMENT_FILE_FOLDER}/${config.PAYOUT_FILENAME_PREFIX}${datestamp}${config.PAYOUT_FILENAME_POSTFIX}.csv`
+  return `${config.PAYOUT_FILENAME_PREFIX}${datestamp}${config.PAYOUT_FILENAME_POSTFIX}.csv`
 }
 
 function stripSpecialCharacters (payments) {
