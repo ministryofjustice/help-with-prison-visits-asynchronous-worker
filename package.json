@@ -53,7 +53,7 @@
     "moment": "^2.29.1",
     "mssql": "^7.2.1",
     "notifications-node-client": "5.1.0",
-    "sftp-promises": "^1.7.1",
+    "ssh2-sftp-client": "^7.0.4",
     "xlsx-populate": "^1.21.0",
     "xml2js": "^0.4.23",
     "xml2js-xpath": "^0.12.0",

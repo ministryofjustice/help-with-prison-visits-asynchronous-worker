@@ -1,6 +1,6 @@
 const config = require('../../../config')
 const log = require('../log')
-const SFTPClient = require('sftp-promises')
+const SFTPClient = require('ssh2-sftp-client')
 
 module.exports = function (paymentFilePathLocal, paymentFilePathRemote) {
   log.info(`sftp-send-payout-payment-file PAYOUT_SFTP_ENABLED: ${config.PAYOUT_SFTP_ENABLED}`)
@@ -13,11 +13,18 @@ module.exports = function (paymentFilePathLocal, paymentFilePathRemote) {
       password: config.PAYOUT_SFTP_PASSWORD
     }
 
-    const sftp = new SFTPClient(sftpConfig)
+    const sftp = new SFTPClient()
 
     log.info(`Sending file ${paymentFilePathLocal} to remote ${sftpConfig.host}:${paymentFilePathRemote}`)
 
-    return sftp.put(paymentFilePathLocal, paymentFilePathRemote)
+    sftp.connect(sftpConfig).then(() => {
+      return sftp.fastPut(paymentFilePathLocal, paymentFilePathRemote)
+    }).then(() => {
+      return sftp.end()
+    }).catch(error => {
+      log.error('Error sending payment file', error)
+      return Promise.resolve()
+    })
   } else {
     return Promise.resolve()
   }
