@@ -1022,5 +1022,76 @@ module.exports = {
     displayName: 'Les Nicolles',
     region: 'GSY',
     postcode: ''
+  },
+
+  // YCS
+  OAKHILL_STC_YCS: {
+    value: 'oakhill-stc-ycs',
+    displayName: 'Oakhill STC (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  RAINSBROOK_STC_YCS: {
+    value: 'rainsbrook-stc-ycs',
+    displayName: 'Rainsbrook STC (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  ADEL_BECK_SCH_YCS: {
+    value: 'adel-beck-sch-ycs',
+    displayName: 'Adel Beck SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  ALDINE_HOUSE_SCH_YCS: {
+    value: 'aldine-house-sch-ycs',
+    displayName: 'Aldine House SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  AYCLIFFE_SCH_YCS: {
+    value: 'aycliffe-sch-ycs',
+    displayName: 'Aycliffe SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  BARTON_MOSS_SCH_YCS: {
+    value: 'barton-moss-sch-ycs',
+    displayName: 'Barton Moss SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  CLAYFIELDS_HOUSE_SCH_YCS: {
+    value: 'clayfields-house-sch-ycs',
+    displayName: 'Clayfields House SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  HILLSIDE_SCH_YCS: {
+    value: 'hillside-sch-ycs',
+    displayName: 'Hillside SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  LINCOLNSHIRE_SCH_YCS: {
+    value: 'lincolnshire-sch-ycs',
+    displayName: 'Lincolnshire SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
+  },
+
+  VINNEY_GREEN_SCH_YCS: {
+    value: 'vinney-green-sch-ycs',
+    displayName: 'Vinney Green SCH (YCS)',
+    region: 'YCS',
+    postcode: ''
   }
 }
