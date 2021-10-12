@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const getNumberOfSubmittedClaimsForDateRange = require('../../../../app/services/data/get-number-of-submitted-claims-for-date-range')
@@ -22,9 +21,11 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
     claim3.ClaimId = claim1.ClaimId + 2
     claim3.DateSubmitted = new Date('1930-12-07 20:00')
 
-    return Promise.all([knex('IntSchema.Claim').insert(claim1),
-      knex('IntSchema.Claim').insert(claim2),
-      knex('IntSchema.Claim').insert(claim3)])
+    const db = getDatabaseConnector()
+
+    return Promise.all([db('IntSchema.Claim').insert(claim1),
+      db('IntSchema.Claim').insert(claim2),
+      db('IntSchema.Claim').insert(claim3)])
   })
 
   it('should return number of claims submitted', function () {

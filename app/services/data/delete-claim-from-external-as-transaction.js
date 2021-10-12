@@ -1,10 +1,11 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const log = require('../log')
 const deleteClaimFromExternal = require('./delete-claim-from-external')
 
 module.exports = function (eligibilityId, claimId) {
-  return knex.transaction(function (trx) {
+  const db = getDatabaseConnector()
+
+  return db.transaction(function (trx) {
     return deleteClaimFromExternal(eligibilityId, claimId, trx)
   })
     .then(function () {

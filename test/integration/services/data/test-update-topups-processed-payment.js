@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const moment = require('moment')
 
@@ -30,7 +29,9 @@ describe('services/data/update-topups-processed-payment', function () {
         expect(topupsPendingPayment.length, 'Topups pending payment should be an array of size 1').to.be.equal(1)
         return updateTopupsPendingPayment(claimId, paymentDate)
           .then(function () {
-            return knex('IntSchema.TopUp').where('ClaimId', claimId)
+            const db = getDatabaseConnector()
+
+            return db('IntSchema.TopUp').where('ClaimId', claimId)
               .then(function (claims) {
                 expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
                 expect(claims[0].PaymentDate).to.not.equal(null)

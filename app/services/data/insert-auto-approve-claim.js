@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
@@ -10,6 +9,7 @@ module.exports = function (reference, eligibilityId, claimId, visitorEmailAddres
     EmailAddress: visitorEmailAddress,
     DateAdded: dateFormatter.now().toDate()
   }
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.AutoApproval').insert(autoApproval)
+  return db('IntSchema.AutoApproval').insert(autoApproval)
 }

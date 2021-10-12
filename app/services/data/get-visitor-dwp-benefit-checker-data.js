@@ -1,9 +1,10 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const moment = require('moment')
 
 module.exports = function (reference, eligibilityId, claimId) {
-  return knex('IntSchema.Eligibility')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Eligibility')
     .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
     .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .leftJoin('IntSchema.Benefit', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Benefit.EligibilityId')

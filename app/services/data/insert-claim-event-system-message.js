@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (reference, eligibilityId, claimId, claimDocumentId, event, additionalData, note, isInternal) {
@@ -15,6 +14,7 @@ module.exports = function (reference, eligibilityId, claimId, claimDocumentId, e
     note: note,
     isInternal: isInternal
   }
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.ClaimEvent').insert(claimEvent)
+  return db('IntSchema.ClaimEvent').insert(claimEvent)
 }

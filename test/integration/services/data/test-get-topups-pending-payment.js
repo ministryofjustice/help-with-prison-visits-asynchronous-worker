@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
 const getTopUpsPendingPayment = require('../../../../app/services/data/get-topups-pending-payment')
@@ -32,7 +31,7 @@ describe('services/data/get-topups-pending-payment', function () {
       return beforeDataCreation()
     })
 
-    it('should retrieve only topups with a PaymentStatus of PENIDNG and a PaymentDate of NULL', function () {
+    it('should retrieve only topups with a PaymentStatus of PENDING and a PaymentDate of NULL', function () {
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (results) {
           expect(results).to.eql(expectedBankTopups)
@@ -49,14 +48,16 @@ describe('services/data/get-topups-pending-payment', function () {
 
   describe('Payout payments', function () {
     before(function () {
+      const db = getDatabaseConnector()
+
       return beforeDataCreation()
         .then(function () {
-          return knex('IntSchema.Claim')
+          return db('IntSchema.Claim')
             .where('ClaimId', claimId)
             .update('PaymentMethod', paymentMethods.PAYOUT.value)
         })
         .then(function () {
-          return knex('IntSchema.ClaimBankDetail')
+          return db('IntSchema.ClaimBankDetail')
             .where('ClaimId', claimId)
             .del()
         })

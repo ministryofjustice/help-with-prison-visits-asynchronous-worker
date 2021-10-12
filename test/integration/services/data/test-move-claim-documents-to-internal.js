@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -37,9 +36,11 @@ describe('services/data/move-claim-documents-to-internal', function () {
   })
 
   it('should move claim documents to from external to internal', function () {
+    const db = getDatabaseConnector()
+
     return moveClaimDocumentsToInternal(REFERENCE, eligibilityId, claimId)
       .then(function () {
-        return knex('IntSchema.ClaimDocument').where('Reference', REFERENCE)
+        return db('IntSchema.ClaimDocument').where('Reference', REFERENCE)
           .then(function (claimDocuments) {
             expect(claimDocuments.length, 'should have copied claim documents from external to internal').to.be.equal(3)
             expect(disableClaimDocument.calledOne, 'should have disabled one old document')
@@ -47,7 +48,7 @@ describe('services/data/move-claim-documents-to-internal', function () {
           })
       })
       .then(function () {
-        return knex('ExtSchema.ClaimDocument').where('Reference', REFERENCE)
+        return db('ExtSchema.ClaimDocument').where('Reference', REFERENCE)
           .then(function (claimDocuments) {
             expect(claimDocuments.length, 'should have deleted External ClaimDocuments').to.be.equal(0)
           })

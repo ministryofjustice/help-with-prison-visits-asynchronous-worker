@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const _ = require('lodash')
 const paymentMethods = require('../../constants/payment-method-enum')
 
@@ -45,8 +44,9 @@ function payoutPaymentsReturn (results) {
 
 module.exports = function (paymentMethod) {
   const selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.Claim')
+  return db('IntSchema.Claim')
     .sum('IntSchema.TopUp.TopUpAmount as PaymentAmount')
     .select(selectColumns)
     .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')

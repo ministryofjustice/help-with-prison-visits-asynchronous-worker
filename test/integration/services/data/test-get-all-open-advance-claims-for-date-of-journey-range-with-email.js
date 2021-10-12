@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = require('../../../../app/services/data/get-all-open-advance-claims-for-date-of-journey-range-with-email')
@@ -19,8 +18,9 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         const claim1DateOfJourney = new Date('1930-12-08 10:00')
+        const db = getDatabaseConnector()
 
-        return knex('IntSchema.Claim')
+        return db('IntSchema.Claim')
           .update({ DateOfJourney: claim1DateOfJourney, IsAdvanceClaim: true, Status: 'APPROVED' })
           .where('ClaimId', claimId)
           .then(function () {
@@ -38,7 +38,7 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
             claim3.IsAdvanceClaim = true
             claim3.Status = 'APPROVED'
 
-            return Promise.all([knex('IntSchema.Claim').insert(claim2), knex('IntSchema.Claim').insert(claim3)])
+            return Promise.all([db('IntSchema.Claim').insert(claim2), db('IntSchema.Claim').insert(claim3)])
           })
       })
   })

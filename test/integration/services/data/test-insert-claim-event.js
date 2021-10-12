@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const insertClaimEvent = require('../../../../app/services/data/insert-claim-event')
 const testHelper = require('../../../test-helper')
 
@@ -21,7 +20,9 @@ describe('services/data/insert-claim-event', function () {
   it('should create a Claim Event', function () {
     return insertClaimEvent(REFERENCE, eligibilityId, claimId, null, event, null, null, true)
       .then(function () {
-        return knex.table('IntSchema.ClaimEvent')
+        const db = getDatabaseConnector()
+
+        return db.table('IntSchema.ClaimEvent')
           .where({ Reference: REFERENCE, EligibilityId: eligibilityId, ClaimId: claimId })
           .first()
           .then(function (result) {

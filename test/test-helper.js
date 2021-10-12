@@ -1,5 +1,4 @@
-const config = require('../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../app/databaseConnector')
 const dateFormatter = require('../app/services/date-formatter')
 
 module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
@@ -23,7 +22,9 @@ module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
 }
 
 function deleteByReference (schemaTable, reference) {
-  return knex(schemaTable).where('Reference', reference).del()
+  const db = getDatabaseConnector()
+
+  return db(schemaTable).where('Reference', reference).del()
 }
 
 module.exports.deleteAll = function (reference, schema) {
@@ -47,6 +48,8 @@ module.exports.deleteAll = function (reference, schema) {
 }
 
 module.exports.insertClaimEligibilityData = function (schema, reference, status, randomIds) {
+  const db = getDatabaseConnector()
+
   const data = this.getClaimData(reference, randomIds)
   if (status) {
     data.Claim.Status = status
@@ -61,7 +64,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
     delete data.Eligibility.EligibilityId
   }
 
-  return knex(`${schema}.Eligibility`).insert(data.Eligibility).returning('EligibilityId')
+  return db(`${schema}.Eligibility`).insert(data.Eligibility).returning('EligibilityId')
     .then(function (insertedIds) {
       newEligibilityId = insertedIds[0]
     })
@@ -70,14 +73,14 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
         delete data.Visitor.VisitorId
         data.Visitor.EligibilityId = newEligibilityId
       }
-      return knex(`${schema}.Visitor`).insert(data.Visitor)
+      return db(`${schema}.Visitor`).insert(data.Visitor)
     })
     .then(function () {
       if (isExtSchema) {
         delete data.Prisoner.PrisonerId
         data.Prisoner.EligibilityId = newEligibilityId
       }
-      return knex(`${schema}.Prisoner`).insert(data.Prisoner)
+      return db(`${schema}.Prisoner`).insert(data.Prisoner)
     })
     .then(function () {
       return insertClaimData(schema, reference, newEligibilityId, data)
@@ -90,13 +93,14 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
 module.exports.insertClaimData = function (schema, reference, newEligibilityId, data) {
   let newClaimId
   const isExtSchema = schema === 'ExtSchema'
+  const db = getDatabaseConnector()
 
   if (isExtSchema) {
     delete data.Claim.ClaimId
     data.Claim.EligibilityId = newEligibilityId
   }
 
-  return knex(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
+  return db(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
       if (isExtSchema) {
@@ -104,13 +108,13 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
         data.ClaimBankDetail.EligibilityId = newEligibilityId
         data.ClaimBankDetail.ClaimId = newClaimId
       }
-      return knex(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
+      return db(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
     })
     .then(function () {
       if (isExtSchema) {
         delete data.EligibilityVisitorUpdateContactDetail.EligibilityVisitorUpdateContactDetailId
         data.EligibilityVisitorUpdateContactDetail.EligibilityId = newEligibilityId
-        return knex('ExtSchema.EligibilityVisitorUpdateContactDetail').insert(data.EligibilityVisitorUpdateContactDetail)
+        return db('ExtSchema.EligibilityVisitorUpdateContactDetail').insert(data.EligibilityVisitorUpdateContactDetail)
       }
     })
     .then(function () {
@@ -124,7 +128,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
         data.ClaimExpenses[0].ClaimId = newClaimId
         data.ClaimExpenses[1].ClaimId = newClaimId
       }
-      return knex(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
+      return db(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })
     .then(function () {
       return insertClaimDocuments(schema, newEligibilityId, newClaimId, data.ClaimDocument)
@@ -138,13 +142,13 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
         data.ClaimChildren[0].ClaimId = newClaimId
         data.ClaimChildren[1].ClaimId = newClaimId
       }
-      return knex(`${schema}.ClaimChild`).insert(data.ClaimChildren)
+      return db(`${schema}.ClaimChild`).insert(data.ClaimChildren)
     })
     .then(function () {
       if (isExtSchema) {
         Promise.resolve(null)
       } else {
-        return knex(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
+        return db(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
       }
     })
     .then(function () {
@@ -339,8 +343,9 @@ module.exports.claimMigrationData = function (reference) {
   const claim = { EligibilityId: eligibilityId, Reference: reference, Status: 'SUBMITTED', IsAdvanceClaim: false, DateOfJourney: dateFormatter.now().toDate(), DateCreated: dateFormatter.now().toDate(), DateSubmitted: dateFormatter.now().toDate(), PaymentMethod: 'payout' }
   const claimExpense = { EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, ExpenseType: 'car', Cost: 0, TravelTime: null, From: 'London', To: 'Hewell', IsReturn: false, DurationOfTravel: null, TicketType: null, IsEnabled: true }
   const claimDocument = { EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, DocumentType: 'RECEIPT', ClaimExpenseId: claimExpenseId, DocumentStatus: 'UPLOADED', Filepath: 'path/to/nowhere', DateSubmitted: dateFormatter.now().toDate(), IsEnabled: true }
+  const db = getDatabaseConnector()
 
-  return knex('ExtSchema.Eligibility').insert(eligibility).returning('EligibilityId')
+  return db('ExtSchema.Eligibility').insert(eligibility).returning('EligibilityId')
     .then(function (id) {
       eligibilityId = id[0]
       eligibility.EligibilityId = eligibilityId
@@ -349,28 +354,28 @@ module.exports.claimMigrationData = function (reference) {
       claim.EligibilityId = eligibilityId
       claimExpense.EligibilityId = eligibilityId
       claimDocument.EligibilityId = eligibilityId
-      return knex('ExtSchema.Prisoner').insert(prisoner).returning('PrisonerId')
+      return db('ExtSchema.Prisoner').insert(prisoner).returning('PrisonerId')
     })
     .then(function (prisonerId) {
       prisoner.PrisonerId = prisonerId[0]
-      return knex('ExtSchema.Visitor').insert(visitor).returning('VisitorId')
+      return db('ExtSchema.Visitor').insert(visitor).returning('VisitorId')
     })
     .then(function (VisitorId) {
       visitor.VisitorId = VisitorId[0]
-      return knex('ExtSchema.Claim').insert(claim).returning('ClaimId')
+      return db('ExtSchema.Claim').insert(claim).returning('ClaimId')
     })
     .then(function (id) {
       claimId = id[0]
       claim.ClaimId = claimId
       claimExpense.ClaimId = claimId
       claimDocument.ClaimId = claimId
-      return knex('ExtSchema.ClaimExpense').insert(claimExpense).returning('ClaimExpenseId')
+      return db('ExtSchema.ClaimExpense').insert(claimExpense).returning('ClaimExpenseId')
     })
     .then(function (id) {
       claimExpenseId = id[0]
       claimExpense.ClaimExpenseId = claimExpenseId
       claimDocument.ClaimExpenseId = claimExpenseId
-      return knex('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
+      return db('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
     })
     .then(function (ClaimDocumentId) {
       claimDocument.ClaimDocumentId = ClaimDocumentId[0]
@@ -391,7 +396,9 @@ module.exports.claimMigrationData = function (reference) {
 
 module.exports.orphanedClaimDocument = function (eligibilityId, claimId, reference) {
   const claimDocument = { EligibilityId: eligibilityId, Reference: reference, ClaimId: claimId, ClaimExpenseId: 0, DocumentType: 'RECEIPT', DocumentStatus: 'UPLOADED', Filepath: 'path/to/nowhere', DateSubmitted: dateFormatter.now().toDate(), IsEnabled: true }
-  return knex('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
+  const db = getDatabaseConnector()
+
+  return db('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
     .then(function (ClaimDocumentId) {
       claimDocument.ClaimDocumentId = ClaimDocumentId[0]
       return {
@@ -539,6 +546,8 @@ function subtractDateFromNow (amount, unit) {
 
 function insertClaimDocuments (schema, eligibilityId, claimId, data) {
   const isExtSchema = schema === 'ExtSchema'
+  const db = getDatabaseConnector()
+
   if (isExtSchema) {
     delete data[0].ClaimDocumentId
     delete data[1].ClaimDocumentId
@@ -547,7 +556,7 @@ function insertClaimDocuments (schema, eligibilityId, claimId, data) {
     data[0].ClaimId = claimId
     data[1].ClaimId = claimId
   }
-  return knex(`${schema}.ClaimDocument`).insert(data)
+  return db(`${schema}.ClaimDocument`).insert(data)
 }
 
 module.exports.insertTopUp = function (claimId) {
@@ -559,9 +568,13 @@ module.exports.insertTopUp = function (claimId) {
     Reason: 'Test Reason',
     PaymentDate: null
   }
-  return knex('IntSchema.TopUp').insert(topUp).returning('TopUpId')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.TopUp').insert(topUp).returning('TopUpId')
 }
 
 module.exports.deleteTopUp = function (claimId) {
-  return knex('IntSchema.TopUp').where('ClaimId', claimId).del()
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.TopUp').where('ClaimId', claimId).del()
 }

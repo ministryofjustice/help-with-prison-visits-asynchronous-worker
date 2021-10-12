@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 const statusEnum = require('../../constants/status-enum')
 
@@ -16,18 +15,21 @@ module.exports = function (claimId) {
 }
 
 function getClaimExpenses (claimId) {
-  return knex('IntSchema.ClaimExpense')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimExpense')
     .where('ClaimId', claimId)
     .select('ClaimExpenseId', 'Cost')
 }
 
 function updateClaimExpenseToApproved (claimExpense) {
+  const db = getDatabaseConnector()
   const updatedClaimExpense = {
     Status: statusEnum.APPROVED,
     ApprovedCost: parseFloat(claimExpense.Cost).toFixed(2)
   }
 
-  return knex('IntSchema.ClaimExpense')
+  return db('IntSchema.ClaimExpense')
     .where('ClaimExpenseId', claimExpense.ClaimExpenseId)
     .update(updatedClaimExpense)
 }

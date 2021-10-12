@@ -1,5 +1,4 @@
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 const updateClaimTotalAmount = require('../../../../app/services/data/update-claim-total-amount')
@@ -16,7 +15,9 @@ describe('services/data/update-claim-total-amount', function () {
   it('should update the manually processed column for a particular claim', function () {
     return updateClaimTotalAmount(claimId, '12')
       .then(function () {
-        return knex('IntSchema.Claim')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim')
           .select('TotalAmount')
           .where('ClaimId', claimId)
           .then(function (result) {
@@ -28,7 +29,9 @@ describe('services/data/update-claim-total-amount', function () {
   it('should update the manually processed column for a particular claim given a decimal value', function () {
     return updateClaimTotalAmount(claimId, '12.10')
       .then(function () {
-        return knex('IntSchema.Claim')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim')
           .select('TotalAmount')
           .where('ClaimId', claimId)
           .then(function (result) {

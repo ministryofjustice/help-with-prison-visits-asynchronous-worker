@@ -1,5 +1,4 @@
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const updateOldPaymentFilesIsEnabledFalse = require('../../../../app/services/data/update-old-payment-files-is-enabled-false')
@@ -8,7 +7,9 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
   let paymentFileIds
 
   before(function () {
-    return knex('IntSchema.DirectPaymentFile')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.DirectPaymentFile')
       .insert([
         {
           FileType: 'TEST_FILE',
@@ -32,7 +33,9 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
   it('should set IsEnabled to false for inserted payment files', function () {
     return updateOldPaymentFilesIsEnabledFalse(paymentFileIds)
       .then(function () {
-        return knex('IntSchema.DirectPaymentFile')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.DirectPaymentFile')
           .select('IsEnabled')
           .whereIn('PaymentFileId', paymentFileIds)
           .then(function (results) {
@@ -43,7 +46,9 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
   })
 
   after(function () {
-    return knex('IntSchema.DirectPaymentFile')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.DirectPaymentFile')
       .whereIn('PaymentFileId', paymentFileIds).del()
   })
 })

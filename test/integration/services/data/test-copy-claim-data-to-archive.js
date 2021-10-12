@@ -1,6 +1,5 @@
 /* COMMENTED OUT AS LOCAL AND DEV ENVIRONMENTS DO NO HAVE ARCHIVE DB
 const config = require('../../../../knexfile').archive
-const knex = require('knex')(config)
 const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 

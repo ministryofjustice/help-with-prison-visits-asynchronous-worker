@@ -1,6 +1,7 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function () {
-  return knex('IntSchema.AutoApproval').select('AutoApprovalId', 'EligibilityId', 'Reference', 'ClaimId', 'EmailAddress')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.AutoApproval').select('AutoApprovalId', 'EligibilityId', 'Reference', 'ClaimId', 'EmailAddress')
 }

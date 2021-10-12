@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (claimId, paymentDate) {
-  return knex('IntSchema.TopUp')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.TopUp')
     .where('ClaimId', claimId)
     .andWhere('PaymentStatus', 'PENDING')
     .update({

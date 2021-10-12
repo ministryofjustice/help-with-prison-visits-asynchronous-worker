@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexfile = require('../../../../knexfile').asyncworker
-const knex = require('knex')(knexfile)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const config = require('../../../../config')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const testHelper = require('../../../test-helper')
@@ -84,10 +83,12 @@ function createTestData (ref, dateCreated, deleteClaim) {
 
   return testHelper.insertClaimEligibilityData('ExtSchema', ref)
     .then(function (ids) {
+      const db = getDatabaseConnector()
+
       returnObject.eligibilityId = ids.eligibilityId
       returnObject.claimId = ids.claimId
 
-      return knex('ExtSchema.Eligibility')
+      return db('ExtSchema.Eligibility')
         .where('EligibilityId', returnObject.eligibilityId)
         .update({
           DateCreated: dateCreated
@@ -112,7 +113,9 @@ function createTestData (ref, dateCreated, deleteClaim) {
 }
 
 function deleteFromTable (claimId, tableName) {
-  return knex(`ExtSchema.${tableName}`)
+  const db = getDatabaseConnector()
+
+  return db(`ExtSchema.${tableName}`)
     .where('ClaimId', claimId)
     .del()
 }

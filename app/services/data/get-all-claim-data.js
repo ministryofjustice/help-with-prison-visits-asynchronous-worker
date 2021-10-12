@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (schema, reference, eligibilityId, claimId, getDisabledDocuments = false) {
   return Promise.all([getEligilibility(schema, reference, eligibilityId),
@@ -37,60 +36,84 @@ module.exports = function (schema, reference, eligibilityId, claimId, getDisable
 }
 
 function getEligilibility (schema, reference, eligibilityId) {
-  return knex(`${schema}.Eligibility`).first().where({ Reference: reference, EligibilityId: eligibilityId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Eligibility`).first().where({ Reference: reference, EligibilityId: eligibilityId })
 }
 
 function getClaim (schema, claimId) {
-  return knex(`${schema}.Claim`).first().where({ ClaimId: claimId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Claim`).first().where({ ClaimId: claimId })
 }
 
 function getPrisoner (schema, reference, eligibilityId) {
-  return knex(`${schema}.Prisoner`).first().where({ Reference: reference, EligibilityId: eligibilityId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Prisoner`).first().where({ Reference: reference, EligibilityId: eligibilityId })
 }
 
 function getEligibleChild (schema, reference, eligibilityId) {
-  return knex(`${schema}.EligibleChild`).select().where({ Reference: reference, EligibilityId: eligibilityId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.EligibleChild`).select().where({ Reference: reference, EligibilityId: eligibilityId })
 }
 
 function getBenefit (schema, reference, eligibilityId) {
-  return knex(`${schema}.Benefit`).first().where({ Reference: reference, EligibilityId: eligibilityId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Benefit`).first().where({ Reference: reference, EligibilityId: eligibilityId })
 }
 
 function getVisitor (schema, reference, eligibilityId) {
-  return knex(`${schema}.Visitor`).first().where({ Reference: reference, EligibilityId: eligibilityId })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Visitor`).first().where({ Reference: reference, EligibilityId: eligibilityId })
 }
 
 function getClaimExpenses (schema, claimId) {
-  return knex(`${schema}.ClaimExpense`).select().where({ ClaimId: claimId, IsEnabled: true })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.ClaimExpense`).select().where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getClaimBankDetail (schema, claimId) {
-  return knex(`${schema}.ClaimBankDetail`).first().where('ClaimId', claimId)
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.ClaimBankDetail`).first().where('ClaimId', claimId)
 }
 
 function getClaimChildren (schema, claimId) {
-  return knex(`${schema}.ClaimChild`).select().where({ ClaimId: claimId, IsEnabled: true })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.ClaimChild`).select().where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getClaimDocuments (schema, reference, eligibilityId, claimId, getDisabledDocuments) {
+  const db = getDatabaseConnector()
+
   if (getDisabledDocuments) {
-    return knex(`${schema}.ClaimDocument`).select()
+    return db(`${schema}.ClaimDocument`).select()
       .where({ Reference: reference, EligibilityId: eligibilityId, ClaimId: claimId })
       .orWhere({ Reference: reference, EligibilityId: eligibilityId, ClaimId: null })
   } else {
-    return knex(`${schema}.ClaimDocument`).select()
+    return db(`${schema}.ClaimDocument`).select()
       .where({ Reference: reference, EligibilityId: eligibilityId, ClaimId: claimId, IsEnabled: true })
       .orWhere({ Reference: reference, EligibilityId: eligibilityId, ClaimId: null, IsEnabled: true })
   }
 }
 
 function getClaimEscort (schema, claimId) {
-  return knex(`${schema}.ClaimEscort`).select().where({ ClaimId: claimId, IsEnabled: true })
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.ClaimEscort`).select().where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getEligibilityVisitorUpdateContactDetail (schema, reference, eligibilityId) {
   if (schema === 'ExtSchema') {
-    return knex(`${schema}.EligibilityVisitorUpdateContactDetail`).first().where({ Reference: reference, EligibilityId: eligibilityId }).orderBy('DateSubmitted', 'desc')
+    const db = getDatabaseConnector()
+
+    return db(`${schema}.EligibilityVisitorUpdateContactDetail`).first().where({ Reference: reference, EligibilityId: eligibilityId }).orderBy('DateSubmitted', 'desc')
   } else {
     return Promise.resolve(null)
   }
@@ -98,7 +121,9 @@ function getEligibilityVisitorUpdateContactDetail (schema, reference, eligibilit
 
 function getClaimEvents (schema, claimId) {
   if (schema === 'IntSchema') {
-    return knex(`${schema}.ClaimEvent`).select().where({ ClaimId: claimId })
+    const db = getDatabaseConnector()
+
+    return db(`${schema}.ClaimEvent`).select().where({ ClaimId: claimId })
   } else {
     return Promise.resolve(null)
   }
@@ -106,7 +131,9 @@ function getClaimEvents (schema, claimId) {
 
 function getClaimDeductions (schema, claimId) {
   if (schema === 'IntSchema') {
-    return knex(`${schema}.ClaimDeduction`).select().where({ ClaimId: claimId, IsEnabled: true })
+    const db = getDatabaseConnector()
+
+    return db(`${schema}.ClaimDeduction`).select().where({ ClaimId: claimId, IsEnabled: true })
   } else {
     return Promise.resolve(null)
   }

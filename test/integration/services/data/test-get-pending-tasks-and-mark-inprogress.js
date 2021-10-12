@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
 
@@ -11,7 +10,9 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
   let ids = []
   const taskType = 'PENDING-TEST'
   before(function (done) {
-    knex('ExtSchema.Task').insert([
+    const db = getDatabaseConnector()
+
+    db('ExtSchema.Task').insert([
       testHelper.getTaskObject(taskType, '1'),
       testHelper.getTaskObject(taskType, '2'),
       testHelper.getTaskObject(taskType, '3'),
@@ -48,7 +49,9 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
 
   after(function (done) {
     // Clean up
-    knex('ExtSchema.Task').whereIn('TaskId', ids).del().then(function () {
+    const db = getDatabaseConnector()
+
+    db('ExtSchema.Task').whereIn('TaskId', ids).del().then(function () {
       done()
     })
   })

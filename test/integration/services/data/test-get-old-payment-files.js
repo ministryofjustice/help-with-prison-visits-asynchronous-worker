@@ -1,5 +1,4 @@
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const expect = require('chai').expect
 const { getOldPaymentFiles } = require('../../../../app/services/data/get-old-payment-files')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -10,7 +9,9 @@ describe('services/data/get-old-payment-files', function () {
   let paymentFileIds
 
   before(function () {
-    return knex('IntSchema.DirectPaymentFile')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.DirectPaymentFile')
       .insert([
         {
           FileType: 'TEST_FILE',
@@ -44,7 +45,9 @@ describe('services/data/get-old-payment-files', function () {
   })
 
   after(function () {
-    return knex('IntSchema.DirectPaymentFile')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.DirectPaymentFile')
       .whereIn('PaymentFileId', paymentFileIds).del()
   })
 })

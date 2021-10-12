@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const updateBankDetails = require('../../../../app/services/data/update-bank-details')
 const testHelper = require('../../../test-helper')
 
@@ -22,7 +21,9 @@ describe('services/data/update-bank-details', function () {
   it('should update bank details with new sortcode and acoount number', function () {
     return updateBankDetails(claimBankDetailId, reference, claimId, sortcode, accountNumber)
       .then(function () {
-        return knex.table('IntSchema.ClaimBankDetail')
+        const db = getDatabaseConnector()
+
+        return db.table('IntSchema.ClaimBankDetail')
           .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
           .first()
           .then(function (result) {

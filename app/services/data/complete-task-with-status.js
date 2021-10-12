@@ -1,10 +1,11 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const log = require('../log')
 
 module.exports = function (schema, taskId, status) {
-  return knex(`${schema}.Task`).where('TaskId', taskId)
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Task`).where('TaskId', taskId)
     .update({
       Status: status,
       DateProcessed: dateFormatter.now().toDate()

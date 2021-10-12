@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const updateClaimStatus = require('../../../../app/services/data/update-claim-status')
@@ -20,7 +19,9 @@ describe('services/data/update-claim-status', function () {
   it('should update Claim Status to NEW', function () {
     return updateClaimStatus(claimId, STATUS)
       .then(function () {
-        return knex('IntSchema.Claim').where('ClaimId', claimId).first()
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {
             expect(claim.Status).to.be.equal(STATUS)
           })

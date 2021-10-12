@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (schema, claimId) {
-  return knex(`${schema}.Visitor`)
+  const db = getDatabaseConnector()
+
+  return db(`${schema}.Visitor`)
     .join(`${schema}.Claim`, 'Visitor.EligibilityId', 'Claim.EligibilityId')
     .where({ ClaimId: claimId })
     .first('FirstName')

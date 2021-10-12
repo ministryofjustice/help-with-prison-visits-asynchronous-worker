@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const deleteClaimFromExternal = require('../../../../app/services/data/delete-claim-from-external')
@@ -19,11 +18,13 @@ describe('services/data/delete-claim-from-external', function () {
   })
 
   it('should delete the first time claim from external', function () {
-    return knex.transaction(function (trx) {
+    const db = getDatabaseConnector()
+
+    return db.transaction(function (trx) {
       return deleteClaimFromExternal(eligibilityId, claimId, trx)
     })
       .then(function () {
-        return knex('ExtSchema.Eligibility')
+        return db('ExtSchema.Eligibility')
           .join('ExtSchema.Prisoner', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Prisoner.Reference')
           .join('ExtSchema.Visitor', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Visitor.Reference')
           .join('ExtSchema.Claim', 'ExtSchema.Eligibility.Reference', '=', 'ExtSchema.Claim.Reference')
@@ -32,7 +33,7 @@ describe('services/data/delete-claim-from-external', function () {
           .then(function (countResult) {
             expect(countResult[0].count).to.be.equal(0)
 
-            return knex('ExtSchema.ClaimBankDetail')
+            return db('ExtSchema.ClaimBankDetail')
               .join('ExtSchema.ClaimExpense', 'ExtSchema.ClaimBankDetail.ClaimId', '=', 'ExtSchema.ClaimExpense.ClaimId')
               .where('ExtSchema.ClaimBankDetail.ClaimId', claimId)
               .count('ExtSchema.ClaimBankDetail.ClaimId as count')
@@ -44,7 +45,9 @@ describe('services/data/delete-claim-from-external', function () {
   })
 
   it('should not throw an error when only eligibility id is supplied', function () {
-    return knex.transaction(function (trx) {
+    const db = getDatabaseConnector()
+
+    return db.transaction(function (trx) {
       return deleteClaimFromExternal(eligibilityId, null, trx)
     })
       .then(function () {

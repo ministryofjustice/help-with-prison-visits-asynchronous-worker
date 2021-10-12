@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const config = require('../../../../config')
 
 const claimPaymentAmount1 = 45.50
 const claimPaymentAmount2 = 22.22
@@ -70,7 +71,7 @@ describe('services/workers/generate-payout-payments', function () {
       expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(getTopUpsPendingPayment.calledOnce).to.be.true //eslint-disable-line
       expect(createPayoutFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
-      expect(sftpSendPayoutPaymentFile.calledWith(`/app/tmp/${testPath}`, './test.csv')).to.be.true //eslint-disable-line
+      expect(sftpSendPayoutPaymentFile.calledWith(`${config.FILE_TMP_DIR}/${testPath}`, `${config.PAYOUT_SFTP_REMOTE_PATH}test.csv`)).to.be.true //eslint-disable-line
       expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, false)).to.be.true //eslint-disable-line
       expect(updateAllTopupsProcessedPayment.calledWith(['999990', '999991', '999992'])).to.be.true //eslint-disable-line
     })

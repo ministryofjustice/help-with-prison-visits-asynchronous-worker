@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -25,7 +24,9 @@ describe('services/data/update-claims-processed-payment', function () {
   it('should update Claim Payment Status to processed and Payment Amount to the total of approved claim expenses for all references', function () {
     return updateClaimsProcessedPayment(claimId, paymentTotal, paymentDate)
       .then(function () {
-        return knex('IntSchema.Claim').where('ClaimId', claimId)
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
             expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
@@ -38,7 +39,9 @@ describe('services/data/update-claims-processed-payment', function () {
     paymentTotal = 7.50
     return updateClaimsProcessedPayment(claimId, paymentTotal)
       .then(function () {
-        return knex('IntSchema.Claim').where('ClaimId', claimId)
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
             expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
             expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)

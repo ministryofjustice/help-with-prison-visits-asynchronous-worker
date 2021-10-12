@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (oldPaymentIds) {
-  return knex('IntSchema.DirectPaymentFile')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.DirectPaymentFile')
     .whereIn('PaymentFileId', oldPaymentIds)
     .update('IsEnabled', 'false')
 }

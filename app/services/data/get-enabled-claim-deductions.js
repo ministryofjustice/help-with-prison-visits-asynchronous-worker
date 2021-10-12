@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (claimId) {
-  return knex('IntSchema.ClaimDeduction')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimDeduction')
     .where({
       ClaimId: claimId,
       IsEnabled: true

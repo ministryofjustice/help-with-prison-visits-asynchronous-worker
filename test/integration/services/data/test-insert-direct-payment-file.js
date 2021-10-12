@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const fileTypeEnum = require('../../../../app/constants/payment-filetype-enum')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -14,7 +13,9 @@ describe('services/data/insert-direct-payment-file', function () {
     const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
     return insertDirectPaymentFile(path, fileTypeEnum.ACCESSPAY_FILE)
       .then(function () {
-        return knex.table('IntSchema.DirectPaymentFile')
+        const db = getDatabaseConnector()
+
+        return db.table('IntSchema.DirectPaymentFile')
           .where({ Filepath: path, FileType: fileTypeEnum.ACCESSPAY_FILE })
           .first()
           .then(function (result) {
@@ -27,6 +28,8 @@ describe('services/data/insert-direct-payment-file', function () {
   })
 
   after(function () {
-    return knex('IntSchema.DirectPaymentFile').where('Filepath', path).del()
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.DirectPaymentFile').where('Filepath', path).del()
   })
 })

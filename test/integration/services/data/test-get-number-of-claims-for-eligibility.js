@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const getNumberOfClaimsForEligibility = require('../../../../app/services/data/get-number-of-claims-for-eligibility')
@@ -18,7 +17,9 @@ describe('services/data/get-number-of-claims-for-eligibility', function () {
     const claim2 = testHelper.getClaimData(REFERENCE).Claim
     claim2.ClaimId = claim1.ClaimId + 1
 
-    return Promise.all([knex('IntSchema.Claim').insert(claim1), knex('IntSchema.Claim').insert(claim2)])
+    const db = getDatabaseConnector()
+
+    return Promise.all([db('IntSchema.Claim').insert(claim1), db('IntSchema.Claim').insert(claim2)])
   })
 
   it('should return number of claims for an eligibility Id', function () {

@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const deleteClaimFromInternal = require('../../../../app/services/data/delete-claim-from-internal')
@@ -22,7 +21,9 @@ describe('services/data/delete-claim-from-internal', function () {
   it('should delete claim and eligibility details', function () {
     return deleteClaimFromInternal(eligibilityId, claimId, true)
       .then(function () {
-        return knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
       })
       .then(function (countResult) {
         expect(countResult[0].count).to.equal(0)
@@ -32,7 +33,9 @@ describe('services/data/delete-claim-from-internal', function () {
   it('should delete claim and leave eligibility details', function () {
     return deleteClaimFromInternal(eligibilityId, claimId, false)
       .then(function () {
-        return knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
       })
       .then(function (countResult) {
         expect(countResult[0].count).to.equal(1)

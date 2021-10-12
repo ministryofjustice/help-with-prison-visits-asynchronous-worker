@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
@@ -36,7 +35,9 @@ describe('services/data/auto-approve-claim', function () {
   it('should update the status of the claim to AUTOAPPROVED, add current timestamp to DateApproved, call to update expenses, send accept email and add claim event', function () {
     return autoApproveClaim(REFERENCE, eligibilityId, claimId, EMAIL_ADDRESS)
       .then(function () {
-        return knex('IntSchema.Claim')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim')
           .where('ClaimId', claimId)
           .first()
           .then(function (claim) {

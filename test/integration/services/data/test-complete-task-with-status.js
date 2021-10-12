@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -11,7 +10,9 @@ describe('services/data/complete-task-with-status', function () {
   let id
 
   before(function () {
-    return knex('ExtSchema.Task')
+    const db = getDatabaseConnector()
+
+    return db('ExtSchema.Task')
       .insert(testHelper.getTaskObject('TEST-TASK', null, 'TEST'))
       .returning('TaskId')
       .then(function (taskId) {
@@ -21,7 +22,9 @@ describe('services/data/complete-task-with-status', function () {
 
   it('should set status and set DateProcessed', function () {
     return completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
-      return knex.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
+      const db = getDatabaseConnector()
+
+      return db.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
         const currentDate = dateFormatter.now()
         const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
         const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
@@ -32,6 +35,8 @@ describe('services/data/complete-task-with-status', function () {
   })
 
   after(function () {
-    return knex('ExtSchema.Task').where('Task', 'TEST-TASK').del()
+    const db = getDatabaseConnector()
+
+    return db('ExtSchema.Task').where('Task', 'TEST-TASK').del()
   })
 })
