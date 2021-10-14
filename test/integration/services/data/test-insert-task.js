@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
-const dateFormatter = require('../../../../app/services/date-formatter')
 
 const insertTask = require('../../../../app/services/data/insert-task')
 
@@ -22,25 +21,6 @@ describe('services/data/insert-task', function () {
           .then(function (result) {
             expect(result.Status).to.be.equal(statusEnum.PENDING)
             expect(result.DateCreated).not.to.be.null //eslint-disable-line
-          })
-      })
-  })
-
-  it('should create Generate Direct Payments Task', function () {
-    const currentDate = dateFormatter.now()
-    const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-    const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
-    return insertTask(reference, '', '', tasksEnum.GENERATE_DIRECT_PAYMENTS)
-      .then(function () {
-        const db = getDatabaseConnector()
-
-        return db.table('IntSchema.Task')
-          .where({ Task: tasksEnum.GENERATE_DIRECT_PAYMENTS, Status: statusEnum.PENDING })
-          .first()
-          .then(function (result) {
-            expect(result.Task).to.be.equal(tasksEnum.GENERATE_DIRECT_PAYMENTS)
-            expect(result.Status).to.be.equal(statusEnum.PENDING)
-            expect(result.DateCreated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
           })
       })
   })

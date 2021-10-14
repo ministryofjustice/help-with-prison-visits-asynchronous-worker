@@ -53,6 +53,7 @@ module.exports = {
         enableArithAbort: true
       }
     }
+    // , debug: true // uncomment to debug
   }
 
 }

@@ -103,11 +103,13 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return db(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
       newClaimId = insertedClaimIds[0]
+
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
         data.ClaimBankDetail.EligibilityId = newEligibilityId
         data.ClaimBankDetail.ClaimId = newClaimId
       }
+
       return db(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
     })
     .then(function () {
