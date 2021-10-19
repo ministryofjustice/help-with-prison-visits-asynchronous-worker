@@ -12,7 +12,6 @@ const sendClaimNotification = { name: 'sendClaimNotification' }
 const completeClaim = { name: 'completeClaim' }
 const requestInformationResponse = { name: 'requestInformationResponse' }
 const dwpCheck = { name: 'dwpCheck' }
-const sendPerformancePlatformMetricsForDay = { name: 'sendPerformancePlatformMetricsForDay' }
 const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = { name: 'markOverpayments' }
@@ -37,7 +36,6 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/complete-claim': completeClaim,
   './workers/request-information-response': requestInformationResponse,
   './workers/dwp-check': dwpCheck,
-  './workers/send-performance-platform-metrics-for-day': sendPerformancePlatformMetricsForDay,
   './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
   './workers/mark-overpayments': markOverpayments,
