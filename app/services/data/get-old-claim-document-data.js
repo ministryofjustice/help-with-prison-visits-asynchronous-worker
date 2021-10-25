@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (dateThreshold) {
-  return knex('ExtSchema.ClaimDocument')
+  const db = getDatabaseConnector()
+
+  return db('ExtSchema.ClaimDocument')
     .select('ClaimDocument.EligibilityId', 'ClaimDocument.ClaimId', 'ClaimDocument.Reference')
     .where('ClaimDocument.DateSubmitted', '<', dateThreshold)
 }

@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (eligibilityId, claimId, deleteEligibility) {
   return Promise.all([
@@ -35,5 +34,7 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
 }
 
 function deleteInternal (table, column, value) {
-  return knex(`IntSchema.${table}`).where(column, value).del()
+  const db = getDatabaseConnector()
+
+  return db(`IntSchema.${table}`).where(column, value).del()
 }

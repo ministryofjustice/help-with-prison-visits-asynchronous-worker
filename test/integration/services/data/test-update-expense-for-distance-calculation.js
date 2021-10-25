@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const updateExpenseForDistanceCalculation = require('../../../../app/services/data/update-expense-for-distance-calculation')
@@ -19,7 +18,9 @@ describe('services/data/update-expense-for-distance-calculation', function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         claimId = ids.claimId
-        return knex('IntSchema.ClaimExpense').where('ClaimId', claimId).first('ClaimExpenseId')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.ClaimExpense').where('ClaimId', claimId).first('ClaimExpenseId')
           .then(function (result) {
             claimExpenseId = result.ClaimExpenseId
           })
@@ -29,7 +30,9 @@ describe('services/data/update-expense-for-distance-calculation', function () {
   it('should update the ClaimExpense postcode, distance and cost columns', function () {
     return updateExpenseForDistanceCalculation(claimExpenseId, FROM_POSTCODE, TO_POSTCODE, DISTANCE, COST)
       .then(function () {
-        return knex('IntSchema.ClaimExpense').where('ClaimExpenseId', claimExpenseId).first()
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.ClaimExpense').where('ClaimExpenseId', claimExpenseId).first()
           .then(function (claimExpense) {
             expect(claimExpense.FromPostCode).to.be.equal(FROM_POSTCODE)
             expect(claimExpense.ToPostCode).to.be.equal(TO_POSTCODE)

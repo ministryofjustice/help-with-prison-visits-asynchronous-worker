@@ -1,11 +1,11 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (claimId) {
   let claimExpenses
+  const db = getDatabaseConnector()
 
   // Get all Claim expenses from database for specified claim id
-  return knex('IntSchema.ClaimExpense')
+  return db('IntSchema.ClaimExpense')
     .where('IntSchema.ClaimExpense.ClaimId', claimId)
     .then(function (claimExpenseData) {
       claimExpenses = claimExpenseData
@@ -22,8 +22,9 @@ module.exports = function (claimId) {
 
 function getClaimantData (claimId) {
   let visitor
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.Visitor')
+  return db('IntSchema.Visitor')
     .join('IntSchema.Claim', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
     .join('IntSchema.Prisoner', 'IntSchema.Visitor.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
     .where('IntSchema.Claim.ClaimId', claimId)
@@ -33,7 +34,7 @@ function getClaimantData (claimId) {
       visitor = visitorData
     })
     .then(function () {
-      return knex('IntSchema.ClaimBankDetail')
+      return db('IntSchema.ClaimBankDetail')
         .where('ClaimId', claimId)
         .first()
     })

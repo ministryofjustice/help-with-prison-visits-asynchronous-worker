@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const statusEnum = require('../../constants/status-enum')
 const dateFormatter = require('../date-formatter')
 
@@ -13,6 +12,7 @@ module.exports = function (reference, eligibilityId, claimId, taskType, addition
     DateCreated: dateFormatter.now().toDate(),
     Status: statusEnum.PENDING
   }
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.Task').insert(task).returning('TaskId')
+  return db('IntSchema.Task').insert(task).returning('TaskId')
 }

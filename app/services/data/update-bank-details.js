@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (claimBankDetailId, reference, claimId, sortcode, accountNumber, nameOnAccount, rollNumber) {
-  return knex('IntSchema.ClaimBankDetail')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimBankDetail')
     .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
     .update({ SortCode: sortcode, AccountNumber: accountNumber, NameOnAccount: nameOnAccount, RollNumber: rollNumber })
 }

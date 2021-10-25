@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -23,12 +22,14 @@ describe('services/data/get-claims-pending-payment', function () {
   })
 
   function beforeDataCreation () {
+    const db = getDatabaseConnector()
+
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
       })
       .then(function () {
-        return knex('IntSchema.Claim')
+        return db('IntSchema.Claim')
           .where('ClaimId', claimId)
           .update({
             Status: 'APPROVED',
@@ -36,7 +37,7 @@ describe('services/data/get-claims-pending-payment', function () {
           })
       })
       .then(function () {
-        return knex('IntSchema.ClaimExpense')
+        return db('IntSchema.ClaimExpense')
           .where('ClaimId', claimId)
           .select('ClaimExpenseId')
       })
@@ -45,13 +46,13 @@ describe('services/data/get-claims-pending-payment', function () {
         claimExpenseId2 = claimExpenses[1].ClaimExpenseId
 
         // Set one expense to REJECTED
-        return knex('IntSchema.ClaimExpense')
+        return db('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId1)
           .update('Status', 'REJECTED')
       })
       // Set one expense to APPROVED
       .then(function () {
-        return knex('IntSchema.ClaimExpense')
+        return db('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId2)
           .update({
             Status: 'APPROVED',
@@ -61,13 +62,17 @@ describe('services/data/get-claims-pending-payment', function () {
   }
 
   function changeClaimStatus (status) {
-    return knex('IntSchema.Claim')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.Claim')
       .where('ClaimId', claimId)
       .update('Status', status)
   }
 
   function changeClaimDateApproved (dateApproved) {
-    return knex('IntSchema.Claim')
+    const db = getDatabaseConnector()
+
+    return db('IntSchema.Claim')
       .where('ClaimId', claimId)
       .update('DateApproved', dateApproved)
   }
@@ -97,13 +102,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should exclude manually processed expense costs from the amount paid', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '20.50',
           Status: 'APPROVED-DIFF-AMOUNT'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '4.55',
@@ -125,13 +132,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should call update claim total amount with the correct value', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '15',
           Status: 'APPROVED-DIFF-AMOUNT'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '15',
@@ -148,13 +157,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should call update claim manually processed amount the with correct value', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '10',
           Status: 'MANUALLY-PROCESSED'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '15',
@@ -170,13 +181,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should call update claim manually processed amount the with correct value given a decimal value', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '10.20',
           Status: 'MANUALLY-PROCESSED'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '15',
@@ -192,13 +205,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should return payment amount to two decimal places', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '20.65',
           Status: 'APPROVED'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '10.45',
@@ -220,13 +235,15 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should not return claims to be paid if PaymentAmount is not positive', function () {
-      const update1 = knex('IntSchema.ClaimExpense')
+      const db = getDatabaseConnector()
+
+      const update1 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId1)
         .update({
           ApprovedCost: '15',
           Status: 'APPROVED'
         })
-      const update2 = knex('IntSchema.ClaimExpense')
+      const update2 = db('IntSchema.ClaimExpense')
         .where('ClaimExpenseId', claimExpenseId2)
         .update({
           ApprovedCost: '15',
@@ -248,7 +265,9 @@ describe('services/data/get-claims-pending-payment', function () {
     })
 
     it('should retrieve not retrieve claims with a PaymentMethod of manually processed', function () {
-      return knex('IntSchema.Claim')
+      const db = getDatabaseConnector()
+
+      return db('IntSchema.Claim')
         .where('ClaimId', claimId)
         .update({ PaymentMethod: paymentMethods.MANUALLY_PROCESSED.value })
         .then(function () {
@@ -270,14 +289,16 @@ describe('services/data/get-claims-pending-payment', function () {
 
   describe('Payout payments', function () {
     before(function () {
+      const db = getDatabaseConnector()
+
       return beforeDataCreation()
         .then(function () {
-          return knex('IntSchema.Claim')
+          return db('IntSchema.Claim')
             .where('ClaimId', claimId)
             .update('PaymentMethod', paymentMethods.PAYOUT.value)
         })
         .then(function () {
-          return knex('IntSchema.ClaimBankDetail')
+          return db('IntSchema.ClaimBankDetail')
             .where('ClaimId', claimId)
             .del()
         })

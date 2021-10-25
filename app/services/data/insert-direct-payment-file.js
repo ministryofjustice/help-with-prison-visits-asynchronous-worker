@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (filePath, fileType) {
+  const db = getDatabaseConnector()
+
   const fileMetadata = {
     FileType: fileType,
     DateCreated: dateFormatter.now().toDate(),
@@ -10,5 +11,5 @@ module.exports = function (filePath, fileType) {
     IsEnabled: true
   }
 
-  return knex('IntSchema.DirectPaymentFile').insert(fileMetadata).returning('PaymentFileId')
+  return db('IntSchema.DirectPaymentFile').insert(fileMetadata).returning('PaymentFileId')
 }

@@ -1,8 +1,9 @@
-const knexConfig = require('../../../knexfile').asyncworker
-const knex = require('knex')(knexConfig)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (olderThanDate) {
-  return knex('IntSchema.Claim')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Claim')
     .where('Claim.DateReviewed', '<', olderThanDate)
     .select('ClaimId')
 }

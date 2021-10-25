@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const getClaimDocuments = require('./get-claim-documents')
 const disableClaimDocument = require('./disable-claim-document')
 const insertClaimEvent = require('./insert-claim-event')
@@ -43,12 +42,16 @@ function disableOldClaimDocumentsInInternal (reference, eligibilityId, claimId, 
 
 function copyClaimDocumentsToInternal (claimDocuments) {
   log.info('copyClaimDocumentsToInternal')
-  return knex('IntSchema.ClaimDocument').insert(claimDocuments)
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimDocument').insert(claimDocuments)
 }
 
 function deleteClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
   log.info('deleteClaimDocumentsFromExternals')
-  return knex('ExtSchema.ClaimDocument')
+  const db = getDatabaseConnector()
+
+  return db('ExtSchema.ClaimDocument')
     .where({ Reference: reference, EligibilityId: eligibilityId }).del()
 }
 

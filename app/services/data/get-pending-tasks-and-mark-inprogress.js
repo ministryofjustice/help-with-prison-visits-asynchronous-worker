@@ -1,11 +1,12 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const statusEnum = require('../../constants/status-enum')
 const Task = require('../domain/task')
 const log = require('../log')
 
 module.exports = function (schema, batchSize) {
-  return knex.select().table(`${schema}.Task`)
+  const db = getDatabaseConnector()
+
+  return db.select().table(`${schema}.Task`)
     .where('Status', statusEnum.PENDING)
     .orderBy('DateCreated', 'asc')
     .limit(batchSize)
@@ -34,7 +35,7 @@ module.exports = function (schema, batchSize) {
       }
 
       log.info(`Updating pending tasks status for ${schema}`)
-      return knex(`${schema}.Task`).whereIn('TaskId', ids)
+      return db(`${schema}.Task`).whereIn('TaskId', ids)
         .update('Status', statusEnum.INPROGRESS)
         .then(function () {
           log.info(`Pending tasks status updated for ${schema}`)

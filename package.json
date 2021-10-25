@@ -17,7 +17,7 @@
     "security_audit": "npx audit-ci --config audit-ci.json",
     "test": "standard && mocha --recursive test/unit/ --exit",
     "test-unit": "mocha --recursive test/unit/ --exit",
-    "test-integration": "mocha --recursive test/integration/ --timeout 15000 --exit",
+    "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-coverage": "nyc npm run test-unit"
   },
   "standard": {

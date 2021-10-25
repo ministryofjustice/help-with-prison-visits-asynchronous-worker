@@ -20,7 +20,7 @@ function copyEligibilityDataIfPresent (data, trx) {
         return trx('IntSchema.Prisoner').insert(data.Prisoner)
       })
       .then(function () {
-        if (data.EligibleChild.length > 0) {
+        if (data.EligibleChild && data.EligibleChild.length > 0) {
           return trx('IntSchema.EligibleChild').insert(data.EligibleChild)
         } else {
           return Promise.resolve()
@@ -79,7 +79,7 @@ function copyClaimData (data, additionalData, trx) {
       }
     })
     .then(function () {
-      if (data.ClaimEscort.length > 0) {
+      if (data.ClaimEscort && data.ClaimEscort.length > 0) {
         return trx('IntSchema.ClaimEscort').insert(data.ClaimEscort)
       } else {
         return Promise.resolve()

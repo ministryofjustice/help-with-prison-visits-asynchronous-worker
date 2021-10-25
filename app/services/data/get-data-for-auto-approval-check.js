@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const getAllClaimData = require('./get-all-claim-data')
 const statusEnum = require('../../constants/status-enum')
 const moment = require('moment')
@@ -34,7 +33,9 @@ module.exports = function (reference, eligibilityId, claimId) {
 }
 
 function getPreviousClaims (claimId, eligibilityId) {
-  return knex('IntSchema.Claim')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Claim')
     .where('EligibilityId', eligibilityId)
     .whereNot('ClaimId', claimId)
     .orderBy('DateReviewed', 'desc')
@@ -104,14 +105,17 @@ function getLatestManualClaim (previousClaims) {
 }
 
 function getClaimExpenses (claimId) {
-  return knex('IntSchema.ClaimExpense')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimExpense')
     .where('ClaimId', claimId)
 }
 
 function getEligibilityIds (day, month, year) {
   const dateOfJourney = dateFormatter.buildFormatted(day, month, year)
+  const db = getDatabaseConnector()
 
-  return knex.raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney])
+  return db.raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney])
     .then(function (results) {
       const eligibilityIds = []
 
@@ -124,7 +128,9 @@ function getEligibilityIds (day, month, year) {
 }
 
 function getPrisonNumberFromEligibilityId (eligibilityIds) {
-  return knex('IntSchema.Prisoner').whereIn('EligibilityId', eligibilityIds).select('PrisonNumber')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Prisoner').whereIn('EligibilityId', eligibilityIds).select('PrisonNumber')
     .then(function (results) {
       const prisonNumbers = []
 

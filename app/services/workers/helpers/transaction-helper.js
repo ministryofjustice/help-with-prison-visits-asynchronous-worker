@@ -1,10 +1,11 @@
 const deleteClaimFromExternal = require('../../data/delete-claim-from-external')
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../databaseConnector')
 const log = require('../../log')
 
 module.exports = function (eligibilityId, claimId) {
-  return knex.transaction(function (trx) { return deleteClaimFromExternal(eligibilityId, claimId, trx) })
+  const db = getDatabaseConnector()
+
+  return db.transaction(function (trx) { return deleteClaimFromExternal(eligibilityId, claimId, trx) })
     .then(function () {
       log.info(`Bank Details for Claim with ClaimId: ${claimId} copied to internal`)
     })

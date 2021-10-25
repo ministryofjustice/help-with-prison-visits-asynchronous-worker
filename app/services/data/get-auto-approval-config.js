@@ -1,9 +1,10 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').asyncworker
-const knex = require('knex')(knexConfig)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function () {
-  return knex('IntSchema.AutoApprovalConfig')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.AutoApprovalConfig')
     .where('IsEnabled', true)
     .orderBy('DateCreated', 'desc')
     .first()

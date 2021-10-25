@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 
 const autoApproveClaimExpenses = require('../../../../app/services/data/auto-approve-claim-expenses')
 const testHelper = require('../../../test-helper')
@@ -20,7 +19,9 @@ describe('services/data/auto-approve-claim-expenses', function () {
   it('should update the status and approved cost of all specified claim expenses', function () {
     return autoApproveClaimExpenses(claimId)
       .then(function () {
-        return knex('IntSchema.ClaimExpense')
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.ClaimExpense')
           .where('ClaimId', claimId)
           .then(function (claimExpenses) {
             claimExpenses.forEach(function (claimExpense) {

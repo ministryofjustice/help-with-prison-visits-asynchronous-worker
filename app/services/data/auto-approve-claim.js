@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
 const autoApproveClaimExpenses = require('./auto-approve-claim-expenses')
@@ -17,7 +16,9 @@ module.exports = function (reference, eligibilityId, claimId, visitorEmailAddres
 }
 
 function setClaimStatusToAutoApproved (claimId) {
-  return knex('IntSchema.Claim')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Claim')
     .where('ClaimId', claimId)
     .update({ Status: statusEnum.AUTOAPPROVED, VisitConfirmationCheck: statusEnum.APPROVED, DateReviewed: dateFormatter.now().toDate(), DateApproved: dateFormatter.now().toDate() })
 }

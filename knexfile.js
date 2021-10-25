@@ -40,6 +40,20 @@ module.exports = {
     },
     acquireConnectionTimeout: 300000
     //, debug: true // uncomment to debug
+  },
+  testing: {
+    client: 'mssql',
+    connection: {
+      host: config.TESTING_DATABASE_SERVER,
+      user: config.TESTING_USERNAME,
+      password: config.TESTING_PASSWORD,
+      database: config.TESTING_DATABASE,
+      options: {
+        encrypt: false,
+        enableArithAbort: true
+      }
+    }
+    // , debug: true // uncomment to debug
   }
 
 }

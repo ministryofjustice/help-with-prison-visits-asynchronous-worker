@@ -1,9 +1,10 @@
-const knexConfig = require('../../../knexfile').asyncworker
-const knex = require('knex')(knexConfig)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatusEnum = require('../../constants/claim-status-enum')
 
 module.exports = function (reminderCutoffDate) {
-  return knex('IntSchema.Claim')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Claim')
     .join('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .where('Claim.LastUpdated', '<', reminderCutoffDate)
     .where(function () {

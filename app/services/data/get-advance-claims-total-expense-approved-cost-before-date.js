@@ -1,9 +1,10 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (date, status) {
   // Get all Claims before a certain date or above away with total amount of expenses
-  return knex('IntSchema.Claim')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.Claim')
     .select('IntSchema.Claim.ClaimId', 'IntSchema.Claim.Reference')
     .where({ 'IntSchema.Claim.IsAdvanceClaim': true, 'IntSchema.Claim.Status': status, 'IntSchema.ClaimExpense.IsEnabled': true })
     .andWhere(function () {

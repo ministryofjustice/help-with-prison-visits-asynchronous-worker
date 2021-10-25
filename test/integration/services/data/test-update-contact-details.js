@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const updateContactDetails = require('../../../../app/services/data/update-contact-details')
 const testHelper = require('../../../test-helper')
 
@@ -23,7 +22,9 @@ describe('services/data/update-contact-details', function () {
   it('should create update visitor to new contact details', function () {
     return updateContactDetails(updatedDetails)
       .then(function () {
-        return knex.table('IntSchema.Visitor')
+        const db = getDatabaseConnector()
+
+        return db.table('IntSchema.Visitor')
           .where({ Reference: reference, EligibilityId: updatedDetails.EligibilityId })
           .first()
           .then(function (result) {

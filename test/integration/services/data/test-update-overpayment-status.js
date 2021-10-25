@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
 const updateOverpaymentStatus = require('../../../../app/services/data/update-overpayment-status')
@@ -20,7 +19,9 @@ describe('services/data/update-overpayment-status', function () {
   it('should update Claim IsOverpaid to true and with the amount added', function () {
     return updateOverpaymentStatus(claimId, REFERENCE, AMOUNT, '10')
       .then(function () {
-        return knex('IntSchema.Claim').where('ClaimId', claimId).first()
+        const db = getDatabaseConnector()
+
+        return db('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {
             expect(claim.IsOverpaid).to.be.true //eslint-disable-line
             expect(claim.OverpaymentAmount).to.equal(AMOUNT)

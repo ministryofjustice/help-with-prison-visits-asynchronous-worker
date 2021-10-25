@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports = {
   LOGGING_PATH: process.env.LOGGING_PATH,
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
@@ -16,6 +18,11 @@ module.exports = {
   ASYNC_WORKER_PASSWORD: process.env.APVS_ASYNC_WORKER_PASSWORD,
   DATABASE: process.env.APVS_DATABASE,
   ARCHIVE_DATABASE: process.env.APVS_ARCHIVE_DATABASE,
+  TESTING_DATABASE_SERVER: process.env.HWPV_TESTING_DATABASE_SERVER,
+  TESTING_DATABASE: process.env.HWPV_TESTING_DATABASE,
+  TESTING_USERNAME: process.env.HWPV_TESTING_USERNAME,
+  TESTING_PASSWORD: process.env.HWPV_TESTING_PASSWORD,
+  KNEX_CONFIG: process.env.KNEX_CONFIG || 'asyncworker',
 
   // Worker
   ASYNC_WORKER_BATCH_SIZE: process.env.APVS_ASYNC_WORKER_BATCH_SIZE || '10',

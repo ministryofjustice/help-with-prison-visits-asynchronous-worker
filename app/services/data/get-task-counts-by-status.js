@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const statusEnum = require('../../constants/status-enum')
 require('../promise-each')
 
@@ -8,7 +7,9 @@ const EXTSCHEMA = 'ExtSchema'
 
 module.exports = function () {
   const getCountForStatus = function (schema, status) {
-    return knex(`${schema}.Task`).count('Status as count').where('Status', status)
+    const db = getDatabaseConnector()
+
+    return db(`${schema}.Task`).count('Status as count').where('Status', status)
       .then(function (countResult) {
         const count = countResult[0].count
         return `${schema}-${status}: ${count}`

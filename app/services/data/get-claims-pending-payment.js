@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').asyncworker
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const _ = require('lodash')
 const claimStatuses = require('../../constants/claim-status-enum')
 const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
@@ -15,7 +14,9 @@ const payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName',
   'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney']
 
 function getManuallyProcessedExpenseCostsPerClaim (claimIds) {
-  return knex('IntSchema.ClaimExpense')
+  const db = getDatabaseConnector()
+
+  return db('IntSchema.ClaimExpense')
     .sum('ApprovedCost as ManuallyProcessedCost')
     .select('ClaimId')
     .groupBy('ClaimId')
@@ -86,9 +87,10 @@ module.exports = function (paymentMethod) {
     'AND IntSchema.ClaimDeduction.IsEnabled = 1) ' +
     'AS TotalDeductionAmount'
   const selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
+  const db = getDatabaseConnector()
 
-  return knex('IntSchema.Claim')
-    .column(knex.raw(rawDeductionTotalQuery))
+  return db('IntSchema.Claim')
+    .column(db.raw(rawDeductionTotalQuery))
     .sum('IntSchema.ClaimExpense.ApprovedCost as TotalApprovedCost')
     .select(selectColumns)
     .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
