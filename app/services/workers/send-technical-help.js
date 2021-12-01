@@ -1,5 +1,6 @@
 const Config = require('../../../config')
-const Zendesk = require('zendesk-node-api')
+const log = require('../log')
+const axios = require('axios')
 
 module.exports.execute = function (task) {
   const technicalHelp = task.additionalData.split('~~')
@@ -12,32 +13,40 @@ module.exports.execute = function (task) {
   }
 
   if (Config.ZENDESK_ENABLED === 'true') {
-    const zendesk = new Zendesk({
-      url: Config.ZENDESK_API_URL,
-      email: Config.ZENDESK_EMAIL_ADDRESS,
-      token: Config.ZENDESK_API_KEY
-    })
-
     if (Config.ZENDESK_TEST_ENVIRONMENT === 'true') {
       subjectText = 'Test: Help With Prison Visits - Help'
       tagText = ['HelpWithPrisonVisits', 'Test']
     }
 
-    return zendesk.tickets.create({
-      submitter_id: '114198238551',
-      requester: {
-        name: personalisation.name,
-        email: personalisation.contactEmailAddress,
-        verified: true
-      },
-      subject: subjectText,
-      comment: {
-        body: personalisation.issue
-      },
-      tags: tagText
-    }).then(function (result) {
-      console.log('Zendesk ticket, ' + result.ticket.id + ' has been raised')
-    })
+    const zendeskApiUrl = Config.ZENDESK_API_URL + '/api/v2/tickets.json'
+
+    const headers = {
+      Authorization: `Basic ${Buffer.from(Config.ZENDESK_EMAIL_ADDRESS +
+        '/token:' + Config.ZENDESK_API_KEY).toString('base64')}`
+    }
+
+    const ticket = {
+      ticket: {
+        submitter_id: '114198238551',
+        requester: {
+          name: personalisation.name,
+          email: personalisation.contactEmailAddress,
+          verified: true
+        },
+        subject: subjectText,
+        comment: {
+          body: personalisation.issue
+        },
+        tags: tagText
+      }
+    }
+
+    return axios.post(zendeskApiUrl, ticket, { headers })
+      .then(function (response) {
+        if (response.status === 201) {
+          log.info('Zendesk ticket ' + response.data.ticket.id + ' has been raised')
+        }
+      })
   } else {
     return console.dir('Zendesk not implemented in development environments.')
   }
