@@ -56,7 +56,6 @@
     "sftp-promises": "^1.8.0",
     "xlsx-populate": "^1.21.0",
     "xml2js": "^0.4.23",
-    "xml2js-xpath": "^0.12.0",
-    "zendesk-node-api": "^1.3.0"
+    "xml2js-xpath": "^0.12.0"
   }
 }
