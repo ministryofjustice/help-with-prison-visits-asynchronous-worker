@@ -15,7 +15,6 @@ const dwpCheck = { name: 'dwpCheck' }
 const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimRemindersForDay' }
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = { name: 'markOverpayments' }
-const sendFeedback = { name: 'sendFeedback' }
 const cleanupOldData = { name: 'cleanupOldData' }
 const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
 const archiveOldClaims = { name: 'archiveOldClaims' }
@@ -39,7 +38,6 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-all-advance-claim-reminders-for-day': sendAllAdvanceClaimRemindersForDay,
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
   './workers/mark-overpayments': markOverpayments,
-  './workers/send-feedback': sendFeedback,
   './workers/cleanup-old-data': cleanupOldData,
   './workers/send-technical-help': sendTechnicalHelp,
   './workers/archive-old-claims': archiveOldClaims,
@@ -99,11 +97,6 @@ describe('services/getWorkerForTask', function () {
   it('should return dwp-check', function () {
     const worker = getWorkerForTask(tasksEnum.DWP_CHECK)
     expect(worker.name).to.be.equal('dwpCheck')
-  })
-
-  it('should return send-feedback', function () {
-    const worker = getWorkerForTask(tasksEnum.FEEDBACK_SUBMITTED)
-    expect(worker.name).to.be.equal('sendFeedback')
   })
 
   it('should return send-technical-help', function () {

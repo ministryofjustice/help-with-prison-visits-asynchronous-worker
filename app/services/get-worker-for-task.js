@@ -9,7 +9,6 @@ const sendClaimNotification = require('./workers/send-claim-notification')
 const completeClaim = require('./workers/complete-claim')
 const requestInformationResponse = require('./workers/request-information-response')
 const dwpCheck = require('./workers/dwp-check')
-const sendFeedback = require('./workers/send-feedback')
 const sendMalwareUploadNotification = require('./workers/send-malware-notification')
 const sendTechnicalHelp = require('./workers/send-technical-help')
 const archiveOldClaims = require('./workers/archive-old-claims')
@@ -32,7 +31,6 @@ module.exports = function (taskType) {
     case tasksEnum.COMPLETE_CLAIM: return completeClaim
     case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
     case tasksEnum.SEND_MALWARE_ALERT: return sendMalwareUploadNotification
-    case tasksEnum.FEEDBACK_SUBMITTED: return sendFeedback
     case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
     case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
 
