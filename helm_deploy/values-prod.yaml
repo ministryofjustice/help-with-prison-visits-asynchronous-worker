@@ -7,6 +7,7 @@ env:
   APVS_DWP_BENEFIT_CHECKER_URL: "https://benefitchecker.legalservices.gov.uk/lsx/lsc-services/benefitChecker"
   APVS_ZENDESK_ENABLED: "true"
   APVS_ZENDESK_API_URL: "https://ministryofjustice.zendesk.com"
+  APVS_ZENDESK_TEST_ENVIRONMENT: "false"
   APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits.service.gov.uk'
   PAYOUT_SFTP_ENABLED: "true"
   PAYOUT_SFTP_REMOTE_PATH: "data/"
