@@ -34,13 +34,6 @@ module.exports = {
   ARCHIVE_CLAIMS_AFTER_DAYS: process.env.APVS_ARCHIVE_CLAIMS_AFTER_DAYS || '365',
   AUTO_REJECT_AFTER_WEEKS: process.env.APVS_AUTO_REJECT_AFTER_WEEKS || '6',
 
-  // ZenDesk
-  ZENDESK_ENABLED: process.env.APVS_ZENDESK_ENABLED || 'false',
-  ZENDESK_TEST_ENVIRONMENT: process.env.APVS_ZENDESK_TEST_ENVIRONMENT || 'true',
-  ZENDESK_API_URL: process.env.APVS_ZENDESK_API_URL,
-  ZENDESK_API_KEY: process.env.APVS_ZENDESK_API_KEY,
-  ZENDESK_EMAIL_ADDRESS: process.env.APVS_ZENDESK_EMAIL_ADDRESS,
-
   // GOV Notify
   NOTIFY_API_URL: process.env.APVS_NOTIFY_API_URL || 'https://api.notifications.service.gov.uk',
   NOTIFY_API_KEY: process.env.APVS_NOTIFY_API_KEY,

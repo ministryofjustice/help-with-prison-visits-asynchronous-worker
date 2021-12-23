@@ -7,7 +7,6 @@ const sendRejectedClaimNotification = { name: 'sendRejectedClaimNotification' }
 const sendRequestInformationClaimNotification = { name: 'sendRequestInformationClaimNotification' }
 const sendRequestInformationResponseSubmittedNotification = { name: 'sendRequestInformationResponseSubmittedNotification' }
 const sendAdvanceClaimEvidenceReminderNotification = { name: 'sendAdvanceClaimEvidenceReminderNotification' }
-const sendUpdatedContactDetailsClaimNotification = { name: 'sendUpdatedContactDetailsClaimNotification' }
 const sendClaimNotification = { name: 'sendClaimNotification' }
 const completeClaim = { name: 'completeClaim' }
 const requestInformationResponse = { name: 'requestInformationResponse' }
@@ -16,7 +15,6 @@ const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimReminders
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = { name: 'markOverpayments' }
 const cleanupOldData = { name: 'cleanupOldData' }
-const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
 const archiveOldClaims = { name: 'archiveOldClaims' }
 const archiveClaim = { name: 'archiveClaim' }
 const referenceRecovery = { name: 'referenceRecovery' }
@@ -30,7 +28,6 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/send-request-information-claim-notification': sendRequestInformationClaimNotification,
   './workers/send-request-information-response-submitted-notification': sendRequestInformationResponseSubmittedNotification,
   './workers/send-advance-claim-evidence-reminder-notification': sendAdvanceClaimEvidenceReminderNotification,
-  './workers/send-updated-contact-details-claim-notification': sendUpdatedContactDetailsClaimNotification,
   './workers/send-claim-notification': sendClaimNotification,
   './workers/complete-claim': completeClaim,
   './workers/request-information-response': requestInformationResponse,
@@ -39,7 +36,6 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/cleanup-old-payment-files': cleanupOldPaymentFiles,
   './workers/mark-overpayments': markOverpayments,
   './workers/cleanup-old-data': cleanupOldData,
-  './workers/send-technical-help': sendTechnicalHelp,
   './workers/archive-old-claims': archiveOldClaims,
   './workers/archive-claim': archiveClaim,
   './workers/reference-recovery': referenceRecovery,
@@ -74,11 +70,6 @@ describe('services/getWorkerForTask', function () {
     expect(worker.name).to.be.equal('sendAdvanceClaimEvidenceReminderNotification')
   })
 
-  it('should return send-updated-contact-details-claim-notification', function () {
-    const worker = getWorkerForTask(tasksEnum.UPDATED_CONTACT_DETAILS_CLAIM_NOTIFICATION)
-    expect(worker.name).to.be.equal('sendUpdatedContactDetailsClaimNotification')
-  })
-
   it('should return send-claim-notification', function () {
     const worker = getWorkerForTask(tasksEnum.SEND_CLAIM_NOTIFICATION)
     expect(worker.name).to.be.equal('sendClaimNotification')
@@ -97,11 +88,6 @@ describe('services/getWorkerForTask', function () {
   it('should return dwp-check', function () {
     const worker = getWorkerForTask(tasksEnum.DWP_CHECK)
     expect(worker.name).to.be.equal('dwpCheck')
-  })
-
-  it('should return send-technical-help', function () {
-    const worker = getWorkerForTask(tasksEnum.TECHNICAL_HELP_SUBMITTED)
-    expect(worker.name).to.be.equal('sendTechnicalHelp')
   })
 
   it('should return archive-old-claims', function () {

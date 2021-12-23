@@ -4,13 +4,11 @@ const sendRejectedClaimNotification = require('./workers/send-rejected-claim-not
 const sendRequestInformationClaimNotification = require('./workers/send-request-information-claim-notification')
 const sendRequestInformationResponseSubmittedNotification = require('./workers/send-request-information-response-submitted-notification')
 const sendAdvanceClaimEvidenceReminderNotification = require('./workers/send-advance-claim-evidence-reminder-notification')
-const sendUpdatedContactDetailsClaimNotification = require('./workers/send-updated-contact-details-claim-notification')
 const sendClaimNotification = require('./workers/send-claim-notification')
 const completeClaim = require('./workers/complete-claim')
 const requestInformationResponse = require('./workers/request-information-response')
 const dwpCheck = require('./workers/dwp-check')
 const sendMalwareUploadNotification = require('./workers/send-malware-notification')
-const sendTechnicalHelp = require('./workers/send-technical-help')
 const archiveOldClaims = require('./workers/archive-old-claims')
 const archiveClaim = require('./workers/archive-claim')
 const referenceRecovery = require('./workers/reference-recovery')
@@ -31,12 +29,10 @@ module.exports = function (taskType) {
     case tasksEnum.COMPLETE_CLAIM: return completeClaim
     case tasksEnum.REQUEST_INFORMATION_RESPONSE: return requestInformationResponse
     case tasksEnum.SEND_MALWARE_ALERT: return sendMalwareUploadNotification
-    case tasksEnum.TECHNICAL_HELP_SUBMITTED: return sendTechnicalHelp
     case tasksEnum.REFERENCE_RECOVERY: return referenceRecovery
 
     // Everything else
     case tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION: return sendAdvanceClaimEvidenceReminderNotification
-    case tasksEnum.UPDATED_CONTACT_DETAILS_CLAIM_NOTIFICATION: return sendUpdatedContactDetailsClaimNotification
     case tasksEnum.SEND_CLAIM_NOTIFICATION: return sendClaimNotification
     case tasksEnum.DWP_CHECK: return dwpCheck
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
