@@ -260,6 +260,13 @@ module.exports = {
     postcode: 'TW13 4ND'
   },
 
+  FIVE_WELLS: {
+    value: 'five-wells',
+    displayName: 'Five Wells',
+    region: 'ENG/WAL',
+    postcode: 'NN8 2NG'
+  },
+
   FORD: {
     value: 'ford',
     displayName: 'Ford',
