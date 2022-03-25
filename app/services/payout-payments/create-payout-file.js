@@ -1,5 +1,6 @@
 const util = require('util')
-const stringify = util.promisify(require('csv-stringify'))
+const { stringify } = require('csv-stringify')
+const generateCsvString = util.promisify(stringify)
 const writeFile = util.promisify(require('fs').writeFile)
 const path = require('path')
 const dateFormatter = require('../date-formatter')
@@ -16,7 +17,7 @@ module.exports = function (payments) {
   const length = formattedPayments.length
 
   log.info(`Generating payout file with ${length} payments`)
-  return stringify(formattedPayments).then(function (content) {
+  return generateCsvString(formattedPayments).then(function (content) {
     return writeFile(tempFilePath, content, {})
       .then(async function () {
         log.info(`Filename for payout payment file = ${filename}`)
