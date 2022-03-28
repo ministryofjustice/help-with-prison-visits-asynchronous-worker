@@ -1,7 +1,7 @@
 FROM node:16.14-bullseye-slim as builder
 
-ARG BUILD_NUMBER
-ARG GIT_REF
+ARG BUILD_NUMBER=dev
+ARG GIT_REF=dev
 
 RUN apt-get update && \
     apt-get upgrade -y
@@ -10,7 +10,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm ci --no-audit
+RUN npm ci --no-audit \
+    export BUILD_NUMBER=${BUILD_NUMBER} && \
+    export GIT_REF=${GIT_REF} && \
+    npm run record-build-info
 
 RUN npm prune --production
 
@@ -40,6 +43,7 @@ COPY --from=builder --chown=appuser:appgroup \
         /app/package.json \
         /app/package-lock.json \
         /app/knexfile.js \
+        /app/build-info.json \
         /app/config.js \
         /app/start-worker-tasks.js \
         /app/start-payment-run.js \
