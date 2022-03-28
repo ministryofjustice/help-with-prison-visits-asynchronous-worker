@@ -11,6 +11,7 @@
     "npm": "^8"
   },
   "scripts": {
+    "record-build-info": "node scripts/record-build-info",
     "start-worker-tasks": "node start-worker-tasks.js",
     "start-daily-tasks": "node start-daily-tasks.js",
     "start-payment-run": "node start-payment-run.js",
@@ -51,9 +52,11 @@
     "dotenv": "^16.0.0",
     "knex": "^0.95.11",
     "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "mssql": "^7.3.0",
     "notifications-node-client": "5.1.1",
+    "path": "^0.12.7",
     "sftp-promises": "^1.8.0",
     "xlsx-populate": "^1.21.0",
     "xml2js": "^0.4.23",
