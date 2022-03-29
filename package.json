@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ministryofjustice/apvs-asynchronous-worker.git"
+    "url": "https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/"
   },
   "engines": {
     "node": "^16",
