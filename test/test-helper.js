@@ -66,7 +66,7 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
 
   return db(`${schema}.Eligibility`).insert(data.Eligibility).returning('EligibilityId')
     .then(function (insertedIds) {
-      newEligibilityId = insertedIds[0]
+      newEligibilityId = insertedIds[0].EligibilityId
     })
     .then(function () {
       if (isExtSchema) {
@@ -102,7 +102,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
 
   return db(`${schema}.Claim`).insert(data.Claim).returning('ClaimId')
     .then(function (insertedClaimIds) {
-      newClaimId = insertedClaimIds[0]
+      newClaimId = insertedClaimIds[0].ClaimId
 
       if (isExtSchema) {
         delete data.ClaimBankDetail.ClaimBankDetailId
@@ -349,7 +349,7 @@ module.exports.claimMigrationData = function (reference) {
 
   return db('ExtSchema.Eligibility').insert(eligibility).returning('EligibilityId')
     .then(function (id) {
-      eligibilityId = id[0]
+      eligibilityId = id[0].EligibilityId
       eligibility.EligibilityId = eligibilityId
       prisoner.EligibilityId = eligibilityId
       visitor.EligibilityId = eligibilityId
@@ -359,28 +359,28 @@ module.exports.claimMigrationData = function (reference) {
       return db('ExtSchema.Prisoner').insert(prisoner).returning('PrisonerId')
     })
     .then(function (prisonerId) {
-      prisoner.PrisonerId = prisonerId[0]
+      prisoner.PrisonerId = prisonerId[0].PrisonerId
       return db('ExtSchema.Visitor').insert(visitor).returning('VisitorId')
     })
     .then(function (VisitorId) {
-      visitor.VisitorId = VisitorId[0]
+      visitor.VisitorId = VisitorId[0].VisitorId
       return db('ExtSchema.Claim').insert(claim).returning('ClaimId')
     })
     .then(function (id) {
-      claimId = id[0]
+      claimId = id[0].ClaimId
       claim.ClaimId = claimId
       claimExpense.ClaimId = claimId
       claimDocument.ClaimId = claimId
       return db('ExtSchema.ClaimExpense').insert(claimExpense).returning('ClaimExpenseId')
     })
     .then(function (id) {
-      claimExpenseId = id[0]
+      claimExpenseId = id[0].ClaimExpenseId
       claimExpense.ClaimExpenseId = claimExpenseId
       claimDocument.ClaimExpenseId = claimExpenseId
       return db('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
     })
     .then(function (ClaimDocumentId) {
-      claimDocument.ClaimDocumentId = ClaimDocumentId[0]
+      claimDocument.ClaimDocumentId = ClaimDocumentId[0].ClaimDocumentId
       return {
         Eligibility: eligibility,
         Prisoner: prisoner,
@@ -402,7 +402,7 @@ module.exports.orphanedClaimDocument = function (eligibilityId, claimId, referen
 
   return db('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
     .then(function (ClaimDocumentId) {
-      claimDocument.ClaimDocumentId = ClaimDocumentId[0]
+      claimDocument.ClaimDocumentId = ClaimDocumentId[0].ClaimDocumentId
       return {
         ClaimDocument: [claimDocument]
       }

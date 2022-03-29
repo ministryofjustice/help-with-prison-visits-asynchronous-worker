@@ -26,7 +26,7 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
       ])
       .returning('PaymentFileId')
       .then(function (insertedIds) {
-        paymentFileIds = insertedIds
+        paymentFileIds = insertedIds.map(paymentFile => paymentFile.PaymentFileId)
       })
   })
 

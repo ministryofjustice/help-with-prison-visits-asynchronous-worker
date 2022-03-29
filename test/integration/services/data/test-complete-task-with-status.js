@@ -16,7 +16,7 @@ describe('services/data/complete-task-with-status', function () {
       .insert(testHelper.getTaskObject('TEST-TASK', null, 'TEST'))
       .returning('TaskId')
       .then(function (taskId) {
-        id = taskId
+        id = taskId.TaskId
       })
   })
 

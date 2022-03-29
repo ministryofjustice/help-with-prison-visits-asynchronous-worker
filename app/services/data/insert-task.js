@@ -14,5 +14,5 @@ module.exports = function (reference, eligibilityId, claimId, taskType, addition
   }
   const db = getDatabaseConnector()
 
-  return db('IntSchema.Task').insert(task).returning('TaskId')
+  return db('IntSchema.Task').insert(task)
 }

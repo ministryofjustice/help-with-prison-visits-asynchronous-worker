@@ -93,7 +93,7 @@ function insertTestData () {
     }])
     .returning('AutoApprovalConfigId')
     .then(function (result) {
-      insertedIds = result
+      insertedIds = result.map(autoApproval => autoApproval.AutoApprovalConfigId)
     })
 }
 

@@ -11,5 +11,5 @@ module.exports = function (filePath, fileType) {
     IsEnabled: true
   }
 
-  return db('IntSchema.DirectPaymentFile').insert(fileMetadata).returning('PaymentFileId')
+  return db('IntSchema.DirectPaymentFile').insert(fileMetadata)
 }
