@@ -19,7 +19,7 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
       testHelper.getTaskObject(taskType, '4')
     ]).returning('TaskId')
       .then(function (taskIds) {
-        ids = taskIds
+        ids = taskIds.map(task => task.TaskId)
         done()
       })
   })

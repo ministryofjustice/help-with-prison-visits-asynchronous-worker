@@ -28,7 +28,7 @@ describe('services/data/get-old-payment-files', function () {
       ])
       .returning('PaymentFileId')
       .then(function (insertedIds) {
-        paymentFileIds = insertedIds
+        paymentFileIds = insertedIds.map(paymentFile => paymentFile.PaymentFileId)
       })
   })
 
