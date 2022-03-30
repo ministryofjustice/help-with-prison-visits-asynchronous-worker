@@ -1,5 +1,5 @@
 ---
-# Environment specific values, override helm_deploy/help-with-prison-visits-external/values.yaml
+# Environment specific values, override helm_deploy/help-with-prison-visits-asynchronous-worker/values.yaml
 replicaCount: 2
 
 env:
