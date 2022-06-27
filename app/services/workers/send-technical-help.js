@@ -13,7 +13,7 @@ module.exports.execute = function (task) {
       issue: technicalHelp[2]
     }
 
-    if (Config.ZENDESK_TEST_ENVIRONMENT === 'true') {
+    if (Config.ZENDESK_PROD_ENVIRONMENT !== 'true') {
       subjectText = 'Test: Help With Prison Visits - Help'
       tagText = ['HelpWithPrisonVisits', 'Test']
     }
