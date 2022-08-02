@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
 spec:
-  schedule: "30 4 * * *"
+  schedule: "30 3 * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   startingDeadlineSeconds: 600
