@@ -10,7 +10,7 @@ module.exports = function (emailTemplateId, emailAddress, personalisation) {
   )
 
   if (emailAddress !== config.NOTIFY_DO_NOT_SEND_EMAIL) {
-    return notifyClient.sendEmail(emailTemplateId, emailAddress, { personalisation: personalisation })
+    return notifyClient.sendEmail(emailTemplateId, emailAddress, { personalisation })
       .catch(function (error) {
         log.error(error)
         throw error

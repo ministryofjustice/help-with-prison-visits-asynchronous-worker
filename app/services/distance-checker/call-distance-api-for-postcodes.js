@@ -20,7 +20,7 @@ module.exports = function (originPostCode, destinationPostCode) {
     })
     .catch(function (error) {
       // suppress errors as car expense calculation is optional
-      log.error({ error: error }, 'Error calling distance calculation')
+      log.error({ error }, 'Error calling distance calculation')
       return null
     })
 }

@@ -16,7 +16,7 @@ module.exports.execute = function (task) {
 
       return getFirstNameByClaimId('IntSchema', claimId)
         .then(function (firstName) {
-          const personalisation = { reference: reference, requestInfoUrl: requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName }
+          const personalisation = { reference, requestInfoUrl, dateOfJourney: dateOfJourneyString, first_name: firstName }
           const additionalData = task.additionalData.split('~~')
           const emailAddress = additionalData[0]
           const reminder = additionalData[1]

@@ -94,9 +94,9 @@ function formatCaseworkerNote (caseworkerNote) {
 function standardPersonalisationElements (firstName, reference, town, prison, caseworkerNote) {
   return {
     first_name: firstName,
-    reference: reference,
+    reference,
     start_town: town,
-    prison: prison,
+    prison,
     caseworker_note: formatCaseworkerNote(caseworkerNote)
   }
 }

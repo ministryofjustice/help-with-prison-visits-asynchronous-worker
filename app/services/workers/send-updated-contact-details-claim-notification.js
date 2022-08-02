@@ -11,8 +11,8 @@ module.exports.execute = function (task) {
       const technicalHelpUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_TECHNICAL_HELP}`
       const personalisation = {
         first_name: firstName,
-        reference: reference,
-        technicalHelpUrl: technicalHelpUrl
+        reference,
+        technicalHelpUrl
       }
 
       const emailAddress = task.additionalData
