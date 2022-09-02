@@ -15,7 +15,6 @@ const archiveOldClaims = require('./workers/archive-old-claims')
 const archiveClaim = require('./workers/archive-claim')
 const referenceRecovery = require('./workers/reference-recovery')
 const dwpFailedNotification = require('./workers/send-claim-additional-information-required')
-const autoApproveClaims = require('./workers/auto-approve-claims')
 const sendRequestInformationReminderNotification = require('./workers/send-request-information-reminder-notification')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
@@ -42,7 +41,6 @@ module.exports = function (taskType) {
     case tasksEnum.ARCHIVE_OLD_CLAIMS: return archiveOldClaims
     case tasksEnum.ARCHIVE_CLAIM: return archiveClaim
     case tasksEnum.DWP_FAILED_NOTIFICATION: return dwpFailedNotification
-    case tasksEnum.AUTO_APPROVE_CLAIMS: return autoApproveClaims
     case tasksEnum.SEND_REQUEST_INFORMATION_REMINDER_NOTIFICATION: return sendRequestInformationReminderNotification
   }
 
