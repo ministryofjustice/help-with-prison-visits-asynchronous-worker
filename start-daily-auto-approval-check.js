@@ -1,7 +1,7 @@
 require('dotenv').config()
 require('./app/azure-appinsights')
 const log = require('./app/services/log')
-const autoApproveClaims = require('./app/services/workers/auto-approve-claims')
+const { autoApproveClaims } = require('./app/services/workers/auto-approve-claims')
 
 log.info('Starting auto approval checks')
 
