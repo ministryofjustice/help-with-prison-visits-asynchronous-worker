@@ -36,10 +36,10 @@ const completeClaim = proxyquire('../../../../app/services/workers/complete-clai
 describe('services/workers/complete-claim', function () {
   it('should call to retrieve, copy and delete first time claim, calculate car expenses, run auto-approval checks, insert notification and DWP check tasks', function () {
     return completeClaim.execute({
-      reference: reference,
+      reference,
       additionalData: null,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).to.be.true //eslint-disable-line

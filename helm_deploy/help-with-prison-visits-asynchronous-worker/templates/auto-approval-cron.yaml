@@ -1,11 +1,11 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: hwpv-payment-run
+  name: hwpv-auto-approval
   labels:
     {{- include "generic-service.labels" . | nindent 4 }}
 spec:
-  schedule: "5 0 * * 1-5"
+  schedule: "30 3 * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   startingDeadlineSeconds: 600
@@ -16,10 +16,10 @@ spec:
       template:
         spec:
           containers:
-          - name: hwpv-payment-run
+          - name: hwpv-auto-approval
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             args:
             - node
-            - start-payment-run
+            - start-daily-auto-approval-check
 {{ include "deployment.envs" . | nindent 12 }}
           restartPolicy: Never

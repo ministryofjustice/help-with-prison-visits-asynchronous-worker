@@ -28,7 +28,7 @@ describe('services/reference-recovery', function () {
 
   it('should call reference number recovery send email with recovered reference number', function () {
     stubReferenceNumberRecovery.resolves({ Reference: REFERENCE, FirstName: FIRST_NAME })
-    return referenceRecovery.execute({ additionalData: additionalData })
+    return referenceRecovery.execute({ additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
         expect(stubSendNotification.called).to.be.true //eslint-disable-line
@@ -42,7 +42,7 @@ describe('services/reference-recovery', function () {
 
   it('should only call reference recover, get nothing and send no email', function () {
     stubReferenceNumberRecovery.resolves()
-    return referenceRecovery.execute({ additionalData: additionalData })
+    return referenceRecovery.execute({ additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
         expect(stubSendNotification.called).to.be.false //eslint-disable-line

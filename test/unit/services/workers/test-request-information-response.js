@@ -62,9 +62,9 @@ describe('services/workers/request-information-response', function () {
   it('should call data methods to move claim documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
     moveClaimDocumentsToInternal.resolves()
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId,
+      reference,
+      eligibilityId,
+      claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
       expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
@@ -79,9 +79,9 @@ describe('services/workers/request-information-response', function () {
 
   it('should call data methods to move claim documents, but not insert event as no documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId,
+      reference,
+      eligibilityId,
+      claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
       expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
@@ -97,9 +97,9 @@ describe('services/workers/request-information-response', function () {
 
   it('should call data methods to move claim documents, update status and trigger auto-approval, no bank details methods and add no note claim event', function () {
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      reference,
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
@@ -114,9 +114,9 @@ describe('services/workers/request-information-response', function () {
 
   it('should insert task to send notification', function () {
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId,
+      reference,
+      eligibilityId,
+      claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true //eslint-disable-line
@@ -128,9 +128,9 @@ describe('services/workers/request-information-response', function () {
     getAllClaimData.resolves(CLAIM_DATA_FOR_REVIEWED_CLAIM)
 
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      reference,
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(autoApprovalProcess.called).to.be.false //eslint-disable-line
     })
@@ -139,9 +139,9 @@ describe('services/workers/request-information-response', function () {
   it('should call bank details methods', function () {
     getAllClaimData.resolves(CLAIM_DATA_FOR_BANK_DETAILS)
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      reference,
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       expect(updateBankDetails.called).to.be.true //eslint-disable-line
@@ -154,9 +154,9 @@ describe('services/workers/request-information-response', function () {
   it('should not call bank details methods', function () {
     getAllClaimData.resolves(CLAIM_DATA_FOR_PAYOUT)
     return requestInformationResponse.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      reference,
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       expect(updateBankDetails.called).to.be.false //eslint-disable-line

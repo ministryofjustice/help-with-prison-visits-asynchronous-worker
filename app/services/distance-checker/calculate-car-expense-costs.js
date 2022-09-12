@@ -81,10 +81,10 @@ function getDistanceInMilesAndCost (visitorPostCode, prisonPostCode) {
             const costPerMile = parseFloat(config.CostPerMile)
             cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2') // accurate 2 decimal place rounding
 
-            return { cost: cost, distanceInMiles: distanceInMiles }
+            return { cost, distanceInMiles }
           })
       } else {
-        return { cost: cost, distanceInMiles: distanceInMiles }
+        return { cost, distanceInMiles }
       }
     })
 }

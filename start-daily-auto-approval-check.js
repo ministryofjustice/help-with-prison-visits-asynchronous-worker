@@ -1,14 +1,16 @@
 require('dotenv').config()
 require('./app/azure-appinsights')
 const log = require('./app/services/log')
-const insertTask = require('./app/services/data/insert-task')
-const taskTypes = require('./app/constants/tasks-enum')
+const { autoApproveClaims } = require('./app/services/workers/auto-approve-claims')
 
-// This script inserts auto approval, according to a CRON config value (e.g. every morning at 5am)
 log.info('Starting auto approval checks')
-Promise.all([
-  insertTask(null, null, null, taskTypes.AUTO_APPROVE_CLAIMS)])
+
+autoApproveClaims()
   .then(function () {
-    log.info('auto approval tasks created')
+    log.info('Auto approval checks completed')
+    process.exit()
+  })
+  .catch(function (error) {
+    log.error('Failed auto approval checks', error)
     process.exit()
   })

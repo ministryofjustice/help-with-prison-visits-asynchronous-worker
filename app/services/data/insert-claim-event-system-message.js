@@ -10,9 +10,9 @@ module.exports = function (reference, eligibilityId, claimId, claimDocumentId, e
     ClaimDocumentId: claimDocumentId,
     DateAdded: dateFormatter.now().toDate(),
     Event: event,
-    additionalData: additionalData,
-    note: note,
-    isInternal: isInternal
+    additionalData,
+    note,
+    isInternal
   }
   const db = getDatabaseConnector()
 

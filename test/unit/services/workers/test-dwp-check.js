@@ -25,9 +25,9 @@ const claimId = 123
 describe('services/workers/dwp-check', function () {
   it('should call to retrieve data then make benefit check call and finally run auto-approval checks', function () {
     return dwpCheck.execute({
-      reference: reference,
-      eligibilityId: eligibilityId,
-      claimId: claimId
+      reference,
+      eligibilityId,
+      claimId
     }).then(function () {
       expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true //eslint-disable-line

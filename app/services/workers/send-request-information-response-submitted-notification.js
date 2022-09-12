@@ -11,8 +11,8 @@ module.exports.execute = function (task) {
       const requestInfoUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
       const personalisation = {
         first_name: firstName,
-        reference: reference,
-        requestInfoUrl: requestInfoUrl
+        reference,
+        requestInfoUrl
       }
 
       const emailAddress = task.additionalData
