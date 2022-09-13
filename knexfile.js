@@ -9,9 +9,11 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.DATABASE,
       requestTimeout: 90000,
+      connectionTimeout: 90000,
       options: {
         encrypt: false,
         requestTimeout: 90000,
+        connectionTimeout: 90000,
         enableArithAbort: true
       }
     },
@@ -30,9 +32,11 @@ module.exports = {
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.ARCHIVE_DATABASE,
       requestTimeout: 90000,
+      connectionTimeout: 90000,
       options: {
         encrypt: false,
         requestTimeout: 90000,
+        connectionTimeout: 90000,
         enableArithAbort: true
       }
     },
