@@ -8,6 +8,7 @@ module.exports = {
       user: config.ASYNC_WORKER_USERNAME,
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.DATABASE,
+      requestTimeout: 90000,
       options: {
         encrypt: false,
         requestTimeout: 90000,
@@ -28,6 +29,7 @@ module.exports = {
       user: config.ASYNC_WORKER_USERNAME,
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.ARCHIVE_DATABASE,
+      requestTimeout: 90000,
       options: {
         encrypt: false,
         requestTimeout: 90000,
