@@ -1,4 +1,6 @@
 const config = require('./config')
+const longTimeout = 90000
+const retryTimeout = 10000
 
 module.exports = {
   asyncworker: {
@@ -8,20 +10,19 @@ module.exports = {
       user: config.ASYNC_WORKER_USERNAME,
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.DATABASE,
-      requestTimeout: 90000,
-      connectionTimeout: 90000,
+      requestTimeout: longTimeout,
+      connectionTimeout: longTimeout,
       options: {
         encrypt: false,
-        requestTimeout: 90000,
-        connectionTimeout: 90000,
         enableArithAbort: true
       }
     },
     pool: {
       min: 2,
-      max: 100
-    },
-    acquireConnectionTimeout: 300000
+      max: 100,
+      createRetryIntervalMillis: retryTimeout,
+      createTimeoutMillis: longTimeout
+    }
     //, debug: true // uncomment to debug
   },
   archive: {
@@ -31,20 +32,19 @@ module.exports = {
       user: config.ASYNC_WORKER_USERNAME,
       password: config.ASYNC_WORKER_PASSWORD,
       database: config.ARCHIVE_DATABASE,
-      requestTimeout: 90000,
-      connectionTimeout: 90000,
+      requestTimeout: longTimeout,
+      connectionTimeout: longTimeout,
       options: {
         encrypt: false,
-        requestTimeout: 90000,
-        connectionTimeout: 90000,
         enableArithAbort: true
       }
     },
     pool: {
       min: 2,
-      max: 10
-    },
-    acquireConnectionTimeout: 300000
+      max: 10,
+      createRetryIntervalMillis: retryTimeout,
+      createTimeoutMillis: longTimeout
+    }
     //, debug: true // uncomment to debug
   },
   testing: {
