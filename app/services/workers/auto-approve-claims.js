@@ -10,7 +10,9 @@ const autoApproveClaims = function () {
   return getAutoApproveClaims()
     .then(function (data) {
       claimData = data
+      log.info(`Auto approval: ${claimData.length} claims found`)
       claimData.forEach(function (claim) {
+        log.info(`Auto approval: processing ClaimId ${claim.ClaimId}`)
         return autoApproveClaim(claim.Reference, claim.EligibilityId, claim.ClaimId, claim.EmailAddress)
           .then(function () {
             return deleteAutoApproveClaim(claim.AutoApprovalId)
