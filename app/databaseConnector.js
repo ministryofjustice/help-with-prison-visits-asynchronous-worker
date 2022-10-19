@@ -3,16 +3,9 @@ const knex = require('knex')
 const { KNEX_CONFIG } = require('../config')
 const log = require('./services/log')
 
-// let cachedConnection
-
 function getDatabaseConnector (connectionDetails = KNEX_CONFIG) {
   log.info('Getting database connection')
   const knexConfig = require('../knexfile')[connectionDetails]
-
-  // if (cachedConnection) {
-  //   log.info('Returning cached ')
-  //   return cachedConnection
-  // }
   let connection
 
   try {
@@ -26,7 +19,7 @@ function getDatabaseConnector (connectionDetails = KNEX_CONFIG) {
       }, 5000)
     }
   }
-  // cachedConnection = connection
+
   return connection
 }
 
