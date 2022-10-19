@@ -1,5 +1,5 @@
 require('dotenv').config()
-require('./app/azure-appinsights')
+const appInsights = require('./app/azure-appinsights')
 const log = require('./app/services/log')
 const { sendAllAdvanceClaimRemindersForDay } = require('./app/services/workers/send-all-advance-claim-reminders-for-day')
 const { sendRequestInformationRemindersForDay } = require('./app/services/workers/send-request-information-reminders-for-day')
@@ -16,9 +16,16 @@ Promise.all([
   autoRejectClaims()])
   .then(function () {
     log.info('Daily tasks completed')
-    process.exit()
+    if (appInsights) {
+      appInsights.flush({ callback: () => process.exit() })
+    }
   })
   .catch(function (error) {
     log.error('Failed daily tasks run', error)
+    if (appInsights) {
+      appInsights.flush({ callback: () => process.exit(1) })
+    }
+  })
+  .finally(() => {
     process.exit()
   })
