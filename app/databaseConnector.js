@@ -13,7 +13,19 @@ function getDatabaseConnector (connectionDetails = KNEX_CONFIG) {
   //   log.info('Returning cached ')
   //   return cachedConnection
   // }
-  const connection = knex(knexConfig)
+  let connection
+
+  try {
+    connection = knex(knexConfig)
+  } catch (error) {
+    if (error && error.message.match(/Failed to connect to /)) {
+      log.error('Failed first connection attempt')
+      setTimeout(function() {
+        log.info('Retrying connection')
+        connection = knex(knexConfig)
+      }, 5000)
+    }
+  }
   // cachedConnection = connection
   return connection
 }
