@@ -5,8 +5,10 @@ const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const reminderEnum = require('../../constants/advance-claim-reminder-enum')
 const dateFormatter = require('../date-formatter')
+const log = require('../log')
 
 const sendAllAdvanceClaimRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
+  log.info('Sending advance claim reminders')
   const numberOfDaysAfterDateOfJourneyForReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER)
   const numberOfDaysAfterDateOfJourneyForSecondReminder = parseInt(config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_SECOND_ADVANCE_REMINDER)
 

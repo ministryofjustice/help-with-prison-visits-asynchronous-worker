@@ -10,14 +10,14 @@ function getDatabaseConnector (connectionDetails = KNEX_CONFIG) {
 
   try {
     connection = knex(knexConfig)
+    log.info('Successfully got database connection')
   } catch (error) {
-    if (error && error.message.match(/Failed to connect to /)) {
-      log.error('Failed first connection attempt')
-      setTimeout(function () {
-        log.info('Retrying connection')
-        connection = knex(knexConfig)
-      }, 5000)
-    }
+    log.error('Failed first connection attempt')
+    setTimeout(function () {
+      log.info('Retrying connection')
+      connection = knex(knexConfig)
+      log.info('Successfully got retried database connection')
+    }, 5000)
   }
 
   return connection

@@ -54,10 +54,10 @@
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.4",
-    "mssql": "^9.0.1",
     "notifications-node-client": "5.2.0",
     "path": "^0.12.7",
     "sftp-promises": "^1.8.0",
+    "tedious": "^15.1.0",
     "xlsx-populate": "^1.21.0",
     "xml2js": "^0.4.23",
     "xml2js-xpath": "^0.13.0"
