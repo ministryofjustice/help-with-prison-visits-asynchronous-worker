@@ -7,7 +7,7 @@ const { generatePayoutPayments } = require('./app/services/workers/generate-payo
 
 log.info('Running payment generation job')
 
-setTimeout(function() {
+setTimeout(function () {
   Promise.all([
     generateDirectPayments(),
     cleanupOldPaymentFiles(),

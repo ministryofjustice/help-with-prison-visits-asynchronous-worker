@@ -5,7 +5,7 @@ const processTasks = require('./app/process-tasks')
 
 log.info('Started worker')
 
-setTimeout(function() {
+setTimeout(function () {
   processTasks()
     .then(function () {
       log.info('Worker completed processing tasks')

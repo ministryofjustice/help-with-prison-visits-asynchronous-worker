@@ -5,7 +5,7 @@ const { autoApproveClaims } = require('./app/services/workers/auto-approve-claim
 
 log.info('Starting auto approval checks')
 
-setTimeout(function() {
+setTimeout(function () {
   autoApproveClaims()
     .then(function () {
       log.info('Auto approval checks completed')
