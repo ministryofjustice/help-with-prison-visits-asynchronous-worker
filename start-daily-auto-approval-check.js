@@ -5,19 +5,21 @@ const { autoApproveClaims } = require('./app/services/workers/auto-approve-claim
 
 log.info('Starting auto approval checks')
 
-autoApproveClaims()
-  .then(function () {
-    log.info('Auto approval checks completed')
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit() })
-    }
-  })
-  .catch(function (error) {
-    log.error('Failed auto approval checks', error)
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit(1) })
-    }
-  })
-  .finally(() => {
-    process.exit()
-  })
+setTimeout(function() {
+  autoApproveClaims()
+    .then(function () {
+      log.info('Auto approval checks completed')
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit() })
+      }
+    })
+    .catch(function (error) {
+      log.error('Failed auto approval checks', error)
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit(1) })
+      }
+    })
+    .finally(() => {
+      process.exit()
+    })
+}, 5000)
