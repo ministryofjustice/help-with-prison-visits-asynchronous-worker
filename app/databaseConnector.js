@@ -6,19 +6,9 @@ const log = require('./services/log')
 function getDatabaseConnector (connectionDetails = KNEX_CONFIG) {
   log.info('Getting database connection')
   const knexConfig = require('../knexfile')[connectionDetails]
-  let connection
+  const connection = knex(knexConfig)
 
-  try {
-    connection = knex(knexConfig)
-    log.info('Successfully got database connection')
-  } catch (error) {
-    log.error('Failed first connection attempt')
-    setTimeout(function () {
-      log.info('Retrying connection')
-      connection = knex(knexConfig)
-      log.info('Successfully got retried database connection')
-    }, 5000)
-  }
+  log.info('Successfully got database connection')
 
   return connection
 }

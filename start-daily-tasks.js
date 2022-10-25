@@ -8,6 +8,7 @@ const { cleanupOldData } = require('./app/services/workers/cleanup-old-data')
 const { autoRejectClaims } = require('./app/services/workers/auto-reject-claims')
 
 log.info('Starting daily tasks')
+
 setTimeout(function () {
   Promise.all([
     sendAllAdvanceClaimRemindersForDay(),
