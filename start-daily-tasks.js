@@ -8,24 +8,27 @@ const { cleanupOldData } = require('./app/services/workers/cleanup-old-data')
 const { autoRejectClaims } = require('./app/services/workers/auto-reject-claims')
 
 log.info('Starting daily tasks')
-Promise.all([
-  sendAllAdvanceClaimRemindersForDay(),
-  sendRequestInformationRemindersForDay(),
-  markOverpayments(),
-  cleanupOldData(),
-  autoRejectClaims()])
-  .then(function () {
-    log.info('Daily tasks completed')
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit() })
-    }
-  })
-  .catch(function (error) {
-    log.error('Failed daily tasks run', error)
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit(1) })
-    }
-  })
-  .finally(() => {
-    process.exit()
-  })
+
+setTimeout(function () {
+  Promise.all([
+    sendAllAdvanceClaimRemindersForDay(),
+    sendRequestInformationRemindersForDay(),
+    markOverpayments(),
+    cleanupOldData(),
+    autoRejectClaims()])
+    .then(function () {
+      log.info('Daily tasks completed')
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit() })
+      }
+    })
+    .catch(function (error) {
+      log.error('Failed daily tasks run', error)
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit(1) })
+      }
+    })
+    .finally(() => {
+      process.exit()
+    })
+}, 5000)

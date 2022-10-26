@@ -7,9 +7,11 @@ const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const moment = require('moment')
 const config = require('../../../config')
+const log = require('../log')
 require('../promise-each')
 
 const autoRejectClaims = function () {
+  log.info('Auto reject claims')
   const numberOfDaysAfterFinalReminderForRejection = parseInt(config.NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION)
   const autoRejectClaimsOlderThan = moment().startOf('day').subtract(numberOfDaysAfterFinalReminderForRejection, 'days').format('YYYY-MM-DD')
 

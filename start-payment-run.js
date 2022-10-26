@@ -7,22 +7,24 @@ const { generatePayoutPayments } = require('./app/services/workers/generate-payo
 
 log.info('Running payment generation job')
 
-Promise.all([
-  generateDirectPayments(),
-  cleanupOldPaymentFiles(),
-  generatePayoutPayments()])
-  .then(function () {
-    log.info('Payment generation jobs completed')
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit() })
-    }
-  })
-  .catch(function (error) {
-    log.error('Failed payment run', error)
-    if (appInsights) {
-      appInsights.flush({ callback: () => process.exit(1) })
-    }
-  })
-  .finally(() => {
-    process.exit()
-  })
+setTimeout(function () {
+  Promise.all([
+    generateDirectPayments(),
+    cleanupOldPaymentFiles(),
+    generatePayoutPayments()])
+    .then(function () {
+      log.info('Payment generation jobs completed')
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit() })
+      }
+    })
+    .catch(function (error) {
+      log.error('Failed payment run', error)
+      if (appInsights) {
+        appInsights.flush({ callback: () => process.exit(1) })
+      }
+    })
+    .finally(() => {
+      process.exit()
+    })
+}, 5000)

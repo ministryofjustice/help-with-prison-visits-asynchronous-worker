@@ -7,8 +7,10 @@ const getOldClaimData = require('../data/get-old-claim-data')
 const getOldClaimDocumentData = require('../data/get-old-claim-document-data')
 const deleteOldFiles = require('../cleanup-old-data/delete-old-files')
 const deleteFilesFromExternalAsTransaction = require('../data/delete-claim-from-external-as-transaction')
+const log = require('../log')
 
 const cleanupOldData = function () {
+  log.info('Clean up old data')
   const maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
   const dateThreshold = dateFormatter.now().subtract(maxDaysBeforeDeleteData, 'days').toDate()
 

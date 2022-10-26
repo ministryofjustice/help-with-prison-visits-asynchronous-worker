@@ -4,8 +4,10 @@ const getAllClaimsPendingForFiveWeeks = require('../data/get-all-claims-pending-
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 const dateFormatter = require('../date-formatter')
+const log = require('../log')
 
 const sendRequestInformationRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
+  log.info('Sending request information reminders')
   const numberOfDaysPendingForFinalReminder = parseInt(config.NUMBER_OF_DAYS_PENDING_FOR_FINAL_REMINDER)
 
   // Get date range of Advance Claims with DateOfJourney which require reminders
