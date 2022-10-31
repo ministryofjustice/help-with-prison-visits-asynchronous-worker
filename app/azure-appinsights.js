@@ -9,6 +9,7 @@ if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
   appInsights
     .setup()
     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
+    .setInternalLogging(true, true)
     .start()
   module.exports = appInsights.defaultClient
   appInsights.defaultClient.context.tags['ai.cloud.role'] = packageData.name
