@@ -30,6 +30,7 @@ env:
   APVS_NOTIFY_SUBMIT_CLAIM_EMAIL_TEMPLATE_ID: 508b23b3-3f1c-45c2-bdc7-db90e3fae8b0
   APVS_NOTIFY_UPDATE_CONTACT_DETAILS_EMAIL_TEMPLATE_ID: b4478243-1120-4fc3-8cab-a8a512868254
   LOGGING_LEVEL: DEBUG
+  APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
 
 # Pre-existing kubernetes secrets to load as environment variables in the deployment.
 # namespace_secrets:
