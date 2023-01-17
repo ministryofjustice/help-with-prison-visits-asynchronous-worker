@@ -62,7 +62,6 @@ function getSoapBenefitCheckerRequestBody (data) {
       <nino>${data.nino}</nino>
       <surname>${data.surname}</surname>
       <dateOfBirth>${data.dateOfBirth}</dateOfBirth>
-      <dateOfAward></dateOfAward>
     </benefitCheckerRequest>
   </soapenv:Body>
 </soapenv:Envelope>`

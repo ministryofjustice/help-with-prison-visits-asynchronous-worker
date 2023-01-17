@@ -12,7 +12,6 @@
 					<element name="nino" type="xsd:string" />
 					<element name="surname" type="xsd:string" />
 					<element name="dateOfBirth" type="xsd:string" />
-					<element name="dateOfAward" nillable="true" type="xsd:string" />
 				</sequence>
 			</complexType>
 			<complexType name="benefitCheckerResponse">
