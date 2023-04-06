@@ -7,8 +7,8 @@
     "url": "https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/"
   },
   "engines": {
-    "node": "^16",
-    "npm": "^8"
+    "node": "^18",
+    "npm": "^9"
   },
   "scripts": {
     "record-build-info": "node scripts/record-build-info",
@@ -37,27 +37,27 @@
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
-    "sinon": "^15.0.1",
+    "sinon": "^15.0.3",
     "sinon-chai": "^3.7.0",
     "standard": "^17.0.0",
     "supertest": "^6.3.3"
   },
   "dependencies": {
-    "applicationinsights": "^2.4.1",
-    "aws-sdk": "^2.1300.0",
-    "axios": "^1.2.3",
+    "applicationinsights": "^2.5.1",
+    "aws-sdk": "^2.1351.0",
+    "axios": "^1.3.5",
     "bunyan": "^1.8.15",
     "bunyan-prettystream": "^0.1.3",
-    "csv-stringify": "^6.2.3",
+    "csv-stringify": "^6.3.0",
     "dotenv": "^16.0.3",
     "knex": "^2.4.2",
     "lodash": "^4.17.21",
-    "mkdirp": "^2.1.3",
+    "mkdirp": "^2.1.6",
     "moment": "^2.29.4",
     "notifications-node-client": "7.0.0",
     "path": "^0.12.7",
     "sftp-promises": "^1.8.0",
-    "tedious": "^15.1.2",
+    "tedious": "^15.1.3",
     "xlsx-populate": "^1.21.0",
     "xml2js": "^0.4.23",
     "xml2js-xpath": "^0.13.0"
