@@ -59,7 +59,7 @@
     "sftp-promises": "^1.8.0",
     "tedious": "^15.1.2",
     "xlsx-populate": "^1.21.0",
-    "xml2js": "^0.4.23",
+    "xml2js": "^0.5.0",
     "xml2js-xpath": "^0.13.0"
   }
 }
