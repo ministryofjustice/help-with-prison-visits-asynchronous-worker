@@ -1,4 +1,4 @@
-FROM node:16.14-bullseye-slim as base
+FROM node:18.15-bullseye-slim as base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
@@ -35,7 +35,7 @@ RUN npm ci --no-audit \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
 
-RUN npm prune --production
+RUN npm prune --no-audit --omit=dev
 
 FROM base
 
