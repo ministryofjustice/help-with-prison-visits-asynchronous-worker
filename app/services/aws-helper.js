@@ -1,17 +1,19 @@
 const { v4: uuidv4 } = require('uuid')
-const AWS = require('aws-sdk')
+const { S3 } = require('@aws-sdk/client-s3')
 const fs = require('fs')
 const log = require('./log')
 const config = require('../../config')
 
 class AWSHelper {
-  constructor ({ accessKeyId = config.AWS_ACCESS_KEY_ID, secretAccessKey = config.AWS_SECRET_ACCESS_KEY, bucketName = config.AWS_S3_BUCKET_NAME } = { }) {
+  constructor ({ accessKeyId = config.AWS_ACCESS_KEY_ID, secretAccessKey = config.AWS_SECRET_ACCESS_KEY, bucketName = config.AWS_S3_BUCKET_NAME, region = config.AWS_REGION } = { }) {
     this.accessKeyId = accessKeyId
     this.secretAccessKey = secretAccessKey
     this.bucketName = bucketName
-    this.s3 = new AWS.S3({
+    this.region = region
+    this.s3 = new S3({
       accessKeyId: this.accessKeyId,
-      secretAccessKey: this.secretAccessKey
+      secretAccessKey: this.secretAccessKey,
+      region: this.region
     })
   }
 
@@ -22,7 +24,7 @@ class AWSHelper {
     }
 
     try {
-      await this.s3.deleteObject(deleteParams).promise()
+      await this.s3.deleteObject(deleteParams)
     } catch (error) {
       log.error(`Problem deleting file ${key}`)
       throw new Error(error)
@@ -45,7 +47,7 @@ class AWSHelper {
     uploadParams.Body = fileStream
 
     try {
-      const uploadResult = await this.s3.upload(uploadParams).promise()
+      const uploadResult = await this.s3.putObject(uploadParams)
       log.info('Upload Success', uploadResult.Location, key)
       return key
     } catch (error) {
@@ -63,8 +65,10 @@ class AWSHelper {
     const tempFile = `${config.FILE_TMP_DIR}/${randomFilename}`
 
     try {
-      const data = await this.s3.getObject(downloadParams).promise()
-      fs.writeFileSync(tempFile, data.Body)
+      const data = await this.s3.getObject(downloadParams)
+      const fileData = await data.Body.transformToByteArray()
+      fs.writeFileSync(tempFile, Buffer.from(fileData))
+      log.info(`S3 Download Success ${key}`)
     } catch (error) {
       throw new Error(error)
     }
