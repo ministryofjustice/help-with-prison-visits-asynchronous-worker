@@ -281,6 +281,13 @@ module.exports = {
     postcode: 'M27 8FB'
   },
 
+  FOSSE_WAY: {
+    value: 'fosse-way',
+    displayName: 'Fosse Way',
+    region: 'ENG/WAL',
+    postcode: 'LE18 4WS'
+  },
+
   FOSTON_HALL: {
     value: 'foston-hall',
     displayName: 'Foston Hall',
