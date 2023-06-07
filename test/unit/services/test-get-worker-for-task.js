@@ -20,7 +20,6 @@ const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
 const archiveOldClaims = { name: 'archiveOldClaims' }
 const archiveClaim = { name: 'archiveClaim' }
 const referenceRecovery = { name: 'referenceRecovery' }
-const generatePayoutPayments = { name: 'generatePayoutPayments' }
 const generateDirectPayments = { name: 'generateDirectPayments' }
 const sendMalwareAlert = { name: 'sendMalwareAlert' }
 
@@ -43,7 +42,6 @@ const getWorkerForTask = proxyquire('../../../app/services/get-worker-for-task',
   './workers/archive-old-claims': archiveOldClaims,
   './workers/archive-claim': archiveClaim,
   './workers/reference-recovery': referenceRecovery,
-  './workers/generate-payout-payments': generatePayoutPayments,
   './workers/generate-direct-payments': generateDirectPayments,
   './workers/send-malware-notification': sendMalwareAlert
 })
