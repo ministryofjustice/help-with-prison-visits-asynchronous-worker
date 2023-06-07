@@ -285,7 +285,7 @@ module.exports = {
     value: 'fosse-way',
     displayName: 'Fosse Way',
     region: 'ENG/WAL',
-    postcode: 'LE18 4WS'
+    postcode: 'LE18 4TN'
   },
 
   FOSTON_HALL: {
