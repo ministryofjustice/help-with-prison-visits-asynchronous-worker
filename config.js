@@ -123,5 +123,6 @@ module.exports = {
   ADI_JOURNAL_DESCRIPTION_CELL: process.env.APVS_ADI_JOURNAL_DESCRIPTION_CELL || 'E15',
 
   // S3
-  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
+  AWS_REGION: process.env.AWS_REGION || 'eu-west-2'
 }
