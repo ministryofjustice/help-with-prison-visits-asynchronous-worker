@@ -5,9 +5,12 @@ const log = require('./log')
 const config = require('../../config')
 
 class AWSHelper {
-  constructor ({ bucketName = config.AWS_S3_BUCKET_NAME } = { }) {
+  constructor ({ bucketName = config.AWS_S3_BUCKET_NAME, region = config.AWS_REGION } = { }) {
     this.bucketName = bucketName
-    this.s3 = new S3({})
+    this.region = region
+    this.s3 = new S3({
+      region: this.region
+    })
   }
 
   async delete (key) {
