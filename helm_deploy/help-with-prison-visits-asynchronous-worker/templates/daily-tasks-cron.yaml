@@ -15,6 +15,7 @@ spec:
       ttlSecondsAfterFinished: 86400
       template:
         spec:
+          serviceAccountName: help-with-prison-visits-internal
           containers:
           - name: hwpv-daily-tasks
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
