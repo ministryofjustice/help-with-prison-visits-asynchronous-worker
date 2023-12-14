@@ -14,9 +14,9 @@ module.exports = function (autoApprovalData) {
       const child = autoApprovalData.ClaimChildren[i]
       const dateOfBirth = moment(child.DateOfBirth)
       const ageInYears = now.diff(dateOfBirth, 'years')
-
+      const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Date of birth: ${dateOfBirth.format('DD/MM/YYYY')}`
       if (ageInYears >= 18) {
-        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE + ADDITIONAL_INFO)
       }
     }
   }

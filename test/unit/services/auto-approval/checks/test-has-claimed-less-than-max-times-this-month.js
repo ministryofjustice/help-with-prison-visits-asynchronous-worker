@@ -13,6 +13,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
 
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
     expect(checkResult.result).to.equal(false)
+    expect(checkResult.failureMessage).to.equal('This claimant has claimed more than the maximum number of times this month. Claim ref: ABC123, Maximum no of claims per month: 4, No. of claims this month: 5')
   })
 
   it(`should return true if the number of claims made for the current month is equal to ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
@@ -54,7 +55,9 @@ function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) 
   const firstOfCurrentMonth = dateFormatter.now().startOf('month')
   const now = dateFormatter.now()
   const result = {
+
     Claim: {
+      Reference: 'ABC123',
       DateOfJourney: firstOfCurrentMonth.clone().toDate()
     },
     previousClaims: [],

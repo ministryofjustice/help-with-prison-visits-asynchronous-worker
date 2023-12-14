@@ -15,8 +15,8 @@ module.exports = function (autoApprovalData) {
 
   const numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, firstDayOfCurrentMonth, firstDayOfNextMonth)
   const checkPassed = numberOfClaimsThisMonth <= autoApprovalData.maxNumberOfClaimsPerMonth
-
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
+  const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Maximum no of claims per month: ${autoApprovalData.maxNumberOfClaimsPerMonth}, No. of claims this month: ${numberOfClaimsThisMonth}`
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)
 }
 
 function getCountOfApprovedClaimsSubmittedSinceDate (previousClaims, currentClaim, date, cutOffDate) {

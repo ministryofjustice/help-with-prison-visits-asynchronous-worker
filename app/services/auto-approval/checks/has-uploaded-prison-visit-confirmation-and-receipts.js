@@ -8,10 +8,10 @@ const UPLOADED_DOC_STATUS = 'uploaded'
 
 module.exports = function (autoApprovalData) {
   let checkPassed
-  if (autoApprovalData.ClaimDocument) {
-    let prisonVisitConfirmationUploaded = false
-    let allRequiredDocumentsUploaded = true
+  let prisonVisitConfirmationUploaded = false
+  let allRequiredDocumentsUploaded = true
 
+  if (autoApprovalData.ClaimDocument) {
     for (let i = 0; i < autoApprovalData.ClaimDocument.length; i++) {
       const claimDocument = autoApprovalData.ClaimDocument[i]
 
@@ -24,6 +24,6 @@ module.exports = function (autoApprovalData) {
 
     checkPassed = prisonVisitConfirmationUploaded && allRequiredDocumentsUploaded
   }
-
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
+  const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Prison visit confirmation uploaded: ${prisonVisitConfirmationUploaded}, All required documents uploaded: ${allRequiredDocumentsUploaded}`
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)
 }
