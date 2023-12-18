@@ -5,6 +5,7 @@ const visitDateDifferentToPreviousClaims = require('../../../../../app/services/
 const visitDate = new Date(2016, 1, 1)
 const validAutoApprovalData = {
   Claim: {
+    Reference: 'ABC123',
     DateOfJourney: moment(visitDate).subtract(5, 'months')
   },
   previousClaims: [
@@ -25,6 +26,7 @@ const validAutoApprovalData = {
 
 const invalidAutoApprovalData = {
   Claim: {
+    Reference: 'ABC123',
     DateOfJourney: moment(visitDate).subtract(6, 'months').toDate()
   },
   previousClaims: [
@@ -45,6 +47,7 @@ const invalidAutoApprovalData = {
 
 const emptyAutoApprovalData = {
   Claim: {
+    Reference: 'ABC123',
     DateOfJourney: moment(visitDate).subtract(5, 'days')
   },
   previousClaims: []
@@ -59,6 +62,7 @@ describe('services/auto-approval/checks/visit-date-different-to-previous-claims'
   it('should return false if any of the previous claims have the same visit date as the current claim', function () {
     const checkResult = visitDateDifferentToPreviousClaims(invalidAutoApprovalData)
     expect(checkResult.result).to.equal(false)
+    expect(checkResult.failureMessage).to.equal('The date of visit for this claim is the same as the date of visit for a previous claim. Claim ref: ABC123, Current claim visit date: 01/08/2015, Previous claim visit date: 01/08/2015')
   })
 
   it('should return true if there are no previous claims', function () {

@@ -15,8 +15,12 @@ module.exports = function (autoApprovalData) {
 
       // For each expense type, check that the first time claim contains the same expense type
       // with the same or less number of claim expenses
-      if (!groupedFirstTimeClaimExpenses[index] || currentExpenseTypeGroup.length > groupedFirstTimeClaimExpenses[index].length) {
-        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+      if (!groupedFirstTimeClaimExpenses[index]) {
+        const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, No. of current expense type: ${currentExpenseTypeGroup.length}, No. of first time claim expense: ${groupedFirstTimeClaimExpenses[index]?.length ?? 0}`
+        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE + ADDITIONAL_INFO)
+      } else if (currentExpenseTypeGroup.length > groupedFirstTimeClaimExpenses[index].length) {
+        const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Expense type: ${JSON.stringify(groupedFirstTimeClaimExpenses[index][0]?.ExpenseType)}, No. of current expense type: ${currentExpenseTypeGroup.length}, No. of first time claim expense: ${groupedFirstTimeClaimExpenses[index]?.length ?? 0}`
+        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE + ADDITIONAL_INFO)
       }
     }
   }

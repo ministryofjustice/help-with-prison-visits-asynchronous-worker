@@ -22,9 +22,10 @@ module.exports = function (autoApprovalData) {
         const variance = firstTimeExpenseTypeTotal * (Math.abs(autoApprovalData.costVariancePercentage) / 100)
         const lowerThreshold = firstTimeExpenseTypeTotal - variance
         const upperThreshold = firstTimeExpenseTypeTotal + variance
+        const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Current expense type total: ${currentExpenseTypeTotal}, Upper threshold: ${upperThreshold}, Lower threshold: ${lowerThreshold}`
 
         if (currentExpenseTypeTotal < lowerThreshold || currentExpenseTypeTotal > upperThreshold) {
-          return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+          return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE + ADDITIONAL_INFO)
         }
       }
     }

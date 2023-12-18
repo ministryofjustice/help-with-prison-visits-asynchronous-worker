@@ -21,6 +21,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
 
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
     expect(checkResult.result).to.equal(false)
+    expect(checkResult.failureMessage).to.equal('This claimant has claimed more than the maximum number of times this year. Claim ref: ABC123, Maximum no of claims per year: 26, No. of claims this year: 27')
   })
 
   it('should return true if the number of claims made for the current year is less than 26', function () {
@@ -50,6 +51,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
 function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) {
   const result = {
     Claim: {
+      Reference: 'ABC123',
       DateOfJourney: now.clone().subtract('14', 'days').toDate()
     },
     previousClaims: [],

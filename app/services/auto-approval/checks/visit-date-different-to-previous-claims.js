@@ -12,9 +12,9 @@ module.exports = function (autoApprovalData) {
     for (let i = 0; i < autoApprovalData.previousClaims.length; i++) {
       const previousClaim = autoApprovalData.previousClaims[i]
       const dateOfJourney = moment(previousClaim.DateOfJourney)
-
+      const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Current claim visit date: ${visitDateMoment.format('DD/MM/YYYY')}, Previous claim visit date: ${dateOfJourney.format('DD/MM/YYYY')}`
       if (visitDateMoment.isSame(dateOfJourney)) {
-        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
+        return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE + ADDITIONAL_INFO)
       }
     }
   }

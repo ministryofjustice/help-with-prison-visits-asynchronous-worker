@@ -5,9 +5,9 @@ const FAILURE_MESSAGE = 'The total claim value is over the maximum permitted amo
 
 module.exports = function (autoApprovalData) {
   let checkPassed
-  if (autoApprovalData.ClaimExpenses) {
-    let claimTotal = 0
+  let claimTotal = 0
 
+  if (autoApprovalData.ClaimExpenses) {
     for (let i = 0; i < autoApprovalData.ClaimExpenses.length; i++) {
       const claimExpense = autoApprovalData.ClaimExpenses[i]
 
@@ -16,6 +16,6 @@ module.exports = function (autoApprovalData) {
 
     checkPassed = claimTotal <= autoApprovalData.maxClaimTotal
   }
-
-  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE)
+  const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Total claim: ${claimTotal}, Maximum permitted amount: ${autoApprovalData.maxClaimTotal}`
+  return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)
 }

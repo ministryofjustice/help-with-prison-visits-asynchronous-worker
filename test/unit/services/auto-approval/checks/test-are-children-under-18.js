@@ -1,9 +1,13 @@
 const expect = require('chai').expect
+const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const areChildrenUnder18 = require('../../../../../app/services/auto-approval/checks/are-children-under-18')
 
 const autoApprovalDataClaimChildrenOver18 = {
+  Claim: {
+    Reference: 'ABC123'
+  },
   ClaimChildren: [
     {
       DateOfBirth: dateFormatter.now().subtract(17, 'years').toDate()
@@ -15,6 +19,9 @@ const autoApprovalDataClaimChildrenOver18 = {
 }
 
 const autoApprovalDataClaimChildrenUnder18 = {
+  Claim: {
+    Reference: 'ABC123'
+  },
   ClaimChildren: [
     {
       ClaimChildId: 798118115,
@@ -49,6 +56,7 @@ describe('services/auto-approval/checks/are-children-under-18', function () {
   it('should return false if any children associated to the claim are over 18 years old', function () {
     const checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenOver18)
     expect(checkResult.result).to.equal(false)
+    expect(checkResult.failureMessage).to.equal(`One or more children to be claimed are over 18 years old. Claim ref: ABC123, Date of birth: ${moment(autoApprovalDataClaimChildrenOver18.ClaimChildren[1].DateOfBirth).format('DD/MM/YYYY')}`)
   })
 
   it('should return true if all children associated to the claim are under 18 years old', function () {
