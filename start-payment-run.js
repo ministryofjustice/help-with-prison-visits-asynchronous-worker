@@ -3,15 +3,13 @@ const appInsights = require('./app/azure-appinsights')
 const log = require('./app/services/log')
 const { generateDirectPayments } = require('./app/services/workers/generate-direct-payments')
 const { cleanupOldPaymentFiles } = require('./app/services/workers/cleanup-old-payment-files')
-const { generatePayoutPayments } = require('./app/services/workers/generate-payout-payments')
 
 log.info('Running payment generation job')
 
 setTimeout(function () {
   Promise.all([
     generateDirectPayments(),
-    cleanupOldPaymentFiles(),
-    generatePayoutPayments()])
+    cleanupOldPaymentFiles()])
     .then(function () {
       log.info('Payment generation jobs completed')
       if (appInsights) {
