@@ -16,7 +16,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
     expect(checkResult.result).to.equal(true)
   })
 
-  it.only('should return false if the number of claims made for the current year is greater than 26', function () {
+  it('should return false if the number of claims made for the current year is greater than 26', function () {
     const claimsGenerated = 28
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(claimsGenerated - 1, now.clone().subtract(1, 'years'))
 
