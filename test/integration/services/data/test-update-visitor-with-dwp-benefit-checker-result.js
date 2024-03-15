@@ -28,8 +28,8 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
         return db('IntSchema.Visitor').where('Reference', reference).first('DWPBenefitCheckerResult')
           .then(function (visitor) {
             expect(visitor.DWPBenefitCheckerResult).toBe(dwpBenefitCheckerResult)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

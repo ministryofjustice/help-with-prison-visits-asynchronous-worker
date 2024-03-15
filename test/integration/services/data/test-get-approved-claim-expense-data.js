@@ -70,8 +70,8 @@ describe('services/data/get-approved-claim-expense-data', function () {
           })
           .then(function (claimExpense) {
             expect(claimExpense.Status).toBe('APPROVED')
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

@@ -22,8 +22,8 @@ describe('services/data/update-claim-manually-processed-amount', function () {
           .then(function (result) {
             // manually processed amount should equal 12
             expect(result[0].ManuallyProcessedAmount).toBe(12)
-          });
-      });
+          })
+      })
   })
 
   it('should update the manually processed column for a particular claim given a decimal number', function () {
@@ -37,8 +37,8 @@ describe('services/data/update-claim-manually-processed-amount', function () {
           .then(function (result) {
             // manually processed amount should equal 12.10
             expect(result[0].ManuallyProcessedAmount).toBe(12.10)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

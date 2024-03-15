@@ -42,8 +42,8 @@ describe('services/direct-payments/create-payment-file', function () {
           expect(lines[14]).toBe('Northern Ireland,72.10')
           expect(lines[15]).toBe('Wales,20.00')
           expect(lines[16]).toBe('Scotland,21.22')
-        });
-      });
+        })
+      })
   })
 
   it('should generate valid SSCL AccessPay file with correct header', function () {
@@ -59,8 +59,8 @@ describe('services/direct-payments/create-payment-file', function () {
           expect(lines[0]).toBe('223344,11223344,Alan Turing       ,00000022.33,')
           expect(lines[1]).toBe("334455,22334455,John O'Shea       ,00000010.00,")
           expect(lines[9]).toBe("338289,03418438,Terry O'Sullivan  ,00000010.00,ROLL-1BE.R")
-        });
-      });
+        })
+      })
   })
 
   afterAll(function () {

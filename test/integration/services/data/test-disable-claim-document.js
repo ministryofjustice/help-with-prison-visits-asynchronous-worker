@@ -27,8 +27,8 @@ describe('services/data/disable-claim-document', function () {
           .first()
           .then(function (result) {
             expect(result.IsEnabled).toBe(false) //eslint-disable-line
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

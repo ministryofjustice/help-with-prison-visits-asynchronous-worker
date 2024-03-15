@@ -43,9 +43,9 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
               .select()
               .then(function (results) {
                 expect(results.length).toBe(0)
-              });
-          });
-      });
+              })
+          })
+      })
   })
 
   it('should not copy the first time claim data to internal nor delete from external when an error is thrown', function () {
@@ -71,10 +71,10 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
                   .select()
                   .then(function (results) {
                     expect(results.length).toBe(1)
-                  });
-              });
-          });
-      });
+                  })
+              })
+          })
+      })
   })
 
   afterEach(function () {

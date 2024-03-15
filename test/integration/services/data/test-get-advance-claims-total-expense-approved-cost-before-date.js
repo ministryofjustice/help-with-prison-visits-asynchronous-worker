@@ -24,7 +24,7 @@ describe('services/data/get-advance-claims-total-expense-approved-cost-before-da
         expect(claims[0].ClaimId).toBe(claimId)
         expect(claims[0].Reference).toBe(REFERENCE)
         expect(claims[0].Amount).toBe(amount)
-      });
+      })
   })
 
   afterAll(function () {

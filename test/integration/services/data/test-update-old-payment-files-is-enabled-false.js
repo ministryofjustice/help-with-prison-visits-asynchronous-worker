@@ -40,8 +40,8 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
           .then(function (results) {
             expect(results[0].IsEnabled).toBe(false)
             expect(results[1].IsEnabled).toBe(false)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

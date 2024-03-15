@@ -15,6 +15,6 @@ describe('services/cleanup-old-data/delete-old-payment-files', function () {
     return deleteOldPaymentFiles([PAYMENT_FILE])
       .then(function () {
         expect(fs.existsSync(TEST_FILE_PATH)).toBe(false) //eslint-disable-line
-      });
+      })
   })
 })

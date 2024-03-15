@@ -39,10 +39,10 @@ describe('services/data/update-topups-processed-payment', function () {
                   .then(function (topupsPendingPayment) {
                     // Topups pending payment should be an array of size 0
                     expect(topupsPendingPayment.length).toBe(0)
-                  });
-              });
-          });
-      });
+                  })
+              })
+          })
+      })
   })
 
   afterAll(function () {

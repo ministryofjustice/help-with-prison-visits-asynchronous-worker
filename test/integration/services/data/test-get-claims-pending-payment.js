@@ -1,25 +1,24 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
-const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
 
-jest.mock('./update-claim-total-amount', () => updateClaimTotalAmountStub);
+const updateClaimTotalAmountStub = jest.fn().mockResolvedValue()
+const updateClaimManuallyProcessedAmountStub = jest.fn().mockResolvedValue()
+
+jest.mock('./update-claim-total-amount', () => updateClaimTotalAmountStub)
 
 jest.mock(
   './update-claim-manually-processed-amount',
   () => updateClaimManuallyProcessedAmountStub
-);
+)
 
 describe('services/data/get-claims-pending-payment', function () {
   const reference = 'PAYMENT'
   let claimId
   let claimExpenseId1
   let claimExpenseId2
-
-  const updateClaimTotalAmountStub = sinon.stub().resolves()
-  const updateClaimManuallyProcessedAmountStub = sinon.stub().resolves()
 
   const getClaimsPendingPayment = require('../../../../app/services/data/get-claims-pending-payment')
 
@@ -109,7 +108,7 @@ describe('services/data/get-claims-pending-payment', function () {
           expect(filteredResults[0][6]).toBe('Northern Ireland')
           // should contain the roll number
           expect(filteredResults[0][7]).toBe('ROLL-1BE.R')
-        });
+        })
     })
 
     it('should exclude manually processed expense costs from the amount paid', function () {
@@ -139,8 +138,8 @@ describe('services/data/get-claims-pending-payment', function () {
               // Total approved amount: £25.05. Payment amount: £25.05 - £15 (deduction) - £4.55 (Manually processed) = £5.50
               // should return correct amount (excluding manually processed expenses)
               expect(filteredResults[0][4]).toBe('5.50')
-            });
-        });
+            })
+        })
     })
 
     it('should call update claim total amount with the correct value', function () {
@@ -165,8 +164,8 @@ describe('services/data/get-claims-pending-payment', function () {
               // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
               // should update total amount with correct value
               expect(updateClaimTotalAmountStub.calledWith(claimId, 15)).toBe(true) //eslint-disable-line
-            });
-        });
+            })
+        })
     })
 
     it('should call update claim manually processed amount the with correct value', function () {
@@ -190,8 +189,8 @@ describe('services/data/get-claims-pending-payment', function () {
             .then(function () {
               // should update manually processed amount with correct value
               expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25)).toBe(true) //eslint-disable-line
-            });
-        });
+            })
+        })
     })
 
     it('should call update claim manually processed amount the with correct value given a decimal value', function () {
@@ -215,8 +214,8 @@ describe('services/data/get-claims-pending-payment', function () {
             .then(function () {
               // should update manually processed amount with correct value
               expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20)).toBe(true) //eslint-disable-line
-            });
-        });
+            })
+        })
     })
 
     it('should return payment amount to two decimal places', function () {
@@ -246,8 +245,8 @@ describe('services/data/get-claims-pending-payment', function () {
               // Total approved amount: £31.10. Payment amount: £31.10 - £15 (deduction) - £10.45 (Manually processed) = £5.65
               // should return correct amount (excluding manually processed expenses)
               expect(filteredResults[0][4]).toBe('5.65')
-            });
-        });
+            })
+        })
     })
 
     it('should not return claims to be paid if PaymentAmount is not positive', function () {
@@ -277,8 +276,8 @@ describe('services/data/get-claims-pending-payment', function () {
               // Total approved amount: £30. Payment amount: £30 - £15 (deduction) - £15 (Manually processed) = £0.00
               // should not return claims to be paid given PaymentAmount of 0
               expect(filteredResults.length).toBe(0)
-            });
-        });
+            })
+        })
     })
 
     it('should retrieve not retrieve claims with a PaymentMethod of manually processed', function () {
@@ -348,7 +347,7 @@ describe('services/data/get-claims-pending-payment', function () {
           expect(filteredResults[0][8]).toBe(claimData.Visitor.PostCode)
           // should contain the reference number
           expect(filteredResults[0][9]).toBe(reference)
-        });
+        })
     })
 
     it('should retrieve UPDATED claim records with payment status of NULL', function () {
@@ -381,8 +380,8 @@ describe('services/data/get-claims-pending-payment', function () {
               expect(filteredResults[0][8]).toBe(claimData.Visitor.PostCode)
               // should contain the reference number
               expect(filteredResults[0][9]).toBe(reference)
-            });
-        });
+            })
+        })
     })
 
     it('should retrieve APPROVED-ADVANCE-CLOSED claim records with payment status of NULL', function () {
@@ -415,8 +414,8 @@ describe('services/data/get-claims-pending-payment', function () {
               expect(filteredResults[0][8]).toBe(claimData.Visitor.PostCode)
               // should contain the reference number
               expect(filteredResults[0][9]).toBe(reference)
-            });
-        });
+            })
+        })
     })
 
     it('should not retrieve REJECTED claim records', function () {
@@ -430,9 +429,9 @@ describe('services/data/get-claims-pending-payment', function () {
                     return result[0] === claimId
                   })
                   expect(filteredResults.length === 0).toBe(true) //eslint-disable-line
-                });
-            });
-        });
+                })
+            })
+        })
     })
 
     afterAll(function () {

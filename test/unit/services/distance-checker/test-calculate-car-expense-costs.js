@@ -1,5 +1,4 @@
-const sinon = require('sinon')
-
+const proxyquire = require('proxyquire')
 let getAllClaimData
 let callDistanceApiForPostcodes
 let updateExpenseForDistanceCalculation
@@ -30,24 +29,24 @@ const CLAIM_DATA_WITH_INCORRECT_PRISON = { Visitor: { PostCode: VISITOR_POSTCODE
 jest.mock('../../../config', () => ({
   DISTANCE_CALCULATION_ENABLED: 'true',
   DISTANCE_CALCULATION_MAX_MILES: '750'
-}));
+}))
 
-jest.mock('../data/get-all-claim-data', () => getAllClaimData);
-jest.mock('./call-distance-api-for-postcodes', () => callDistanceApiForPostcodes);
+jest.mock('../data/get-all-claim-data', () => getAllClaimData)
+jest.mock('./call-distance-api-for-postcodes', () => callDistanceApiForPostcodes)
 
 jest.mock(
   '../data/update-expense-for-distance-calculation',
   () => updateExpenseForDistanceCalculation
-);
+)
 
-jest.mock('../data/get-auto-approval-config', () => getAutoApprovalConfig);
+jest.mock('../data/get-auto-approval-config', () => getAutoApprovalConfig)
 
 describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
-    getAllClaimData = sinon.stub()
-    callDistanceApiForPostcodes = sinon.stub().resolves(10.0)
-    updateExpenseForDistanceCalculation = sinon.stub().resolves()
-    getAutoApprovalConfig = sinon.stub().resolves({ CostPerMile: '13.00' })
+    getAllClaimData = jest.fn()
+    callDistanceApiForPostcodes = jest.fn().mockResolvedValue(10.0)
+    updateExpenseForDistanceCalculation = jest.fn().mockResolvedValue()
+    getAutoApprovalConfig = jest.fn().mockResolvedValue({ CostPerMile: '13.00' })
 
     calculateCarExpenseCosts = require('../../../../app/services/distance-checker/calculate-car-expense-costs')
   })
@@ -57,16 +56,16 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   it('should not call if no car expense', function () {
-    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_CAR_EXPENSE)
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_NO_CAR_EXPENSE)
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   it('should call distance API and update claim for car expense', function () {
@@ -74,74 +73,74 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     const DISTANCE = 6.21371
     const distanceInKm = 10.0
 
-    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
-    callDistanceApiForPostcodes.resolves(distanceInKm)
-    updateExpenseForDistanceCalculation.resolves()
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    callDistanceApiForPostcodes.mockResolvedValue(distanceInKm)
+    updateExpenseForDistanceCalculation.mockResolvedValue()
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).toBe(true) //eslint-disable-line
         expect(getAutoApprovalConfig.called).toBe(true) //eslint-disable-line
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST)).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should not set cost if distance over max', function () {
     const DISTANCE = 776.71375
     const distanceInKm = 1250
 
-    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
-    callDistanceApiForPostcodes.resolves(distanceInKm)
-    updateExpenseForDistanceCalculation.resolves()
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    callDistanceApiForPostcodes.mockResolvedValue(distanceInKm)
+    updateExpenseForDistanceCalculation.mockResolvedValue()
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0)).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should use existing car expense to/from postcodes', function () {
-    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA)
-    callDistanceApiForPostcodes.resolves(20.0)
-    updateExpenseForDistanceCalculation.resolves()
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA)
+    callDistanceApiForPostcodes.mockResolvedValue(20.0)
+    updateExpenseForDistanceCalculation.mockResolvedValue()
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode)).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should resolve without calling distance checker if no claim expenses', function () {
-    getAllClaimData.resolves({})
+    getAllClaimData.mockResolvedValue({})
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   it('should resolve without calling distance checker if no postcodes', function () {
-    getAllClaimData.resolves(CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES)
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES)
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   it('should resolve without calling distance checker if prison incorrect', function () {
-    getAllClaimData.resolves(CLAIM_DATA_WITH_INCORRECT_PRISON)
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_INCORRECT_PRISON)
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   it('should return distance in miles to be null if no distance in km calculated', function () {
-    getAllClaimData.resolves(CLAIM_DATA_WITH_CAR_EXPENSE)
-    callDistanceApiForPostcodes.resolves()
+    getAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    callDistanceApiForPostcodes.mockResolvedValue()
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
         expect(callDistanceApiForPostcodes.calledWith(VISITOR_POSTCODE, PRISON_POSTCODE)).toBe(true) //eslint-disable-line
         expect(updateExpenseForDistanceCalculation.calledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0)).toBe(true) //eslint-disable-line
-      });
+      })
   })
 })

@@ -1,11 +1,9 @@
-const sinon = require('sinon')
-
-const stubZendesk = sinon.stub().resolves()
+const stubZendesk = jest.fn().mockResolvedValue()
 
 describe('services/send-technical-help', function () {
   it('should call zendesk with correct details', function () {
     expect(function () {
-      sinon.assert.calledOnce(stubZendesk)
+      expect(stubZendesk).toHaveBeenCalledTimes(1)
     })
   })
 })

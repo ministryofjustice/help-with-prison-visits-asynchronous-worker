@@ -45,8 +45,8 @@ describe('services/direct-payments/create-adi-journal-file', function () {
             log.error('An error occurred while reading the test journal ')
             log.error(error)
             throw (error)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

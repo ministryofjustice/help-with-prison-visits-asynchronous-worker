@@ -28,8 +28,8 @@ describe('services/data/update-bank-details', function () {
           .then(function (result) {
             expect(result.SortCode).toBe(sortcode)
             expect(result.AccountNumber).toBe(accountNumber)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

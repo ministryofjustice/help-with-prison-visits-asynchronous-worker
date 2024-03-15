@@ -35,7 +35,7 @@ describe('services/data/get-last-set-number-of-claims-status', function () {
         expect(results[1].Status).toBe(STATUS_RETURN)
         expect(results[2].Status).toBe(STATUS_RETURN)
         expect(results[3].Status).toBe(STATUS_RETURN)
-      });
+      })
   })
 
   afterAll(function () {

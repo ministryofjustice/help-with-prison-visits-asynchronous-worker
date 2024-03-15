@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const OLD_ELIGIBILITY_DATA = [
   {
     EligibilityId: 1,
@@ -37,32 +35,32 @@ let deleteOldFilesStub
 
 let cleanupOldData
 
-jest.mock('../data/get-old-eligibility-data', () => getOldEligibilityDataStub);
-jest.mock('../data/get-old-claim-data', () => getOldClaimDataStub);
-jest.mock('../data/get-old-claim-document-data', () => getOldClaimDocumentDataStub);
+jest.mock('../data/get-old-eligibility-data', () => getOldEligibilityDataStub)
+jest.mock('../data/get-old-claim-data', () => getOldClaimDataStub)
+jest.mock('../data/get-old-claim-document-data', () => getOldClaimDocumentDataStub)
 
 jest.mock(
   '../data/delete-claim-from-external-as-transaction',
   () => deleteClaimFromExternalAsTransactionStub
-);
+)
 
-jest.mock('../cleanup-old-data/delete-old-files', () => deleteOldFilesStub);
+jest.mock('../cleanup-old-data/delete-old-files', () => deleteOldFilesStub)
 
 describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {
-    getOldEligibilityDataStub = sinon.stub()
-    getOldClaimDataStub = sinon.stub()
-    getOldClaimDocumentDataStub = sinon.stub()
-    deleteClaimFromExternalAsTransactionStub = sinon.stub().resolves()
-    deleteOldFilesStub = sinon.stub().resolves()
+    getOldEligibilityDataStub = jest.fn()
+    getOldClaimDataStub = jest.fn()
+    getOldClaimDocumentDataStub = jest.fn()
+    deleteClaimFromExternalAsTransactionStub = jest.fn().mockResolvedValue()
+    deleteOldFilesStub = jest.fn().mockResolvedValue()
 
     cleanupOldData = require('../../../../app/services/workers/cleanup-old-data')
   })
 
   it('should retrieve any old eligibility records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves(OLD_ELIGIBILITY_DATA)
-    getOldClaimDataStub.resolves([])
-    getOldClaimDocumentDataStub.resolves([])
+    getOldEligibilityDataStub.mockResolvedValue(OLD_ELIGIBILITY_DATA)
+    getOldClaimDataStub.mockResolvedValue([])
+    getOldClaimDocumentDataStub.mockResolvedValue([])
 
     return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).toBe(true) //eslint-disable-line
@@ -70,13 +68,13 @@ describe('services/workers/cleanup-old-data', function () {
       expect(deleteOldFilesStub.calledTwice).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[0].EligibilityId, OLD_ELIGIBILITY_DATA[0].ClaimId)).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[1].EligibilityId, OLD_ELIGIBILITY_DATA[1].ClaimId)).toBe(true) //eslint-disable-line
-    });
+    })
   })
 
   it('should retrieve any old claim records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves([])
-    getOldClaimDataStub.resolves(OLD_CLAIM_DATA)
-    getOldClaimDocumentDataStub.resolves([])
+    getOldEligibilityDataStub.mockResolvedValue([])
+    getOldClaimDataStub.mockResolvedValue(OLD_CLAIM_DATA)
+    getOldClaimDocumentDataStub.mockResolvedValue([])
 
     return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).toBe(true) //eslint-disable-line
@@ -84,13 +82,13 @@ describe('services/workers/cleanup-old-data', function () {
       expect(deleteOldFilesStub.calledTwice).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId)).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId)).toBe(true) //eslint-disable-line
-    });
+    })
   })
 
   it('should retrieve any old claim document records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves([])
-    getOldClaimDataStub.resolves([])
-    getOldClaimDocumentDataStub.resolves(OLD_CLAIM_DOCUMENT_DATA)
+    getOldEligibilityDataStub.mockResolvedValue([])
+    getOldClaimDataStub.mockResolvedValue([])
+    getOldClaimDocumentDataStub.mockResolvedValue(OLD_CLAIM_DOCUMENT_DATA)
 
     return cleanupOldData.cleanupOldData().then(function () {
       expect(getOldEligibilityDataStub.calledOnce).toBe(true) //eslint-disable-line
@@ -98,6 +96,6 @@ describe('services/workers/cleanup-old-data', function () {
       expect(deleteOldFilesStub.calledTwice).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId)).toBe(true) //eslint-disable-line
       expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId)).toBe(true) //eslint-disable-line
-    });
+    })
   })
 })

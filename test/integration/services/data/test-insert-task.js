@@ -20,8 +20,8 @@ describe('services/data/insert-task', function () {
           .then(function (result) {
             expect(result.Status).toBe(statusEnum.PENDING)
             expect(result.DateCreated).not.toBeNull() //eslint-disable-line
-          });
-      });
+          })
+      })
   })
 
   it('should set the AdditionalData field when an AdditionalData parameter is supplied', function () {
@@ -35,8 +35,8 @@ describe('services/data/insert-task', function () {
           .first()
           .then(function (result) {
             expect(result.AdditionalData).toBe(emailAddress)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

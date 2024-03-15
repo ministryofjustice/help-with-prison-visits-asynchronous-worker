@@ -27,8 +27,8 @@ describe('services/data/auto-approve-claim-expenses', function () {
               expect(claimExpense.Status).toBe(statusEnum.APPROVED)
               expect(claimExpense.ApprovedCost).toBe(claimExpense.Cost)
             })
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

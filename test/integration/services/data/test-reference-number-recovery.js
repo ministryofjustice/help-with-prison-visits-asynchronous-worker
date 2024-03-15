@@ -21,7 +21,7 @@ describe('services/data/reference-number-recovery', function () {
     return referenceNumberRecovery(email, prisonNumber)
       .then(function (result) {
         expect(result.Reference).toBe(REFERENCE)
-      });
+      })
   })
 
   afterAll(function () {

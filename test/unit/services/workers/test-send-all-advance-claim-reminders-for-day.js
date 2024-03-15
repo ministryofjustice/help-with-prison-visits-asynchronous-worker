@@ -1,21 +1,11 @@
-const sinon = require('sinon')
 const moment = require('moment')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 
-jest.mock('../../../config', () => config);
-
-jest.mock(
-  '../data/get-all-open-advance-claims-for-date-of-journey-range-with-email',
-  () => getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail
-);
-
-jest.mock('../data/insert-task', () => insertTask);
-
 describe('services/send-all-advance-claim-reminders-for-day', function () {
   let sendAllAdvanceClaimRemindersForDay
 
-  const config = { NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: '1' }
+  // const config = { NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER: '1' }
   let getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail
   let insertTask
 
@@ -25,8 +15,8 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
   ]
 
   beforeEach(function () {
-    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = sinon.stub().resolves(CLAIMS_WITH_EMAIL)
-    insertTask = sinon.stub().resolves()
+    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail = jest.fn().mockResolvedValue(CLAIMS_WITH_EMAIL)
+    insertTask = jest.fn().mockResolvedValue()
 
     sendAllAdvanceClaimRemindersForDay = require(
       '../../../../app/services/workers/send-all-advance-claim-reminders-for-day'
@@ -51,6 +41,6 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
         expect(insertTask.thirdCall.args[0]).toBe(CLAIMS_WITH_EMAIL[0].Reference)
         expect(insertTask.thirdCall.args[3]).toBe(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
         expect(insertTask.thirdCall.args[4]).toBe(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.SECOND}`)
-      });
+      })
   })
 })

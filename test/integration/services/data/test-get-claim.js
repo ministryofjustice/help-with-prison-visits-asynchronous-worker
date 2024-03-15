@@ -16,7 +16,7 @@ describe('services/data/get-claim', function () {
     return getClaim('IntSchema', claimId)
       .then(function (claim) {
         expect(claim.Reference).toBe(REFERENCE)
-      });
+      })
   })
 
   afterAll(function () {

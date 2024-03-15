@@ -53,7 +53,7 @@ describe('services/data/get-old-claim-document-data', function () {
 
         expect(claimDocument1Found).toBe(true) //eslint-disable-line
         expect(claimDocument2Found).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should not retrieve claim records within the date threshold', function () {
@@ -64,7 +64,7 @@ describe('services/data/get-old-claim-document-data', function () {
 
         expect(claimDocument3Found).toBe(false) //eslint-disable-line
         expect(claimDocument4Found).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

@@ -38,9 +38,9 @@ describe('services/data/delete-claim-from-external', function () {
               .count('ExtSchema.ClaimBankDetail.ClaimId as count')
               .then(function (countResult) {
                 expect(countResult[0].count).toBe(0)
-              });
-          });
-      });
+              })
+          })
+      })
   })
 
   it('should not throw an error when only eligibility id is supplied', function () {

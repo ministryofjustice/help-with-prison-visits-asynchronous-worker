@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const config = require('../../../../config')
 
 const EMAIL_ADDRESS = 'test@test.com'
@@ -8,11 +6,11 @@ const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const FIRST_NAME = 'Joe'
 
-const stubSendNotification = sinon.stub().resolves()
-const stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
+const stubSendNotification = jest.fn().mockResolvedValue()
+const stubGetFirstNameByClaimId = jest.fn().mockResolvedValue(FIRST_NAME)
 
-jest.mock('../notify/send-notification', () => stubSendNotification);
-jest.mock('../data/get-first-name-by-claimId', () => stubGetFirstNameByClaimId);
+jest.mock('../notify/send-notification', () => stubSendNotification)
+jest.mock('../data/get-first-name-by-claimId', () => stubGetFirstNameByClaimId)
 
 const sendUpdatedContactDetailsClaimNotification = require(
   '../../../../app/services/workers/send-updated-contact-details-claim-notification'
@@ -34,6 +32,6 @@ describe('services/send-updated-contact-details-claim-notification', function ()
         expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
         expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
         expect(stubSendNotification.firstCall.args[2].technicalHelpUrl).not.toBeNull() //eslint-disable-line
-      });
+      })
   })
 })

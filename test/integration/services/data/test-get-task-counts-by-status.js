@@ -1,4 +1,3 @@
-// const expect = require('chai').expect
 // const statusEnum = require('../../../../app/constants/status-enum')
 
 // const getTaskCountsByStatus = require('../../../../app/services/data/get-task-counts-by-status')

@@ -18,7 +18,7 @@ describe('services/data/get-visitor-email-address', function () {
     return getVisitorEmailAddress('IntSchema', reference, eligibilityId)
       .then(function (emailAddress) {
         expect(emailAddress).toBe(claimData.Visitor.EmailAddress)
-      });
+      })
   })
 
   afterAll(function () {

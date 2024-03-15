@@ -45,7 +45,7 @@ describe('services/data/get-all-claims-older-than-date', function () {
         })
 
         expect(expectedClaimIds.length).toBe(2)
-      });
+      })
   })
 
   afterAll(function () {

@@ -1,4 +1,3 @@
-const sinon = require('sinon')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -12,14 +11,14 @@ let previousClaims
 let getAllClaimDataStub
 let getDataForAutoApprovalCheck
 
-jest.mock('./get-all-claim-data', () => getAllClaimDataStub);
+jest.mock('./get-all-claim-data', () => getAllClaimDataStub)
 
 describe.skip('services/data/get-data-for-auto-approval-check', function () {
   beforeAll(function () {
     const uniqueId = Math.floor(Date.now() / 100) - 15000000000
     claimData = testHelper.getClaimData(REFERENCE)
 
-    getAllClaimDataStub = sinon.stub().resolves(claimData)
+    getAllClaimDataStub = jest.fn().mockResolvedValue(claimData)
 
     getDataForAutoApprovalCheck = require('../../../../app/services/data/get-data-for-auto-approval-check')
 
@@ -182,7 +181,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
         expect(result.previousClaims).not.toBeNull() //eslint-disable-line
         expect(result.latestManuallyApprovedClaim).not.toBeNull() //eslint-disable-line
         expect(result.latestManuallyApprovedClaim.ClaimId).toBe(result.previousClaims[1].ClaimId)
-      });
+      })
   })
 
   afterAll(function () {

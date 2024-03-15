@@ -22,8 +22,8 @@ describe('services/data/update-claim-total-amount', function () {
           .then(function (result) {
             // total amount should equal 12
             expect(result[0].TotalAmount).toBe(12)
-          });
-      });
+          })
+      })
   })
 
   it('should update the manually processed column for a particular claim given a decimal value', function () {
@@ -37,8 +37,8 @@ describe('services/data/update-claim-total-amount', function () {
           .then(function (result) {
             // total amount should equal 12.12
             expect(result[0].TotalAmount).toBe(12.10)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

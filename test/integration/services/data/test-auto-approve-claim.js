@@ -1,18 +1,17 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
-const sinon = require('sinon')
 
 const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
-const autoApproveClaimExpenseStub = sinon.stub().resolves()
-const insertTaskStub = sinon.stub().resolves()
-const insertClaimEventStub = sinon.stub().resolves()
+const autoApproveClaimExpenseStub = jest.fn().mockResolvedValue()
+const insertTaskStub = jest.fn().mockResolvedValue()
+const insertClaimEventStub = jest.fn().mockResolvedValue()
 
-jest.mock('./auto-approve-claim-expenses', () => autoApproveClaimExpenseStub);
-jest.mock('../data/insert-task', () => insertTaskStub);
-jest.mock('../data/insert-claim-event', () => insertClaimEventStub);
+jest.mock('./auto-approve-claim-expenses', () => autoApproveClaimExpenseStub)
+jest.mock('../data/insert-task', () => insertTaskStub)
+jest.mock('../data/insert-claim-event', () => insertClaimEventStub)
 
 const autoApproveClaim = require('../../../../app/services/data/auto-approve-claim')
 
@@ -45,8 +44,8 @@ describe('services/data/auto-approve-claim', function () {
             expect(autoApproveClaimExpenseStub.calledWith(claimId)).toBe(true) //eslint-disable-line
             expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).toBe(true) //eslint-disable-line
             expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).toBe(true) //eslint-disable-line
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

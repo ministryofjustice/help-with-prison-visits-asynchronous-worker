@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const REFERENCE = 'RECOVERY'
 const EMAIL = 'test@test.com'
 const PRISON_NUMBER = 'B123456'
@@ -12,20 +10,20 @@ let stubReferenceNumberRecovery
 let stubSendNotification
 let referenceRecovery
 
-jest.mock('../data/reference-number-recovery', () => stubReferenceNumberRecovery);
-jest.mock('../../../config', () => config);
-jest.mock('../notify/send-notification', () => stubSendNotification);
+jest.mock('../data/reference-number-recovery', () => stubReferenceNumberRecovery)
+jest.mock('../../../config', () => config)
+jest.mock('../notify/send-notification', () => stubSendNotification)
 
 describe('services/reference-recovery', function () {
   beforeEach(function () {
-    stubReferenceNumberRecovery = sinon.stub()
-    stubSendNotification = sinon.stub().resolves()
+    stubReferenceNumberRecovery = jest.fn()
+    stubSendNotification = jest.fn().mockResolvedValue()
 
     referenceRecovery = require('../../../../app/services/workers/reference-recovery')
   })
 
   it('should call reference number recovery send email with recovered reference number', function () {
-    stubReferenceNumberRecovery.resolves({ Reference: REFERENCE, FirstName: FIRST_NAME })
+    stubReferenceNumberRecovery.mockResolvedValue({ Reference: REFERENCE, FirstName: FIRST_NAME })
     return referenceRecovery.execute({ additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
@@ -35,15 +33,15 @@ describe('services/reference-recovery', function () {
         expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
         expect(stubSendNotification.firstCall.args[2].firstname).toBe(FIRST_NAME)
         expect(stubSendNotification.firstCall.args[2].registeredUrl).toBe(`${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`)
-      });
+      })
   })
 
   it('should only call reference recover, get nothing and send no email', function () {
-    stubReferenceNumberRecovery.resolves()
+    stubReferenceNumberRecovery.mockResolvedValue()
     return referenceRecovery.execute({ additionalData })
       .then(function () {
         expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
         expect(stubSendNotification.called).toBe(false) //eslint-disable-line
-      });
+      })
   })
 })

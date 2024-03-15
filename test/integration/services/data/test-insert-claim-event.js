@@ -28,8 +28,8 @@ describe('services/data/insert-claim-event', function () {
             expect(result.Event).toBe(event)
             expect(result.IsInternal).toBe(true) //eslint-disable-line
             expect(result.DateSubmitted).not.toBeNull() //eslint-disable-line
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

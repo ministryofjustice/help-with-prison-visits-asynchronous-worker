@@ -37,8 +37,8 @@ describe('services/data/update-expense-for-distance-calculation', function () {
             expect(claimExpense.ToPostCode).toBe(TO_POSTCODE)
             expect(claimExpense.Distance).toBe(DISTANCE)
             expect(claimExpense.Cost).toBe(COST)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

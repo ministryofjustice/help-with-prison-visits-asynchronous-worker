@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const fileTypes = require('../../../../app/constants/payment-filetype-enum')
 
 const claimPaymentAmount1 = 45.50
@@ -45,38 +43,38 @@ let getTopUpsPendingPayment
 let updateAllTopupsProcessedPayment
 let updateAllClaimsProcessedPayment
 
-jest.mock('../data/get-claims-pending-payment', () => getClaimsPendingPayment);
-jest.mock('../direct-payments/create-payment-file', () => createPaymentFile);
-jest.mock('../direct-payments/create-adi-journal-file', () => createAdiJournalFile);
-jest.mock('../data/insert-direct-payment-file', () => insertDirectBankPayments);
-jest.mock('../data/get-topups-pending-payment', () => getTopUpsPendingPayment);
+jest.mock('../data/get-claims-pending-payment', () => getClaimsPendingPayment)
+jest.mock('../direct-payments/create-payment-file', () => createPaymentFile)
+jest.mock('../direct-payments/create-adi-journal-file', () => createAdiJournalFile)
+jest.mock('../data/insert-direct-payment-file', () => insertDirectBankPayments)
+jest.mock('../data/get-topups-pending-payment', () => getTopUpsPendingPayment)
 
 jest.mock(
   './helpers/payments/update-all-topups-processed-payment',
   () => updateAllTopupsProcessedPayment
-);
+)
 
 jest.mock(
   './helpers/payments/update-all-claims-processed-payment',
   () => updateAllClaimsProcessedPayment
-);
+)
 
 describe('services/workers/generate-direct-payments', function () {
   beforeEach(function () {
-    getClaimsPendingPayment = sinon.stub()
-    createPaymentFile = sinon.stub().resolves(testPath)
-    createAdiJournalFile = sinon.stub().resolves(testAdiPath)
-    insertDirectBankPayments = sinon.stub().resolves()
-    getTopUpsPendingPayment = sinon.stub()
-    updateAllTopupsProcessedPayment = sinon.stub().resolves()
-    updateAllClaimsProcessedPayment = sinon.stub().resolves()
+    getClaimsPendingPayment = jest.fn()
+    createPaymentFile = jest.fn().mockResolvedValue(testPath)
+    createAdiJournalFile = jest.fn().mockResolvedValue(testAdiPath)
+    insertDirectBankPayments = jest.fn().mockResolvedValue()
+    getTopUpsPendingPayment = jest.fn()
+    updateAllTopupsProcessedPayment = jest.fn().mockResolvedValue()
+    updateAllClaimsProcessedPayment = jest.fn().mockResolvedValue()
 
     generateDirectPayments = require('../../../../app/services/workers/generate-direct-payments')
   })
 
   it('should retrieve claim data and then call file generation', function () {
-    getClaimsPendingPayment.resolves(claimsPendingPayment)
-    getTopUpsPendingPayment.resolves(topUpsPendingPayment)
+    getClaimsPendingPayment.mockResolvedValue(claimsPendingPayment)
+    getTopUpsPendingPayment.mockResolvedValue(topUpsPendingPayment)
     return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(true) //eslint-disable-line
@@ -85,30 +83,30 @@ describe('services/workers/generate-direct-payments', function () {
       expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).toBe(true) //eslint-disable-line
       expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, true)).toBe(true) //eslint-disable-line
       expect(updateAllTopupsProcessedPayment.calledWith(['123456', '123457', '123458'])).toBe(true) //eslint-disable-line
-    });
+    })
   })
 
   it('should find no data and not call file generation', function () {
-    getClaimsPendingPayment.resolves(claimsMissingData)
-    getTopUpsPendingPayment.resolves(topUpMissingData)
+    getClaimsPendingPayment.mockResolvedValue(claimsMissingData)
+    getTopUpsPendingPayment.mockResolvedValue(topUpMissingData)
     return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(false) //eslint-disable-line
     })
       .catch(function (error) {
         expect(error.message).toBe('Data is missing')
-      });
+      })
   })
 
   it('should find missing top up data and valid claim data and not call file generation', function () {
-    getClaimsPendingPayment.resolves(claimsPendingPayment)
-    getTopUpsPendingPayment.resolves(topUpMissingData)
+    getClaimsPendingPayment.mockResolvedValue(claimsPendingPayment)
+    getTopUpsPendingPayment.mockResolvedValue(topUpMissingData)
     return generateDirectPayments.generateDirectPayments().then(function () {
       expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
       expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(false) //eslint-disable-line
     })
       .catch(function (error) {
         expect(error.message).toBe('Data is missing')
-      });
+      })
   })
 })

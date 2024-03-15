@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const taskEnum = require('../../../../app/constants/tasks-enum')
 
 const reference = '1234567'
@@ -15,27 +13,27 @@ const claimData = {
   }
 }
 
-const getAllClaimData = sinon.stub().resolves(claimData)
-const migrateClaimToInternalAsTransaction = sinon.stub().resolves()
-const calculateCarExpenseCosts = sinon.stub().resolves()
+const getAllClaimData = jest.fn().mockResolvedValue(claimData)
+const migrateClaimToInternalAsTransaction = jest.fn().mockResolvedValue()
+const calculateCarExpenseCosts = jest.fn().mockResolvedValue()
 // autoApprovalProcess Removed in APVS0115
-const insertTask = sinon.stub().resolves()
-const getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
+const insertTask = jest.fn().mockResolvedValue()
+const getVisitorEmailAddress = jest.fn().mockResolvedValue(emailAddress)
 
-jest.mock('../data/get-all-claim-data', () => getAllClaimData);
+jest.mock('../data/get-all-claim-data', () => getAllClaimData)
 
 jest.mock(
   '../data/migrate-claim-to-internal-as-transaction',
   () => migrateClaimToInternalAsTransaction
-);
+)
 
 jest.mock(
   '../distance-checker/calculate-car-expense-costs',
   () => calculateCarExpenseCosts
-);
+)
 
-jest.mock('../data/insert-task', () => insertTask);
-jest.mock('../data/get-visitor-email-address', () => getVisitorEmailAddress);
+jest.mock('../data/insert-task', () => insertTask)
+jest.mock('../data/get-visitor-email-address', () => getVisitorEmailAddress)
 
 const completeClaim = require('../../../../app/services/workers/complete-claim')
 
@@ -54,6 +52,6 @@ describe('services/workers/complete-claim', function () {
       expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).toBe(true) //eslint-disable-line
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).toBe(true) //eslint-disable-line
       expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).toBe(true) //eslint-disable-line
-    });
+    })
   })
 })

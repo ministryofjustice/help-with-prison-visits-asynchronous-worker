@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 const config = require('../../../../config')
 
@@ -14,19 +12,15 @@ const dateOfJourneyString = '1 February 2016'
 
 let stubGetClaim
 let stubSendNotification
-let stubGetFirstNameByClaimId
+// let stubGetFirstNameByClaimId
 
 let sendRequestInformationClaimNotification
 
-jest.mock('../data/get-claim', () => stubGetClaim);
-jest.mock('../data/get-first-name-by-claimId', () => stubGetFirstNameByClaimId);
-jest.mock('../notify/send-notification', () => stubSendNotification);
-
 describe('services/send-advance-claim-evidence-reminder-notification', function () {
   beforeEach(function () {
-    stubGetClaim = sinon.stub().resolves({ DateOfJourney: dateOfJourney })
-    stubSendNotification = sinon.stub().resolves()
-    stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
+    stubGetClaim = jest.fn().mockResolvedValue({ DateOfJourney: dateOfJourney })
+    stubSendNotification = jest.fn().mockResolvedValue()
+    // stubGetFirstNameByClaimId = jest.fn().mockResolvedValue(FIRST_NAME)
 
     sendRequestInformationClaimNotification = require(
       '../../../../app/services/workers/send-advance-claim-evidence-reminder-notification'
@@ -49,7 +43,7 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
         expect(stubSendNotification.firstCall.args[2].dateOfJourney).toBe(dateOfJourneyString)
         expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.toBeNull() //eslint-disable-line
         expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
-      });
+      })
   })
 
   it('should call send-notification with correct details for second reminder', function () {
@@ -68,7 +62,7 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
         expect(stubSendNotification.firstCall.args[2].dateOfJourney).toBe(dateOfJourneyString)
         expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.toBeNull() //eslint-disable-line
         expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
-      });
+      })
   })
 
   it('should reject the call if an invalid reminder type is sent', function () {
@@ -81,6 +75,6 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       .catch(function (error) {
         expect(error.message).toBe('Not valid reminder type')
         expect(stubSendNotification.calledOnce).toBe(false) //eslint-disable-line
-      });
+      })
   })
 })

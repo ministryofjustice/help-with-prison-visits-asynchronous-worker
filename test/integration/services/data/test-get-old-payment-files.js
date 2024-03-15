@@ -40,7 +40,7 @@ describe('services/data/get-old-payment-files', function () {
         })
 
         expect(testFiles.length).toBe(2)
-      });
+      })
   })
 
   afterAll(function () {

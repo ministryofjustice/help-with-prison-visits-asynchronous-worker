@@ -48,7 +48,7 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
       .then(function (claims) {
         expect(claims.length).toBe(2)
         expect(claims[0].EmailAddress).toBe('test@test.com')
-      });
+      })
   })
 
   afterAll(function () {

@@ -34,7 +34,7 @@ describe('services/data/get-topups-pending-payment', function () {
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (results) {
           expect(results).toEqual(expectedBankTopups)
-        });
+        })
     })
 
     afterAll(function () {
@@ -67,7 +67,7 @@ describe('services/data/get-topups-pending-payment', function () {
           const result = results.pop()
           results.push(result.slice(0, result.length - 1))
           expect(results).toEqual(expectedVoucherTopups)
-        });
+        })
     })
 
     afterAll(function () {

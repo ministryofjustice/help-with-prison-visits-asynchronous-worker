@@ -53,7 +53,7 @@ describe('services/data/get-old-eligibility-data', function () {
 
         expect(eligibility1Found).toBe(true) //eslint-disable-line
         expect(eligibility2Found).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should not retrieve eligibility records within the date threshold', function () {
@@ -64,7 +64,7 @@ describe('services/data/get-old-eligibility-data', function () {
 
         expect(eligibility3Found).toBe(false) //eslint-disable-line
         expect(eligibility4Found).toBe(false) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

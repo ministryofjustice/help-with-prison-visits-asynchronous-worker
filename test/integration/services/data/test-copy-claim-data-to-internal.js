@@ -1,13 +1,12 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
-const sinon = require('sinon')
 
-const insertClaimEventStub = sinon.stub().resolves()
-const updateContactDetailsStub = sinon.stub().resolves()
+const insertClaimEventStub = jest.fn().mockResolvedValue()
+const updateContactDetailsStub = jest.fn().mockResolvedValue()
 
-jest.mock('./insert-claim-event', () => insertClaimEventStub);
-jest.mock('./update-contact-details', () => updateContactDetailsStub);
+jest.mock('./insert-claim-event', () => insertClaimEventStub)
+jest.mock('./update-contact-details', () => updateContactDetailsStub)
 
 const copyClaimDataToInternal = require('../../../../app/services/data/copy-claim-data-to-internal')
 
@@ -46,7 +45,7 @@ describe('services/data/copy-claim-data-to-internal', function () {
                 .then(function (results) {
                   // should have two children
                   expect(results.length).toBe(2)
-                });
+                })
             })
             .then(function () {
               return db('IntSchema.ClaimExpense').where('IntSchema.ClaimExpense.Reference', reference)
@@ -56,7 +55,7 @@ describe('services/data/copy-claim-data-to-internal', function () {
                   expect(results.length).toBe(2)
                   expect(results[0].ExpenseType).toBe('car')
                   expect(results[1].ExpenseType).toBe('bus')
-                });
+                })
             })
             .then(function () {
               return db('IntSchema.ClaimDocument').where('IntSchema.ClaimDocument.Reference', reference)
@@ -64,9 +63,9 @@ describe('services/data/copy-claim-data-to-internal', function () {
                 .then(function (results) {
                   // should have two documents
                   expect(results.length).toBe(2)
-                });
-            });
-        });
+                })
+            })
+        })
     })
 
     it('should change claim status to PENDING if documents not uploaded', function () {
@@ -83,8 +82,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
             .then(function (results) {
               // Claim.Status should be PENDING
               expect(results[0].Status).toBe(statusEnum.PENDING)
-            });
-        });
+            })
+        })
     })
   })
 
@@ -120,8 +119,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
               // Claim.Status should be NEW
               expect(results[0].Status[0]).toBe(statusEnum.NEW)
               expect(results[0].Reference[0]).toBe(reference)
-            });
-        });
+            })
+        })
     })
   })
 

@@ -31,7 +31,7 @@ describe('services/data/get-all-claim-data', function () {
           expect(data.ClaimBankDetail.ClaimId).toBe(claimId)
           expect(data.ClaimChildren[0].ClaimId).toBe(claimId)
           expect(data.ClaimDocument[0].ClaimId).toBe(claimId)
-        });
+        })
     })
 
     afterAll(function () {
@@ -64,7 +64,7 @@ describe('services/data/get-all-claim-data', function () {
           expect(data.ClaimChildren[0].ClaimId).toBe(claimId)
           expect(data.ClaimDocument[0].ClaimId).toBe(claimId)
           expect(data.EligibilityVisitorUpdateContactDetail.EligibilityId).toBe(ELIGIBILITYID)
-        });
+        })
     })
 
     afterAll(function () {
@@ -92,7 +92,7 @@ describe('services/data/get-all-claim-data', function () {
           expect(data.Eligibility.Reference).toBe(REFERENCE)
           expect(data.ClaimEvents[0].ClaimId).toBe(claimId)
           expect(data.ClaimDeductions[0].ClaimId).toBe(claimId)
-        });
+        })
     })
 
     afterAll(function () {

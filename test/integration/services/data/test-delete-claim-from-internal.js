@@ -26,7 +26,7 @@ describe('services/data/delete-claim-from-internal', function () {
       })
       .then(function (countResult) {
         expect(countResult[0].count).toBe(0)
-      });
+      })
   })
 
   it('should delete claim and leave eligibility details', function () {
@@ -38,7 +38,7 @@ describe('services/data/delete-claim-from-internal', function () {
       })
       .then(function (countResult) {
         expect(countResult[0].count).toBe(1)
-      });
+      })
   })
 
   afterEach(function () {

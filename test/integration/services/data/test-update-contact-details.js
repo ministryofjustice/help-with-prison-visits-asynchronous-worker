@@ -29,8 +29,8 @@ describe('services/data/update-contact-details', function () {
           .then(function (result) {
             expect(result.EmailAddress).toBe(updatedDetails.EmailAddress)
             expect(result.PhoneNumber).toBe(updatedDetails.PhoneNumber)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

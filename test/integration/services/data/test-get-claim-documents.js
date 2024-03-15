@@ -27,7 +27,7 @@ describe('services/data/get-claim-documents', function () {
       .then(function (claimDocuments) {
         expect(claimDocuments.length).toBe(expectedCount)
         expect(claimDocuments[0].IsEnabled).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

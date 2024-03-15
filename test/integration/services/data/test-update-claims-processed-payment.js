@@ -30,8 +30,8 @@ describe('services/data/update-claims-processed-payment', function () {
             expect(claims[0].PaymentStatus).toBe(processedStatus)
             expect(claims[0].PaymentAmount).toBe(paymentTotal)
             expect(claims[0].PaymentDate).not.toBeNull() //eslint-disable-line
-          });
-      });
+          })
+      })
   })
 
   it('should update Claim Payment Status to processed and Payment Amount to the total of approved claim expenses for decimal values', function () {
@@ -44,8 +44,8 @@ describe('services/data/update-claims-processed-payment', function () {
           .then(function (claims) {
             expect(claims[0].PaymentStatus).toBe(processedStatus)
             expect(claims[0].PaymentAmount).toBe(paymentTotal)
-          });
-      });
+          })
+      })
   })
 
   afterAll(function () {

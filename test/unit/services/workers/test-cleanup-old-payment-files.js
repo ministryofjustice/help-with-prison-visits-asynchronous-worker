@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const OLD_PAYMENT_FILES = [{
   PaymentFileId: '1',
   FileType: 'TEST',
@@ -8,21 +6,21 @@ const OLD_PAYMENT_FILES = [{
   IsEnabled: 'true'
 }]
 
-const deleteOldPaymentFiles = sinon.stub().resolves()
-const getOldPaymentFiles = { getOldPaymentFiles: sinon.stub().resolves(OLD_PAYMENT_FILES) }
-const updateOldPaymentFilesIsEnabledFalse = sinon.stub().resolves()
+const deleteOldPaymentFiles = jest.fn().mockResolvedValue()
+const getOldPaymentFiles = { getOldPaymentFiles: jest.fn().mockResolvedValue(OLD_PAYMENT_FILES) }
+const updateOldPaymentFilesIsEnabledFalse = jest.fn().mockResolvedValue()
 
 jest.mock(
   '../cleanup-old-data/delete-old-payment-files',
   () => deleteOldPaymentFiles
-);
+)
 
-jest.mock('../data/get-old-payment-files', () => getOldPaymentFiles);
+jest.mock('../data/get-old-payment-files', () => getOldPaymentFiles)
 
 jest.mock(
   '../data/update-old-payment-files-is-enabled-false',
   () => updateOldPaymentFilesIsEnabledFalse
-);
+)
 
 const cleanupOldPaymentFiles = require('../../../../app/services/workers/cleanup-old-payment-files')
 
@@ -32,6 +30,6 @@ describe('services/workers/cleanup-old-payment-files', function () {
       expect(deleteOldPaymentFiles.calledWith(OLD_PAYMENT_FILES)).toBe(true) //eslint-disable-line
       expect(getOldPaymentFiles.getOldPaymentFiles.calledOnce).toBe(true) //eslint-disable-line
       expect(updateOldPaymentFilesIsEnabledFalse.calledWith(OLD_PAYMENT_FILES[0].PaymentFileId))
-    });
+    })
   })
 })

@@ -26,8 +26,8 @@ describe('services/data/update-overpayment-status', function () {
             expect(claim.OverpaymentAmount).toBe(AMOUNT)
             expect(claim.RemainingOverpaymentAmount).toBe(AMOUNT)
             expect(claim.OverpaymentReason).toBe('Evidence not uploaded within 10 days')
-          });
-      });
+          })
+      })
   })
 
   afterEach(function () {

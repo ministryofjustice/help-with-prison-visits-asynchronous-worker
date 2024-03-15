@@ -25,7 +25,7 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
         expect(visitorDwpBenefitCheckerData.nino).toBe(claimData.Visitor.NationalInsuranceNumber)
         expect(visitorDwpBenefitCheckerData.surname).toBe(claimData.Visitor.LastName.toUpperCase())
         expect(visitorDwpBenefitCheckerData.dateOfBirth).toBe(dobFormatted)
-      });
+      })
   })
 
   afterAll(function () {

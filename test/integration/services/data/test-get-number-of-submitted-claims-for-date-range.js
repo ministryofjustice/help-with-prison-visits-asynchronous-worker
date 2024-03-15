@@ -31,7 +31,7 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
     return getNumberOfSubmittedClaimsForDateRange(START_DATE, END_DATE)
       .then(function (submittedClaimCount) {
         expect(submittedClaimCount).toBe(2)
-      });
+      })
   })
 
   it('should return zero when no claims', function () {
@@ -41,7 +41,7 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
     return getNumberOfSubmittedClaimsForDateRange(noClaimsStartDate, noClaimsEndDate)
       .then(function (submittedClaimCount) {
         expect(submittedClaimCount).toBe(0)
-      });
+      })
   })
 
   afterAll(function () {

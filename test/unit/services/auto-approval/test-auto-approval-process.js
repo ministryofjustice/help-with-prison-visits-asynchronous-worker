@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
@@ -47,14 +45,14 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       NumberOfConsecutiveAutoApprovals: 4
     }
 
-    autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
-    getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
-    getAutoApprovalConfigStub = sinon.stub().resolves(validAutoApprovalConfig)
-    insertClaimEventStub = sinon.stub().resolves()
-    insertTaskStub = sinon.stub().resolves()
-    autoApproveClaimStub = sinon.stub().resolves()
-    getLastSetNumberOfClaimsStatusStub = sinon.stub().resolves([])
-    insertAutoApproveClaimStub = sinon.stub().resolves()
+    autoApprovalDataConstructorStub = jest.fn().mockReturnValue(validAutoApprovalData)
+    getDataForAutoApprovalCheckStub = jest.fn().mockResolvedValue(validAutoApprovalData)
+    getAutoApprovalConfigStub = jest.fn().mockResolvedValue(validAutoApprovalConfig)
+    insertClaimEventStub = jest.fn().mockResolvedValue()
+    insertTaskStub = jest.fn().mockResolvedValue()
+    autoApproveClaimStub = jest.fn().mockResolvedValue()
+    getLastSetNumberOfClaimsStatusStub = jest.fn().mockResolvedValue([])
+    insertAutoApproveClaimStub = jest.fn().mockResolvedValue()
 
     autoApprovalDependencies = {
       '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
@@ -69,7 +67,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     }
 
     autoApprovalRulesEnum.forEach(function (check) {
-      autoApprovalDependencies[`./checks/${check}`] = sinon.stub().returns(validCheckResult)
+      autoApprovalDependencies[`./checks/${check}`] = jest.fn().mockReturnValue(validCheckResult)
     })
 
     autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
@@ -81,9 +79,9 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result).to.be.null //eslint-disable-line
-        sinon.assert.calledOnce(getAutoApprovalConfigStub)
-        sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
-        sinon.assert.notCalled(autoApproveClaimStub)
+        expect(getAutoApprovalConfigStub).toHaveBeenCalledTimes(1)
+        expect(getDataForAutoApprovalCheckStub).not.toHaveBeenCalled()
+        expect(autoApproveClaimStub).not.toHaveBeenCalled()
       })
   })
 
@@ -160,20 +158,20 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved).to.be.true //eslint-disable-line
-        sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+        expect(getDataForAutoApprovalCheckStub).toHaveBeenCalledTimes(1)
         const now = dateFormatter.now().toDate()
         const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
         if (isInOfficeHours) {
-          sinon.assert.calledOnce(autoApproveClaimStub)
+          expect(autoApproveClaimStub).toHaveBeenCalledTimes(1)
         } else {
-          sinon.assert.calledOnce(insertAutoApproveClaimStub)
+          expect(insertAutoApproveClaimStub).toHaveBeenCalledTimes(1)
         }
         const keys = Object.keys(autoApprovalDependencies)
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
-          sinon.assert.called(autoApprovalDependencies[key])
+          expect(autoApprovalDependencies[key]).toHaveBeenCalled()
         }
       })
   })
@@ -195,14 +193,14 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
         expect(result.claimApproved).to.be.false //eslint-disable-line
-        sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        sinon.assert.calledOnce(insertClaimEventStub)
+        expect(getDataForAutoApprovalCheckStub).toHaveBeenCalledTimes(1)
+        expect(insertClaimEventStub).toHaveBeenCalledTimes(1)
         const keys = Object.keys(autoApprovalDependencies)
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
-          sinon.assert.calledOnce(autoApprovalDependencies[key])
+          expect(autoApprovalDependencies[key]).toHaveBeenCalledTimes(1)
         }
       })
   })
@@ -214,15 +212,15 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
         .then(function (result) {
           expect(result.claimApproved).to.be.true //eslint-disable-line
-          sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+          expect(getDataForAutoApprovalCheckStub).toHaveBeenCalledTimes(1)
           const now = dateFormatter.now().toDate()
           const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
           if (isInOfficeHours) {
-            sinon.assert.calledOnce(autoApproveClaimStub)
+            expect(autoApproveClaimStub).toHaveBeenCalledTimes(1)
           } else {
-            sinon.assert.calledOnce(insertAutoApproveClaimStub)
+            expect(insertAutoApproveClaimStub).toHaveBeenCalledTimes(1)
           }
-          sinon.assert.notCalled(autoApprovalDependencies[`./checks/${check}`])
+          expect(autoApprovalDependencies[`./checks/${check}`]).not.toHaveBeenCalled()
         })
     })
   })

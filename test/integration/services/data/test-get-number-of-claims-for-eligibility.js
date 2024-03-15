@@ -25,7 +25,7 @@ describe('services/data/get-number-of-claims-for-eligibility', function () {
     return getNumberOfClaimsForEligibility('IntSchema', eligibilityId)
       .then(function (claimCount) {
         expect(claimCount).toBe(2)
-      });
+      })
   })
 
   afterAll(function () {

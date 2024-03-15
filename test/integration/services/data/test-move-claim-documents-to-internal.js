@@ -1,6 +1,5 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
-const sinon = require('sinon')
 
 let disableClaimDocument
 let insertClaimEvent
@@ -11,8 +10,8 @@ const REFERENCE = 'MOVDOCU'
 let eligibilityId
 let claimId
 
-jest.mock('./disable-claim-document', () => disableClaimDocument);
-jest.mock('./insert-claim-event', () => insertClaimEvent);
+jest.mock('./disable-claim-document', () => disableClaimDocument)
+jest.mock('./insert-claim-event', () => insertClaimEvent)
 
 describe('services/data/move-claim-documents-to-internal', function () {
   beforeEach(function () {
@@ -24,13 +23,13 @@ describe('services/data/move-claim-documents-to-internal', function () {
         const claimData = testHelper.getClaimData(REFERENCE)
         claimData.ClaimDocument[1].IsEnabled = false
 
-        disableClaimDocument = sinon.stub().resolves()
-        insertClaimEvent = sinon.stub().resolves()
+        disableClaimDocument = jest.fn().mockResolvedValue()
+        insertClaimEvent = jest.fn().mockResolvedValue()
 
         moveClaimDocumentsToInternal = require('../../../../app/services/data/move-claim-documents-to-internal')
 
         return testHelper.insertClaimDocumentData('ExtSchema', eligibilityId, claimId, claimData.ClaimDocument)
-      });
+      })
   })
 
   it('should move claim documents to from external to internal', function () {
@@ -44,15 +43,15 @@ describe('services/data/move-claim-documents-to-internal', function () {
             expect(claimDocuments.length).toBe(3)
             expect(disableClaimDocument.calledOne, 'should have disabled one old document')
             expect(insertClaimEvent.calledOne, 'should have inserted an event for disabling one old document')
-          });
+          })
       })
       .then(function () {
         return db('ExtSchema.ClaimDocument').where('Reference', REFERENCE)
           .then(function (claimDocuments) {
             // should have deleted External ClaimDocuments
             expect(claimDocuments.length).toBe(0)
-          });
-      });
+          })
+      })
   })
 
   afterEach(function () {

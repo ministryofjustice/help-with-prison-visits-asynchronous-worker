@@ -17,7 +17,7 @@ describe('services/data/get-first-name-by-claimId', function () {
     return getFirstNameByClaimId('IntSchema', claimId)
       .then(function (firstName) {
         expect(firstName).toBe('Joe')
-      });
+      })
   })
 
   afterAll(function () {

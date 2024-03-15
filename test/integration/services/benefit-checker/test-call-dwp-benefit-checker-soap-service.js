@@ -13,6 +13,6 @@ describe('services/benefit-checker/call-dwp-benefit-checker-soap-service', funct
       .then(function (benefitCheckerResult) {
         expect(benefitCheckerResult.visitorId).toBe(visitorDwpBenefitCheckerData.visitorId)
         expect(benefitCheckerResult.result).toBe(expectedResult)
-      });
+      })
   })
 })

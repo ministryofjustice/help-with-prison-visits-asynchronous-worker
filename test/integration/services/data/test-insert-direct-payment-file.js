@@ -18,13 +18,13 @@ describe('services/data/insert-direct-payment-file', function () {
           .where({ Filepath: path, FileType: fileTypeEnum.ACCESSPAY_FILE })
           .first()
           .then(function (result) {
-          expect(result.Filepath).toBe(path)
-          expect(result.FileType).toBe(fileTypeEnum.ACCESSPAY_FILE)
-          expect(result.DateCreated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
-          expect(result.DateCreated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+            expect(result.Filepath).toBe(path)
+            expect(result.FileType).toBe(fileTypeEnum.ACCESSPAY_FILE)
+            expect(result.DateCreated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
+            expect(result.DateCreated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
           expect(result.IsEnabled).toBe(true) //eslint-disable-line
-        });
-      });
+          })
+      })
   })
 
   afterAll(function () {
