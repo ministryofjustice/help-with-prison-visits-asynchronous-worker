@@ -32,12 +32,12 @@ describe('services/send-all-advance-claim-reminders-for-day', function () {
     return sendAllAdvanceClaimRemindersForDay.sendAllAdvanceClaimRemindersForDay(dateCreated)
       .then(function () {
         expect(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.calledTwice).toBe(true) //eslint-disable-line
-        expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.firstCall.args[0]).format('YYYY-MM-DD HH:mm')).toBe(startDateString)
-        expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.firstCall.args[1]).format('YYYY-MM-DD HH:mm')).toBe(endDateString)
+        expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.mock.calls[0][0]).format('YYYY-MM-DD HH:mm')).toBe(startDateString)
+        expect(moment(getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail.mock.calls[0][1]).format('YYYY-MM-DD HH:mm')).toBe(endDateString)
         expect(insertTask.callCount).toBe(4)
-        expect(insertTask.firstCall.args[0]).toBe(CLAIMS_WITH_EMAIL[0].Reference)
-        expect(insertTask.firstCall.args[3]).toBe(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
-        expect(insertTask.firstCall.args[4]).toBe(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.FIRST}`)
+        expect(insertTask.mock.calls[0][0]).toBe(CLAIMS_WITH_EMAIL[0].Reference)
+        expect(insertTask.mock.calls[0][3]).toBe(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
+        expect(insertTask.mock.calls[0][4]).toBe(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.FIRST}`)
         expect(insertTask.thirdCall.args[0]).toBe(CLAIMS_WITH_EMAIL[0].Reference)
         expect(insertTask.thirdCall.args[3]).toBe(tasksEnum.ADVANCE_CLAIM_EVIDENCE_REMINDER_NOTIFICATION)
         expect(insertTask.thirdCall.args[4]).toBe(`${CLAIMS_WITH_EMAIL[0].EmailAddress}~~${reminderEnum.SECOND}`)

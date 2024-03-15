@@ -6,11 +6,11 @@ const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const FIRST_NAME = 'Joe'
 
-const stubSendNotification = jest.fn().mockResolvedValue()
-const stubGetFirstNameByClaimId = jest.fn().mockResolvedValue(FIRST_NAME)
+const mockSendNotification = jest.fn().mockResolvedValue()
+const mockGetFirstNameByClaimId = jest.fn().mockResolvedValue(FIRST_NAME)
 
-jest.mock('../notify/send-notification', () => stubSendNotification)
-jest.mock('../data/get-first-name-by-claimId', () => stubGetFirstNameByClaimId)
+jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
+jest.mock('../../../../app/services/data/get-first-name-by-claimId', () => mockGetFirstNameByClaimId)
 
 const sendRequestInformationResponseSubmittedNotification = require(
   '../../../../app/services/workers/send-request-information-response-submitted-notification'
@@ -25,13 +25,13 @@ describe('services/send-request-information-response-submitted-notification', fu
       additionalData: EMAIL_ADDRESS
     })
       .then(function () {
-        expect(stubGetFirstNameByClaimId.calledWith('IntSchema', CLAIM_ID)).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.called).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_REQUEST_INFORMATION_RESPONSE_SUBMITTED_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockGetFirstNameByClaimId).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_REQUEST_INFORMATION_RESPONSE_SUBMITTED_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
       })
   })
 })

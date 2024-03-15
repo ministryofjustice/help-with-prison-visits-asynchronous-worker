@@ -3,27 +3,27 @@ const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-e
 const visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A' }
 const benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.YES }
 
-const getVisitorDwpBenefitCheckerData = jest.fn().mockResolvedValue(visitorDwpBenefitCheckerData)
-const callDwpBenefitCheckerSoapService = jest.fn().mockResolvedValue(benefitCheckerResult)
-const updateVisitorWithDwpBenefitCheckerResult = jest.fn().mockResolvedValue()
-const autoApprovalProcess = jest.fn().mockResolvedValue()
+const mockGetVisitorDwpBenefitCheckerData = jest.fn().mockResolvedValue(visitorDwpBenefitCheckerData)
+const mockCallDwpBenefitCheckerSoapService = jest.fn().mockResolvedValue(benefitCheckerResult)
+const mockUpdateVisitorWithDwpBenefitCheckerResult = jest.fn().mockResolvedValue()
+const mockAutoApprovalProcess = jest.fn().mockResolvedValue()
 
 jest.mock(
-  '../data/get-visitor-dwp-benefit-checker-data',
-  () => getVisitorDwpBenefitCheckerData
+  '../../../../app/services/data/get-visitor-dwp-benefit-checker-data',
+  () => mockGetVisitorDwpBenefitCheckerData
 )
 
 jest.mock(
-  '../benefit-checker/call-dwp-benefit-checker-soap-service',
-  () => callDwpBenefitCheckerSoapService
+  '../../../../app/services/benefit-checker/call-dwp-benefit-checker-soap-service',
+  () => mockCallDwpBenefitCheckerSoapService
 )
 
 jest.mock(
-  '../data/update-visitor-with-dwp-benefit-checker-result',
-  () => updateVisitorWithDwpBenefitCheckerResult
+  '../../../../app/services/data/update-visitor-with-dwp-benefit-checker-result',
+  () => mockUpdateVisitorWithDwpBenefitCheckerResult
 )
 
-jest.mock('../auto-approval/auto-approval-process', () => autoApprovalProcess)
+jest.mock('../../../../app/services/auto-approval/auto-approval-process', () => mockAutoApprovalProcess)
 
 const dwpCheck = require('../../../../app/services/workers/dwp-check')
 
@@ -38,10 +38,10 @@ describe('services/workers/dwp-check', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).toBe(true) //eslint-disable-line
-      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)).toBe(true) //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
+      expect(mockGetVisitorDwpBenefitCheckerData).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockCallDwpBenefitCheckerSoapService).toHaveBeenCalledWith(visitorDwpBenefitCheckerData) //eslint-disable-line
+      expect(mockUpdateVisitorWithDwpBenefitCheckerResult).toHaveBeenCalledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, null) //eslint-disable-line
+      expect(mockAutoApprovalProcess).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
     })
   })
 })

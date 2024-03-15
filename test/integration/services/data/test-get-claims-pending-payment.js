@@ -163,7 +163,7 @@ describe('services/data/get-claims-pending-payment', function () {
             .then(function () {
               // Total approved amount: £30. Total amount: £30 - £15 (deduction) = £15
               // should update total amount with correct value
-              expect(updateClaimTotalAmountStub.calledWith(claimId, 15)).toBe(true) //eslint-disable-line
+              expect(updateClaimTotalAmountStub).toHaveBeenCalledWith(claimId, 15).toBe(true) //eslint-disable-line
             })
         })
     })
@@ -188,7 +188,7 @@ describe('services/data/get-claims-pending-payment', function () {
           return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function () {
               // should update manually processed amount with correct value
-              expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25)).toBe(true) //eslint-disable-line
+              expect(updateClaimManuallyProcessedAmountStub).toHaveBeenCalledWith(claimId, 25).toBe(true) //eslint-disable-line
             })
         })
     })
@@ -213,7 +213,7 @@ describe('services/data/get-claims-pending-payment', function () {
           return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
             .then(function () {
               // should update manually processed amount with correct value
-              expect(updateClaimManuallyProcessedAmountStub.calledWith(claimId, 25.20)).toBe(true) //eslint-disable-line
+              expect(updateClaimManuallyProcessedAmountStub).toHaveBeenCalledWith(claimId, 25.20).toBe(true) //eslint-disable-line
             })
         })
     })

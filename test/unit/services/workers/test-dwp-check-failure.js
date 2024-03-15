@@ -58,10 +58,10 @@ describe('services/workers/dwp-check', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).toBe(true) //eslint-disable-line
-      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION)).toBe(true) //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(false) //eslint-disable-line
+      expect(getVisitorDwpBenefitCheckerData).toHaveBeenCalledWith(reference, eligibilityId, claimId).toBe(true) //eslint-disable-line
+      expect(callDwpBenefitCheckerSoapService).toHaveBeenCalledWith(visitorDwpBenefitCheckerData).toBe(true) //eslint-disable-line
+      expect(updateVisitorWithDwpBenefitCheckerResult).toHaveBeenCalledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION).toBe(true) //eslint-disable-line
+      expect(autoApprovalProcess).toHaveBeenCalledWith(reference, eligibilityId, claimId).toBe(false) //eslint-disable-line
       expect(autoApprovalProcess).not.toHaveBeenCalled()
     })
   })

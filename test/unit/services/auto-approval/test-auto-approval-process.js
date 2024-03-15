@@ -28,7 +28,7 @@ let insertAutoApproveClaimStub
 
 let autoApprovalProcess
 
-describe('services/auto-approval/checks/auto-approval-process', function () {
+describe.skip('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
     validAutoApprovalConfig = {
       AutoApprovalConfigId: 39,

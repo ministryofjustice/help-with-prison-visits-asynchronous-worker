@@ -6,20 +6,20 @@ const OLD_PAYMENT_FILES = [{
   IsEnabled: 'true'
 }]
 
-const deleteOldPaymentFiles = jest.fn().mockResolvedValue()
-const getOldPaymentFiles = { getOldPaymentFiles: jest.fn().mockResolvedValue(OLD_PAYMENT_FILES) }
-const updateOldPaymentFilesIsEnabledFalse = jest.fn().mockResolvedValue()
+const mockDeleteOldPaymentFiles = jest.fn().mockResolvedValue()
+const mockGetOldPaymentFiles = { getOldPaymentFiles: jest.fn().mockResolvedValue(OLD_PAYMENT_FILES) }
+const mockUpdateOldPaymentFilesIsEnabledFalse = jest.fn().mockResolvedValue()
 
 jest.mock(
-  '../cleanup-old-data/delete-old-payment-files',
-  () => deleteOldPaymentFiles
+  '../../../../app/services/cleanup-old-data/delete-old-payment-files',
+  () => mockDeleteOldPaymentFiles
 )
 
-jest.mock('../data/get-old-payment-files', () => getOldPaymentFiles)
+jest.mock('../../../../app/services/data/get-old-payment-files', () => mockGetOldPaymentFiles)
 
 jest.mock(
-  '../data/update-old-payment-files-is-enabled-false',
-  () => updateOldPaymentFilesIsEnabledFalse
+  '../../../../app/services/data/update-old-payment-files-is-enabled-false',
+  () => mockUpdateOldPaymentFilesIsEnabledFalse
 )
 
 const cleanupOldPaymentFiles = require('../../../../app/services/workers/cleanup-old-payment-files')
@@ -27,9 +27,9 @@ const cleanupOldPaymentFiles = require('../../../../app/services/workers/cleanup
 describe('services/workers/cleanup-old-payment-files', function () {
   it('should get old payment files, delete them, and update their IsEnabled status', function () {
     return cleanupOldPaymentFiles.cleanupOldPaymentFiles().then(function () {
-      expect(deleteOldPaymentFiles.calledWith(OLD_PAYMENT_FILES)).toBe(true) //eslint-disable-line
-      expect(getOldPaymentFiles.getOldPaymentFiles.calledOnce).toBe(true) //eslint-disable-line
-      expect(updateOldPaymentFilesIsEnabledFalse.calledWith(OLD_PAYMENT_FILES[0].PaymentFileId))
+      expect(mockDeleteOldPaymentFiles).toHaveBeenCalledWith(OLD_PAYMENT_FILES) //eslint-disable-line
+      expect(mockGetOldPaymentFiles.getOldPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockUpdateOldPaymentFilesIsEnabledFalse).toHaveBeenCalledWith([OLD_PAYMENT_FILES[0].PaymentFileId])
     })
   })
 })

@@ -6,7 +6,7 @@ describe('notify/helpers/generate-claim-updated-string', function () {
 
     const message = generateClaimUpdatedString(UPDATED_DOCUMENTS)
 
-    expect(message).toEqual(expect.arrayContaining([UPDATED_DOCUMENTS[0].DocumentType]))
-    expect(message).toEqual(expect.arrayContaining([UPDATED_DOCUMENTS[0].DocumentStatus]))
+    expect(message).toMatch(UPDATED_DOCUMENTS[0].DocumentType)
+    expect(message).toMatch(UPDATED_DOCUMENTS[0].DocumentStatus)
   })
 })

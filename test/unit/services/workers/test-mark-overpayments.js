@@ -1,6 +1,6 @@
 const config = { MARK_AS_OVERPAYMENT_DAYS: '10' }
 let getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub
-jest.mock('../../../config', () => config)
+jest.mock('../../../../config', () => config)
 
 describe('services/workers/mark-overpayments', function () {
   let markOverpayments

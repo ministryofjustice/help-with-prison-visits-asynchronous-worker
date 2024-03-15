@@ -16,71 +16,71 @@ const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
 const SINGLE_UPLOADED_DOCUMENT = [{ ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded' }]
 const EMAIL_ADDRESS = 'test@test.com'
 
-let moveClaimDocumentsToInternal
-let getAllClaimData
-let updateClaimStatus
-let insertClaimEvent
-let generateClaimUpdatedString
-let autoApprovalProcess
-let updateBankDetails
-let getVisitorEmailAddress
-let insertTask
-let transactionHelper
+let mockMoveClaimDocumentsToInternal
+let mockGetAllClaimData
+let mockUpdateClaimStatus
+let mockInsertClaimEvent
+let mockGenerateClaimUpdatedString
+let mockAutoApprovalProcess
+let mockUpdateBankDetails
+let mockGetVisitorEmailAddress
+let mockInsertTask
+let mockTransactionHelper
 
 let requestInformationResponse
 
 jest.mock(
-  '../data/move-claim-documents-to-internal',
-  () => moveClaimDocumentsToInternal
+  '../../../../app/services/data/move-claim-documents-to-internal',
+  () => mockMoveClaimDocumentsToInternal
 )
 
-jest.mock('../data/get-all-claim-data', () => getAllClaimData)
-jest.mock('../data/update-claim-status', () => updateClaimStatus)
-jest.mock('../data/insert-claim-event', () => insertClaimEvent)
+jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
+jest.mock('../../../../app/services/data/update-claim-status', () => mockUpdateClaimStatus)
+jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
 
 jest.mock(
-  '../notify/helpers/generate-claim-updated-string',
-  () => generateClaimUpdatedString
+  '../../../../app/services/notify/helpers/generate-claim-updated-string',
+  () => mockGenerateClaimUpdatedString
 )
 
-jest.mock('../auto-approval/auto-approval-process', () => autoApprovalProcess)
-jest.mock('../data/update-bank-details', () => updateBankDetails)
-jest.mock('../data/get-visitor-email-address', () => getVisitorEmailAddress)
-jest.mock('../data/insert-task', () => insertTask)
-jest.mock('./helpers/transaction-helper', () => transactionHelper)
+jest.mock('../../../../app/services/auto-approval/auto-approval-process', () => mockAutoApprovalProcess)
+jest.mock('../../../../app/services/data/update-bank-details', () => mockUpdateBankDetails)
+jest.mock('../../../../app/services/data/get-visitor-email-address', () => mockGetVisitorEmailAddress)
+jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
+jest.mock('../../../../app/services/workers/helpers/transaction-helper', () => mockTransactionHelper)
 
 describe('services/workers/request-information-response', function () {
   beforeEach(function () {
-    moveClaimDocumentsToInternal = jest.fn().mockResolvedValue(SINGLE_UPLOADED_DOCUMENT)
-    getAllClaimData = jest.fn().mockResolvedValue(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
-    updateClaimStatus = jest.fn().mockResolvedValue()
-    insertClaimEvent = jest.fn().mockResolvedValue()
-    generateClaimUpdatedString = jest.fn().mockReturnValue('message')
-    autoApprovalProcess = jest.fn().mockResolvedValue()
-    updateBankDetails = jest.fn().mockResolvedValue()
-    getVisitorEmailAddress = jest.fn().mockResolvedValue(EMAIL_ADDRESS)
-    insertTask = jest.fn().mockResolvedValue()
-    transactionHelper = jest.fn().mockResolvedValue()
+    mockMoveClaimDocumentsToInternal = jest.fn().mockResolvedValue(SINGLE_UPLOADED_DOCUMENT)
+    mockGetAllClaimData = jest.fn().mockResolvedValue(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
+    mockUpdateClaimStatus = jest.fn().mockResolvedValue()
+    mockInsertClaimEvent = jest.fn().mockResolvedValue()
+    mockGenerateClaimUpdatedString = jest.fn().mockReturnValue('message')
+    mockAutoApprovalProcess = jest.fn().mockResolvedValue()
+    mockUpdateBankDetails = jest.fn().mockResolvedValue()
+    mockGetVisitorEmailAddress = jest.fn().mockResolvedValue(EMAIL_ADDRESS)
+    mockInsertTask = jest.fn().mockResolvedValue()
+    mockTransactionHelper = jest.fn().mockResolvedValue()
 
     requestInformationResponse = require('../../../../app/services/workers/request-information-response')
   })
 
   it('should call data methods to move claim documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
-    moveClaimDocumentsToInternal.resolves()
+    mockMoveClaimDocumentsToInternal.mockResolvedValue()
     return requestInformationResponse.execute({
       reference,
       eligibilityId,
       claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
-      expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateClaimStatus.calledWith(claimId, 'NEW')).toBe(true) //eslint-disable-line
+      expect(mockMoveClaimDocumentsToInternal).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateClaimStatus).toHaveBeenCalledWith(claimId, 'NEW') //eslint-disable-line
       // should have inserted event for just the note, no document
-      expect(insertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.called).toBe(false) //eslint-disable-line
-      expect(transactionHelper.called).toBe(false) //eslint-disable-line
+      expect(mockInsertClaimEvent).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockAutoApprovalProcess).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateBankDetails).not.toHaveBeenCalled() //eslint-disable-line
+      expect(mockTransactionHelper).not.toHaveBeenCalled() //eslint-disable-line
     })
   })
 
@@ -91,15 +91,15 @@ describe('services/workers/request-information-response', function () {
       claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
-      expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateClaimStatus.calledWith(claimId, 'NEW')).toBe(true) //eslint-disable-line
-      expect(generateClaimUpdatedString.calledOnce).toBe(true) //eslint-disable-line
+      expect(mockMoveClaimDocumentsToInternal).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateClaimStatus).toHaveBeenCalledWith(claimId, 'NEW') //eslint-disable-line
+      expect(mockGenerateClaimUpdatedString).toHaveBeenCalledTimes(1) //eslint-disable-line
       // should have inserted event for note and update
-      expect(insertClaimEvent.calledTwice).toBe(true) //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.called).toBe(false) //eslint-disable-line
-      expect(transactionHelper.called).toBe(false) //eslint-disable-line
+      expect(mockInsertClaimEvent).toHaveBeenCalledTimes(2) //eslint-disable-line
+      expect(mockAutoApprovalProcess).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateBankDetails).not.toHaveBeenCalled() //eslint-disable-line
+      expect(mockTransactionHelper).not.toHaveBeenCalled() //eslint-disable-line
     })
   })
 
@@ -109,14 +109,14 @@ describe('services/workers/request-information-response', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(moveClaimDocumentsToInternal.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateClaimStatus.calledWith(claimId, 'NEW')).toBe(true) //eslint-disable-line
-      expect(generateClaimUpdatedString.calledOnce).toBe(true) //eslint-disable-line
-      expect(insertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.called).toBe(false) //eslint-disable-line
-      expect(transactionHelper.called).toBe(false) //eslint-disable-line
+      expect(mockMoveClaimDocumentsToInternal).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateClaimStatus).toHaveBeenCalledWith(claimId, 'NEW') //eslint-disable-line
+      expect(mockGenerateClaimUpdatedString).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockInsertClaimEvent).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockAutoApprovalProcess).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateBankDetails).not.toHaveBeenCalled() //eslint-disable-line
+      expect(mockTransactionHelper).not.toHaveBeenCalled() //eslint-disable-line
     })
   })
 
@@ -127,47 +127,47 @@ describe('services/workers/request-information-response', function () {
       claimId,
       additionalData: ADDITIONAL_DATA
     }).then(function () {
-      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).toBe(true) //eslint-disable-line
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION, EMAIL_ADDRESS)).toBe(true) //eslint-disable-line
+      expect(mockGetVisitorEmailAddress).toHaveBeenCalledWith('IntSchema', reference, eligibilityId) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledWith(reference, eligibilityId, claimId, tasksEnum.REQUEST_INFORMATION_RESPONSE_SUBMITTED_NOTIFICATION, EMAIL_ADDRESS) //eslint-disable-line
     })
   })
 
   it('should not trigger auto-approval for previously reviewed claims', function () {
-    getAllClaimData.resolves(CLAIM_DATA_FOR_REVIEWED_CLAIM)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_FOR_REVIEWED_CLAIM)
 
     return requestInformationResponse.execute({
       reference,
       eligibilityId,
       claimId
     }).then(function () {
-      expect(autoApprovalProcess.called).toBe(false) //eslint-disable-line
+      expect(mockAutoApprovalProcess).not.toHaveBeenCalled() //eslint-disable-line
     })
   })
 
   it('should call bank details methods', function () {
-    getAllClaimData.resolves(CLAIM_DATA_FOR_BANK_DETAILS)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_FOR_BANK_DETAILS)
     return requestInformationResponse.execute({
       reference,
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.called).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.calledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber)).toBe(true) //eslint-disable-line
-      expect(insertClaimEvent.calledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true))
-      expect(transactionHelper.calledWith(eligibilityId, claimId)).toBe(true) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('ExtSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateBankDetails).toHaveBeenCalled() //eslint-disable-line
+      expect(mockUpdateBankDetails).toHaveBeenCalledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber) //eslint-disable-line
+      expect(mockInsertClaimEvent).toHaveBeenCalledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true)
+      expect(mockTransactionHelper).toHaveBeenCalledWith(eligibilityId, claimId) //eslint-disable-line
     })
   })
 
   it('should not call bank details methods', function () {
-    getAllClaimData.resolves(CLAIM_DATA_FOR_PAYOUT)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_FOR_PAYOUT)
     return requestInformationResponse.execute({
       reference,
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith('IntSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(updateBankDetails.called).toBe(false) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockUpdateBankDetails).not.toHaveBeenCalled() //eslint-disable-line
     })
   })
 })

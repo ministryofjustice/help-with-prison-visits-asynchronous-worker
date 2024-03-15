@@ -35,14 +35,14 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.FIRST}`
     })
       .then(function () {
-        expect(stubGetClaim.calledWith('IntSchema', CLAIM_ID)).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.called).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].dateOfJourney).toBe(dateOfJourneyString)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.toBeNull() //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
+        expect(stubGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID).toBe(true) //eslint-disable-line
+        expect(stubSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(stubSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID)
+        expect(stubSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(stubSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
+        expect(stubSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(stubSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 
@@ -54,14 +54,14 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.SECOND}`
     })
       .then(function () {
-        expect(stubGetClaim.calledWith('IntSchema', CLAIM_ID)).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.called).toBe(true) //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].dateOfJourney).toBe(dateOfJourneyString)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.toBeNull() //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[2].first_name).toBe(FIRST_NAME)
+        expect(stubGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID).toBe(true) //eslint-disable-line
+        expect(stubSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(stubSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID)
+        expect(stubSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(stubSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
+        expect(stubSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(stubSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 

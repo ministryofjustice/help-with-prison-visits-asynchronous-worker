@@ -41,9 +41,9 @@ describe('services/data/auto-approve-claim', function () {
             expect(claim.Status).toBe(statusEnum.AUTOAPPROVED)
             expect(claim.DateApproved).not.toBeNull() //eslint-disable-line
             expect(claim.VisitConfirmationCheck).toBe(statusEnum.APPROVED) //eslint-disable-line
-            expect(autoApproveClaimExpenseStub.calledWith(claimId)).toBe(true) //eslint-disable-line
-            expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).toBe(true) //eslint-disable-line
-            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).toBe(true) //eslint-disable-line
+            expect(autoApproveClaimExpenseStub).toHaveBeenCalledWith(claimId).toBe(true) //eslint-disable-line
+            expect(insertTaskStub).toHaveBeenCalledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS).toBe(true) //eslint-disable-line
+            expect(insertClaimEventStub).toHaveBeenCalledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true).toBe(true) //eslint-disable-line
           })
       })
   })

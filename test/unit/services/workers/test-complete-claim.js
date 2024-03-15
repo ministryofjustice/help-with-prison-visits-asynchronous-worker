@@ -13,27 +13,27 @@ const claimData = {
   }
 }
 
-const getAllClaimData = jest.fn().mockResolvedValue(claimData)
-const migrateClaimToInternalAsTransaction = jest.fn().mockResolvedValue()
-const calculateCarExpenseCosts = jest.fn().mockResolvedValue()
+const mockGetAllClaimData = jest.fn().mockResolvedValue(claimData)
+const mockMigrateClaimToInternalAsTransaction = jest.fn().mockResolvedValue()
+const mockCalculateCarExpenseCosts = jest.fn().mockResolvedValue()
 // autoApprovalProcess Removed in APVS0115
-const insertTask = jest.fn().mockResolvedValue()
-const getVisitorEmailAddress = jest.fn().mockResolvedValue(emailAddress)
+const mockInsertTask = jest.fn().mockResolvedValue()
+const mockGetVisitorEmailAddress = jest.fn().mockResolvedValue(emailAddress)
 
-jest.mock('../data/get-all-claim-data', () => getAllClaimData)
+jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
 
 jest.mock(
-  '../data/migrate-claim-to-internal-as-transaction',
-  () => migrateClaimToInternalAsTransaction
+  '../../../../app/services/data/migrate-claim-to-internal-as-transaction',
+  () => mockMigrateClaimToInternalAsTransaction
 )
 
 jest.mock(
-  '../distance-checker/calculate-car-expense-costs',
-  () => calculateCarExpenseCosts
+  '../../../../app/services/distance-checker/calculate-car-expense-costs',
+  () => mockCalculateCarExpenseCosts
 )
 
-jest.mock('../data/insert-task', () => insertTask)
-jest.mock('../data/get-visitor-email-address', () => getVisitorEmailAddress)
+jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
+jest.mock('../../../../app/services/data/get-visitor-email-address', () => mockGetVisitorEmailAddress)
 
 const completeClaim = require('../../../../app/services/workers/complete-claim')
 
@@ -45,13 +45,13 @@ describe('services/workers/complete-claim', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).toBe(true) //eslint-disable-line
-      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('ExtSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockMigrateClaimToInternalAsTransaction).toHaveBeenCalledWith(claimData, null, eligibilityId, claimId) //eslint-disable-line
+      expect(mockCalculateCarExpenseCosts).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
       // autoApprovalProcess Removed in APVS0115
-      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).toBe(true) //eslint-disable-line
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).toBe(true) //eslint-disable-line
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).toBe(true) //eslint-disable-line
+      expect(mockGetVisitorEmailAddress).toHaveBeenCalledWith('IntSchema', reference, eligibilityId) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK) //eslint-disable-line
     })
   })
 })
