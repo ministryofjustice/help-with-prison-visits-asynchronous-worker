@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 const insertClaimEvent = require('../../../../app/services/data/insert-claim-event')
 
@@ -13,7 +12,7 @@ describe('services/data/get-all-claim-data', function () {
     let eligibilityId
     let claimId
 
-    before(function () {
+    beforeAll(function () {
       return testHelper.insertClaimEligibilityData(EXTSCHEMA, REFERENCE)
         .then(function (ids) {
           eligibilityId = ids.eligibilityId
@@ -24,18 +23,18 @@ describe('services/data/get-all-claim-data', function () {
     it('should return all first time claim data', function () {
       return getAllClaimData(EXTSCHEMA, REFERENCE, eligibilityId, claimId)
         .then(function (data) {
-          expect(data.Eligibility.Reference).to.be.equal(REFERENCE)
-          expect(data.Claim.Reference).to.be.equal(REFERENCE)
-          expect(data.Prisoner.Reference).to.be.equal(REFERENCE)
-          expect(data.Visitor.Reference).to.be.equal(REFERENCE)
-          expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)
-          expect(data.ClaimBankDetail.ClaimId).to.be.equal(claimId)
-          expect(data.ClaimChildren[0].ClaimId).to.be.equal(claimId)
-          expect(data.ClaimDocument[0].ClaimId).to.be.equal(claimId)
-        })
+          expect(data.Eligibility.Reference).toBe(REFERENCE)
+          expect(data.Claim.Reference).toBe(REFERENCE)
+          expect(data.Prisoner.Reference).toBe(REFERENCE)
+          expect(data.Visitor.Reference).toBe(REFERENCE)
+          expect(data.ClaimExpenses[0].ClaimId).toBe(claimId)
+          expect(data.ClaimBankDetail.ClaimId).toBe(claimId)
+          expect(data.ClaimChildren[0].ClaimId).toBe(claimId)
+          expect(data.ClaimDocument[0].ClaimId).toBe(claimId)
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return testHelper.deleteAll(REFERENCE, EXTSCHEMA)
     })
   })
@@ -45,7 +44,7 @@ describe('services/data/get-all-claim-data', function () {
     const ELIGIBILITYID = 4321
     let claimId
 
-    before(function () {
+    beforeAll(function () {
       return testHelper.insertClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, testHelper.getClaimData(REFERENCE))
         .then(function (newClaimId) {
           claimId = newClaimId
@@ -55,20 +54,20 @@ describe('services/data/get-all-claim-data', function () {
     it('should return all repeat claim data', function () {
       return getAllClaimData(EXTSCHEMA, REFERENCE, ELIGIBILITYID, claimId)
         .then(function (data) {
-          expect(data.Eligibility).to.be.undefined //eslint-disable-line
-          expect(data.Prisoner).to.be.undefined //eslint-disable-line
-          expect(data.Visitor).to.be.undefined //eslint-disable-line
-          expect(data.Claim.Reference).to.be.equal(REFERENCE)
-          expect(data.Claim.EligibilityId).to.be.equal(ELIGIBILITYID)
-          expect(data.ClaimExpenses[0].ClaimId).to.be.equal(claimId)
-          expect(data.ClaimBankDetail.ClaimId).to.be.equal(claimId)
-          expect(data.ClaimChildren[0].ClaimId).to.be.equal(claimId)
-          expect(data.ClaimDocument[0].ClaimId).to.be.equal(claimId)
-          expect(data.EligibilityVisitorUpdateContactDetail.EligibilityId).to.be.equal(ELIGIBILITYID)
-        })
+          expect(data.Eligibility).toBeUndefined() //eslint-disable-line
+          expect(data.Prisoner).toBeUndefined() //eslint-disable-line
+          expect(data.Visitor).toBeUndefined() //eslint-disable-line
+          expect(data.Claim.Reference).toBe(REFERENCE)
+          expect(data.Claim.EligibilityId).toBe(ELIGIBILITYID)
+          expect(data.ClaimExpenses[0].ClaimId).toBe(claimId)
+          expect(data.ClaimBankDetail.ClaimId).toBe(claimId)
+          expect(data.ClaimChildren[0].ClaimId).toBe(claimId)
+          expect(data.ClaimDocument[0].ClaimId).toBe(claimId)
+          expect(data.EligibilityVisitorUpdateContactDetail.EligibilityId).toBe(ELIGIBILITYID)
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return testHelper.deleteAll(REFERENCE, EXTSCHEMA)
     })
   })
@@ -78,7 +77,7 @@ describe('services/data/get-all-claim-data', function () {
     let eligibilityId
     let claimId
 
-    before(function () {
+    beforeAll(function () {
       return testHelper.insertClaimEligibilityData(INTSCHEMA, REFERENCE)
         .then(function (ids) {
           eligibilityId = ids.eligibilityId
@@ -90,13 +89,13 @@ describe('services/data/get-all-claim-data', function () {
     it('should return events and deductions', function () {
       return getAllClaimData(INTSCHEMA, REFERENCE, eligibilityId, claimId)
         .then(function (data) {
-          expect(data.Eligibility.Reference).to.be.equal(REFERENCE)
-          expect(data.ClaimEvents[0].ClaimId).to.be.equal(claimId)
-          expect(data.ClaimDeductions[0].ClaimId).to.be.equal(claimId)
-        })
+          expect(data.Eligibility.Reference).toBe(REFERENCE)
+          expect(data.ClaimEvents[0].ClaimId).toBe(claimId)
+          expect(data.ClaimDeductions[0].ClaimId).toBe(claimId)
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return testHelper.deleteAll(REFERENCE, INTSCHEMA)
     })
   })

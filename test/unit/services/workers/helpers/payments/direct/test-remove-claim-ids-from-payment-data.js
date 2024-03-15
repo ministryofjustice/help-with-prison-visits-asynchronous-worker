@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const removeClaimIdsFromPaymetData = require('../../../../../../../app/services/workers/helpers/payments/direct/remove-claim-ids-from-payment-data')
 
 const paymentData = [
@@ -19,6 +17,6 @@ const expectedPaymentDataWithoutClaimIds = [
 describe('services/workers/helpers/payments/direct/remove-claim-ids-from-payment-data', function () {
   it('should remove claimIds from payment data array', function () {
     const paymentDataWithoutClaimIds = removeClaimIdsFromPaymetData(paymentData, 0)
-    expect(paymentDataWithoutClaimIds).to.eql(expectedPaymentDataWithoutClaimIds)
+    expect(paymentDataWithoutClaimIds).toEqual(expectedPaymentDataWithoutClaimIds)
   })
 })

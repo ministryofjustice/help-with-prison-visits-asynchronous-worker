@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const config = require('../../../../config')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -21,7 +20,7 @@ describe('services/data/get-old-eligibility-data', function () {
   const olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
   const lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
-  before(function () {
+  beforeAll(function () {
     return Promise.all([
       // Old eligibility with claim
       createTestData(reference1, olderThanMaxAge, false)
@@ -52,9 +51,9 @@ describe('services/data/get-old-eligibility-data', function () {
         const eligibility1Found = eligibilityExists(eligibilityId1, results)
         const eligibility2Found = eligibilityExists(eligibilityId2, results)
 
-        expect(eligibility1Found).to.be.true //eslint-disable-line
-        expect(eligibility2Found).to.be.true //eslint-disable-line
-      })
+        expect(eligibility1Found).toBe(true) //eslint-disable-line
+        expect(eligibility2Found).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should not retrieve eligibility records within the date threshold', function () {
@@ -63,12 +62,12 @@ describe('services/data/get-old-eligibility-data', function () {
         const eligibility3Found = eligibilityExists(eligibilityId3, results)
         const eligibility4Found = eligibilityExists(eligibilityId4, results)
 
-        expect(eligibility3Found).to.be.false //eslint-disable-line
-        expect(eligibility4Found).to.be.false //eslint-disable-line
-      })
+        expect(eligibility3Found).toBe(false) //eslint-disable-line
+        expect(eligibility4Found).toBe(false) //eslint-disable-line
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return Promise.all([
       testHelper.deleteAll(reference1, 'ExtSchema'),
       testHelper.deleteAll(reference2, 'ExtSchema'),

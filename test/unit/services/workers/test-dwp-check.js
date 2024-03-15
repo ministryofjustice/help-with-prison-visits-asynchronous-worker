@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-enum')
 
@@ -11,12 +9,24 @@ const callDwpBenefitCheckerSoapService = sinon.stub().resolves(benefitCheckerRes
 const updateVisitorWithDwpBenefitCheckerResult = sinon.stub().resolves()
 const autoApprovalProcess = sinon.stub().resolves()
 
-const dwpCheck = proxyquire('../../../../app/services/workers/dwp-check', {
-  '../data/get-visitor-dwp-benefit-checker-data': getVisitorDwpBenefitCheckerData,
-  '../benefit-checker/call-dwp-benefit-checker-soap-service': callDwpBenefitCheckerSoapService,
-  '../data/update-visitor-with-dwp-benefit-checker-result': updateVisitorWithDwpBenefitCheckerResult,
-  '../auto-approval/auto-approval-process': autoApprovalProcess
-})
+jest.mock(
+  '../data/get-visitor-dwp-benefit-checker-data',
+  () => getVisitorDwpBenefitCheckerData
+);
+
+jest.mock(
+  '../benefit-checker/call-dwp-benefit-checker-soap-service',
+  () => callDwpBenefitCheckerSoapService
+);
+
+jest.mock(
+  '../data/update-visitor-with-dwp-benefit-checker-result',
+  () => updateVisitorWithDwpBenefitCheckerResult
+);
+
+jest.mock('../auto-approval/auto-approval-process', () => autoApprovalProcess);
+
+const dwpCheck = require('../../../../app/services/workers/dwp-check')
 
 const reference = '1234567'
 const eligibilityId = '4321'
@@ -29,11 +39,11 @@ describe('services/workers/dwp-check', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
-      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).to.be.true //eslint-disable-line
-      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)).to.be.true //eslint-disable-line
-      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
-      sinon.assert.called(autoApprovalProcess)
-    })
+      expect(getVisitorDwpBenefitCheckerData.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
+      expect(callDwpBenefitCheckerSoapService.calledWith(visitorDwpBenefitCheckerData)).toBe(true) //eslint-disable-line
+      expect(updateVisitorWithDwpBenefitCheckerResult.calledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, null)).toBe(true) //eslint-disable-line
+      expect(autoApprovalProcess.calledWith(reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
+      sinon.toHaveBeenCalled()
+    });
   })
 })

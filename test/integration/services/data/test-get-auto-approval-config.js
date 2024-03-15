@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
 
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
@@ -10,7 +9,7 @@ let insertedIds
 describe('services/data/get-auto-approval-config', function () {
   let existingAutoApprovalId
 
-  before(function () {
+  beforeAll(function () {
     return getCurrentAutoApprovalConfigId()
       .then(function (currentAutoApprovalConfigId) {
         if (currentAutoApprovalConfigId) {
@@ -25,16 +24,16 @@ describe('services/data/get-auto-approval-config', function () {
   it('should return auto approval config defaults when no auto approval config data is found', function () {
     return getAutoApprovalConfig()
       .then(function (result) {
-        expect(result.AutoApprovalEnabled).to.equal(config.AUTO_APPROVAL_ENABLED === 'true')
-        expect(result.CostVariancePercentage).to.equal(parseFloat(config.AUTO_APPROVAL_COST_VARIANCE))
-        expect(result.MaxClaimTotal).to.equal(parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL))
-        expect(result.MaxDaysAfterAPVUVisit).to.equal(parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT))
-        expect(result.MaxNumberOfClaimsPerYear).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
-        expect(result.MaxNumberOfClaimsPerMonth).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
-        expect(result.RulesDisabled).to.be.null //eslint-disable-line
-        expect(result.CostPerMile).to.equal(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE))
-        expect(result.NumberOfConsecutiveAutoApprovals).to.equal(parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
-      })
+        expect(result.AutoApprovalEnabled).toBe(config.AUTO_APPROVAL_ENABLED === 'true')
+        expect(result.CostVariancePercentage).toBe(parseFloat(config.AUTO_APPROVAL_COST_VARIANCE))
+        expect(result.MaxClaimTotal).toBe(parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL))
+        expect(result.MaxDaysAfterAPVUVisit).toBe(parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT))
+        expect(result.MaxNumberOfClaimsPerYear).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
+        expect(result.MaxNumberOfClaimsPerMonth).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
+        expect(result.RulesDisabled).toBeNull() //eslint-disable-line
+        expect(result.CostPerMile).toBe(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE))
+        expect(result.NumberOfConsecutiveAutoApprovals).toBe(parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
+      });
   })
 
   it('should return the latest auto approval config record', function () {
@@ -42,14 +41,14 @@ describe('services/data/get-auto-approval-config', function () {
       .then(function () {
         return getAutoApprovalConfig()
           .then(function (result) {
-            expect(result.Caseworker).to.equal('caseworker1@test.com')
-            expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
-            expect(result.IsEnabled).to.equal(true)
-          })
-      })
+            expect(result.Caseworker).toBe('caseworker1@test.com')
+            expect(result.RulesDisabled).toEqual(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
+            expect(result.IsEnabled).toBe(true)
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.AutoApprovalConfig')

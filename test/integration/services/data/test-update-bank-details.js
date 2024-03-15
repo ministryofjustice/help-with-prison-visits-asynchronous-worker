@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const updateBankDetails = require('../../../../app/services/data/update-bank-details')
 const testHelper = require('../../../test-helper')
@@ -10,7 +9,7 @@ const sortcode = '123456'
 const accountNumber = '12345678'
 
 describe('services/data/update-bank-details', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
@@ -27,13 +26,13 @@ describe('services/data/update-bank-details', function () {
           .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
           .first()
           .then(function (result) {
-            expect(result.SortCode).to.be.equal(sortcode)
-            expect(result.AccountNumber).to.be.equal(accountNumber)
-          })
-      })
+            expect(result.SortCode).toBe(sortcode)
+            expect(result.AccountNumber).toBe(accountNumber)
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

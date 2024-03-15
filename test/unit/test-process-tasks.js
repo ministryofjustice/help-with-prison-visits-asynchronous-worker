@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const statusEnum = require('../../app/constants/status-enum')
@@ -10,19 +8,29 @@ let completeTaskWithStatus
 let getWorkerForTask
 const batchSize = 3
 
+jest.mock('../config', () => ({
+  ASYNC_WORKER_BATCH_SIZE: batchSize
+}));
+
+jest.mock('./services/log', () => ({
+  info: function (message) {}
+}));
+
+jest.mock(
+  './services/data/get-pending-tasks-and-mark-inprogress',
+  () => getPendingTasksAndMarkInProgress
+);
+
+jest.mock('./services/data/complete-task-with-status', () => completeTaskWithStatus);
+jest.mock('./services/get-worker-for-task', () => getWorkerForTask);
+
 describe('process-tasks', function () {
   beforeEach(function (done) {
     getPendingTasksAndMarkInProgress = sinon.stub()
     completeTaskWithStatus = sinon.stub()
     getWorkerForTask = sinon.stub()
 
-    processTasks = proxyquire('../../app/process-tasks', {
-      '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
-      './services/log': { info: function (message) {} },
-      './services/data/get-pending-tasks-and-mark-inprogress': getPendingTasksAndMarkInProgress,
-      './services/data/complete-task-with-status': completeTaskWithStatus,
-      './services/get-worker-for-task': getWorkerForTask
-    })
+    processTasks = require('../../app/process-tasks')
     done()
   })
 
@@ -38,16 +46,16 @@ describe('process-tasks', function () {
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
-      expect(getPendingTasksAndMarkInProgress.calledWith('ExtSchema', batchSize)).to.be.true //eslint-disable-line
-      expect(getWorkerForTask.calledWith('task1')).to.be.true //eslint-disable-line
-      expect(getWorkerForTask.calledWith('task2')).to.be.true //eslint-disable-line
+      expect(getPendingTasksAndMarkInProgress.calledWith('ExtSchema', batchSize)).toBe(true) //eslint-disable-line
+      expect(getWorkerForTask.calledWith('task1')).toBe(true) //eslint-disable-line
+      expect(getWorkerForTask.calledWith('task2')).toBe(true) //eslint-disable-line
 
-      expect(getPendingTasksAndMarkInProgress.calledWith('IntSchema', batchSize)).to.be.true //eslint-disable-line
+      expect(getPendingTasksAndMarkInProgress.calledWith('IntSchema', batchSize)).toBe(true) //eslint-disable-line
 
-      expect(completeTaskWithStatus.calledWith('ExtSchema', 1, statusEnum.COMPLETE)).to.be.true //eslint-disable-line
-      expect(completeTaskWithStatus.calledWith('ExtSchema', 2, statusEnum.COMPLETE)).to.be.true //eslint-disable-line
-      expect(completeTaskWithStatus.calledWith('IntSchema', 1, statusEnum.COMPLETE)).to.be.true //eslint-disable-line
-      expect(completeTaskWithStatus.calledWith('IntSchema', 2, statusEnum.COMPLETE)).to.be.true //eslint-disable-line
-    })
+      expect(completeTaskWithStatus.calledWith('ExtSchema', 1, statusEnum.COMPLETE)).toBe(true) //eslint-disable-line
+      expect(completeTaskWithStatus.calledWith('ExtSchema', 2, statusEnum.COMPLETE)).toBe(true) //eslint-disable-line
+      expect(completeTaskWithStatus.calledWith('IntSchema', 1, statusEnum.COMPLETE)).toBe(true) //eslint-disable-line
+      expect(completeTaskWithStatus.calledWith('IntSchema', 2, statusEnum.COMPLETE)).toBe(true) //eslint-disable-line
+    });
   })
 })

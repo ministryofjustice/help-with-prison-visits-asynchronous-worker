@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const CLAIM_ID = 1234
@@ -13,6 +11,9 @@ let getClaimDocuments
 let AWS
 let deleteOldFiles
 let deleteFunction
+
+jest.mock('../aws-helper', () => AWS);
+jest.mock('../data/get-claim-documents', () => getClaimDocuments);
 
 describe('services/cleanup-old-data/delete-old-files', function () {
   beforeEach(function () {
@@ -29,34 +30,31 @@ describe('services/cleanup-old-data/delete-old-files', function () {
       AWSHelper: helper
     }
 
-    deleteOldFiles = proxyquire('../../../../app/services/cleanup-old-data/delete-old-files', {
-      '../aws-helper': AWS,
-      '../data/get-claim-documents': getClaimDocuments
-    })
+    deleteOldFiles = require('../../../../app/services/cleanup-old-data/delete-old-files')
   })
 
   it('should call to delete a file based on filepath', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(deleteFunction.called).to.be.true //eslint-disable-line
-      })
+        expect(getClaimDocuments.calledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)).toBe(true) //eslint-disable-line
+        expect(deleteFunction.called).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should copy eligibility directory to archive when archiving eligibility', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_FILEPATH)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(deleteFunction.called).to.be.false //eslint-disable-line
-      })
+        expect(deleteFunction.called).toBe(false) //eslint-disable-line
+      });
   })
 
   it('should not call to delete a file for no claim data', function () {
     getClaimDocuments.resolves(CLAIM_DOCUMENT_NO_DATA)
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
       .then(function () {
-        expect(deleteFunction.called).to.be.false //eslint-disable-line
-      })
+        expect(deleteFunction.called).toBe(false) //eslint-disable-line
+      });
   })
 })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const generateClaimUpdatedString = require('../../../../../app/services/notify/helpers/generate-claim-updated-string')
 
 describe('notify/helpers/generate-claim-updated-string', function () {
@@ -7,7 +6,7 @@ describe('notify/helpers/generate-claim-updated-string', function () {
 
     const message = generateClaimUpdatedString(UPDATED_DOCUMENTS)
 
-    expect(message).to.contain(UPDATED_DOCUMENTS[0].DocumentType)
-    expect(message).to.contain(UPDATED_DOCUMENTS[0].DocumentStatus)
+    expect(message).toEqual(expect.arrayContaining([UPDATED_DOCUMENTS[0].DocumentType]))
+    expect(message).toEqual(expect.arrayContaining([UPDATED_DOCUMENTS[0].DocumentStatus]))
   })
 })

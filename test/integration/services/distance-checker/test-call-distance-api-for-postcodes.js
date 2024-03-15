@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const callDistanceApiForPostcodes = require('../../../../app/services/distance-checker/call-distance-api-for-postcodes')
 
 const FROM_POSTCODE = 'BT7 1NT' // Upper Crescent, Belfast
@@ -11,7 +9,7 @@ describe('services/distance-checker/call-distance-api-for-postcodes', function (
     return callDistanceApiForPostcodes(FROM_POSTCODE, TO_POSTCODE)
       .then(function (distanceInKm) {
         // check that the distance returned is between 230 and 240 as this changes frequently
-        expect(distanceInKm >= APPROXIMATE_EXPECTED_DISTANCE && distanceInKm <= APPROXIMATE_EXPECTED_DISTANCE + 10).to.equal(true)
-      })
+        expect(distanceInKm >= APPROXIMATE_EXPECTED_DISTANCE && distanceInKm <= APPROXIMATE_EXPECTED_DISTANCE + 10).toBe(true)
+      });
   })
 })

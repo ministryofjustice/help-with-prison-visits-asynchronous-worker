@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const fs = require('fs')
 const util = require('util')
 const unlink = util.promisify(require('fs').unlink)
@@ -17,7 +16,8 @@ describe('services/direct-payments/create-adi-journal-file', function () {
     const journalName = config.ADI_JOURNAL_PREFIX + dateFormatter.now().format('DDMMYY') + config.ADI_JOURNAL_SUFFIX
     return createAdiJournalFile(amount)
       .then(function (filePath) {
-        expect(fs.existsSync(filePath), 'file must have been created (cannot verify content)').to.be.true //eslint-disable-line
+        // file must have been created (cannot verify content)
+        expect(fs.existsSync(filePath)).toBe(true) //eslint-disable-line
         testFilePath = filePath
         return XlsxPopulate.fromFileAsync(testFilePath)
           .then(workbook => {
@@ -28,22 +28,28 @@ describe('services/direct-payments/create-adi-journal-file', function () {
             const periodCellValue = adiJournalSheet.cell(config.ADI_PERIOD_CELL).value()
             const adiJournalNameCellValue = adiJournalSheet.cell(config.ADI_JOURNAL_NAME_CELL).value()
             const adiJournalDescriptionCellValue = adiJournalSheet.cell(config.ADI_JOURNAL_DESCRIPTION_CELL).value()
-            expect(totalCellValue, 'Total Cell should have the value ' + amount).to.be.eql(amount)
-            expect(debitCellValue, 'Debit Cell should have the value ' + amount).to.be.eql(amount)
-            expect(accountingDateCellValue, 'Accounting Date Cell should have the value ' + accountingDate).to.be.eql(accountingDate)
-            expect(periodCellValue, 'Period cell should be blank').to.be.eql(undefined)
-            expect(adiJournalNameCellValue, 'Journal name cell should have the value ' + journalName).to.be.eql(journalName)
-            expect(adiJournalDescriptionCellValue, 'Journal description cell should have the value ' + journalName).to.be.eql(journalName)
+            // 'Total Cell should have the value ' + amount
+            expect(totalCellValue).toEqual(amount)
+            // 'Debit Cell should have the value ' + amount
+            expect(debitCellValue).toEqual(amount)
+            // 'Accounting Date Cell should have the value ' + accountingDate
+            expect(accountingDateCellValue).toEqual(accountingDate)
+            // Period cell should be blank
+            expect(periodCellValue).toBeUndefined()
+            // 'Journal name cell should have the value ' + journalName
+            expect(adiJournalNameCellValue).toEqual(journalName)
+            // 'Journal description cell should have the value ' + journalName
+            expect(adiJournalDescriptionCellValue).toEqual(journalName)
           })
           .catch(function (error) {
             log.error('An error occurred while reading the test journal ')
             log.error(error)
             throw (error)
-          })
-      })
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     console.log('\n\n\n\n\nTest File Path is ' + testFilePath + '\n\n\n\n\n\n')
     return unlink(testFilePath)
   })

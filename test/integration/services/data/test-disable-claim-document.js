@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const disableClaimDocument = require('../../../../app/services/data/disable-claim-document')
 const testHelper = require('../../../test-helper')
@@ -7,7 +6,7 @@ const REFERENCE = 'DISDOC1'
 let claimDocumentId
 
 describe('services/data/disable-claim-document', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function () {
         const db = getDatabaseConnector()
@@ -27,12 +26,12 @@ describe('services/data/disable-claim-document', function () {
           .where({ ClaimDocumentId: claimDocumentId })
           .first()
           .then(function (result) {
-            expect(result.IsEnabled).to.be.false //eslint-disable-line
-          })
-      })
+            expect(result.IsEnabled).toBe(false) //eslint-disable-line
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

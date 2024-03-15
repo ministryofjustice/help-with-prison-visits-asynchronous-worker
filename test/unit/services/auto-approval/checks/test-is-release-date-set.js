@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const isReleaseDateSet = require('../../../../../app/services/auto-approval/checks/is-release-date-set')
 
 const autoApprovalDataReleaseDateSet = {
@@ -22,16 +21,16 @@ const autoApprovalDataReleaseDateSetNull = {
 describe('services/auto-approval/checks/is-visit-in-past', function () {
   it('should return true if the ReleaseDateIsSet variable is true', function () {
     const checkResult = isReleaseDateSet(autoApprovalDataReleaseDateSet)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if the ReleaseDateIsSet variable is false', function () {
     const checkResult = isReleaseDateSet(autoApprovalDataReleaseDateSetFalse)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).toBe(false)
   })
 
   it('should return false if the ReleaseDateIsSet variable is null', function () {
     const checkResult = isReleaseDateSet(autoApprovalDataReleaseDateSetNull)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).toBe(false)
   })
 })

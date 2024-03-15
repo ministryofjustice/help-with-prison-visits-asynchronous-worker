@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 const moment = require('moment')
 
@@ -10,7 +9,7 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
   let claimId
   const claimData = testHelper.getClaimData(reference)
 
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
@@ -23,13 +22,13 @@ describe('services/data/get-visitor-dwp-benefit-checker-data', function () {
       .then(function (visitorDwpBenefitCheckerData) {
         const dobFormatted = moment(claimData.Visitor.DateOfBirth).format('YYYYMMDD')
 
-        expect(visitorDwpBenefitCheckerData.nino).to.be.equal(claimData.Visitor.NationalInsuranceNumber)
-        expect(visitorDwpBenefitCheckerData.surname).to.be.equal(claimData.Visitor.LastName.toUpperCase())
-        expect(visitorDwpBenefitCheckerData.dateOfBirth).to.be.equal(dobFormatted)
-      })
+        expect(visitorDwpBenefitCheckerData.nino).toBe(claimData.Visitor.NationalInsuranceNumber)
+        expect(visitorDwpBenefitCheckerData.surname).toBe(claimData.Visitor.LastName.toUpperCase())
+        expect(visitorDwpBenefitCheckerData.dateOfBirth).toBe(dobFormatted)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

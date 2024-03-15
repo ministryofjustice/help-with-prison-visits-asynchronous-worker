@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
@@ -9,7 +8,7 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
   const batchSize = 3
   let ids = []
   const taskType = 'PENDING-TEST'
-  before(function (done) {
+  beforeAll(function (done) {
     const db = getDatabaseConnector()
 
     db('ExtSchema.Task').insert([
@@ -33,21 +32,21 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
         }
       })
 
-      expect(testTasks.length).to.be.equal(batchSize)
+      expect(testTasks.length).toBe(batchSize)
 
-      expect(testTasks[0].additionalData).to.be.equal('1')
-      expect(testTasks[1].additionalData).to.be.equal('2')
-      expect(testTasks[2].additionalData).to.be.equal('3')
+      expect(testTasks[0].additionalData).toBe('1')
+      expect(testTasks[1].additionalData).toBe('2')
+      expect(testTasks[2].additionalData).toBe('3')
 
-      expect(testTasks[0].status).to.be.equal(statusEnum.INPROGRESS)
-      expect(testTasks[1].status).to.be.equal(statusEnum.INPROGRESS)
-      expect(testTasks[2].status).to.be.equal(statusEnum.INPROGRESS)
+      expect(testTasks[0].status).toBe(statusEnum.INPROGRESS)
+      expect(testTasks[1].status).toBe(statusEnum.INPROGRESS)
+      expect(testTasks[2].status).toBe(statusEnum.INPROGRESS)
 
       done()
     })
   })
 
-  after(function (done) {
+  afterAll(function (done) {
     // Clean up
     const db = getDatabaseConnector()
 

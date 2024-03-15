@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const autoApprovalData = {
   Claim: {
     Reference: 'ABC123'
@@ -55,7 +53,7 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
     ]
 
     const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if the total cost of any expense type is outside the accepted variance (10%)', function () {
@@ -79,7 +77,9 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
     ]
 
     const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
-    expect(checkResult.result).to.equal(false)
-    expect(checkResult.failureMessage).to.equal('Claim expense costs are outside of the accepted variance from the last manually approved claim. Claim ref: ABC123, Current expense type total: 115, Upper threshold: 110, Lower threshold: 90')
+    expect(checkResult.result).toBe(false)
+    expect(checkResult.failureMessage).toBe(
+      'Claim expense costs are outside of the accepted variance from the last manually approved claim. Claim ref: ABC123, Current expense type total: 115, Upper threshold: 110, Lower threshold: 90'
+    )
   })
 })

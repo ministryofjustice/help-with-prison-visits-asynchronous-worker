@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const isBenefitExpiryDateInFuture = require('../../../../../app/services/auto-approval/checks/is-benefit-expiry-date-in-future')
@@ -16,17 +15,19 @@ const autoApprovalData = {
 describe('services/auto-approval/checks/is-benefit-expiry-date-in-future', function () {
   it('should return true if the benefit expiry date is after date of journey', function () {
     const checkResult = isBenefitExpiryDateInFuture(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
   it('should return true if the benefit expiry date is same as date of journey', function () {
     autoApprovalData.Visitor.BenefitExpiryDate = dateFormatter.now().subtract(5, 'days')
     const checkResult = isBenefitExpiryDateInFuture(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
   it('should return false if the date of journey is after benefit expiry date', function () {
     autoApprovalData.Visitor.BenefitExpiryDate = dateFormatter.now().subtract(7, 'days')
     const checkResult = isBenefitExpiryDateInFuture(autoApprovalData)
-    expect(checkResult.result).to.equal(false)
-    expect(checkResult.failureMessage).to.equal(`The visit date is after the benefit expiry date. Claim ref: ABC123, Benefit expiry date: ${moment(autoApprovalData.Visitor.BenefitExpiryDate).format('DD/MM/YYYY')}, Date of journey: ${moment(autoApprovalData.Claim.DateOfJourney).format('DD/MM/YYYY')}`)
+    expect(checkResult.result).toBe(false)
+    expect(checkResult.failureMessage).toBe(
+      `The visit date is after the benefit expiry date. Claim ref: ABC123, Benefit expiry date: ${moment(autoApprovalData.Visitor.BenefitExpiryDate).format('DD/MM/YYYY')}, Date of journey: ${moment(autoApprovalData.Claim.DateOfJourney).format('DD/MM/YYYY')}`
+    )
   })
 })

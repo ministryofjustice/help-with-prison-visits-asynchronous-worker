@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const Task = require('../../../../app/services/domain/task')
 
 describe('services/domain/task', function () {
@@ -16,16 +15,16 @@ describe('services/domain/task', function () {
 
     const task = new Task(taskId, taskType, reference, eligibilityId, claimId, additionalData, dateCreated, dateProcessed, schema, status)
 
-    expect(task.taskId).to.equal(taskId)
-    expect(task.task).to.equal(taskType)
-    expect(task.reference).to.equal(reference)
-    expect(task.eligibilityId).to.equal(eligibilityId)
-    expect(task.claimId).to.equal(claimId)
-    expect(task.additionalData).to.equal(additionalData)
-    expect(task.dateCreated).to.equal(dateCreated)
-    expect(task.dateProcessed).to.equal(dateProcessed)
-    expect(task.schema).to.equal(schema)
-    expect(task.status).to.equal(status)
+    expect(task.taskId).toBe(taskId)
+    expect(task.task).toBe(taskType)
+    expect(task.reference).toBe(reference)
+    expect(task.eligibilityId).toBe(eligibilityId)
+    expect(task.claimId).toBe(claimId)
+    expect(task.additionalData).toBe(additionalData)
+    expect(task.dateCreated).toBe(dateCreated)
+    expect(task.dateProcessed).toBe(dateProcessed)
+    expect(task.schema).toBe(schema)
+    expect(task.status).toBe(status)
     done()
   })
 })

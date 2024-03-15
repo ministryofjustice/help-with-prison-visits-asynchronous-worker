@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const isClaimSubmittedWithinTimeLimit = require('../../../../../app/services/auto-approval/checks/is-claim-submitted-within-time-limit')
@@ -30,12 +29,14 @@ const invalidAutoApprovalData = {
 describe('services/auto-approval/checks/is-claim-submitted-within-time-limit', function () {
   it('should return true if the submission date is less than or equal to maxDayAfterAPVUVisit days after the date of journey of last manually approved claim', function () {
     const checkResult = isClaimSubmittedWithinTimeLimit(validAutoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if the submission date is greater than maxDayAfterAPVUVisit days after the date of journey of last manually approved claim', function () {
     const checkResult = isClaimSubmittedWithinTimeLimit(invalidAutoApprovalData)
-    expect(checkResult.result).to.equal(false)
-    expect(checkResult.failureMessage).to.equal(`Claim was not submitted with the time limit. Claim ref: ABC123, Claim submission date: ${moment(invalidAutoApprovalData.Claim.DateSubmitted).format('DD/MM/YYYY')}, Claim submission cut off date: ${moment(invalidAutoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(invalidAutoApprovalData.maxDaysAfterAPVUVisit, 'days').format('DD/MM/YYYY')}`)
+    expect(checkResult.result).toBe(false)
+    expect(checkResult.failureMessage).toBe(
+      `Claim was not submitted with the time limit. Claim ref: ABC123, Claim submission date: ${moment(invalidAutoApprovalData.Claim.DateSubmitted).format('DD/MM/YYYY')}, Claim submission cut off date: ${moment(invalidAutoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(invalidAutoApprovalData.maxDaysAfterAPVUVisit, 'days').format('DD/MM/YYYY')}`
+    )
   })
 })

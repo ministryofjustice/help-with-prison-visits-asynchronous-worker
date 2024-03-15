@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -31,17 +30,17 @@ describe('services/data/delete-claim-from-external', function () {
           .where('ExtSchema.Eligibility.Reference', reference)
           .count('ExtSchema.Eligibility.Reference as count')
           .then(function (countResult) {
-            expect(countResult[0].count).to.be.equal(0)
+            expect(countResult[0].count).toBe(0)
 
             return db('ExtSchema.ClaimBankDetail')
               .join('ExtSchema.ClaimExpense', 'ExtSchema.ClaimBankDetail.ClaimId', '=', 'ExtSchema.ClaimExpense.ClaimId')
               .where('ExtSchema.ClaimBankDetail.ClaimId', claimId)
               .count('ExtSchema.ClaimBankDetail.ClaimId as count')
               .then(function (countResult) {
-                expect(countResult[0].count).to.be.equal(0)
-              })
-          })
-      })
+                expect(countResult[0].count).toBe(0)
+              });
+          });
+      });
   })
 
   it('should not throw an error when only eligibility id is supplied', function () {

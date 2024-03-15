@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const isVisitInPast = require('../../../../../app/services/auto-approval/checks/is-visit-in-past')
 
@@ -19,11 +18,11 @@ const autoApprovalDataWithFutureClaim = {
 describe('services/auto-approval/checks/is-visit-in-past', function () {
   it('should return true if the visit date of the current claim is in the past', function () {
     const checkResult = isVisitInPast(autoApprovalDataWithPastClaim)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if the visit date of the current claim is in the future', function () {
     const checkResult = isVisitInPast(autoApprovalDataWithFutureClaim)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).toBe(false)
   })
 })

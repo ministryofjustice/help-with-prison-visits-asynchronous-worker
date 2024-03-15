@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -16,25 +14,26 @@ let insertTask
 
 let archiveOldClaims
 
+jest.mock('../../../config', () => config);
+jest.mock('../data/get-all-claims-older-than-date', () => getAllClaimsOlderThanDate);
+jest.mock('../data/insert-task', () => insertTask);
+
 describe('services/workers/archive-old-claims', function () {
   beforeEach(function () {
     getAllClaimsOlderThanDate = sinon.stub()
     insertTask = sinon.stub()
 
-    archiveOldClaims = proxyquire('../../../../app/services/workers/archive-old-claims', {
-      '../../../config': config,
-      '../data/get-all-claims-older-than-date': getAllClaimsOlderThanDate,
-      '../data/insert-task': insertTask
-    })
+    archiveOldClaims = require('../../../../app/services/workers/archive-old-claims')
   })
 
   it('should retrieve all claims older than current date minus config days', function () {
     getAllClaimsOlderThanDate.resolves([])
 
     return archiveOldClaims.execute({}).then(function () {
-      expect(getAllClaimsOlderThanDate.calledOnce).to.be.true //eslint-disable-line
-      expect(getAllClaimsOlderThanDate.firstCall.args[0]).to.be.within(tenDaysAgoMinus5mins, tenDaysAgoPlus5mins)
-    })
+      expect(getAllClaimsOlderThanDate.calledOnce).toBe(true) //eslint-disable-line
+      expect(getAllClaimsOlderThanDate.firstCall.args[0]).toBeGreaterThanOrEqual(tenDaysAgoMinus5mins);
+      expect(getAllClaimsOlderThanDate.firstCall.args[0]).toBeLessThanOrEqual(tenDaysAgoPlus5mins)
+    });
   })
 
   it('should insert an archive claim task for each claim id found', function () {
@@ -42,7 +41,7 @@ describe('services/workers/archive-old-claims', function () {
     insertTask.resolves()
 
     return archiveOldClaims.execute({}).then(function () {
-      expect(insertTask.calledTwice).to.be.true //eslint-disable-line
-    })
+      expect(insertTask.calledTwice).toBe(true) //eslint-disable-line
+    });
   })
 })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -26,8 +25,8 @@ describe('services/data/delete-claim-from-internal', function () {
         return db('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
       })
       .then(function (countResult) {
-        expect(countResult[0].count).to.equal(0)
-      })
+        expect(countResult[0].count).toBe(0)
+      });
   })
 
   it('should delete claim and leave eligibility details', function () {
@@ -38,8 +37,8 @@ describe('services/data/delete-claim-from-internal', function () {
         return db('IntSchema.Eligibility').where('EligibilityId', eligibilityId).count('EligibilityId as count')
       })
       .then(function (countResult) {
-        expect(countResult[0].count).to.equal(1)
-      })
+        expect(countResult[0].count).toBe(1)
+      });
   })
 
   afterEach(function () {

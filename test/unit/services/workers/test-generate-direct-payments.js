@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const fileTypes = require('../../../../app/constants/payment-filetype-enum')
@@ -47,6 +45,22 @@ let getTopUpsPendingPayment
 let updateAllTopupsProcessedPayment
 let updateAllClaimsProcessedPayment
 
+jest.mock('../data/get-claims-pending-payment', () => getClaimsPendingPayment);
+jest.mock('../direct-payments/create-payment-file', () => createPaymentFile);
+jest.mock('../direct-payments/create-adi-journal-file', () => createAdiJournalFile);
+jest.mock('../data/insert-direct-payment-file', () => insertDirectBankPayments);
+jest.mock('../data/get-topups-pending-payment', () => getTopUpsPendingPayment);
+
+jest.mock(
+  './helpers/payments/update-all-topups-processed-payment',
+  () => updateAllTopupsProcessedPayment
+);
+
+jest.mock(
+  './helpers/payments/update-all-claims-processed-payment',
+  () => updateAllClaimsProcessedPayment
+);
+
 describe('services/workers/generate-direct-payments', function () {
   beforeEach(function () {
     getClaimsPendingPayment = sinon.stub()
@@ -57,52 +71,44 @@ describe('services/workers/generate-direct-payments', function () {
     updateAllTopupsProcessedPayment = sinon.stub().resolves()
     updateAllClaimsProcessedPayment = sinon.stub().resolves()
 
-    generateDirectPayments = proxyquire('../../../../app/services/workers/generate-direct-payments', {
-      '../data/get-claims-pending-payment': getClaimsPendingPayment,
-      '../direct-payments/create-payment-file': createPaymentFile,
-      '../direct-payments/create-adi-journal-file': createAdiJournalFile,
-      '../data/insert-direct-payment-file': insertDirectBankPayments,
-      '../data/get-topups-pending-payment': getTopUpsPendingPayment,
-      './helpers/payments/update-all-topups-processed-payment': updateAllTopupsProcessedPayment,
-      './helpers/payments/update-all-claims-processed-payment': updateAllClaimsProcessedPayment
-    })
+    generateDirectPayments = require('../../../../app/services/workers/generate-direct-payments')
   })
 
   it('should retrieve claim data and then call file generation', function () {
     getClaimsPendingPayment.resolves(claimsPendingPayment)
     getTopUpsPendingPayment.resolves(topUpsPendingPayment)
     return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
-      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.true //eslint-disable-line
-      expect(createAdiJournalFile.calledWith(total)).to.be.true //eslint-disable-line
-      expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).to.be.true //eslint-disable-line
-      expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).to.be.true //eslint-disable-line
-      expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, true)).to.be.true //eslint-disable-line
-      expect(updateAllTopupsProcessedPayment.calledWith(['123456', '123457', '123458'])).to.be.true //eslint-disable-line
-    })
+      expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
+      expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(true) //eslint-disable-line
+      expect(createAdiJournalFile.calledWith(total)).toBe(true) //eslint-disable-line
+      expect(insertDirectBankPayments.calledWith(testPath, fileTypes.ACCESSPAY_FILE)).toBe(true) //eslint-disable-line
+      expect(insertDirectBankPayments.calledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)).toBe(true) //eslint-disable-line
+      expect(updateAllClaimsProcessedPayment.calledWith(['999997', '999998', '999999'], payments, true)).toBe(true) //eslint-disable-line
+      expect(updateAllTopupsProcessedPayment.calledWith(['123456', '123457', '123458'])).toBe(true) //eslint-disable-line
+    });
   })
 
   it('should find no data and not call file generation', function () {
     getClaimsPendingPayment.resolves(claimsMissingData)
     getTopUpsPendingPayment.resolves(topUpMissingData)
     return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
-      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
+      expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
+      expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(false) //eslint-disable-line
     })
       .catch(function (error) {
-        expect(error.message).to.equal('Data is missing')
-      })
+        expect(error.message).toBe('Data is missing')
+      });
   })
 
   it('should find missing top up data and valid claim data and not call file generation', function () {
     getClaimsPendingPayment.resolves(claimsPendingPayment)
     getTopUpsPendingPayment.resolves(topUpMissingData)
     return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(getClaimsPendingPayment.calledOnce).to.be.true //eslint-disable-line
-      expect(createPaymentFile.calledWith(claimsPendingPayment)).to.be.false //eslint-disable-line
+      expect(getClaimsPendingPayment.calledOnce).toBe(true) //eslint-disable-line
+      expect(createPaymentFile.calledWith(claimsPendingPayment)).toBe(false) //eslint-disable-line
     })
       .catch(function (error) {
-        expect(error.message).to.equal('Data is missing')
-      })
+        expect(error.message).toBe('Data is missing')
+      });
   })
 })

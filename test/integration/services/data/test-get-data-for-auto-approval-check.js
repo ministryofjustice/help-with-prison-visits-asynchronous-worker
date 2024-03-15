@@ -1,6 +1,4 @@
-const expect = require('chai').expect
 const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -14,14 +12,16 @@ let previousClaims
 let getAllClaimDataStub
 let getDataForAutoApprovalCheck
 
+jest.mock('./get-all-claim-data', () => getAllClaimDataStub);
+
 describe.skip('services/data/get-data-for-auto-approval-check', function () {
-  before(function () {
+  beforeAll(function () {
     const uniqueId = Math.floor(Date.now() / 100) - 15000000000
     claimData = testHelper.getClaimData(REFERENCE)
 
     getAllClaimDataStub = sinon.stub().resolves(claimData)
 
-    getDataForAutoApprovalCheck = proxyquire('../../../../app/services/data/get-data-for-auto-approval-check', { './get-all-claim-data': getAllClaimDataStub })
+    getDataForAutoApprovalCheck = require('../../../../app/services/data/get-data-for-auto-approval-check')
 
     eligibilityId = claimData.Claim.EligibilityId
     claimId = claimData.Claim.ClaimId
@@ -179,13 +179,13 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
   it('should return all current and previous claim data associated to the claimant', function () {
     return getDataForAutoApprovalCheck(REFERENCE, eligibilityId, claimId)
       .then(function (result) {
-        expect(result.previousClaims).to.not.be.null //eslint-disable-line
-        expect(result.latestManuallyApprovedClaim).to.not.be.null //eslint-disable-line
-        expect(result.latestManuallyApprovedClaim.ClaimId).to.equal(result.previousClaims[1].ClaimId)
-      })
+        expect(result.previousClaims).not.toBeNull() //eslint-disable-line
+        expect(result.latestManuallyApprovedClaim).not.toBeNull() //eslint-disable-line
+        expect(result.latestManuallyApprovedClaim.ClaimId).toBe(result.previousClaims[1].ClaimId)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

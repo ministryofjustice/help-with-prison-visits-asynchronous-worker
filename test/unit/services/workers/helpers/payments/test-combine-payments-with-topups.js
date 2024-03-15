@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const combinePaymentWithTopups = require('../../../../../../app/services/workers/helpers/payments/combine-payments-with-topups')
 
 const claims = [
@@ -22,6 +20,6 @@ const claimsAndTopups = [
 describe('services/workers/helpers/payments/combine-payments-with-topups', function () {
   it('should combine topup and claim payment data', function () {
     const combinedPayments = combinePaymentWithTopups(claims, topups)
-    expect(combinedPayments).to.eql(claimsAndTopups)
+    expect(combinedPayments).toEqual(claimsAndTopups)
   })
 })

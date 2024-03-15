@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const config = require('../../../../config')
 
 const callDwpBenefitCheckerSoapService = require('../../../../app/services/benefit-checker/call-dwp-benefit-checker-soap-service')
@@ -12,8 +11,8 @@ describe('services/benefit-checker/call-dwp-benefit-checker-soap-service', funct
 
     return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
       .then(function (benefitCheckerResult) {
-        expect(benefitCheckerResult.visitorId).to.be.equal(visitorDwpBenefitCheckerData.visitorId)
-        expect(benefitCheckerResult.result).to.be.equal(expectedResult)
-      })
+        expect(benefitCheckerResult.visitorId).toBe(visitorDwpBenefitCheckerData.visitorId)
+        expect(benefitCheckerResult.result).toBe(expectedResult)
+      });
   })
 })

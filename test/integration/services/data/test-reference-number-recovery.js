@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 
 const referenceNumberRecovery = require('../../../../app/services/data/reference-number-recovery')
@@ -9,7 +8,7 @@ let email
 let prisonNumber
 
 describe('services/data/reference-number-recovery', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function () {
         const claimData = testHelper.getClaimData(REFERENCE)
@@ -21,11 +20,11 @@ describe('services/data/reference-number-recovery', function () {
   it('should return all first time claim data', function () {
     return referenceNumberRecovery(email, prisonNumber)
       .then(function (result) {
-        expect(result.Reference).to.be.equal(REFERENCE)
-      })
+        expect(result.Reference).toBe(REFERENCE)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

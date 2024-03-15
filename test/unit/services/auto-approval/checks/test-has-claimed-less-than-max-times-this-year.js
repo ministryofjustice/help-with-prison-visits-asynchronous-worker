@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 
@@ -13,22 +12,24 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(25, now.clone().subtract(1, 'years'))
 
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if the number of claims made for the current year is greater than 26', function () {
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(27, now.clone().subtract(1, 'years'))
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
 
-    expect(checkResult.result).to.equal(false)
-    expect(checkResult.failureMessage).to.equal('This claimant has claimed more than the maximum number of times this year. Claim ref: ABC123, Maximum no of claims per year: 26, No. of claims this year: 27')
+    expect(checkResult.result).toBe(false)
+    expect(checkResult.failureMessage).toBe(
+      'This claimant has claimed more than the maximum number of times this year. Claim ref: ABC123, Maximum no of claims per year: 26, No. of claims this year: 27'
+    )
   })
 
   it('should return true if the number of claims made for the current year is less than 26', function () {
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(25, now.clone().subtract(1, 'years'))
 
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return true if the number of claims made for the current year is zero', function () {
@@ -36,7 +37,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
       previousClaims: []
     }
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return true if the claimant has claimed the max number of claims this year, and submits an advance claim that falls outside the claimable year', function () {
@@ -44,7 +45,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
     autoApprovalData.Claim.DateOfJourney = now.clone().add('20', 'days').toDate()
 
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 })
 

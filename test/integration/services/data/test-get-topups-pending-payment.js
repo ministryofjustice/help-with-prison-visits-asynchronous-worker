@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const paymentMethods = require('../../../../app/constants/payment-method-enum')
@@ -27,18 +26,18 @@ describe('services/data/get-topups-pending-payment', function () {
   }
 
   describe('Direct Bank payment', function () {
-    before(function () {
+    beforeAll(function () {
       return beforeDataCreation()
     })
 
     it('should retrieve only topups with a PaymentStatus of PENDING and a PaymentDate of NULL', function () {
       return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
         .then(function (results) {
-          expect(results).to.eql(expectedBankTopups)
-        })
+          expect(results).toEqual(expectedBankTopups)
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return testHelper.deleteTopUp(claimId)
         .then(function () {
           return testHelper.deleteAll(reference, 'IntSchema')
@@ -47,7 +46,7 @@ describe('services/data/get-topups-pending-payment', function () {
   })
 
   describe('Payout payments', function () {
-    before(function () {
+    beforeAll(function () {
       const db = getDatabaseConnector()
 
       return beforeDataCreation()
@@ -67,11 +66,11 @@ describe('services/data/get-topups-pending-payment', function () {
         .then(function (results) {
           const result = results.pop()
           results.push(result.slice(0, result.length - 1))
-          expect(results).to.eql(expectedVoucherTopups)
-        })
+          expect(results).toEqual(expectedVoucherTopups)
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return testHelper.deleteTopUp(claimId)
         .then(function () {
           return testHelper.deleteAll(reference, 'IntSchema')

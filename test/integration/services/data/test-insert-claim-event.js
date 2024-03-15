@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const insertClaimEvent = require('../../../../app/services/data/insert-claim-event')
 const testHelper = require('../../../test-helper')
@@ -10,7 +9,7 @@ let claimId
 let eligibilityId
 
 describe('services/data/insert-claim-event', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         claimId = ids.claimId
@@ -26,14 +25,14 @@ describe('services/data/insert-claim-event', function () {
           .where({ Reference: REFERENCE, EligibilityId: eligibilityId, ClaimId: claimId })
           .first()
           .then(function (result) {
-            expect(result.Event).to.be.equal(event)
-            expect(result.IsInternal).to.be.true //eslint-disable-line
-            expect(result.DateSubmitted).not.to.be.null //eslint-disable-line
-          })
-      })
+            expect(result.Event).toBe(event)
+            expect(result.IsInternal).toBe(true) //eslint-disable-line
+            expect(result.DateSubmitted).not.toBeNull() //eslint-disable-line
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

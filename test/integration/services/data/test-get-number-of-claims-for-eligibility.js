@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -9,7 +8,7 @@ const REFERENCE = 'GETNUME'
 let eligibilityId
 
 describe('services/data/get-number-of-claims-for-eligibility', function () {
-  before(function () {
+  beforeAll(function () {
     const claim1 = testHelper.getClaimData(REFERENCE).Claim
 
     eligibilityId = claim1.EligibilityId
@@ -25,11 +24,11 @@ describe('services/data/get-number-of-claims-for-eligibility', function () {
   it('should return number of claims for an eligibility Id', function () {
     return getNumberOfClaimsForEligibility('IntSchema', eligibilityId)
       .then(function (claimCount) {
-        expect(claimCount).to.equal(2)
-      })
+        expect(claimCount).toBe(2)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

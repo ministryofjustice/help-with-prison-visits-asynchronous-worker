@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const isClaimantTrusted = require('../../../../../app/services/auto-approval/checks/is-claimant-trusted')
 
 const autoApprovalDataTrusted = {
@@ -17,11 +15,11 @@ const autoApprovalDataUntrusted = {
 describe('services/auto-approval/checks/is-claimant-trusted', function () {
   it('should return true if claimant is marked as trusted', function () {
     const checkResult = isClaimantTrusted(autoApprovalDataTrusted)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if claimant is marked as untrusted', function () {
     const checkResult = isClaimantTrusted(autoApprovalDataUntrusted)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).toBe(false)
   })
 })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 
 const getVisitorEmailAddress = require('../../../../app/services/data/get-visitor-email-address')
@@ -8,7 +7,7 @@ describe('services/data/get-visitor-email-address', function () {
   let eligibilityId
   const claimData = testHelper.getClaimData(reference)
 
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         eligibilityId = ids.eligibilityId
@@ -18,11 +17,11 @@ describe('services/data/get-visitor-email-address', function () {
   it('should return visitor email address', function () {
     return getVisitorEmailAddress('IntSchema', reference, eligibilityId)
       .then(function (emailAddress) {
-        expect(emailAddress).to.be.equal(claimData.Visitor.EmailAddress)
-      })
+        expect(emailAddress).toBe(claimData.Visitor.EmailAddress)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const getTotalFromPaymentData = require('../../../../../../../app/services/workers/helpers/payments/direct/get-total-from-payment-data')
 
 let paymentData = [
@@ -14,13 +12,13 @@ let expectedTotal = '134.41'
 describe('services/workers/helpers/payments/direct/get-total-from-payment-data', function () {
   it('should return the correct direct payment total of all claims', function () {
     const total = getTotalFromPaymentData(paymentData)
-    expect(total).to.eql(expectedTotal)
+    expect(total).toEqual(expectedTotal)
   })
 
   it('should return the correct direct payment total when paymentData contains only 1 item', function () {
     paymentData = paymentData.splice(0, 1)
     expectedTotal = paymentData[0][3]
     const total = getTotalFromPaymentData(paymentData)
-    expect(total).to.eql(expectedTotal)
+    expect(total).toEqual(expectedTotal)
   })
 })

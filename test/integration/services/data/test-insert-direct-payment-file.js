@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const fileTypeEnum = require('../../../../app/constants/payment-filetype-enum')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -19,15 +18,16 @@ describe('services/data/insert-direct-payment-file', function () {
           .where({ Filepath: path, FileType: fileTypeEnum.ACCESSPAY_FILE })
           .first()
           .then(function (result) {
-            expect(result.Filepath).to.be.equal(path)
-            expect(result.FileType).to.be.equal(fileTypeEnum.ACCESSPAY_FILE)
-            expect(result.DateCreated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-            expect(result.IsEnabled).to.be.true //eslint-disable-line
-          })
-      })
+          expect(result.Filepath).toBe(path)
+          expect(result.FileType).toBe(fileTypeEnum.ACCESSPAY_FILE)
+          expect(result.DateCreated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
+          expect(result.DateCreated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+          expect(result.IsEnabled).toBe(true) //eslint-disable-line
+        });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.DirectPaymentFile').where('Filepath', path).del()

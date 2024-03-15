@@ -1,6 +1,13 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+
+jest.mock('../../../config', () => config);
+
+jest.mock(
+  '../data/get-advance-claims-total-expense-approved-cost-before-date',
+  () => getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub
+);
+
+jest.mock('../data/update-overpayment-status', () => updateOverpaymentStatusStub);
 
 describe('services/workers/mark-overpayments', function () {
   let markOverpayments
@@ -17,18 +24,14 @@ describe('services/workers/mark-overpayments', function () {
     getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub = sinon.stub().resolves(claims)
     updateOverpaymentStatusStub = sinon.stub().resolves()
 
-    markOverpayments = proxyquire('../../../../app/services/workers/mark-overpayments', {
-      '../../../config': config,
-      '../data/get-advance-claims-total-expense-approved-cost-before-date': getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub,
-      '../data/update-overpayment-status': updateOverpaymentStatusStub
-    })
+    markOverpayments = require('../../../../app/services/workers/mark-overpayments')
   })
 
   it('find all claims that are should be overpaid, then adds a task to mark them', function () {
     return markOverpayments.markOverpayments()
       .then(function () {
-        expect(getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub.calledOnce).to.be.true //eslint-disable-line
-        expect(updateOverpaymentStatusStub.calledTwice).to.be.true //eslint-disable-line
-      })
+        expect(getAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmountStub.calledOnce).toBe(true) //eslint-disable-line
+        expect(updateOverpaymentStatusStub.calledTwice).toBe(true) //eslint-disable-line
+      });
   })
 })

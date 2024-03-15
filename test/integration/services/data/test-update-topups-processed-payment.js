@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const moment = require('moment')
@@ -15,7 +14,7 @@ describe('services/data/update-topups-processed-payment', function () {
   const referenceA = 'PROCESS'
   let claimId
 
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', referenceA)
       .then(function (ids) {
         claimId = ids.claimId
@@ -26,25 +25,27 @@ describe('services/data/update-topups-processed-payment', function () {
   it(`should update Topup PaymentStatus to PROCESSED and set PaymentDate to ${paymentDate}`, function () {
     return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
       .then(function (topupsPendingPayment) {
-        expect(topupsPendingPayment.length, 'Topups pending payment should be an array of size 1').to.be.equal(1)
+        // Topups pending payment should be an array of size 1
+        expect(topupsPendingPayment.length).toBe(1)
         return updateTopupsPendingPayment(claimId, paymentDate)
           .then(function () {
             const db = getDatabaseConnector()
 
             return db('IntSchema.TopUp').where('ClaimId', claimId)
               .then(function (claims) {
-                expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
-                expect(claims[0].PaymentDate).to.not.equal(null)
+                expect(claims[0].PaymentStatus).toBe(processedStatus)
+                expect(claims[0].PaymentDate).not.toBeNull()
                 return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
                   .then(function (topupsPendingPayment) {
-                    expect(topupsPendingPayment.length, 'Topups pending payment should be an array of size 0').to.be.equal(0)
-                  })
-              })
-          })
-      })
+                    // Topups pending payment should be an array of size 0
+                    expect(topupsPendingPayment.length).toBe(0)
+                  });
+              });
+          });
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteTopUp(claimId)
       .then(function () {
         return testHelper.deleteAll(referenceA, 'IntSchema')

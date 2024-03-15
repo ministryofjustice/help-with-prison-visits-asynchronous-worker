@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
@@ -24,6 +22,23 @@ const PAYOUT_DATA_ADVANCE = { VisitorFirstName: 'Joe', PaymentMethod: paymentMet
 
 let sendAcceptedClaimNotification
 
+jest.mock('../notify/send-notification', () => stubSendNotification);
+
+jest.mock(
+  '../data/get-approved-claim-expense-data',
+  () => stubGetApprovedClaimExpenseData
+);
+
+jest.mock(
+  '../notify/helpers/get-approved-claim-details-string',
+  () => stubGetApprovedClaimDetailsString
+);
+
+jest.mock(
+  '../data/get-enabled-claim-deductions',
+  () => stubGetEnabledClaimDeductions
+);
+
 describe('services/send-accepted-claim-notification', function () {
   beforeEach(function () {
     stubSendNotification = sinon.stub().resolves()
@@ -31,12 +46,7 @@ describe('services/send-accepted-claim-notification', function () {
     stubGetApprovedClaimDetailsString = sinon.stub().returns('string with payment breakdown')
     stubGetEnabledClaimDeductions = sinon.stub().resolves([])
 
-    sendAcceptedClaimNotification = proxyquire('../../../../app/services/workers/send-accepted-claim-notification', {
-      '../notify/send-notification': stubSendNotification,
-      '../data/get-approved-claim-expense-data': stubGetApprovedClaimExpenseData,
-      '../notify/helpers/get-approved-claim-details-string': stubGetApprovedClaimDetailsString,
-      '../data/get-enabled-claim-deductions': stubGetEnabledClaimDeductions
-    })
+    sendAcceptedClaimNotification = require('../../../../app/services/workers/send-accepted-claim-notification')
   })
 
   it('should call send-notification with correct details for retro bank payment', function () {
@@ -48,14 +58,14 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(stubSendNotification.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID)
+        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
+        expect(stubGetApprovedClaimExpenseData.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetApprovedClaimDetailsString.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetEnabledClaimDeductions.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should call send-notification with correct details for advance bank payment', function () {
@@ -67,14 +77,14 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_BANK_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.false //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(stubSendNotification.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_BANK_EMAIL_TEMPLATE_ID)
+        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
+        expect(stubGetApprovedClaimExpenseData.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetApprovedClaimDetailsString.calledOnce).toBe(false) //eslint-disable-line
+        expect(stubGetEnabledClaimDeductions.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should call send-notification with correct details for retro payout payment', function () {
@@ -86,14 +96,14 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(stubSendNotification.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID)
+        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
+        expect(stubGetApprovedClaimExpenseData.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetApprovedClaimDetailsString.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetEnabledClaimDeductions.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should call send-notification with correct details for advance payout payment', function () {
@@ -105,14 +115,14 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_PAYOUT_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.false //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(stubSendNotification.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubSendNotification.firstCall.args[0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_PAYOUT_EMAIL_TEMPLATE_ID)
+        expect(stubSendNotification.firstCall.args[1]).toBe(EMAIL_ADDRESS)
+        expect(stubSendNotification.firstCall.args[2].reference).toBe(REFERENCE)
+        expect(stubGetApprovedClaimExpenseData.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubGetApprovedClaimDetailsString.calledOnce).toBe(false) //eslint-disable-line
+        expect(stubGetEnabledClaimDeductions.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should reject if there is no payment method', function () {
@@ -124,8 +134,8 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .catch(function (error) {
-        expect(error.message).to.equal('No payment method found')
-        expect(stubSendNotification.calledOnce).to.be.false //eslint-disable-line
-      })
+        expect(error.message).toBe('No payment method found')
+        expect(stubSendNotification.calledOnce).toBe(false) //eslint-disable-line
+      });
   })
 })
