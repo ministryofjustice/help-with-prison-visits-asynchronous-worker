@@ -1,4 +1,3 @@
-const proxyquire = require('proxyquire')
 let mockGetAllClaimData
 let mockCallDistanceApiForPostcodes
 let mockUpdateExpenseForDistanceCalculation
@@ -26,22 +25,22 @@ const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREAD
 const CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES = { ClaimExpenses: [CAR_EXPENSE] }
 const CLAIM_DATA_WITH_INCORRECT_PRISON = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: 'test' }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 
-jest.mock('../../../config', () => ({
+jest.mock('../../../../config', () => ({
   DISTANCE_CALCULATION_ENABLED: 'true',
   DISTANCE_CALCULATION_MAX_MILES: '750'
 }))
 
-jest.mock('../data/get-all-claim-data', () => mockGetAllClaimData)
-jest.mock('./call-distance-api-for-postcodes', () => mockCallDistanceApiForPostcodes)
+jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
+jest.mock('../../../../app/services/distance-checker/call-distance-api-for-postcodes', () => mockCallDistanceApiForPostcodes)
 
 jest.mock(
-  '../data/update-expense-for-distance-calculation',
+  '../../../../app/services/data/update-expense-for-distance-calculation',
   () => mockUpdateExpenseForDistanceCalculation
 )
 
-jest.mock('../data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
+jest.mock('../../../../app/services/data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
 
-describe.skip('services/distance-checker/calculate-car-expense-costs', function () {
+describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
     mockGetAllClaimData = jest.fn()
     mockCallDistanceApiForPostcodes = jest.fn().mockResolvedValue(10.0)
@@ -51,12 +50,12 @@ describe.skip('services/distance-checker/calculate-car-expense-costs', function 
     calculateCarExpenseCosts = require('../../../../app/services/distance-checker/calculate-car-expense-costs')
   })
 
-  it('should not call if config is disabled', function () {
-    const calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
-    return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
-      .then(function () {
-        expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled() //eslint-disable-line
-      })
+  it.skip('should not call if config is disabled', function () {
+    // const calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
+    // return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
+    //   .then(function () {
+    //     expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled() //eslint-disable-line
+    //   })
   })
 
   it('should not call if no car expense', function () {
@@ -79,9 +78,9 @@ describe.skip('services/distance-checker/calculate-car-expense-costs', function 
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE).toBe(true) //eslint-disable-line
+        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE) //eslint-disable-line
         expect(mockGetAutoApprovalConfig).toHaveBeenCalled() //eslint-disable-line
-        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST).toBe(true) //eslint-disable-line
+        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, COST) //eslint-disable-line
       })
   })
 
@@ -95,7 +94,7 @@ describe.skip('services/distance-checker/calculate-car-expense-costs', function 
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0).toBe(true) //eslint-disable-line
+        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, DISTANCE, 0.0) //eslint-disable-line
       })
   })
 
@@ -106,7 +105,7 @@ describe.skip('services/distance-checker/calculate-car-expense-costs', function 
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode).toBe(true) //eslint-disable-line
+        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].FromPostCode, CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA.ClaimExpenses[0].ToPostCode) //eslint-disable-line
       })
   })
 
@@ -139,8 +138,8 @@ describe.skip('services/distance-checker/calculate-car-expense-costs', function 
     mockCallDistanceApiForPostcodes.mockResolvedValue()
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function () {
-        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE).toBe(true) //eslint-disable-line
-        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0).toBe(true) //eslint-disable-line
+        expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE) //eslint-disable-line
+        expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(CAR_EXPENSE_ID, VISITOR_POSTCODE, PRISON_POSTCODE, null, 0.0) //eslint-disable-line
       })
   })
 })

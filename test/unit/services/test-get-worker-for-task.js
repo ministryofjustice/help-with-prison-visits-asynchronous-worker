@@ -22,54 +22,54 @@ const generateDirectPayments = { name: 'generateDirectPayments' }
 const sendMalwareAlert = { name: 'sendMalwareAlert' }
 
 jest.mock(
-  './workers/send-accepted-claim-notification',
+  '../../../app/services/workers/send-accepted-claim-notification',
   () => sendAcceptedClaimNotification
 )
 
 jest.mock(
-  './workers/send-rejected-claim-notification',
+  '../../../app/services/workers/send-rejected-claim-notification',
   () => sendRejectedClaimNotification
 )
 
 jest.mock(
-  './workers/send-request-information-claim-notification',
+  '../../../app/services/workers/send-request-information-claim-notification',
   () => sendRequestInformationClaimNotification
 )
 
 jest.mock(
-  './workers/send-request-information-response-submitted-notification',
+  '../../../app/services/workers/send-request-information-response-submitted-notification',
   () => sendRequestInformationResponseSubmittedNotification
 )
 
 jest.mock(
-  './workers/send-advance-claim-evidence-reminder-notification',
+  '../../../app/services/workers/send-advance-claim-evidence-reminder-notification',
   () => sendAdvanceClaimEvidenceReminderNotification
 )
 
 jest.mock(
-  './workers/send-updated-contact-details-claim-notification',
+  '../../../app/services/workers/send-updated-contact-details-claim-notification',
   () => sendUpdatedContactDetailsClaimNotification
 )
 
-jest.mock('./workers/send-claim-notification', () => sendClaimNotification)
-jest.mock('./workers/complete-claim', () => completeClaim)
-jest.mock('./workers/request-information-response', () => requestInformationResponse)
-jest.mock('./workers/dwp-check', () => dwpCheck)
+jest.mock('../../../app/services/workers/send-claim-notification', () => sendClaimNotification)
+jest.mock('../../../app/services/workers/complete-claim', () => completeClaim)
+jest.mock('../../../app/services/workers/request-information-response', () => requestInformationResponse)
+jest.mock('../../../app/services/workers/dwp-check', () => dwpCheck)
 
 jest.mock(
-  './workers/send-all-advance-claim-reminders-for-day',
+  '../../../app/services/workers/send-all-advance-claim-reminders-for-day',
   () => sendAllAdvanceClaimRemindersForDay
 )
 
-jest.mock('./workers/cleanup-old-payment-files', () => cleanupOldPaymentFiles)
-jest.mock('./workers/mark-overpayments', () => markOverpayments)
-jest.mock('./workers/cleanup-old-data', () => cleanupOldData)
-jest.mock('./workers/send-technical-help', () => sendTechnicalHelp)
-jest.mock('./workers/archive-old-claims', () => archiveOldClaims)
-jest.mock('./workers/archive-claim', () => archiveClaim)
-jest.mock('./workers/reference-recovery', () => referenceRecovery)
-jest.mock('./workers/generate-direct-payments', () => generateDirectPayments)
-jest.mock('./workers/send-malware-notification', () => sendMalwareAlert)
+jest.mock('../../../app/services/workers/cleanup-old-payment-files', () => cleanupOldPaymentFiles)
+jest.mock('../../../app/services/workers/mark-overpayments', () => markOverpayments)
+jest.mock('../../../app/services/workers/cleanup-old-data', () => cleanupOldData)
+jest.mock('../../../app/services/workers/send-technical-help', () => sendTechnicalHelp)
+jest.mock('../../../app/services/workers/archive-old-claims', () => archiveOldClaims)
+jest.mock('../../../app/services/workers/archive-claim', () => archiveClaim)
+jest.mock('../../../app/services/workers/reference-recovery', () => referenceRecovery)
+jest.mock('../../../app/services/workers/generate-direct-payments', () => generateDirectPayments)
+jest.mock('../../../app/services/workers/send-malware-notification', () => sendMalwareAlert)
 
 const getWorkerForTask = require('../../../app/services/get-worker-for-task')
 
