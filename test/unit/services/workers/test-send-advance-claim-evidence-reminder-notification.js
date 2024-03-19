@@ -73,7 +73,7 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       })
   })
 
-  it.skip('should reject the call if an invalid reminder type is sent', function () {
+  it('should reject the call if an invalid reminder type is sent', function () {
     return sendRequestInformationClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -82,7 +82,7 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
     })
       .catch(function (error) {
         expect(error.message).toBe('Not valid reminder type')
-        expect(mockSendNotification.calledOnce).toBe(false) //eslint-disable-line
+        expect(mockSendNotification).not.toHaveBeenCalled() //eslint-disable-line
       })
   })
 })
