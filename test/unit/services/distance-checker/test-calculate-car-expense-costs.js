@@ -1,10 +1,3 @@
-let mockGetAllClaimData
-let mockCallDistanceApiForPostcodes
-let mockUpdateExpenseForDistanceCalculation
-let mockGetAutoApprovalConfig
-
-let calculateCarExpenseCosts
-
 const REFERENCE = '1234567'
 const ELIGIBILITY_ID = '4321'
 const CLAIM_ID = 123
@@ -25,37 +18,45 @@ const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREAD
 const CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES = { ClaimExpenses: [CAR_EXPENSE] }
 const CLAIM_DATA_WITH_INCORRECT_PRISON = { Visitor: { PostCode: VISITOR_POSTCODE }, Prisoner: { NameOfPrison: 'test' }, ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE] }
 
-jest.mock('../../../../config', () => ({
-  DISTANCE_CALCULATION_ENABLED: 'true',
-  DISTANCE_CALCULATION_MAX_MILES: '750'
-}))
+const mockGetAllClaimData = jest.fn()
+const mockCallDistanceApiForPostcodes = jest.fn()
+const mockUpdateExpenseForDistanceCalculation = jest.fn()
+const mockGetAutoApprovalConfig = jest.fn()
 
-jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
-jest.mock('../../../../app/services/distance-checker/call-distance-api-for-postcodes', () => mockCallDistanceApiForPostcodes)
-
-jest.mock(
-  '../../../../app/services/data/update-expense-for-distance-calculation',
-  () => mockUpdateExpenseForDistanceCalculation
-)
-
-jest.mock('../../../../app/services/data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
+let calculateCarExpenseCosts
 
 describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
-    mockGetAllClaimData = jest.fn()
-    mockCallDistanceApiForPostcodes = jest.fn().mockResolvedValue(10.0)
-    mockUpdateExpenseForDistanceCalculation = jest.fn().mockResolvedValue()
-    mockGetAutoApprovalConfig = jest.fn().mockResolvedValue({ CostPerMile: '13.00' })
+    mockCallDistanceApiForPostcodes.mockResolvedValue(10.0)
+    mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
+    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00' })
+
+    jest.mock('../../../../config', () => ({
+      DISTANCE_CALCULATION_ENABLED: 'true',
+      DISTANCE_CALCULATION_MAX_MILES: '750'
+    }))
+    jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
+    jest.mock('../../../../app/services/distance-checker/call-distance-api-for-postcodes', () => mockCallDistanceApiForPostcodes)
+    jest.mock(
+      '../../../../app/services/data/update-expense-for-distance-calculation',
+      () => mockUpdateExpenseForDistanceCalculation
+    )
+    jest.mock('../../../../app/services/data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
 
     calculateCarExpenseCosts = require('../../../../app/services/distance-checker/calculate-car-expense-costs')
   })
 
-  it.skip('should not call if config is disabled', function () {
-    // const calculateCarExpenseCostsConfigDisabled = proxyquire('../../../../app/services/distance-checker/calculate-car-expense-costs', { '../../../config': { DISTANCE_CALCULATION_ENABLED: 'false' } })
-    // return calculateCarExpenseCostsConfigDisabled(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
-    //   .then(function () {
-    //     expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled() //eslint-disable-line
-    //   })
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('should not call if config is disabled', function () {
+    jest.mock('../../../../config', () => ({ DISTANCE_CALCULATION_ENABLED: 'false' }))
+
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
+      .then(function () {
+        expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled() //eslint-disable-line
+      })
   })
 
   it('should not call if no car expense', function () {

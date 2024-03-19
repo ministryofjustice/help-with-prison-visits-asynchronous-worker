@@ -27,38 +27,32 @@ const OLD_CLAIM_DOCUMENT_DATA = [
   }
 ]
 
-let mockGetOldEligibilityData
-let mockGetOldClaimData
-let mockGetOldClaimDocumentData
-let mockDeleteClaimFromExternalAsTransaction
-let mockDeleteOldFiles
-
+const mockGetOldEligibilityData = jest.fn()
+const mockGetOldClaimData = jest.fn()
+const mockGetOldClaimDocumentData = jest.fn()
+const mockDeleteClaimFromExternalAsTransaction = jest.fn()
+const mockDeleteOldFiles = jest.fn()
 let cleanupOldData
-
-jest.mock('../../../../app/services/data/get-old-eligibility-data', () => mockGetOldEligibilityData)
-jest.mock('../../../../app/services/data/get-old-claim-data', () => mockGetOldClaimData)
-jest.mock('../../../../app/services/data/get-old-claim-document-data', () => mockGetOldClaimDocumentData)
-
-jest.mock(
-  '../../../../app/services/data/delete-claim-from-external-as-transaction',
-  () => mockDeleteClaimFromExternalAsTransaction
-)
-
-jest.mock('../../../../app/services/cleanup-old-data/delete-old-files', () => mockDeleteOldFiles)
 
 describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {
-    mockGetOldEligibilityData = jest.fn()
-    mockGetOldClaimData = jest.fn()
-    mockGetOldClaimDocumentData = jest.fn()
-    mockDeleteClaimFromExternalAsTransaction = jest.fn().mockResolvedValue()
-    mockDeleteOldFiles = jest.fn().mockResolvedValue()
+    mockDeleteClaimFromExternalAsTransaction.mockResolvedValue()
+    mockDeleteOldFiles.mockResolvedValue()
+
+    jest.mock('../../../../app/services/data/get-old-eligibility-data', () => mockGetOldEligibilityData)
+    jest.mock('../../../../app/services/data/get-old-claim-data', () => mockGetOldClaimData)
+    jest.mock('../../../../app/services/data/get-old-claim-document-data', () => mockGetOldClaimDocumentData)
+    jest.mock(
+      '../../../../app/services/data/delete-claim-from-external-as-transaction',
+      () => mockDeleteClaimFromExternalAsTransaction
+    )
+    jest.mock('../../../../app/services/cleanup-old-data/delete-old-files', () => mockDeleteOldFiles)
 
     cleanupOldData = require('../../../../app/services/workers/cleanup-old-data')
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
   })
 
   it('should retrieve any old eligibility records and delete them from the external database', function () {

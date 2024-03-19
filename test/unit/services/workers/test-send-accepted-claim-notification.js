@@ -8,10 +8,10 @@ const REFERENCE = '1234567'
 const ELIGIBILITY_ID = 4321
 const CLAIM_ID = 1234
 
-let mockSendNotification
-let mockGetApprovedClaimExpenseData
-let mockGetApprovedClaimDetailsString
-let mockGetEnabledClaimDeductions
+const mockSendNotification = jest.fn()
+const mockGetApprovedClaimExpenseData = jest.fn()
+const mockGetApprovedClaimDetailsString = jest.fn()
+const mockGetEnabledClaimDeductions = jest.fn()
 
 const BANK_DATA_PAST = { VisitorFirstName: 'Joe', AccountNumberLastFourDigits: '1234', PaymentMethod: paymentMethodEnum.DIRECT_BANK_PAYMENT.value, IsAdvanceClaim: false }
 const PAYOUT_DATA_PAST = { VisitorFirstName: 'Joe', PaymentMethod: paymentMethodEnum.PAYOUT.value, Town: 'Town', Prison: prisonsEnum.HEWELL.value, IsAdvanceClaim: false }
@@ -20,31 +20,31 @@ const PAYOUT_DATA_ADVANCE = { VisitorFirstName: 'Joe', PaymentMethod: paymentMet
 
 let sendAcceptedClaimNotification
 
-jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
-
-jest.mock(
-  '../../../../app/services/data/get-approved-claim-expense-data',
-  () => mockGetApprovedClaimExpenseData
-)
-
-jest.mock(
-  '../../../../app/services/notify/helpers/get-approved-claim-details-string',
-  () => mockGetApprovedClaimDetailsString
-)
-
-jest.mock(
-  '../../../../app/services/data/get-enabled-claim-deductions',
-  () => mockGetEnabledClaimDeductions
-)
-
 describe('services/send-accepted-claim-notification', function () {
   beforeEach(function () {
-    mockSendNotification = jest.fn().mockResolvedValue()
-    mockGetApprovedClaimExpenseData = jest.fn()
-    mockGetApprovedClaimDetailsString = jest.fn().mockReturnValue('string with payment breakdown')
-    mockGetEnabledClaimDeductions = jest.fn().mockResolvedValue([])
+    mockSendNotification.mockResolvedValue()
+    mockGetApprovedClaimDetailsString.mockReturnValue('string with payment breakdown')
+    mockGetEnabledClaimDeductions.mockResolvedValue([])
+
+    jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
+    jest.mock(
+      '../../../../app/services/data/get-approved-claim-expense-data',
+      () => mockGetApprovedClaimExpenseData
+    )
+    jest.mock(
+      '../../../../app/services/notify/helpers/get-approved-claim-details-string',
+      () => mockGetApprovedClaimDetailsString
+    )
+    jest.mock(
+      '../../../../app/services/data/get-enabled-claim-deductions',
+      () => mockGetEnabledClaimDeductions
+    )
 
     sendAcceptedClaimNotification = require('../../../../app/services/workers/send-accepted-claim-notification')
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should call send-notification with correct details for retro bank payment', function () {

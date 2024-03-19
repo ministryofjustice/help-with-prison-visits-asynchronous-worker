@@ -34,42 +34,43 @@ const topUpMissingData = [['', '', '12345678', 'Alan Turing', topUpPaymentAmount
 const testPath = 'data/payments/test.csv'
 const testAdiPath = 'data/payments/adi.xlsm'
 
+const mockGetClaimsPendingPayment = jest.fn()
+const mockCreatePaymentFile = jest.fn()
+const mockCreateAdiJournalFile = jest.fn()
+const mockInsertDirectBankPayments = jest.fn()
+const mockGetTopUpsPendingPayment = jest.fn()
+const mockUpdateAllTopupsProcessedPayment = jest.fn()
+const mockUpdateAllClaimsProcessedPayment = jest.fn()
+
 let generateDirectPayments
-let mockGetClaimsPendingPayment
-let mockCreatePaymentFile
-let mockCreateAdiJournalFile
-let mockInsertDirectBankPayments
-let mockGetTopUpsPendingPayment
-let mockUpdateAllTopupsProcessedPayment
-let mockUpdateAllClaimsProcessedPayment
-
-jest.mock('../../../../app/services/data/get-claims-pending-payment', () => mockGetClaimsPendingPayment)
-jest.mock('../../../../app/services/direct-payments/create-payment-file', () => mockCreatePaymentFile)
-jest.mock('../../../../app/services/direct-payments/create-adi-journal-file', () => mockCreateAdiJournalFile)
-jest.mock('../../../../app/services/data/insert-direct-payment-file', () => mockInsertDirectBankPayments)
-jest.mock('../../../../app/services/data/get-topups-pending-payment', () => mockGetTopUpsPendingPayment)
-
-jest.mock(
-  '../../../../app/services/workers/helpers/payments/update-all-topups-processed-payment',
-  () => mockUpdateAllTopupsProcessedPayment
-)
-
-jest.mock(
-  '../../../../app/services/workers/helpers/payments/update-all-claims-processed-payment',
-  () => mockUpdateAllClaimsProcessedPayment
-)
 
 describe('services/workers/generate-direct-payments', function () {
   beforeEach(function () {
-    mockGetClaimsPendingPayment = jest.fn()
-    mockCreatePaymentFile = jest.fn().mockResolvedValue(testPath)
-    mockCreateAdiJournalFile = jest.fn().mockResolvedValue(testAdiPath)
-    mockInsertDirectBankPayments = jest.fn().mockResolvedValue()
-    mockGetTopUpsPendingPayment = jest.fn()
-    mockUpdateAllTopupsProcessedPayment = jest.fn().mockResolvedValue()
-    mockUpdateAllClaimsProcessedPayment = jest.fn().mockResolvedValue()
+    mockCreatePaymentFile.mockResolvedValue(testPath)
+    mockCreateAdiJournalFile.mockResolvedValue(testAdiPath)
+    mockInsertDirectBankPayments.mockResolvedValue()
+    mockUpdateAllTopupsProcessedPayment.mockResolvedValue()
+    mockUpdateAllClaimsProcessedPayment.mockResolvedValue()
+
+    jest.mock('../../../../app/services/data/get-claims-pending-payment', () => mockGetClaimsPendingPayment)
+    jest.mock('../../../../app/services/direct-payments/create-payment-file', () => mockCreatePaymentFile)
+    jest.mock('../../../../app/services/direct-payments/create-adi-journal-file', () => mockCreateAdiJournalFile)
+    jest.mock('../../../../app/services/data/insert-direct-payment-file', () => mockInsertDirectBankPayments)
+    jest.mock('../../../../app/services/data/get-topups-pending-payment', () => mockGetTopUpsPendingPayment)
+    jest.mock(
+      '../../../../app/services/workers/helpers/payments/update-all-topups-processed-payment',
+      () => mockUpdateAllTopupsProcessedPayment
+    )
+    jest.mock(
+      '../../../../app/services/workers/helpers/payments/update-all-claims-processed-payment',
+      () => mockUpdateAllClaimsProcessedPayment
+    )
 
     generateDirectPayments = require('../../../../app/services/workers/generate-direct-payments')
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should retrieve claim data and then call file generation', function () {

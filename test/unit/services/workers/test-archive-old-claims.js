@@ -6,16 +6,12 @@ const tenDaysAgoMinus5mins = tenDaysAgo.subtract(5, 'minute').toDate().getTime()
 const tenDaysAgoPlus5mins = tenDaysAgo.add(10, 'minute').toDate().getTime()
 
 const mockConfig = { ARCHIVE_CLAIMS_AFTER_DAYS: '10' }
-let mockGetAllClaimsOlderThanDate
-let mockInsertTask
+const mockGetAllClaimsOlderThanDate = jest.fn()
+const mockInsertTask = jest.fn()
 let archiveOldClaims
 
 describe('services/workers/archive-old-claims', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-    mockGetAllClaimsOlderThanDate = jest.fn()
-    mockInsertTask = jest.fn()
-
     jest.mock('../../../../config', () => mockConfig)
     jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
     jest.mock('../../../../app/services/data/get-all-claims-older-than-date', () => mockGetAllClaimsOlderThanDate)
@@ -24,6 +20,7 @@ describe('services/workers/archive-old-claims', () => {
   })
 
   afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should retrieve all claims older than current date minus config days', () => {
