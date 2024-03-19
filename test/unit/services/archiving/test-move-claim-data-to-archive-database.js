@@ -4,7 +4,6 @@ const REFERENCE = 'MOVECLM'
 const CLAIM_DATA = { Claim: { ClaimId: CLAIM_ID } }
 
 let moveClaimDataToArchiveDatabase
-
 let mockGetClaim
 let mockGetNumberOfClaimsForEligibility
 let mockGetAllClaimData
@@ -12,12 +11,10 @@ let mockCopyClaimDataToArchive
 let mockDeleteClaimFromInternal
 
 jest.mock('../../../../app/services/data/get-claim', () => mockGetClaim)
-
 jest.mock(
   '../../../../app/services/data/get-number-of-claims-for-eligibility',
   () => mockGetNumberOfClaimsForEligibility
 )
-
 jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
 jest.mock('../../../../app/services/data/copy-claim-data-to-archive', () => mockCopyClaimDataToArchive)
 jest.mock('../../../../app/services/data/delete-claim-from-internal', () => mockDeleteClaimFromInternal)
@@ -29,7 +26,6 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     mockGetAllClaimData = jest.fn()
     mockCopyClaimDataToArchive = jest.fn()
     mockDeleteClaimFromInternal = jest.fn()
-
     moveClaimDataToArchiveDatabase = require('../../../../app/services/archiving/move-claim-data-to-archive-database')
   })
 

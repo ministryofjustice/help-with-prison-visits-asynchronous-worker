@@ -1,12 +1,10 @@
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
-
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const reference = '1234567'
 const eligibilityId = '1234'
 const claimId = 123
-
 const ADDITIONAL_DATA = 'Message from claimant'
 const CLAIM_DATA_FOR_UNREVIEWED_CLAIM = { Claim: { DateReviewed: null }, ClaimBankDetail: {} }
 const CLAIM_DATA_FOR_REVIEWED_CLAIM = { Claim: { DateReviewed: dateFormatter.now().toDate() }, ClaimBankDetail: {} }
@@ -16,57 +14,58 @@ const CLAIM_DATA_FOR_PAYOUT = { Claim: { PaymentMethod: 'payout' } }
 const SINGLE_UPLOADED_DOCUMENT = [{ ClaimDocumentId: 1, DocumentType: 'VISIT-CONFIRMATION', DocumentStatus: 'uploaded' }]
 const EMAIL_ADDRESS = 'test@test.com'
 
-let mockMoveClaimDocumentsToInternal
-let mockGetAllClaimData
-let mockUpdateClaimStatus
-let mockInsertClaimEvent
-let mockGenerateClaimUpdatedString
-let mockAutoApprovalProcess
-let mockUpdateBankDetails
-let mockGetVisitorEmailAddress
-let mockInsertTask
-let mockTransactionHelper
-
+const mockMoveClaimDocumentsToInternal = jest.fn()
+const mockGetAllClaimData = jest.fn()
+const mockUpdateClaimStatus = jest.fn()
+const mockInsertClaimEvent = jest.fn()
+const mockGenerateClaimUpdatedString = jest.fn()
+const mockAutoApprovalProcess = jest.fn()
+const mockUpdateBankDetails = jest.fn()
+const mockGetVisitorEmailAddress = jest.fn()
+const mockInsertTask = jest.fn()
+const mockTransactionHelper = jest.fn()
 let requestInformationResponse
-
-jest.mock(
-  '../../../../app/services/data/move-claim-documents-to-internal',
-  () => mockMoveClaimDocumentsToInternal
-)
-
-jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
-jest.mock('../../../../app/services/data/update-claim-status', () => mockUpdateClaimStatus)
-jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
-
-jest.mock(
-  '../../../../app/services/notify/helpers/generate-claim-updated-string',
-  () => mockGenerateClaimUpdatedString
-)
-
-jest.mock('../../../../app/services/auto-approval/auto-approval-process', () => mockAutoApprovalProcess)
-jest.mock('../../../../app/services/data/update-bank-details', () => mockUpdateBankDetails)
-jest.mock('../../../../app/services/data/get-visitor-email-address', () => mockGetVisitorEmailAddress)
-jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
-jest.mock('../../../../app/services/workers/helpers/transaction-helper', () => mockTransactionHelper)
 
 describe('services/workers/request-information-response', function () {
   beforeEach(function () {
-    mockMoveClaimDocumentsToInternal = jest.fn().mockResolvedValue(SINGLE_UPLOADED_DOCUMENT)
-    mockGetAllClaimData = jest.fn().mockResolvedValue(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
-    mockUpdateClaimStatus = jest.fn().mockResolvedValue()
-    mockInsertClaimEvent = jest.fn().mockResolvedValue()
-    mockGenerateClaimUpdatedString = jest.fn().mockReturnValue('message')
-    mockAutoApprovalProcess = jest.fn().mockResolvedValue()
-    mockUpdateBankDetails = jest.fn().mockResolvedValue()
-    mockGetVisitorEmailAddress = jest.fn().mockResolvedValue(EMAIL_ADDRESS)
-    mockInsertTask = jest.fn().mockResolvedValue()
-    mockTransactionHelper = jest.fn().mockResolvedValue()
+    mockMoveClaimDocumentsToInternal.mockResolvedValue(SINGLE_UPLOADED_DOCUMENT)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_FOR_UNREVIEWED_CLAIM)
+    mockUpdateClaimStatus.mockResolvedValue()
+    mockInsertClaimEvent.mockResolvedValue()
+    mockGenerateClaimUpdatedString.mockReturnValue('message')
+    mockAutoApprovalProcess.mockResolvedValue()
+    mockUpdateBankDetails.mockResolvedValue()
+    mockGetVisitorEmailAddress.mockResolvedValue(EMAIL_ADDRESS)
+    mockInsertTask.mockResolvedValue()
+    mockTransactionHelper.mockResolvedValue()
+
+    jest.mock(
+      '../../../../app/services/data/move-claim-documents-to-internal',
+      () => mockMoveClaimDocumentsToInternal
+    )
+    jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
+    jest.mock('../../../../app/services/data/update-claim-status', () => mockUpdateClaimStatus)
+    jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
+    jest.mock(
+      '../../../../app/services/notify/helpers/generate-claim-updated-string',
+      () => mockGenerateClaimUpdatedString
+    )
+    jest.mock('../../../../app/services/auto-approval/auto-approval-process', () => mockAutoApprovalProcess)
+    jest.mock('../../../../app/services/data/update-bank-details', () => mockUpdateBankDetails)
+    jest.mock('../../../../app/services/data/get-visitor-email-address', () => mockGetVisitorEmailAddress)
+    jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
+    jest.mock('../../../../app/services/workers/helpers/transaction-helper', () => mockTransactionHelper)
 
     requestInformationResponse = require('../../../../app/services/workers/request-information-response')
   })
 
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should call data methods to move claim documents, update status and trigger auto-approval, no bank details methods and add a note claim event', function () {
     mockMoveClaimDocumentsToInternal.mockResolvedValue()
+
     return requestInformationResponse.execute({
       reference,
       eligibilityId,
@@ -152,8 +151,7 @@ describe('services/workers/request-information-response', function () {
       claimId
     }).then(function () {
       expect(mockGetAllClaimData).toHaveBeenCalledWith('ExtSchema', reference, eligibilityId, claimId) //eslint-disable-line
-      expect(mockUpdateBankDetails).toHaveBeenCalled() //eslint-disable-line
-      expect(mockUpdateBankDetails).toHaveBeenCalledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber) //eslint-disable-line
+      expect(mockUpdateBankDetails).toHaveBeenCalledWith(BANK_DETAILS.ClaimBankDetailId, reference, claimId, BANK_DETAILS.SortCode, BANK_DETAILS.AccountNumber, undefined, undefined) //eslint-disable-line
       expect(mockInsertClaimEvent).toHaveBeenCalledWith(reference, eligibilityId, claimId, null, claimEventEnum.BANK_DETAILS_UPDATED.value, null, null, true)
       expect(mockTransactionHelper).toHaveBeenCalledWith(eligibilityId, claimId) //eslint-disable-line
     })
