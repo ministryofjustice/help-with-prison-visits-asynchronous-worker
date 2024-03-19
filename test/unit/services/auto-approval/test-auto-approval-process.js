@@ -25,6 +25,7 @@ const mockGetLastSetNumberOfClaimsStatus = jest.fn()
 const mockInsertAutoApproveClaim = jest.fn()
 const mockGetClaimsPendingPayment = jest.fn()
 const mockAutoApprovalDependencies = []
+const mockValidCheckResult = jest.fn()
 
 autoApprovalRulesEnum.forEach(function (check) {
   mockAutoApprovalDependencies[check] = jest.fn()
@@ -32,7 +33,7 @@ autoApprovalRulesEnum.forEach(function (check) {
 
 let autoApprovalProcess
 
-describe.skip('services/auto-approval/checks/auto-approval-process', function () {
+describe('services/auto-approval/checks/auto-approval-process', function () {
   beforeEach(function () {
     validAutoApprovalConfig = {
       AutoApprovalConfigId: 39,
@@ -57,6 +58,7 @@ describe.skip('services/auto-approval/checks/auto-approval-process', function ()
     mockAutoApproveClaim.mockResolvedValue()
     mockGetLastSetNumberOfClaimsStatus.mockResolvedValue([])
     mockInsertAutoApproveClaim.mockResolvedValue()
+    mockValidCheckResult.mockReturnValue(validCheckResult)
 
     autoApprovalRulesEnum.forEach(function (check) {
       mockAutoApprovalDependencies[check].mockReturnValue(validCheckResult)
@@ -74,7 +76,8 @@ describe.skip('services/auto-approval/checks/auto-approval-process', function ()
     jest.mock('../../../../app/services/data/insert-auto-approve-claim', () => mockInsertAutoApproveClaim)
 
     autoApprovalRulesEnum.forEach(function (check) {
-      jest.mock(`../../../../app/services/auto-approval/checks/${check}`, (check) => mockAutoApprovalDependencies[check])
+      const mockAutoApprovalDependency = mockAutoApprovalDependencies[check]
+      jest.mock(`../../../../app/services/auto-approval/checks/${check}`, () => mockAutoApprovalDependency)
     })
 
     autoApprovalProcess = require('../../../../app/services/auto-approval/auto-approval-process')
@@ -164,7 +167,7 @@ describe.skip('services/auto-approval/checks/auto-approval-process', function ()
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject Advance claims for auto-approval').toBe(false) //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
@@ -234,7 +237,7 @@ describe.skip('services/auto-approval/checks/auto-approval-process', function ()
           } else {
             expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
           }
-          expect(mockAutoApprovalDependencies[`./checks/${check}`]).not.toHaveBeenCalled()
+          expect(mockAutoApprovalDependencies[check]).not.toHaveBeenCalled()
         })
     })
   })
