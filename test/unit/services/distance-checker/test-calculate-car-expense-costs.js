@@ -28,6 +28,7 @@ let calculateCarExpenseCosts
 describe('services/distance-checker/calculate-car-expense-costs', function () {
   beforeEach(function () {
     mockCallDistanceApiForPostcodes.mockResolvedValue(10.0)
+    mockGetAllClaimData.mockResolvedValue()
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
     mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00' })
 
@@ -51,6 +52,8 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   })
 
   it('should not call if config is disabled', function () {
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_NO_CAR_EXPENSE)
+
     jest.mock('../../../../config', () => ({ DISTANCE_CALCULATION_ENABLED: 'false' }))
 
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE)
