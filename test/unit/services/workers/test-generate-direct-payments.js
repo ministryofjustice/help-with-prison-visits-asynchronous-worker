@@ -78,7 +78,8 @@ describe('services/workers/generate-direct-payments', function () {
     mockGetTopUpsPendingPayment.mockResolvedValue(topUpsPendingPayment)
     return generateDirectPayments.generateDirectPayments().then(function () {
       expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1) //eslint-disable-line
-      expect(mockCreatePaymentFile).toHaveBeenCalledWith(claimsPendingPayment) //eslint-disable-line
+      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(1, claimsPendingPayment, false) //eslint-disable-line
+      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(2, claimsPendingPayment, true) //eslint-disable-line
       expect(mockCreateAdiJournalFile).toHaveBeenCalledWith(total) //eslint-disable-line
       expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testPath, fileTypes.ACCESSPAY_FILE) //eslint-disable-line
       expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE) //eslint-disable-line
