@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
 const prisonsEnum = require('../../../../app/constants/prisons-enum')
 
@@ -12,10 +8,10 @@ const REFERENCE = '1234567'
 const ELIGIBILITY_ID = 4321
 const CLAIM_ID = 1234
 
-let stubSendNotification
-let stubGetApprovedClaimExpenseData
-let stubGetApprovedClaimDetailsString
-let stubGetEnabledClaimDeductions
+const mockSendNotification = jest.fn()
+const mockGetApprovedClaimExpenseData = jest.fn()
+const mockGetApprovedClaimDetailsString = jest.fn()
+const mockGetEnabledClaimDeductions = jest.fn()
 
 const BANK_DATA_PAST = { VisitorFirstName: 'Joe', AccountNumberLastFourDigits: '1234', PaymentMethod: paymentMethodEnum.DIRECT_BANK_PAYMENT.value, IsAdvanceClaim: false }
 const PAYOUT_DATA_PAST = { VisitorFirstName: 'Joe', PaymentMethod: paymentMethodEnum.PAYOUT.value, Town: 'Town', Prison: prisonsEnum.HEWELL.value, IsAdvanceClaim: false }
@@ -26,21 +22,33 @@ let sendAcceptedClaimNotification
 
 describe('services/send-accepted-claim-notification', function () {
   beforeEach(function () {
-    stubSendNotification = sinon.stub().resolves()
-    stubGetApprovedClaimExpenseData = sinon.stub()
-    stubGetApprovedClaimDetailsString = sinon.stub().returns('string with payment breakdown')
-    stubGetEnabledClaimDeductions = sinon.stub().resolves([])
+    mockSendNotification.mockResolvedValue()
+    mockGetApprovedClaimDetailsString.mockReturnValue('string with payment breakdown')
+    mockGetEnabledClaimDeductions.mockResolvedValue([])
 
-    sendAcceptedClaimNotification = proxyquire('../../../../app/services/workers/send-accepted-claim-notification', {
-      '../notify/send-notification': stubSendNotification,
-      '../data/get-approved-claim-expense-data': stubGetApprovedClaimExpenseData,
-      '../notify/helpers/get-approved-claim-details-string': stubGetApprovedClaimDetailsString,
-      '../data/get-enabled-claim-deductions': stubGetEnabledClaimDeductions
-    })
+    jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
+    jest.mock(
+      '../../../../app/services/data/get-approved-claim-expense-data',
+      () => mockGetApprovedClaimExpenseData
+    )
+    jest.mock(
+      '../../../../app/services/notify/helpers/get-approved-claim-details-string',
+      () => mockGetApprovedClaimDetailsString
+    )
+    jest.mock(
+      '../../../../app/services/data/get-enabled-claim-deductions',
+      () => mockGetEnabledClaimDeductions
+    )
+
+    sendAcceptedClaimNotification = require('../../../../app/services/workers/send-accepted-claim-notification')
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should call send-notification with correct details for retro bank payment', function () {
-    stubGetApprovedClaimExpenseData.resolves({ claimantData: BANK_DATA_PAST, claimExpenseData: [{ ClaimExpenseId: 1 }] })
+    mockGetApprovedClaimExpenseData.mockResolvedValue({ claimantData: BANK_DATA_PAST, claimExpenseData: [{ ClaimExpenseId: 1 }] })
     return sendAcceptedClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -48,18 +56,18 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_BANK_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockGetApprovedClaimExpenseData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetApprovedClaimDetailsString).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetEnabledClaimDeductions).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 
   it('should call send-notification with correct details for advance bank payment', function () {
-    stubGetApprovedClaimExpenseData.resolves({ claimantData: BANK_DATA_ADVANCE, claimExpenseData: [{ ClaimExpenseId: 1 }] })
+    mockGetApprovedClaimExpenseData.mockResolvedValue({ claimantData: BANK_DATA_ADVANCE, claimExpenseData: [{ ClaimExpenseId: 1 }] })
     return sendAcceptedClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -67,18 +75,18 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_BANK_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.false //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_BANK_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockGetApprovedClaimExpenseData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetApprovedClaimDetailsString).not.toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetEnabledClaimDeductions).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 
   it('should call send-notification with correct details for retro payout payment', function () {
-    stubGetApprovedClaimExpenseData.resolves({ claimantData: PAYOUT_DATA_PAST, claimExpenseData: [{ ClaimExpenseId: 1 }] })
+    mockGetApprovedClaimExpenseData.mockResolvedValue({ claimantData: PAYOUT_DATA_PAST, claimExpenseData: [{ ClaimExpenseId: 1 }] })
     return sendAcceptedClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -86,18 +94,18 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_PAYOUT_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockGetApprovedClaimExpenseData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetApprovedClaimDetailsString).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetEnabledClaimDeductions).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 
   it('should call send-notification with correct details for advance payout payment', function () {
-    stubGetApprovedClaimExpenseData.resolves({ claimantData: PAYOUT_DATA_ADVANCE, claimExpenseData: [{ ClaimExpenseId: 1 }] })
+    mockGetApprovedClaimExpenseData.mockResolvedValue({ claimantData: PAYOUT_DATA_ADVANCE, claimExpenseData: [{ ClaimExpenseId: 1 }] })
     return sendAcceptedClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -105,18 +113,18 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .then(function () {
-        expect(stubSendNotification.calledOnce).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_PAYOUT_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubGetApprovedClaimExpenseData.calledOnce).to.be.true //eslint-disable-line
-        expect(stubGetApprovedClaimDetailsString.calledOnce).to.be.false //eslint-disable-line
-        expect(stubGetEnabledClaimDeductions.calledOnce).to.be.true //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ACCEPTED_CLAIM_ADVANCE_PAYOUT_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockGetApprovedClaimExpenseData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetApprovedClaimDetailsString).not.toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetEnabledClaimDeductions).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 
   it('should reject if there is no payment method', function () {
-    stubGetApprovedClaimExpenseData.resolves({ claimantData: {}, claimExpenseData: [] })
+    mockGetApprovedClaimExpenseData.mockResolvedValue({ claimantData: {}, claimExpenseData: [] })
     return sendAcceptedClaimNotification.execute({
       reference: REFERENCE,
       eligibilityId: ELIGIBILITY_ID,
@@ -124,8 +132,8 @@ describe('services/send-accepted-claim-notification', function () {
       claimId: CLAIM_ID
     })
       .catch(function (error) {
-        expect(error.message).to.equal('No payment method found')
-        expect(stubSendNotification.calledOnce).to.be.false //eslint-disable-line
+        expect(error.message).toBe('No payment method found')
+        expect(mockSendNotification).not.toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 })

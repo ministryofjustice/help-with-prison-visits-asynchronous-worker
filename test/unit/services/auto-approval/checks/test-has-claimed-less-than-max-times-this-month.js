@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const hasClaimedLessThanMaxTimesThisMonth = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-month')
@@ -12,8 +11,10 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(5, firstOfCurrentMonth)
 
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
-    expect(checkResult.result).to.equal(false)
-    expect(checkResult.failureMessage).to.equal('This claimant has claimed more than the maximum number of times this month. Claim ref: ABC123, Maximum no of claims per month: 4, No. of claims this month: 5')
+    expect(checkResult.result).toBe(false)
+    expect(checkResult.failureMessage).toBe(
+      'This claimant has claimed more than the maximum number of times this month. Claim ref: ABC123, Maximum no of claims per month: 4, No. of claims this month: 5'
+    )
   })
 
   it(`should return true if the number of claims made for the current month is equal to ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
@@ -21,7 +22,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(4, firstOfCurrentMonth)
 
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it(`should return true if the number of claims made for the current month is less than ${MAX_NUMBER_OF_CLAIMS_PER_MONTH}`, function () {
@@ -29,7 +30,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
     const autoApprovalData = generateAutoApprovalDataWithPreviousClaims(3, firstOfCurrentMonth)
 
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return true if the number of claims made for the current month is zero', function () {
@@ -37,7 +38,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
       previousClaims: []
     }
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return true if the claimant has claimed the max number of claims this month, and submits an advance claim that falls outside the claimable month', function () {
@@ -47,7 +48,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
     autoApprovalData.Claim.DateOfJourney = secondOfNextMonth.toDate()
 
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 })
 

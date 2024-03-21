@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const checkForAccountNumberAndSortCode = require('../../../../../../../app/services/workers/helpers/payments/direct/check-for-account-number-and-sort-code')
 
 const completePaymentData = [
@@ -26,16 +24,16 @@ const missingAccountNumber = [
 describe('services/workers/helpers/payments/direct/check-for-account-number-and-sort-code', function () {
   it(`should return ${false} when there is no missing data`, function () {
     const missingData = checkForAccountNumberAndSortCode(completePaymentData)
-    expect(missingData).to.eql(false)
+    expect(missingData).toEqual(false)
   })
 
   it(`should return ${true} when there is a missing sort code`, function () {
     const missingData = checkForAccountNumberAndSortCode(missingSortCode)
-    expect(missingData).to.eql(true)
+    expect(missingData).toEqual(true)
   })
 
   it(`should return ${true} when there is a missing account number`, function () {
     const missingData = checkForAccountNumberAndSortCode(missingAccountNumber)
-    expect(missingData).to.eql(true)
+    expect(missingData).toEqual(true)
   })
 })

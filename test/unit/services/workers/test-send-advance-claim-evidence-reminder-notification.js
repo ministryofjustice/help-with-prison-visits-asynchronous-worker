@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const reminderEnum = require('../../../../app/constants/advance-claim-reminder-enum')
 const config = require('../../../../config')
 
@@ -14,23 +10,29 @@ const FIRST_NAME = 'Joe'
 const dateOfJourney = new Date('2016-02-01')
 const dateOfJourneyString = '1 February 2016'
 
-let stubGetClaim
-let stubSendNotification
-let stubGetFirstNameByClaimId
+const mockGetClaim = jest.fn()
+const mockSendNotification = jest.fn()
+const mockGetFirstNameByClaimId = jest.fn()
 
 let sendRequestInformationClaimNotification
 
 describe('services/send-advance-claim-evidence-reminder-notification', function () {
   beforeEach(function () {
-    stubGetClaim = sinon.stub().resolves({ DateOfJourney: dateOfJourney })
-    stubSendNotification = sinon.stub().resolves()
-    stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
+    mockGetClaim.mockResolvedValue({ DateOfJourney: dateOfJourney })
+    mockSendNotification.mockResolvedValue()
+    mockGetFirstNameByClaimId.mockResolvedValue(FIRST_NAME)
 
-    sendRequestInformationClaimNotification = proxyquire('../../../../app/services/workers/send-advance-claim-evidence-reminder-notification', {
-      '../data/get-claim': stubGetClaim,
-      '../data/get-first-name-by-claimId': stubGetFirstNameByClaimId,
-      '../notify/send-notification': stubSendNotification
-    })
+    jest.mock('../../../../app/services/data/get-claim', () => mockGetClaim)
+    jest.mock('../../../../app/services/data/get-first-name-by-claimId', () => mockGetFirstNameByClaimId)
+    jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
+
+    sendRequestInformationClaimNotification = require(
+      '../../../../app/services/workers/send-advance-claim-evidence-reminder-notification'
+    )
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should call send-notification with correct details for first reminder', function () {
@@ -41,14 +43,14 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.FIRST}`
     })
       .then(function () {
-        expect(stubGetClaim.calledWith('IntSchema', CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(stubSendNotification.called).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].dateOfJourney).to.be.equal(dateOfJourneyString)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.to.be.null //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[2].first_name).to.be.equal(FIRST_NAME)
+        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 
@@ -60,14 +62,14 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.SECOND}`
     })
       .then(function () {
-        expect(stubGetClaim.calledWith('IntSchema', CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(stubSendNotification.called).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].dateOfJourney).to.be.equal(dateOfJourneyString)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.to.be.null //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[2].first_name).to.be.equal(FIRST_NAME)
+        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 
@@ -79,8 +81,8 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
       additionalData: `${EMAIL_ADDRESS}~~NotValid`
     })
       .catch(function (error) {
-        expect(error.message).to.equal('Not valid reminder type')
-        expect(stubSendNotification.calledOnce).to.be.false //eslint-disable-line
+        expect(error.message).toBe('Not valid reminder type')
+        expect(mockSendNotification).not.toHaveBeenCalled() //eslint-disable-line
       })
   })
 })

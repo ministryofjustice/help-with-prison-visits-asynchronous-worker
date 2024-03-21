@@ -1,8 +1,5 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
 let disableClaimDocument
 let insertClaimEvent
@@ -12,6 +9,9 @@ let moveClaimDocumentsToInternal
 const REFERENCE = 'MOVDOCU'
 let eligibilityId
 let claimId
+
+jest.mock('./disable-claim-document', () => disableClaimDocument)
+jest.mock('./insert-claim-event', () => insertClaimEvent)
 
 describe('services/data/move-claim-documents-to-internal', function () {
   beforeEach(function () {
@@ -23,13 +23,10 @@ describe('services/data/move-claim-documents-to-internal', function () {
         const claimData = testHelper.getClaimData(REFERENCE)
         claimData.ClaimDocument[1].IsEnabled = false
 
-        disableClaimDocument = sinon.stub().resolves()
-        insertClaimEvent = sinon.stub().resolves()
+        disableClaimDocument = jest.fn().mockResolvedValue()
+        insertClaimEvent = jest.fn().mockResolvedValue()
 
-        moveClaimDocumentsToInternal = proxyquire('../../../../app/services/data/move-claim-documents-to-internal', {
-          './disable-claim-document': disableClaimDocument,
-          './insert-claim-event': insertClaimEvent
-        })
+        moveClaimDocumentsToInternal = require('../../../../app/services/data/move-claim-documents-to-internal')
 
         return testHelper.insertClaimDocumentData('ExtSchema', eligibilityId, claimId, claimData.ClaimDocument)
       })
@@ -42,7 +39,8 @@ describe('services/data/move-claim-documents-to-internal', function () {
       .then(function () {
         return db('IntSchema.ClaimDocument').where('Reference', REFERENCE)
           .then(function (claimDocuments) {
-            expect(claimDocuments.length, 'should have copied claim documents from external to internal').to.be.equal(3)
+            // should have copied claim documents from external to internal
+            expect(claimDocuments.length).toBe(3)
             expect(disableClaimDocument.calledOne, 'should have disabled one old document')
             expect(insertClaimEvent.calledOne, 'should have inserted an event for disabling one old document')
           })
@@ -50,7 +48,8 @@ describe('services/data/move-claim-documents-to-internal', function () {
       .then(function () {
         return db('ExtSchema.ClaimDocument').where('Reference', REFERENCE)
           .then(function (claimDocuments) {
-            expect(claimDocuments.length, 'should have deleted External ClaimDocuments').to.be.equal(0)
+            // should have deleted External ClaimDocuments
+            expect(claimDocuments.length).toBe(0)
           })
       })
   })

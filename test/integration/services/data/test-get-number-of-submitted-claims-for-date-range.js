@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -9,7 +8,7 @@ const START_DATE = new Date('1930-12-08')
 const END_DATE = new Date('1930-12-08 23:59')
 
 describe('services/data/get-number-of-submitted-claims-for-date-range', function () {
-  before(function () {
+  beforeAll(function () {
     const claim1 = testHelper.getClaimData(REFERENCE).Claim
     claim1.DateSubmitted = new Date('1930-12-08 10:00')
 
@@ -31,7 +30,7 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
   it('should return number of claims submitted', function () {
     return getNumberOfSubmittedClaimsForDateRange(START_DATE, END_DATE)
       .then(function (submittedClaimCount) {
-        expect(submittedClaimCount).to.equal(2)
+        expect(submittedClaimCount).toBe(2)
       })
   })
 
@@ -41,11 +40,11 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
 
     return getNumberOfSubmittedClaimsForDateRange(noClaimsStartDate, noClaimsEndDate)
       .then(function (submittedClaimCount) {
-        expect(submittedClaimCount).to.equal(0)
+        expect(submittedClaimCount).toBe(0)
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

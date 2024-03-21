@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const OLD_ELIGIBILITY_DATA = [
   {
     EligibilityId: 1,
@@ -31,70 +27,73 @@ const OLD_CLAIM_DOCUMENT_DATA = [
   }
 ]
 
-let getOldEligibilityDataStub
-let getOldClaimDataStub
-let getOldClaimDocumentDataStub
-let deleteClaimFromExternalAsTransactionStub
-let deleteOldFilesStub
-
+const mockGetOldEligibilityData = jest.fn()
+const mockGetOldClaimData = jest.fn()
+const mockGetOldClaimDocumentData = jest.fn()
+const mockDeleteClaimFromExternalAsTransaction = jest.fn()
+const mockDeleteOldFiles = jest.fn()
 let cleanupOldData
 
 describe('services/workers/cleanup-old-data', function () {
   beforeEach(function () {
-    getOldEligibilityDataStub = sinon.stub()
-    getOldClaimDataStub = sinon.stub()
-    getOldClaimDocumentDataStub = sinon.stub()
-    deleteClaimFromExternalAsTransactionStub = sinon.stub().resolves()
-    deleteOldFilesStub = sinon.stub().resolves()
+    mockDeleteClaimFromExternalAsTransaction.mockResolvedValue()
+    mockDeleteOldFiles.mockResolvedValue()
 
-    cleanupOldData = proxyquire('../../../../app/services/workers/cleanup-old-data', {
-      '../data/get-old-eligibility-data': getOldEligibilityDataStub,
-      '../data/get-old-claim-data': getOldClaimDataStub,
-      '../data/get-old-claim-document-data': getOldClaimDocumentDataStub,
-      '../data/delete-claim-from-external-as-transaction': deleteClaimFromExternalAsTransactionStub,
-      '../cleanup-old-data/delete-old-files': deleteOldFilesStub
-    })
+    jest.mock('../../../../app/services/data/get-old-eligibility-data', () => mockGetOldEligibilityData)
+    jest.mock('../../../../app/services/data/get-old-claim-data', () => mockGetOldClaimData)
+    jest.mock('../../../../app/services/data/get-old-claim-document-data', () => mockGetOldClaimDocumentData)
+    jest.mock(
+      '../../../../app/services/data/delete-claim-from-external-as-transaction',
+      () => mockDeleteClaimFromExternalAsTransaction
+    )
+    jest.mock('../../../../app/services/cleanup-old-data/delete-old-files', () => mockDeleteOldFiles)
+
+    cleanupOldData = require('../../../../app/services/workers/cleanup-old-data')
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should retrieve any old eligibility records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves(OLD_ELIGIBILITY_DATA)
-    getOldClaimDataStub.resolves([])
-    getOldClaimDocumentDataStub.resolves([])
+    mockGetOldEligibilityData.mockResolvedValue(OLD_ELIGIBILITY_DATA)
+    mockGetOldClaimData.mockResolvedValue([])
+    mockGetOldClaimDocumentData.mockResolvedValue([])
 
     return cleanupOldData.cleanupOldData().then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[0].EligibilityId, OLD_ELIGIBILITY_DATA[0].ClaimId)).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_ELIGIBILITY_DATA[1].EligibilityId, OLD_ELIGIBILITY_DATA[1].ClaimId)).to.be.true //eslint-disable-line
+      expect(mockGetOldEligibilityData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockGetOldClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockDeleteOldFiles).toHaveBeenCalledTimes(2) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_ELIGIBILITY_DATA[0].EligibilityId, OLD_ELIGIBILITY_DATA[0].ClaimId) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_ELIGIBILITY_DATA[1].EligibilityId, OLD_ELIGIBILITY_DATA[1].ClaimId) //eslint-disable-line
     })
   })
 
   it('should retrieve any old claim records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves([])
-    getOldClaimDataStub.resolves(OLD_CLAIM_DATA)
-    getOldClaimDocumentDataStub.resolves([])
+    mockGetOldEligibilityData.mockResolvedValue([])
+    mockGetOldClaimData.mockResolvedValue(OLD_CLAIM_DATA)
+    mockGetOldClaimDocumentData.mockResolvedValue([])
 
     return cleanupOldData.cleanupOldData().then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId)).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId)).to.be.true //eslint-disable-line
+      expect(mockGetOldEligibilityData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockGetOldClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockDeleteOldFiles).toHaveBeenCalledTimes(2) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_CLAIM_DATA[0].EligibilityId, OLD_CLAIM_DATA[0].ClaimId) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_CLAIM_DATA[1].EligibilityId, OLD_CLAIM_DATA[1].ClaimId) //eslint-disable-line
     })
   })
 
   it('should retrieve any old claim document records and delete them from the external database', function () {
-    getOldEligibilityDataStub.resolves([])
-    getOldClaimDataStub.resolves([])
-    getOldClaimDocumentDataStub.resolves(OLD_CLAIM_DOCUMENT_DATA)
+    mockGetOldEligibilityData.mockResolvedValue([])
+    mockGetOldClaimData.mockResolvedValue([])
+    mockGetOldClaimDocumentData.mockResolvedValue(OLD_CLAIM_DOCUMENT_DATA)
 
     return cleanupOldData.cleanupOldData().then(function () {
-      expect(getOldEligibilityDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(getOldClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-      expect(deleteOldFilesStub.calledTwice).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId)).to.be.true //eslint-disable-line
-      expect(deleteClaimFromExternalAsTransactionStub.calledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId)).to.be.true //eslint-disable-line
+      expect(mockGetOldEligibilityData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockGetOldClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockDeleteOldFiles).toHaveBeenCalledTimes(2) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_CLAIM_DOCUMENT_DATA[0].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[0].ClaimId) //eslint-disable-line
+      expect(mockDeleteClaimFromExternalAsTransaction).toHaveBeenCalledWith(OLD_CLAIM_DOCUMENT_DATA[1].EligibilityId, OLD_CLAIM_DOCUMENT_DATA[1].ClaimId) //eslint-disable-line
     })
   })
 })

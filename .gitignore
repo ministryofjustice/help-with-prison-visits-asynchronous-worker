@@ -56,3 +56,6 @@ app/public
 # Helm
 helm_deploy/help-with-prison-visits-asynchronous-worker/charts
 helm_deploy/help-with-prison-visits-asynchronous-worker/Chart.lock
+
+#jest
+test_results

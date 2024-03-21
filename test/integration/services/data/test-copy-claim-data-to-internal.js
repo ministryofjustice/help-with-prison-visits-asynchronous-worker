@@ -1,17 +1,14 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const statusEnum = require('../../../../app/constants/status-enum')
 const testHelper = require('../../../test-helper')
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
-const insertClaimEventStub = sinon.stub().resolves()
-const updateContactDetailsStub = sinon.stub().resolves()
+const insertClaimEventStub = jest.fn().mockResolvedValue()
+const updateContactDetailsStub = jest.fn().mockResolvedValue()
 
-const copyClaimDataToInternal = proxyquire('../../../../app/services/data/copy-claim-data-to-internal', {
-  './insert-claim-event': insertClaimEventStub,
-  './update-contact-details': updateContactDetailsStub
-})
+jest.mock('./insert-claim-event', () => insertClaimEventStub)
+jest.mock('./update-contact-details', () => updateContactDetailsStub)
+
+const copyClaimDataToInternal = require('../../../../app/services/data/copy-claim-data-to-internal')
 
 const reference = 'COPY123'
 const claimId = 123
@@ -34,33 +31,38 @@ describe('services/data/copy-claim-data-to-internal', function () {
             .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
             .select()
             .then(function (results) {
-              expect(results[0].Status[0], 'Eligibility.Status should be NEW').to.be.equal(statusEnum.NEW)
-              expect(results[0].Status[1], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
-              expect(results[0].AccountNumber).to.be.equal(firstTimeClaimData.ClaimBankDetail.AccountNumber)
-              expect(results[0].NationalInsuranceNumber).to.be.equal(firstTimeClaimData.Visitor.NationalInsuranceNumber)
-              expect(results[0].PrisonNumber).to.be.equal(firstTimeClaimData.Prisoner.PrisonNumber)
+              // Eligibility.Status should be NEW
+              expect(results[0].Status[0]).toBe(statusEnum.NEW)
+              // Claim.Status should be NEW
+              expect(results[0].Status[1]).toBe(statusEnum.NEW)
+              expect(results[0].AccountNumber).toBe(firstTimeClaimData.ClaimBankDetail.AccountNumber)
+              expect(results[0].NationalInsuranceNumber).toBe(firstTimeClaimData.Visitor.NationalInsuranceNumber)
+              expect(results[0].PrisonNumber).toBe(firstTimeClaimData.Prisoner.PrisonNumber)
             })
             .then(function () {
               return db('IntSchema.ClaimChild').where('IntSchema.ClaimChild.Reference', reference)
                 .select()
                 .then(function (results) {
-                  expect(results.length, 'should have two children').to.be.equal(2)
+                  // should have two children
+                  expect(results.length).toBe(2)
                 })
             })
             .then(function () {
               return db('IntSchema.ClaimExpense').where('IntSchema.ClaimExpense.Reference', reference)
                 .select()
                 .then(function (results) {
-                  expect(results.length, 'should have two expenses').to.be.equal(2)
-                  expect(results[0].ExpenseType).to.be.equal('car')
-                  expect(results[1].ExpenseType).to.be.equal('bus')
+                  // should have two expenses
+                  expect(results.length).toBe(2)
+                  expect(results[0].ExpenseType).toBe('car')
+                  expect(results[1].ExpenseType).toBe('bus')
                 })
             })
             .then(function () {
               return db('IntSchema.ClaimDocument').where('IntSchema.ClaimDocument.Reference', reference)
                 .select()
                 .then(function (results) {
-                  expect(results.length, 'should have two documents').to.be.equal(2)
+                  // should have two documents
+                  expect(results.length).toBe(2)
                 })
             })
         })
@@ -78,7 +80,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
           return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
             .select('Claim.Status')
             .then(function (results) {
-              expect(results[0].Status, 'Claim.Status should be PENDING').to.be.equal(statusEnum.PENDING)
+              // Claim.Status should be PENDING
+              expect(results[0].Status).toBe(statusEnum.PENDING)
             })
         })
     })
@@ -91,7 +94,7 @@ describe('services/data/copy-claim-data-to-internal', function () {
     repeatClaimData.Visitor = undefined
     repeatClaimData.Prisoner = undefined
 
-    before(function () {
+    beforeAll(function () {
       const db = getDatabaseConnector()
 
       return db('IntSchema.Eligibility').insert(existingInternalEligibility)
@@ -111,9 +114,11 @@ describe('services/data/copy-claim-data-to-internal', function () {
             .join('IntSchema.ClaimDocument', 'IntSchema.Claim.Reference', '=', 'IntSchema.ClaimDocument.Reference')
             .select()
             .then(function (results) {
-              expect(results.length, 'Should have 8 rows, 2x child 2x expense x2 document').to.be.equal(8)
-              expect(results[0].Status[0], 'Claim.Status should be NEW').to.be.equal(statusEnum.NEW)
-              expect(results[0].Reference[0]).to.be.equal(reference)
+              // Should have 8 rows, 2x child 2x expense x2 document
+              expect(results.length).toBe(8)
+              // Claim.Status should be NEW
+              expect(results[0].Status[0]).toBe(statusEnum.NEW)
+              expect(results[0].Reference[0]).toBe(reference)
             })
         })
     })

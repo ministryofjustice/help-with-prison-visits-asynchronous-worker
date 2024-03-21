@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const config = require('../../../../config')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -21,7 +20,7 @@ describe('services/data/get-old-claim-data', function () {
   const olderThanMaxAge = dateFormatter.now().subtract(maxAgeInDays + 1, 'days').toDate()
   const lessThanMaxAge = dateFormatter.now().subtract(maxAgeInDays - 1, 'days').toDate()
 
-  before(function () {
+  beforeAll(function () {
     return Promise.all([
       // Old claim with eligibility
       createTestData(reference1, olderThanMaxAge, false)
@@ -52,8 +51,8 @@ describe('services/data/get-old-claim-data', function () {
         const claim1Found = claimExists(claimId1, results)
         const claim2Found = claimExists(claimId2, results)
 
-        expect(claim1Found).to.be.true //eslint-disable-line
-        expect(claim2Found).to.be.true //eslint-disable-line
+        expect(claim1Found).toBe(true) //eslint-disable-line
+        expect(claim2Found).toBe(true) //eslint-disable-line
       })
   })
 
@@ -63,12 +62,12 @@ describe('services/data/get-old-claim-data', function () {
         const claim3Found = claimExists(claimId3, results)
         const claim4Found = claimExists(claimId4, results)
 
-        expect(claim3Found).to.be.false //eslint-disable-line
-        expect(claim4Found).to.be.false //eslint-disable-line
+        expect(claim3Found).toBe(false) //eslint-disable-line
+        expect(claim4Found).toBe(false) //eslint-disable-line
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return Promise.all([
       testHelper.deleteAll(reference1, 'ExtSchema'),
       testHelper.deleteAll(reference2, 'ExtSchema'),

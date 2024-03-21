@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -9,7 +8,7 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   const dwpBenefitCheckerResult = 'YES'
   let visitorId
 
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function () {
         const db = getDatabaseConnector()
@@ -28,12 +27,12 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
 
         return db('IntSchema.Visitor').where('Reference', reference).first('DWPBenefitCheckerResult')
           .then(function (visitor) {
-            expect(visitor.DWPBenefitCheckerResult).to.be.equal(dwpBenefitCheckerResult)
+            expect(visitor.DWPBenefitCheckerResult).toBe(dwpBenefitCheckerResult)
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

@@ -1,6 +1,3 @@
-const expect = require('chai').expect
-const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const statusEnum = require('../../../../app/constants/status-enum')
 const autoApprovalRulesEnum = require('../../../../app/constants/auto-approval-rules-enum')
@@ -18,15 +15,21 @@ const validCheckResult = new AutoApprovalCheckResult('', true, '')
 const invalidCheckResult = new AutoApprovalCheckResult('', false, '')
 let validAutoApprovalConfig
 
-let autoApprovalDataConstructorStub
-let getDataForAutoApprovalCheckStub
-let insertClaimEventStub
-let getAutoApprovalConfigStub
-let insertTaskStub
-let autoApproveClaimStub
-let autoApprovalDependencies
-let getLastSetNumberOfClaimsStatusStub
-let insertAutoApproveClaimStub
+const mockAutoApprovalDataConstructor = jest.fn()
+const mockGetDataForAutoApprovalCheck = jest.fn()
+const mockGetAutoApprovalConfig = jest.fn()
+const mockInsertClaimEvent = jest.fn()
+const mockInsertTask = jest.fn()
+const mockAutoApproveClaim = jest.fn()
+const mockGetLastSetNumberOfClaimsStatus = jest.fn()
+const mockInsertAutoApproveClaim = jest.fn()
+const mockGetClaimsPendingPayment = jest.fn()
+const mockAutoApprovalDependencies = []
+const mockValidCheckResult = jest.fn()
+
+autoApprovalRulesEnum.forEach(function (check) {
+  mockAutoApprovalDependencies[check] = jest.fn()
+})
 
 let autoApprovalProcess
 
@@ -47,96 +50,108 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       NumberOfConsecutiveAutoApprovals: 4
     }
 
-    autoApprovalDataConstructorStub = sinon.stub().returns(validAutoApprovalData)
-    getDataForAutoApprovalCheckStub = sinon.stub().resolves(validAutoApprovalData)
-    getAutoApprovalConfigStub = sinon.stub().resolves(validAutoApprovalConfig)
-    insertClaimEventStub = sinon.stub().resolves()
-    insertTaskStub = sinon.stub().resolves()
-    autoApproveClaimStub = sinon.stub().resolves()
-    getLastSetNumberOfClaimsStatusStub = sinon.stub().resolves([])
-    insertAutoApproveClaimStub = sinon.stub().resolves()
-
-    autoApprovalDependencies = {
-      '../../../config': { AUTO_APPROVAL_ENABLED: 'true' },
-      './auto-approval-data-constructor': autoApprovalDataConstructorStub,
-      '../data/get-data-for-auto-approval-check': getDataForAutoApprovalCheckStub,
-      '../data/get-auto-approval-config': getAutoApprovalConfigStub,
-      '../data/auto-approve-claim': autoApproveClaimStub,
-      '../data/insert-claim-event': insertClaimEventStub,
-      '../data/insert-task': insertTaskStub,
-      '../data/get-last-set-number-of-claims-status': getLastSetNumberOfClaimsStatusStub,
-      '../data/insert-auto-approve-claim': insertAutoApproveClaimStub
-    }
+    mockAutoApprovalDataConstructor.mockReturnValue(validAutoApprovalData)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(validAutoApprovalData)
+    mockGetAutoApprovalConfig.mockResolvedValue(validAutoApprovalConfig)
+    mockInsertClaimEvent.mockResolvedValue()
+    mockInsertTask.mockResolvedValue()
+    mockAutoApproveClaim.mockResolvedValue()
+    mockGetLastSetNumberOfClaimsStatus.mockResolvedValue([])
+    mockInsertAutoApproveClaim.mockResolvedValue()
+    mockValidCheckResult.mockReturnValue(validCheckResult)
 
     autoApprovalRulesEnum.forEach(function (check) {
-      autoApprovalDependencies[`./checks/${check}`] = sinon.stub().returns(validCheckResult)
+      mockAutoApprovalDependencies[check].mockReturnValue(validCheckResult)
     })
 
-    autoApprovalProcess = proxyquire('../../../../app/services/auto-approval/auto-approval-process', autoApprovalDependencies)
+    jest.mock('../../../../config', () => ({ AUTO_APPROVAL_ENABLED: 'true' }))
+    jest.mock('../../../../app/services/auto-approval/auto-approval-data-constructor', () => mockAutoApprovalDataConstructor)
+    jest.mock('../../../../app/services/data/get-claims-pending-payment', () => mockGetClaimsPendingPayment)
+    jest.mock('../../../../app/services/data/get-data-for-auto-approval-check', () => mockGetDataForAutoApprovalCheck)
+    jest.mock('../../../../app/services/data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
+    jest.mock('../../../../app/services/data/auto-approve-claim', () => mockAutoApproveClaim)
+    jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
+    jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
+    jest.mock('../../../../app/services/data/get-last-set-number-of-claims-status', () => mockGetLastSetNumberOfClaimsStatus)
+    jest.mock('../../../../app/services/data/insert-auto-approve-claim', () => mockInsertAutoApproveClaim)
+
+    autoApprovalRulesEnum.forEach(function (check) {
+      const mockAutoApprovalDependency = mockAutoApprovalDependencies[check]
+      jest.mock(`../../../../app/services/auto-approval/checks/${check}`, () => mockAutoApprovalDependency)
+    })
+
+    autoApprovalProcess = require('../../../../app/services/auto-approval/auto-approval-process')
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   it('should not execute auto approval process if AutoApprovalEnabled is set to false', function () {
-    getAutoApprovalConfigStub.resolves({ AutoApprovalEnabled: false })
+    mockGetAutoApprovalConfig.mockResolvedValue({ AutoApprovalEnabled: false })
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result).to.be.null //eslint-disable-line
-        sinon.assert.calledOnce(getAutoApprovalConfigStub)
-        sinon.assert.notCalled(getDataForAutoApprovalCheckStub)
-        sinon.assert.notCalled(autoApproveClaimStub)
+        expect(result).toBe(null) //eslint-disable-line
+        expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+        expect(mockGetDataForAutoApprovalCheck).not.toHaveBeenCalled()
+        expect(mockAutoApproveClaim).not.toHaveBeenCalled()
       })
   })
 
   it('should return claimApproved false for FIRST_TIME claim', function () {
     const firstTimeData = { Claim: { ClaimType: claimTypeEnum.FIRST_TIME } }
-    getDataForAutoApprovalCheckStub.resolves(firstTimeData)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject FIRST_TIME claims for auto-approval').to.be.false //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for REPEAT_NEW_ELIGIBILITY claim', function () {
     const firstTimeData = { Claim: { ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY } }
-    getDataForAutoApprovalCheckStub.resolves(firstTimeData)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(firstTimeData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject REPEAT_NEW_ELIGIBILITY claims for auto-approval').to.be.false //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
   it('should return claimApproved false for claims with status not equal to NEW', function () {
     const pendingClaimData = { Claim: { Status: statusEnum.PENDING } }
-    getDataForAutoApprovalCheckStub.resolves(pendingClaimData)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(pendingClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with status other than NEW').to.be.false //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
   it('should return claimApproved true for NEW claims and those that are less than number of consecutive auto approvals', function () {
-    const newClaimData = validAutoApprovalData
-    newClaimData.Claim = { Status: statusEnum.NEW }
-    getDataForAutoApprovalCheckStub.resolves(newClaimData)
+    // const newClaimData = validAutoApprovalData
+    // console.log(newClaimData.Claim.Status)
+    // newClaimData.Claim = { Status: statusEnum.NEW }
+    // console.log(newClaimData.Claim.Status)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(validAutoApprovalData)
+
     const expectedResult = true
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should auto approve NEW claims').to.be.eql(expectedResult)
+        expect(result.claimApproved).toEqual(expectedResult)
       })
   })
 
   it('should return claimApproved false for NEW claims and those that exceed consecutive auto approvals limit', function () {
     const newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
-    getDataForAutoApprovalCheckStub.resolves(newClaimData)
-    getLastSetNumberOfClaimsStatusStub.resolves([{ Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }])
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(newClaimData)
+    mockGetLastSetNumberOfClaimsStatus.mockResolvedValue([{ Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }])
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject claims with more than number of auto approvals').to.be.false //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
@@ -147,40 +162,40 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       Status: statusEnum.NEW,
       IsAdvanceClaim: true
     }
-    autoApprovalDependencies['./checks/is-visit-in-past'].returns(invalidCheckResult)
-    getDataForAutoApprovalCheckStub.resolves(advanceClaimData)
+    mockAutoApprovalDependencies['is-visit-in-past'].mockReturnValue(invalidCheckResult)
+    mockGetDataForAutoApprovalCheck.mockResolvedValue(advanceClaimData)
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved, 'should reject Advance claims for auto-approval').to.be.false //eslint-disable-line
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.true //eslint-disable-line
-        sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+        expect(result.claimApproved).toBe(true) //eslint-disable-line
+        expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
         const now = dateFormatter.now().toDate()
         const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
         if (isInOfficeHours) {
-          sinon.assert.calledOnce(autoApproveClaimStub)
+          expect(mockAutoApproveClaim).toHaveBeenCalledTimes(1)
         } else {
-          sinon.assert.calledOnce(insertAutoApproveClaimStub)
+          expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
         }
-        const keys = Object.keys(autoApprovalDependencies)
+        const keys = Object.keys(mockAutoApprovalDependencies)
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
-          sinon.assert.called(autoApprovalDependencies[key])
+          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalled()
         }
       })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
-    const inautoApprovalDependencies = autoApprovalDependencies
-    const keys = Object.keys(inautoApprovalDependencies)
+    const inmockAutoApprovalDependencies = mockAutoApprovalDependencies
+    const keys = Object.keys(inmockAutoApprovalDependencies)
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
@@ -188,21 +203,21 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       if (key.indexOf('data') > -1 || i % 2 === 0) {
         continue
       } else {
-        inautoApprovalDependencies[key].returns(invalidCheckResult)
+        inmockAutoApprovalDependencies[key].mockReturnValue(invalidCheckResult)
       }
     }
 
     return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       .then(function (result) {
-        expect(result.claimApproved).to.be.false //eslint-disable-line
-        sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
-        sinon.assert.calledOnce(insertClaimEventStub)
-        const keys = Object.keys(autoApprovalDependencies)
+        expect(result.claimApproved).toBe(false) //eslint-disable-line
+        expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
+        expect(mockInsertClaimEvent).toHaveBeenCalledTimes(1)
+        const keys = Object.keys(mockAutoApprovalDependencies)
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i]
           // skip check for getDataForAutoApproval, this is done above
           if (key.indexOf('/checks/') < 0) continue
-          sinon.assert.calledOnce(autoApprovalDependencies[key])
+          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalledTimes(1)
         }
       })
   })
@@ -210,19 +225,19 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   autoApprovalRulesEnum.forEach(function (check) {
     it(`should not perform ${check} check when it is disabled`, function () {
       validAutoApprovalConfig.RulesDisabled = [`${check}`]
-      getAutoApprovalConfigStub.resolves(validAutoApprovalConfig)
+      mockGetAutoApprovalConfig.mockResolvedValue(validAutoApprovalConfig)
       return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
         .then(function (result) {
-          expect(result.claimApproved).to.be.true //eslint-disable-line
-          sinon.assert.calledOnce(getDataForAutoApprovalCheckStub)
+          expect(result.claimApproved).toBe(true) //eslint-disable-line
+          expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
           const now = dateFormatter.now().toDate()
           const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
           if (isInOfficeHours) {
-            sinon.assert.calledOnce(autoApproveClaimStub)
+            expect(mockAutoApproveClaim).toHaveBeenCalledTimes(1)
           } else {
-            sinon.assert.calledOnce(insertAutoApproveClaimStub)
+            expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
           }
-          sinon.assert.notCalled(autoApprovalDependencies[`./checks/${check}`])
+          expect(mockAutoApprovalDependencies[check]).not.toHaveBeenCalled()
         })
     })
   })

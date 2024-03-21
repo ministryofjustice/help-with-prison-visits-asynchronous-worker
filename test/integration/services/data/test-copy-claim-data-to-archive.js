@@ -1,6 +1,5 @@
 /* COMMENTED OUT AS LOCAL AND DEV ENVIRONMENTS DO NO HAVE ARCHIVE DB
 const config = require('../../../../knexfile').archive
-const expect = require('chai').expect
 const testHelper = require('../../../test-helper')
 
 const copyClaimDataToArchive = require('../../../../app/services/data/copy-claim-data-to-archive')

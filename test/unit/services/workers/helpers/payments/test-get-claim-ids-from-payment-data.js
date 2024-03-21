@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const getClaimIdsFromPaymentData = require('../../../../../../app/services/workers/helpers/payments/get-claim-ids-from-payment-data')
 
 const paymentData = [
@@ -16,6 +14,6 @@ const expectedClaimIds = [
 describe('services/workers/helpers/payments/get-claim-ids-from-payment-data', function () {
   it('should return a 1-dimensional array of claim Ids', function () {
     const claimIds = getClaimIdsFromPaymentData(paymentData, 0)
-    expect(claimIds).to.eql(expectedClaimIds)
+    expect(claimIds).toEqual(expectedClaimIds)
   })
 })

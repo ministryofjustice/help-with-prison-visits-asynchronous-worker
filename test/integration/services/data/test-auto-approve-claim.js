@@ -1,22 +1,19 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
 const testHelper = require('../../../test-helper')
 const statusEnum = require('../../../../app/constants/status-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
-const autoApproveClaimExpenseStub = sinon.stub().resolves()
-const insertTaskStub = sinon.stub().resolves()
-const insertClaimEventStub = sinon.stub().resolves()
+const autoApproveClaimExpenseStub = jest.fn().mockResolvedValue()
+const insertTaskStub = jest.fn().mockResolvedValue()
+const insertClaimEventStub = jest.fn().mockResolvedValue()
 
-const autoApproveClaim = proxyquire('../../../../app/services/data/auto-approve-claim', {
-  './auto-approve-claim-expenses': autoApproveClaimExpenseStub,
-  '../data/insert-task': insertTaskStub,
-  '../data/insert-claim-event': insertClaimEventStub
-})
+jest.mock('./auto-approve-claim-expenses', () => autoApproveClaimExpenseStub)
+jest.mock('../data/insert-task', () => insertTaskStub)
+jest.mock('../data/insert-claim-event', () => insertClaimEventStub)
+
+const autoApproveClaim = require('../../../../app/services/data/auto-approve-claim')
 
 const REFERENCE = 'AUTOAPP'
 const EMAIL_ADDRESS = 'donotsend@apvs.com'
@@ -24,7 +21,7 @@ let eligibilityId
 let claimId
 
 describe('services/data/auto-approve-claim', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         eligibilityId = ids.eligibilityId
@@ -41,17 +38,17 @@ describe('services/data/auto-approve-claim', function () {
           .where('ClaimId', claimId)
           .first()
           .then(function (claim) {
-            expect(claim.Status).to.equal(statusEnum.AUTOAPPROVED)
-            expect(claim.DateApproved).not.to.be.null //eslint-disable-line
-            expect(claim.VisitConfirmationCheck).to.equal(statusEnum.APPROVED) //eslint-disable-line
-            expect(autoApproveClaimExpenseStub.calledWith(claimId)).to.be.true //eslint-disable-line
-            expect(insertTaskStub.calledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS)).to.be.true //eslint-disable-line
-            expect(insertClaimEventStub.calledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true)).to.be.true //eslint-disable-line
+            expect(claim.Status).toBe(statusEnum.AUTOAPPROVED)
+            expect(claim.DateApproved).not.toBeNull() //eslint-disable-line
+            expect(claim.VisitConfirmationCheck).toBe(statusEnum.APPROVED) //eslint-disable-line
+            expect(autoApproveClaimExpenseStub).toHaveBeenCalledWith(claimId).toBe(true) //eslint-disable-line
+            expect(insertTaskStub).toHaveBeenCalledWith(REFERENCE, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, EMAIL_ADDRESS).toBe(true) //eslint-disable-line
+            expect(insertClaimEventStub).toHaveBeenCalledWith(REFERENCE, eligibilityId, claimId, null, claimEventEnum.CLAIM_AUTO_APPROVED.value, null, 'Passed all auto approval checks', true).toBe(true) //eslint-disable-line
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

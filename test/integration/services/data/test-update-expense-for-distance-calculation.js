@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -14,7 +13,7 @@ describe('services/data/update-expense-for-distance-calculation', function () {
   let claimId
   let claimExpenseId
 
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         claimId = ids.claimId
@@ -34,15 +33,15 @@ describe('services/data/update-expense-for-distance-calculation', function () {
 
         return db('IntSchema.ClaimExpense').where('ClaimExpenseId', claimExpenseId).first()
           .then(function (claimExpense) {
-            expect(claimExpense.FromPostCode).to.be.equal(FROM_POSTCODE)
-            expect(claimExpense.ToPostCode).to.be.equal(TO_POSTCODE)
-            expect(claimExpense.Distance).to.be.equal(DISTANCE)
-            expect(claimExpense.Cost).to.be.equal(COST)
+            expect(claimExpense.FromPostCode).toBe(FROM_POSTCODE)
+            expect(claimExpense.ToPostCode).toBe(TO_POSTCODE)
+            expect(claimExpense.Distance).toBe(DISTANCE)
+            expect(claimExpense.Cost).toBe(COST)
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

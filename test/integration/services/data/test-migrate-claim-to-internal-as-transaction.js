@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 
 const testHelper = require('../../../test-helper')
@@ -34,7 +33,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
           .select()
           .then(function (results) {
-            expect(results.length).to.be.equal(1)
+            expect(results.length).toBe(1)
           })
           .then(function () {
             return db('ExtSchema.Eligibility').where('ExtSchema.Eligibility.Reference', reference)
@@ -43,7 +42,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
               .join('ExtSchema.Claim', 'ExtSchema.Eligibility.EligibilityId', '=', 'ExtSchema.Claim.EligibilityId')
               .select()
               .then(function (results) {
-                expect(results.length).to.be.equal(0)
+                expect(results.length).toBe(0)
               })
           })
       })
@@ -62,7 +61,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
             return db('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
               .select()
               .then(function (results) {
-                expect(results.length).to.be.equal(0)
+                expect(results.length).toBe(0)
               })
               .then(function () {
                 return db('ExtSchema.Eligibility').where('ExtSchema.Eligibility.Reference', reference)
@@ -71,7 +70,7 @@ describe('services/data/migrate-claim-to-internal-as-transaction', function () {
                   .join('ExtSchema.Claim', 'ExtSchema.Eligibility.EligibilityId', '=', 'ExtSchema.Claim.EligibilityId')
                   .select()
                   .then(function (results) {
-                    expect(results.length).to.be.equal(1)
+                    expect(results.length).toBe(1)
                   })
               })
           })

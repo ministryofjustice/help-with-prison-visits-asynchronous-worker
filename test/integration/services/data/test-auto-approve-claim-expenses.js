@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 
 const autoApproveClaimExpenses = require('../../../../app/services/data/auto-approve-claim-expenses')
@@ -9,7 +8,7 @@ const reference = 'AUTOAPV'
 let claimId
 
 describe('services/data/auto-approve-claim-expenses', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
       .then(function (ids) {
         claimId = ids.claimId
@@ -25,14 +24,14 @@ describe('services/data/auto-approve-claim-expenses', function () {
           .where('ClaimId', claimId)
           .then(function (claimExpenses) {
             claimExpenses.forEach(function (claimExpense) {
-              expect(claimExpense.Status).to.equal(statusEnum.APPROVED)
-              expect(claimExpense.ApprovedCost).to.equal(claimExpense.Cost)
+              expect(claimExpense.Status).toBe(statusEnum.APPROVED)
+              expect(claimExpense.ApprovedCost).toBe(claimExpense.Cost)
             })
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

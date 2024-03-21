@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const statusEnum = require('../../../../../app/constants/status-enum')
 const isNoPreviousPendingClaim = require('../../../../../app/services/auto-approval/checks/is-no-previous-pending-claim')
 
@@ -35,16 +34,16 @@ const noPreviousClaims = {
 describe('services/auto-approval/checks/is-no-previous-pending-claim', function () {
   it('should return false if there is a previous pending claim', function () {
     const check = isNoPreviousPendingClaim(previousClaimsWithPending)
-    expect(check.result).to.equal(false)
+    expect(check.result).toBe(false)
   })
 
   it('should return true if there is no previous pending claims', function () {
     const check = isNoPreviousPendingClaim(previousClaimsNotPending)
-    expect(check.result).to.equal(true)
+    expect(check.result).toBe(true)
   })
 
   it('should return true if there is no previous claims', function () {
     const check = isNoPreviousPendingClaim(noPreviousClaims)
-    expect(check.result).to.equal(true)
+    expect(check.result).toBe(true)
   })
 })

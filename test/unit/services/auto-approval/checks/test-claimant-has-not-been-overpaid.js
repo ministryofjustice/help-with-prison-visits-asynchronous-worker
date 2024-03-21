@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const claimantHasNotBeenOverpaid = require('../../../../../app/services/auto-approval/checks/claimant-has-not-been-overpaid')
 
 const autoApprovalDataWithNoOverpaidClaim = {
@@ -28,16 +26,16 @@ const autoApprovalDataNoPreviousClaims = {
 describe('services/auto-approval/checks/claimant-has-not-been-overpaid', function () {
   it('should return true if claimant has no overpaid previous claims', function () {
     const checkResult = claimantHasNotBeenOverpaid(autoApprovalDataWithNoOverpaidClaim)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 
   it('should return false if claimant has an overpaid previous claims', function () {
     const checkResult = claimantHasNotBeenOverpaid(autoApprovalDataWithOverpaidClaim)
-    expect(checkResult.result).to.equal(false)
+    expect(checkResult.result).toBe(false)
   })
 
   it('should return true if claimant has no previous claims', function () {
     const checkResult = claimantHasNotBeenOverpaid(autoApprovalDataNoPreviousClaims)
-    expect(checkResult.result).to.equal(true)
+    expect(checkResult.result).toBe(true)
   })
 })

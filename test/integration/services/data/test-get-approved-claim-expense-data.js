@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -11,7 +10,7 @@ describe('services/data/get-approved-claim-expense-data', function () {
   let claimExpenseId2
   let testData
 
-  before(function () {
+  beforeAll(function () {
     const db = getDatabaseConnector()
 
     return testHelper.insertClaimEligibilityData('IntSchema', reference)
@@ -49,18 +48,20 @@ describe('services/data/get-approved-claim-expense-data', function () {
       .then(function (result) {
         const db = getDatabaseConnector()
 
-        expect(result.claimantData.VisitorFirstName).to.equal(testData.Visitor.FirstName)
-        expect(result.claimantData.PaymentMethod).to.equal(testData.Claim.PaymentMethod)
-        expect(result.claimantData.AccountNumberLastFourDigits).to.equal(testData.ClaimBankDetail.AccountNumber.substr(testData.ClaimBankDetail.AccountNumber.length - 4))
-        expect(result.claimantData.CaseworkerNote).to.equal('')
-        expect(result.claimantData.Town).to.equal(testData.Visitor.Town)
-        expect(result.claimantData.Prison).to.equal(testData.Prisoner.NameOfPrison)
-        expect(result.claimantData.IsAdvanceClaim).to.equal(testData.Claim.IsAdvanceClaim)
+        expect(result.claimantData.VisitorFirstName).toBe(testData.Visitor.FirstName)
+        expect(result.claimantData.PaymentMethod).toBe(testData.Claim.PaymentMethod)
+        expect(result.claimantData.AccountNumberLastFourDigits).toBe(
+          testData.ClaimBankDetail.AccountNumber.substr(testData.ClaimBankDetail.AccountNumber.length - 4)
+        )
+        expect(result.claimantData.CaseworkerNote).toBe('')
+        expect(result.claimantData.Town).toBe(testData.Visitor.Town)
+        expect(result.claimantData.Prison).toBe(testData.Prisoner.NameOfPrison)
+        expect(result.claimantData.IsAdvanceClaim).toBe(testData.Claim.IsAdvanceClaim)
         return db('IntSchema.ClaimExpense')
           .where('ClaimExpenseId', claimExpenseId1)
           .first()
           .then(function (claimExpense) {
-            expect(claimExpense.Status).to.be.equal('REJECTED')
+            expect(claimExpense.Status).toBe('REJECTED')
           })
           .then(function () {
             return db('IntSchema.ClaimExpense')
@@ -68,12 +69,12 @@ describe('services/data/get-approved-claim-expense-data', function () {
               .first()
           })
           .then(function (claimExpense) {
-            expect(claimExpense.Status).to.be.equal('APPROVED')
+            expect(claimExpense.Status).toBe('APPROVED')
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(reference, 'IntSchema')
   })
 })

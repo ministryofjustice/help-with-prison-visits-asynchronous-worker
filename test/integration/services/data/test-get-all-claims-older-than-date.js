@@ -1,5 +1,4 @@
 const dateFormatter = require('../../../../app/services/date-formatter')
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -14,7 +13,7 @@ let claim3
 const olderThanDate = dateFormatter.now().subtract(365, 'days').toDate()
 
 describe('services/data/get-all-claims-older-than-date', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         claimId = ids.claimId
@@ -45,11 +44,11 @@ describe('services/data/get-all-claims-older-than-date', function () {
           return result.ClaimId === claim2.ClaimId || result.ClaimId === claim3.ClaimId
         })
 
-        expect(expectedClaimIds.length).to.equal(2)
+        expect(expectedClaimIds.length).toBe(2)
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

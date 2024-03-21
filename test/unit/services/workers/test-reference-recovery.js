@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const REFERENCE = 'RECOVERY'
 const EMAIL = 'test@test.com'
 const PRISON_NUMBER = 'B123456'
@@ -10,42 +6,43 @@ const FIRST_NAME = 'test'
 const additionalData = `${EMAIL}~~${PRISON_NUMBER}`
 const config = { EXTERNAL_SERVICE_URL: 'https://test.com', EXTERNAL_PATH_ALREADY_REGISTERED: '/start-already-registered' }
 
-let stubReferenceNumberRecovery
-let stubSendNotification
+const mockReferenceNumberRecovery = jest.fn()
+const mockSendNotification = jest.fn().mockResolvedValue()
 let referenceRecovery
+
+jest.mock('../../../../app/services/data/reference-number-recovery', () => mockReferenceNumberRecovery)
+jest.mock('../../../../config', () => config)
+jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
 
 describe('services/reference-recovery', function () {
   beforeEach(function () {
-    stubReferenceNumberRecovery = sinon.stub()
-    stubSendNotification = sinon.stub().resolves()
+    referenceRecovery = require('../../../../app/services/workers/reference-recovery')
+  })
 
-    referenceRecovery = proxyquire('../../../../app/services/workers/reference-recovery', {
-      '../data/reference-number-recovery': stubReferenceNumberRecovery,
-      '../../../config': config,
-      '../notify/send-notification': stubSendNotification
-    })
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   it('should call reference number recovery send email with recovered reference number', function () {
-    stubReferenceNumberRecovery.resolves({ Reference: REFERENCE, FirstName: FIRST_NAME })
+    mockReferenceNumberRecovery.mockResolvedValue({ Reference: REFERENCE, FirstName: FIRST_NAME })
     return referenceRecovery.execute({ additionalData })
       .then(function () {
-        expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
-        expect(stubSendNotification.called).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_SEND_REFERENCE_RECOVERY_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].firstname).to.be.equal(FIRST_NAME)
-        expect(stubSendNotification.firstCall.args[2].registeredUrl).to.be.equal(`${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`)
+        expect(mockReferenceNumberRecovery).toHaveBeenCalledWith(EMAIL, PRISON_NUMBER)
+        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_SEND_REFERENCE_RECOVERY_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockSendNotification.mock.calls[0][2].firstname).toBe(FIRST_NAME)
+        expect(mockSendNotification.mock.calls[0][2].registeredUrl).toBe(`${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`)
       })
   })
 
   it('should only call reference recover, get nothing and send no email', function () {
-    stubReferenceNumberRecovery.resolves()
+    mockReferenceNumberRecovery.mockResolvedValue()
     return referenceRecovery.execute({ additionalData })
       .then(function () {
-        expect(stubReferenceNumberRecovery.calledWith(EMAIL, PRISON_NUMBER))
-        expect(stubSendNotification.called).to.be.false //eslint-disable-line
+        expect(mockReferenceNumberRecovery).toHaveBeenCalledWith(EMAIL, PRISON_NUMBER)
+        expect(mockSendNotification).not.toHaveBeenCalled() //eslint-disable-line
       })
   })
 })

@@ -1,5 +1,4 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
-const expect = require('chai').expect
 const { getOldPaymentFiles } = require('../../../../app/services/data/get-old-payment-files')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -8,7 +7,7 @@ const OLD_FILE_DATE = dateFormatter.now().subtract('40', 'days')
 describe('services/data/get-old-payment-files', function () {
   let paymentFileIds
 
-  before(function () {
+  beforeAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.DirectPaymentFile')
@@ -40,11 +39,11 @@ describe('services/data/get-old-payment-files', function () {
           return paymentFileIds.indexOf(result.PaymentFileId) !== -1
         })
 
-        expect(testFiles.length).to.equal(2)
+        expect(testFiles.length).toBe(2)
       })
   })
 
-  after(function () {
+  afterAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.DirectPaymentFile')

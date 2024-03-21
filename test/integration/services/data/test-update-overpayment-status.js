@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -23,10 +22,10 @@ describe('services/data/update-overpayment-status', function () {
 
         return db('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {
-            expect(claim.IsOverpaid).to.be.true //eslint-disable-line
-            expect(claim.OverpaymentAmount).to.equal(AMOUNT)
-            expect(claim.RemainingOverpaymentAmount).to.equal(AMOUNT)
-            expect(claim.OverpaymentReason).to.equal('Evidence not uploaded within 10 days')
+            expect(claim.IsOverpaid).toBe(true) //eslint-disable-line
+            expect(claim.OverpaymentAmount).toBe(AMOUNT)
+            expect(claim.RemainingOverpaymentAmount).toBe(AMOUNT)
+            expect(claim.OverpaymentReason).toBe('Evidence not uploaded within 10 days')
           })
       })
   })

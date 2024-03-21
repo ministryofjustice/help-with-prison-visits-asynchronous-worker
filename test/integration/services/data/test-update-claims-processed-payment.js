@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -13,7 +12,7 @@ describe('services/data/update-claims-processed-payment', function () {
   const referenceA = 'PROCESS'
   let claimId
 
-  before(function () {
+  beforeAll(function () {
     paymentDate = dateFormatter.now().toDate()
     return testHelper.insertClaimEligibilityData('IntSchema', referenceA)
       .then(function (ids) {
@@ -28,9 +27,9 @@ describe('services/data/update-claims-processed-payment', function () {
 
         return db('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
-            expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
-            expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
-            expect(claims[0].PaymentDate).to.not.be.null //eslint-disable-line
+            expect(claims[0].PaymentStatus).toBe(processedStatus)
+            expect(claims[0].PaymentAmount).toBe(paymentTotal)
+            expect(claims[0].PaymentDate).not.toBeNull() //eslint-disable-line
           })
       })
   })
@@ -43,13 +42,13 @@ describe('services/data/update-claims-processed-payment', function () {
 
         return db('IntSchema.Claim').where('ClaimId', claimId)
           .then(function (claims) {
-            expect(claims[0].PaymentStatus).to.be.equal(processedStatus)
-            expect(claims[0].PaymentAmount).to.be.equal(paymentTotal)
+            expect(claims[0].PaymentStatus).toBe(processedStatus)
+            expect(claims[0].PaymentAmount).toBe(paymentTotal)
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(referenceA, 'IntSchema')
   })
 })

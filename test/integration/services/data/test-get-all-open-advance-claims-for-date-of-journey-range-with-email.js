@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -12,7 +11,7 @@ let claimId
 let eligibilityId
 
 describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-with-email', function () {
-  before(function () {
+  beforeAll(function () {
     return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
       .then(function (ids) {
         claimId = ids.claimId
@@ -47,12 +46,12 @@ describe('services/data/get-all-open-advance-claims-for-date-of-journey-range-wi
     console.log(START_DATE, END_DATE)
     return getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(START_DATE, END_DATE)
       .then(function (claims) {
-        expect(claims.length).to.equal(2)
-        expect(claims[0].EmailAddress).to.be.equal('test@test.com')
+        expect(claims.length).toBe(2)
+        expect(claims[0].EmailAddress).toBe('test@test.com')
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return testHelper.deleteAll(REFERENCE, 'IntSchema')
   })
 })

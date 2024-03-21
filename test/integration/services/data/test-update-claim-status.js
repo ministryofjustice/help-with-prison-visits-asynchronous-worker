@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 
@@ -23,7 +22,7 @@ describe('services/data/update-claim-status', function () {
 
         return db('IntSchema.Claim').where('ClaimId', claimId).first()
           .then(function (claim) {
-            expect(claim.Status).to.be.equal(STATUS)
+            expect(claim.Status).toBe(STATUS)
           })
       })
   })

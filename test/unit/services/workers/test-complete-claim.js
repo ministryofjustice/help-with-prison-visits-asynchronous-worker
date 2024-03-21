@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const taskEnum = require('../../../../app/constants/tasks-enum')
 
 const reference = '1234567'
@@ -17,21 +13,29 @@ const claimData = {
   }
 }
 
-const getAllClaimData = sinon.stub().resolves(claimData)
-const migrateClaimToInternalAsTransaction = sinon.stub().resolves()
-const calculateCarExpenseCosts = sinon.stub().resolves()
+const mockGetAllClaimData = jest.fn().mockResolvedValue(claimData)
+const mockMigrateClaimToInternalAsTransaction = jest.fn().mockResolvedValue()
+const mockCalculateCarExpenseCosts = jest.fn().mockResolvedValue()
 // autoApprovalProcess Removed in APVS0115
-const insertTask = sinon.stub().resolves()
-const getVisitorEmailAddress = sinon.stub().resolves(emailAddress)
+const mockInsertTask = jest.fn().mockResolvedValue()
+const mockGetVisitorEmailAddress = jest.fn().mockResolvedValue(emailAddress)
 
-const completeClaim = proxyquire('../../../../app/services/workers/complete-claim', {
-  '../data/get-all-claim-data': getAllClaimData,
-  '../data/migrate-claim-to-internal-as-transaction': migrateClaimToInternalAsTransaction,
-  '../distance-checker/calculate-car-expense-costs': calculateCarExpenseCosts,
-  // autoApprovalProcess Removed in APVS0115
-  '../data/insert-task': insertTask,
-  '../data/get-visitor-email-address': getVisitorEmailAddress
-})
+jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
+
+jest.mock(
+  '../../../../app/services/data/migrate-claim-to-internal-as-transaction',
+  () => mockMigrateClaimToInternalAsTransaction
+)
+
+jest.mock(
+  '../../../../app/services/distance-checker/calculate-car-expense-costs',
+  () => mockCalculateCarExpenseCosts
+)
+
+jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
+jest.mock('../../../../app/services/data/get-visitor-email-address', () => mockGetVisitorEmailAddress)
+
+const completeClaim = require('../../../../app/services/workers/complete-claim')
 
 describe('services/workers/complete-claim', function () {
   it('should call to retrieve, copy and delete first time claim, calculate car expenses, run auto-approval checks, insert notification and DWP check tasks', function () {
@@ -41,13 +45,13 @@ describe('services/workers/complete-claim', function () {
       eligibilityId,
       claimId
     }).then(function () {
-      expect(getAllClaimData.calledWith('ExtSchema', reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
-      expect(migrateClaimToInternalAsTransaction.calledWith(claimData, null, eligibilityId, claimId)).to.be.true //eslint-disable-line
-      expect(calculateCarExpenseCosts.calledWith(reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('ExtSchema', reference, eligibilityId, claimId) //eslint-disable-line
+      expect(mockMigrateClaimToInternalAsTransaction).toHaveBeenCalledWith(claimData, null, eligibilityId, claimId) //eslint-disable-line
+      expect(mockCalculateCarExpenseCosts).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
       // autoApprovalProcess Removed in APVS0115
-      expect(getVisitorEmailAddress.calledWith('IntSchema', reference, eligibilityId)).to.be.true //eslint-disable-line
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress)).to.be.true //eslint-disable-line
-      expect(insertTask.calledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK)).to.be.true //eslint-disable-line
+      expect(mockGetVisitorEmailAddress).toHaveBeenCalledWith('IntSchema', reference, eligibilityId) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledWith(reference, eligibilityId, claimId, taskEnum.SEND_CLAIM_NOTIFICATION, emailAddress) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledWith(reference, eligibilityId, claimId, taskEnum.DWP_CHECK) //eslint-disable-line
     })
   })
 })

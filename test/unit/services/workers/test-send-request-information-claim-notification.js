@@ -1,7 +1,3 @@
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
 const config = require('../../../../config')
 
 const EMAIL_ADDRESS = 'test@test.com'
@@ -10,13 +6,15 @@ const CLAIM_ID = 1234
 const ELIGIBILITY_ID = 4321
 const FIRST_NAME = 'Joe'
 
-const stubSendNotification = sinon.stub().resolves()
-const stubGetFirstNameByClaimId = sinon.stub().resolves(FIRST_NAME)
+const mockSendNotification = jest.fn().mockResolvedValue()
+const mockGetFirstNameByClaimId = jest.fn().mockResolvedValue(FIRST_NAME)
 
-const sendRequestInformationClaimNotification = proxyquire('../../../../app/services/workers/send-request-information-claim-notification', {
-  '../notify/send-notification': stubSendNotification,
-  '../data/get-first-name-by-claimId': stubGetFirstNameByClaimId
-})
+jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
+jest.mock('../../../../app/services/data/get-first-name-by-claimId', () => mockGetFirstNameByClaimId)
+
+const sendRequestInformationClaimNotification = require(
+  '../../../../app/services/workers/send-request-information-claim-notification'
+)
 
 describe('services/send-request-information-claim-notification', function () {
   it('should call send-notification with correct details', function () {
@@ -27,13 +25,13 @@ describe('services/send-request-information-claim-notification', function () {
       additionalData: EMAIL_ADDRESS
     })
       .then(function () {
-        expect(stubGetFirstNameByClaimId.calledWith('IntSchema', CLAIM_ID)).to.be.true //eslint-disable-line
-        expect(stubSendNotification.called).to.be.true //eslint-disable-line
-        expect(stubSendNotification.firstCall.args[0]).to.be.equal(config.NOTIFY_REQUEST_INFORMATION_CLAIM_EMAIL_TEMPLATE_ID)
-        expect(stubSendNotification.firstCall.args[1]).to.be.equal(EMAIL_ADDRESS)
-        expect(stubSendNotification.firstCall.args[2].reference).to.be.equal(REFERENCE)
-        expect(stubSendNotification.firstCall.args[2].first_name).to.be.equal(FIRST_NAME)
-        expect(stubSendNotification.firstCall.args[2].requestInfoUrl).not.to.be.null //eslint-disable-line
+        expect(mockGetFirstNameByClaimId).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
+        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_REQUEST_INFORMATION_CLAIM_EMAIL_TEMPLATE_ID)
+        expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
+        expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
+        expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
       })
   })
 })

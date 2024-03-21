@@ -1,12 +1,11 @@
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const updateOldPaymentFilesIsEnabledFalse = require('../../../../app/services/data/update-old-payment-files-is-enabled-false')
 
 describe('services/data/update-old-payment-files-is-enabled-false', function () {
   let paymentFileIds
 
-  before(function () {
+  beforeAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.DirectPaymentFile')
@@ -39,13 +38,13 @@ describe('services/data/update-old-payment-files-is-enabled-false', function () 
           .select('IsEnabled')
           .whereIn('PaymentFileId', paymentFileIds)
           .then(function (results) {
-            expect(results[0].IsEnabled).to.equal(false)
-            expect(results[1].IsEnabled).to.equal(false)
+            expect(results[0].IsEnabled).toBe(false)
+            expect(results[1].IsEnabled).toBe(false)
           })
       })
   })
 
-  after(function () {
+  afterAll(function () {
     const db = getDatabaseConnector()
 
     return db('IntSchema.DirectPaymentFile')

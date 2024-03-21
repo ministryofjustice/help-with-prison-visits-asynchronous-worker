@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { getDatabaseConnector } = require('../../../../app/databaseConnector')
 const testHelper = require('../../../test-helper')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -9,7 +8,7 @@ describe('services/data/complete-task-with-status', function () {
   const newStatus = 'NEWSTAT'
   let id
 
-  before(function () {
+  beforeAll(function () {
     const db = getDatabaseConnector()
 
     return db('ExtSchema.Task')
@@ -28,13 +27,14 @@ describe('services/data/complete-task-with-status', function () {
         const currentDate = dateFormatter.now()
         const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
         const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
-        expect(result.Status).to.be.equal(newStatus)
-        expect(result.DateProcessed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
+        expect(result.Status).toBe(newStatus)
+        expect(result.DateProcessed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
+        expect(result.DateProcessed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
       })
     })
   })
 
-  after(function () {
+  afterAll(function () {
     const db = getDatabaseConnector()
 
     return db('ExtSchema.Task').where('Task', 'TEST-TASK').del()
