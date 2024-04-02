@@ -130,10 +130,6 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   })
 
   it('should return claimApproved true for NEW claims and those that are less than number of consecutive auto approvals', function () {
-    // const newClaimData = validAutoApprovalData
-    // console.log(newClaimData.Claim.Status)
-    // newClaimData.Claim = { Status: statusEnum.NEW }
-    // console.log(newClaimData.Claim.Status)
     mockGetDataForAutoApprovalCheck.mockResolvedValue(validAutoApprovalData)
 
     const expectedResult = true

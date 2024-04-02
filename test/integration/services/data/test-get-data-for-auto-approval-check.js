@@ -168,7 +168,6 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
 
     const createClaims = []
     previousClaims.forEach(function (previousClaim) {
-      console.log(JSON.stringify(previousClaim.ClaimBankDetail))
       createClaims.push(testHelper.insertClaimData('IntSchema', REFERENCE, uniqueId + 1, previousClaim))
     })
 
