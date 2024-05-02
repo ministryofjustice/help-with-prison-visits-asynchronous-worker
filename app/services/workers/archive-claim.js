@@ -1,7 +1,7 @@
 const moveClaimDataToArchiveDatabase = require('../archiving/move-claim-data-to-archive-database')
 
 module.exports.execute = function (task) {
-  const claimId = task.claimId
+  const { claimId } = task
 
   return moveClaimDataToArchiveDatabase(claimId)
 }

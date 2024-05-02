@@ -16,7 +16,11 @@ module.exports = function (autoApprovalData) {
   if (benefitExpiryDate) {
     checkPassed = benefitExpiryDate.isSameOrAfter(dateOfJourney)
   } else {
-    return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : 'The Benefit Expiry Date has not been set')
+    return new AutoApprovalCheckResult(
+      CHECK_NAME,
+      checkPassed,
+      checkPassed ? '' : 'The Benefit Expiry Date has not been set',
+    )
   }
   const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Benefit expiry date: ${benefitExpiryDate.format('DD/MM/YYYY')}, Date of journey: ${dateOfJourney.format('DD/MM/YYYY')}`
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)

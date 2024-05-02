@@ -6,11 +6,13 @@ const FAILURE_MESSAGE = 'Claim expense costs are outside of the accepted varianc
 
 module.exports = function (autoApprovalData) {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.claimExpenses) {
-    const groupedFirstTimeClaimExpenses = groupExpensesByType(autoApprovalData.latestManuallyApprovedClaim.claimExpenses)
+    const groupedFirstTimeClaimExpenses = groupExpensesByType(
+      autoApprovalData.latestManuallyApprovedClaim.claimExpenses,
+    )
     const groupedCurrentExpenses = groupExpensesByType(autoApprovalData.ClaimExpenses)
 
     // Loop through current expense types, get total, and compare against first time expenses of the same types
-    for (let i = 0; i < Object.keys(groupedCurrentExpenses).length; i++) {
+    for (let i = 0; i < Object.keys(groupedCurrentExpenses).length; i += 1) {
       const index = Object.keys(groupedCurrentExpenses)[i]
       const currentExpenseType = groupedCurrentExpenses[index]
       const firstTimeExpenses = groupedFirstTimeClaimExpenses[index]
@@ -34,13 +36,13 @@ module.exports = function (autoApprovalData) {
   return new AutoApprovalCheckResult(CHECK_NAME, true, '')
 }
 
-function getTotal (claimExpenses, fieldName) {
+function getTotal(claimExpenses, fieldName) {
   let expenseTypeTotal = 0
   if (!claimExpenses) {
     return expenseTypeTotal
   }
 
-  for (let i = 0; i < claimExpenses.length; i++) {
+  for (let i = 0; i < claimExpenses.length; i += 1) {
     expenseTypeTotal += claimExpenses[i][fieldName]
   }
 

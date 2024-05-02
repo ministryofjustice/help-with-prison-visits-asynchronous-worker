@@ -1,6 +1,6 @@
-const config = require('../../config')
 const bunyan = require('bunyan')
 const PrettyStream = require('bunyan-prettystream')
+const config = require('../../config')
 
 const logsPath = config.LOGGING_PATH || 'logs/asynchronous-worker.log'
 const logsLevel = config.LOGGING_LEVEL
@@ -14,14 +14,14 @@ const log = bunyan.createLogger({
   name: 'asynchronous-worker',
   streams: [],
   serializers: {
-    error: errorSerializer
-  }
+    error: errorSerializer,
+  },
 })
 
 // Add console Stream.
 log.addStream({
   level: 'DEBUG',
-  stream: prettyStream
+  stream: prettyStream,
 })
 
 // Add file stream.
@@ -30,14 +30,14 @@ log.addStream({
   level: logsLevel,
   path: logsPath,
   period: '1d',
-  count: 7
+  count: 7,
 })
 
-function errorSerializer (error) {
+function errorSerializer(error) {
   return {
     message: error.message,
     name: error.name,
-    stack: error.stack
+    stack: error.stack,
   }
 }
 

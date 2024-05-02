@@ -13,7 +13,18 @@ describe('services/domain/task', function () {
     const schema = 'IntSchema'
     const status = 'PENDING'
 
-    const task = new Task(taskId, taskType, reference, eligibilityId, claimId, additionalData, dateCreated, dateProcessed, schema, status)
+    const task = new Task(
+      taskId,
+      taskType,
+      reference,
+      eligibilityId,
+      claimId,
+      additionalData,
+      dateCreated,
+      dateProcessed,
+      schema,
+      status,
+    )
 
     expect(task.taskId).toBe(taskId)
     expect(task.task).toBe(taskType)

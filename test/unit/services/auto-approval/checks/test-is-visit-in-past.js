@@ -4,15 +4,15 @@ const isVisitInPast = require('../../../../../app/services/auto-approval/checks/
 const autoApprovalDataWithPastClaim = {
   Claim: {
     ClaimId: 1,
-    DateOfJourney: dateFormatter.now().subtract(1, 'days')
-  }
+    DateOfJourney: dateFormatter.now().subtract(1, 'days'),
+  },
 }
 
 const autoApprovalDataWithFutureClaim = {
   Claim: {
     ClaimId: 1,
-    DateOfJourney: dateFormatter.now().add(1, 'days')
-  }
+    DateOfJourney: dateFormatter.now().add(1, 'days'),
+  },
 }
 
 describe('services/auto-approval/checks/is-visit-in-past', function () {

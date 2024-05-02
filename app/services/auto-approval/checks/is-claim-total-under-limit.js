@@ -8,7 +8,7 @@ module.exports = function (autoApprovalData) {
   let claimTotal = 0
 
   if (autoApprovalData.ClaimExpenses) {
-    for (let i = 0; i < autoApprovalData.ClaimExpenses.length; i++) {
+    for (let i = 0; i < autoApprovalData.ClaimExpenses.length; i += 1) {
       const claimExpense = autoApprovalData.ClaimExpenses[i]
 
       claimTotal += parseFloat(claimExpense.Cost)

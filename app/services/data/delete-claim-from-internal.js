@@ -6,7 +6,8 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
     deleteInternal('ClaimDeduction', 'ClaimId', claimId),
     deleteInternal('ClaimEvent', 'ClaimId', claimId),
     deleteInternal('ClaimChild', 'ClaimId', claimId),
-    deleteInternal('ClaimBankDetail', 'ClaimId', claimId)])
+    deleteInternal('ClaimBankDetail', 'ClaimId', claimId),
+  ])
     .then(function () {
       return deleteInternal('ClaimDocument', 'ClaimId', claimId) // Events reference ClaimDocumentId
     })
@@ -23,17 +24,16 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
           deleteInternal('Visitor', 'EligibilityId', eligibilityId),
           deleteInternal('Prisoner', 'EligibilityId', eligibilityId),
           deleteInternal('EligibleChild', 'EligibilityId', eligibilityId),
-          deleteInternal('Benefit', 'EligibilityId', eligibilityId)])
-          .then(function () {
-            return deleteInternal('Eligibility', 'EligibilityId', eligibilityId)
-          })
-      } else {
-        return Promise.resolve()
+          deleteInternal('Benefit', 'EligibilityId', eligibilityId),
+        ]).then(function () {
+          return deleteInternal('Eligibility', 'EligibilityId', eligibilityId)
+        })
       }
+      return Promise.resolve()
     })
 }
 
-function deleteInternal (table, column, value) {
+function deleteInternal(table, column, value) {
   const db = getDatabaseConnector()
 
   return db(`IntSchema.${table}`).where(column, value).del()

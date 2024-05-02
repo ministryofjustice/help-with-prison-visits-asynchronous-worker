@@ -1,5 +1,6 @@
 const util = require('util')
 const { stringify } = require('csv-stringify')
+
 const generateCsvString = util.promisify(stringify)
 const writeFile = util.promisify(require('fs').writeFile)
 const path = require('path')
@@ -7,6 +8,7 @@ const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
 const { AWSHelper } = require('../aws-helper')
+
 const aws = new AWSHelper()
 
 module.exports = function (payments, isForApvu = false) {
@@ -14,19 +16,18 @@ module.exports = function (payments, isForApvu = false) {
   const tempFilePath = path.join(config.FILE_TMP_DIR, filename)
   const data = formatPaymentsToCsvStandard(payments, isForApvu)
 
-  const length = payments.length
+  const { length } = payments
   log.info(`Generating direct bank payments file with ${length} payments`)
 
   return generateCsvString(data).then(function (content) {
-    return writeFile(tempFilePath, content, {})
-      .then(async function () {
-        log.info(`Filepath for direct payment file = ${tempFilePath}`)
-        return await aws.upload(filename, tempFilePath)
-      })
+    return writeFile(tempFilePath, content, {}).then(async function () {
+      log.info(`Filepath for direct payment file = ${tempFilePath}`)
+      return aws.upload(filename, tempFilePath)
+    })
   })
 }
 
-function formatPaymentsToCsvStandard (payments, isForApvu = false) {
+function formatPaymentsToCsvStandard(payments, isForApvu = false) {
   const csvFormattedPayments = []
 
   let niTotal = 0
@@ -37,24 +38,25 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
     const cost = parseFloat(payment[3])
     switch (payment[5]) {
       case 'England':
-        engTotal = engTotal + cost
+        engTotal += cost
         break
       case 'Northern Ireland':
-        niTotal = niTotal + cost
+        niTotal += cost
         break
       case 'Scotland':
-        scoTotal = scoTotal + cost
+        scoTotal += cost
         break
       case 'Wales':
-        walTotal = walTotal + cost
+        walTotal += cost
         break
+      default:
     }
     const thisPayment = [
       payment[0], // sortcode
       payment[1], // account number
       getNameAs18CharactersPaddedWithSpaces(payment[2]), // payee
       getAmountAs11CharactersPaddedWithZeros(payment[3]), // amount
-      payment[6] // roll number
+      payment[6], // roll number
     ]
     if (isForApvu) {
       // reference
@@ -76,17 +78,17 @@ function formatPaymentsToCsvStandard (payments, isForApvu = false) {
   return csvFormattedPayments
 }
 
-function getNameAs18CharactersPaddedWithSpaces (name) {
+function getNameAs18CharactersPaddedWithSpaces(name) {
   const trimmedName = name.substring(0, 17)
   return trimmedName + Array(18 - trimmedName.length + 1).join(' ')
 }
 
-function getAmountAs11CharactersPaddedWithZeros (amount) {
-  const padded = '00000000000' + amount
+function getAmountAs11CharactersPaddedWithZeros(amount) {
+  const padded = `00000000000${amount}`
   return padded.substring(padded.length - 11)
 }
 
-function getFileName (isForApvu = false) {
+function getFileName(isForApvu = false) {
   const filePrefix = isForApvu ? 'apvu-apvs-payments' : 'apvs-payments'
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
   return `${filePrefix}-${datestamp}.txt`

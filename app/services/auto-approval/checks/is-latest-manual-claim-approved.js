@@ -7,10 +7,8 @@ module.exports = function (autoApprovalData) {
   if (autoApprovalData.latestManualClaim) {
     if (autoApprovalData.latestManualClaim.Status === 'APPROVED') {
       return new AutoApprovalCheckResult(CHECK_NAME, true, '')
-    } else {
-      return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
     }
-  } else {
     return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
   }
+  return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
 }

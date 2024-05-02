@@ -11,54 +11,48 @@ const log = require('../log')
 
 const cleanupOldData = function () {
   log.info('Clean up old data')
-  const maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA)
+  const maxDaysBeforeDeleteData = parseInt(config.EXTERNAL_MAX_DAYS_BEFORE_DELETE_OLD_DATA, 10)
   const dateThreshold = dateFormatter.now().subtract(maxDaysBeforeDeleteData, 'days').toDate()
 
-  return cleanEligibilityData(dateThreshold)
-    .then(function () {
-      return cleanClaimData(dateThreshold)
-        .then(function () {
-          return cleanClaimDocumentData(dateThreshold)
-        })
+  return cleanEligibilityData(dateThreshold).then(function () {
+    return cleanClaimData(dateThreshold).then(function () {
+      return cleanClaimDocumentData(dateThreshold)
     })
+  })
 }
 
-function cleanEligibilityData (dateThreshold) {
-  return getOldEligibilityData(dateThreshold)
-    .then(function (oldEligibilityData) {
-      return Promise.each(oldEligibilityData, function (eligibilityData) {
-        return deleteOldFiles(eligibilityData.EligibilityId, eligibilityData.ClaimId, eligibilityData.Reference)
-          .then(function () {
-            return deleteFilesFromExternalAsTransaction(eligibilityData.EligibilityId, eligibilityData.ClaimId)
-          })
-      })
+function cleanEligibilityData(dateThreshold) {
+  return getOldEligibilityData(dateThreshold).then(function (oldEligibilityData) {
+    return Promise.each(oldEligibilityData, function (eligibilityData) {
+      return deleteOldFiles(eligibilityData.EligibilityId, eligibilityData.ClaimId, eligibilityData.Reference).then(
+        function () {
+          return deleteFilesFromExternalAsTransaction(eligibilityData.EligibilityId, eligibilityData.ClaimId)
+        },
+      )
     })
+  })
 }
 
-function cleanClaimData (dateThreshold) {
-  return getOldClaimData(dateThreshold)
-    .then(function (oldClaimData) {
-      return Promise.each(oldClaimData, function (claimData) {
-        return deleteOldFiles(claimData.EligibilityId, claimData.ClaimId, claimData.Reference)
-          .then(function () {
-            return deleteFilesFromExternalAsTransaction(claimData.EligibilityId, claimData.ClaimId)
-          })
+function cleanClaimData(dateThreshold) {
+  return getOldClaimData(dateThreshold).then(function (oldClaimData) {
+    return Promise.each(oldClaimData, function (claimData) {
+      return deleteOldFiles(claimData.EligibilityId, claimData.ClaimId, claimData.Reference).then(function () {
+        return deleteFilesFromExternalAsTransaction(claimData.EligibilityId, claimData.ClaimId)
       })
     })
+  })
 }
 
-function cleanClaimDocumentData (dateThreshold) {
-  return getOldClaimDocumentData(dateThreshold)
-    .then(function (oldClaimDocumentData) {
-      return Promise.each(oldClaimDocumentData, function (documentData) {
-        return deleteOldFiles(documentData.EligibilityId, documentData.ClaimId, documentData.Reference)
-          .then(function () {
-            return deleteFilesFromExternalAsTransaction(documentData.EligibilityId, documentData.ClaimId)
-          })
+function cleanClaimDocumentData(dateThreshold) {
+  return getOldClaimDocumentData(dateThreshold).then(function (oldClaimDocumentData) {
+    return Promise.each(oldClaimDocumentData, function (documentData) {
+      return deleteOldFiles(documentData.EligibilityId, documentData.ClaimId, documentData.Reference).then(function () {
+        return deleteFilesFromExternalAsTransaction(documentData.EligibilityId, documentData.ClaimId)
       })
     })
+  })
 }
 
 module.exports = {
-  cleanupOldData
+  cleanupOldData,
 }

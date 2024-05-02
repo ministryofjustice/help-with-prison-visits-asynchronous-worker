@@ -19,39 +19,45 @@ module.exports = function (autoApprovalData) {
   const monthsSinceStartOfClaimableYear = durationSinceFirstClaim.get('months')
   const daysSinceStartOfClaimableYear = durationSinceFirstClaim.get('days')
 
-  const startOfClaimableYear = now.subtract(monthsSinceStartOfClaimableYear, 'months')
+  const startOfClaimableYear = now
+    .subtract(monthsSinceStartOfClaimableYear, 'months')
     .subtract(daysSinceStartOfClaimableYear, 'days')
   const endOfClaimableYear = startOfClaimableYear.clone().add('1', 'years')
 
-  const numberOfClaimsThisYear = getNumberOfClaimsSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, startOfClaimableYear.toDate(), endOfClaimableYear.toDate())
+  const numberOfClaimsThisYear = getNumberOfClaimsSinceDate(
+    autoApprovalData.previousClaims,
+    autoApprovalData.Claim,
+    startOfClaimableYear.toDate(),
+    endOfClaimableYear.toDate(),
+  )
   const checkPassed = numberOfClaimsThisYear <= autoApprovalData.maxNumberOfClaimsPerYear
   const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Maximum no of claims per year: ${autoApprovalData.maxNumberOfClaimsPerYear}, No. of claims this year: ${numberOfClaimsThisYear}`
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)
 }
 
-function getNumberOfClaimsSinceDate (previousClaims, currentClaim, date, cutOffDate) {
+function getNumberOfClaimsSinceDate(previousClaims, currentClaim, date, cutOffDate) {
   let count = 0
 
   if (currentClaim.DateOfJourney >= date && currentClaim.DateOfJourney <= cutOffDate) {
-    count++
+    count += 1
   }
 
-  for (let i = 0; i < previousClaims.length; i++) {
+  for (let i = 0; i < previousClaims.length; i += 1) {
     const claim = previousClaims[i]
 
     if (claim.DateOfJourney >= date) {
-      count++
+      count += 1
     }
   }
 
   return count
 }
 
-function getFirstClaimDate (previousClaims) {
+function getFirstClaimDate(previousClaims) {
   return previousClaims.sort(compareDates)[0].DateOfJourney
 }
 
-function compareDates (a, b) {
+function compareDates(a, b) {
   if (a.DateOfJourney < b.DateOfJourney) {
     return -1
   }

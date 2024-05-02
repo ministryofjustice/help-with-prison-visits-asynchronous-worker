@@ -5,9 +5,9 @@ module.exports = function (updatedDocuments) {
   if (updatedDocuments && updatedDocuments.length > 0) {
     message = 'Claimant updated claim:'
 
-    message = message + NEWLINE
+    message += NEWLINE
     updatedDocuments.forEach(function (document) {
-      message = message + NEWLINE + ` - updated document ${document.DocumentType} with status ${document.DocumentStatus}`
+      message = `${message + NEWLINE} - updated document ${document.DocumentType} with status ${document.DocumentStatus}`
     })
   }
 

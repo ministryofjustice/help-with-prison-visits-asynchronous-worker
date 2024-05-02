@@ -2,7 +2,13 @@ const dwpCheckResultEnum = require('../../../../app/constants/dwp-check-result-e
 
 const statusEnum = require('../../../../app/constants/status-enum')
 
-const visitorDwpBenefitCheckerData = { visitorId: 1234, surname: 'YELLOW', dateOfBirth: '19681210', nino: 'PW556356A', benefit: 'employment-support' }
+const visitorDwpBenefitCheckerData = {
+  visitorId: 1234,
+  surname: 'YELLOW',
+  dateOfBirth: '19681210',
+  nino: 'PW556356A',
+  benefit: 'employment-support',
+}
 const benefitCheckerResult = { visitorId: 1234, result: dwpCheckResultEnum.NO }
 
 const mockGetVisitorDwpBenefitCheckerData = jest.fn().mockResolvedValue(visitorDwpBenefitCheckerData)
@@ -17,17 +23,17 @@ const mockUpdateClaimStatus = jest.fn().mockResolvedValue()
 
 jest.mock(
   '../../../../app/services/data/get-visitor-dwp-benefit-checker-data',
-  () => mockGetVisitorDwpBenefitCheckerData
+  () => mockGetVisitorDwpBenefitCheckerData,
 )
 
 jest.mock(
   '../../../../app/services/benefit-checker/call-dwp-benefit-checker-soap-service',
-  () => mockCallDwpBenefitCheckerSoapService
+  () => mockCallDwpBenefitCheckerSoapService,
 )
 
 jest.mock(
   '../../../../app/services/data/update-visitor-with-dwp-benefit-checker-result',
-  () => mockUpdateVisitorWithDwpBenefitCheckerResult
+  () => mockUpdateVisitorWithDwpBenefitCheckerResult,
 )
 
 jest.mock('../../../../app/services/auto-approval/auto-approval-process', () => mockAutoApprovalProcess)
@@ -35,13 +41,10 @@ jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
 
 jest.mock(
   '../../../../app/services/workers/helpers/insert-dummy-upload-later-benefit-document',
-  () => mockInsertDummyUploadLaterBenefitDocument
+  () => mockInsertDummyUploadLaterBenefitDocument,
 )
 
-jest.mock(
-  '../../../../app/services/data/insert-claim-event-system-message',
-  () => mockInsertClaimEventSystemMessage
-)
+jest.mock('../../../../app/services/data/insert-claim-event-system-message', () => mockInsertClaimEventSystemMessage)
 
 jest.mock('../../../../app/services/data/update-claim-status', () => mockUpdateClaimStatus)
 
@@ -53,15 +56,21 @@ const claimId = 123
 
 describe('services/workers/dwp-check', function () {
   it('should call to retrieve data then make benefit check call and NOT run auto-approval checks', function () {
-    return dwpCheck.execute({
-      reference,
-      eligibilityId,
-      claimId
-    }).then(function () {
-      expect(mockGetVisitorDwpBenefitCheckerData).toHaveBeenCalledWith(reference, eligibilityId, claimId) //eslint-disable-line
-      expect(mockCallDwpBenefitCheckerSoapService).toHaveBeenCalledWith(visitorDwpBenefitCheckerData) //eslint-disable-line
-      expect(mockUpdateVisitorWithDwpBenefitCheckerResult).toHaveBeenCalledWith(benefitCheckerResult.visitorId, benefitCheckerResult.result, statusEnum.REQUEST_INFORMATION) //eslint-disable-line
-      expect(mockAutoApprovalProcess).not.toHaveBeenCalled()
-    })
+    return dwpCheck
+      .execute({
+        reference,
+        eligibilityId,
+        claimId,
+      })
+      .then(function () {
+        expect(mockGetVisitorDwpBenefitCheckerData).toHaveBeenCalledWith(reference, eligibilityId, claimId)
+        expect(mockCallDwpBenefitCheckerSoapService).toHaveBeenCalledWith(visitorDwpBenefitCheckerData)
+        expect(mockUpdateVisitorWithDwpBenefitCheckerResult).toHaveBeenCalledWith(
+          benefitCheckerResult.visitorId,
+          benefitCheckerResult.result,
+          statusEnum.REQUEST_INFORMATION,
+        )
+        expect(mockAutoApprovalProcess).not.toHaveBeenCalled()
+      })
   })
 })

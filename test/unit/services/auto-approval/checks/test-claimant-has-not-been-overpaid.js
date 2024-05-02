@@ -3,24 +3,24 @@ const claimantHasNotBeenOverpaid = require('../../../../../app/services/auto-app
 const autoApprovalDataWithNoOverpaidClaim = {
   previousClaims: [
     {
-      IsOverpaid: false
-    }
-  ]
+      IsOverpaid: false,
+    },
+  ],
 }
 
 const autoApprovalDataWithOverpaidClaim = {
   previousClaims: [
     {
-      IsOverpaid: false
+      IsOverpaid: false,
     },
     {
-      IsOverpaid: true
-    }
-  ]
+      IsOverpaid: true,
+    },
+  ],
 }
 
 const autoApprovalDataNoPreviousClaims = {
-  previousClaims: []
+  previousClaims: [],
 }
 
 describe('services/auto-approval/checks/claimant-has-not-been-overpaid', function () {

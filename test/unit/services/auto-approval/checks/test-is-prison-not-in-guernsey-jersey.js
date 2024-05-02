@@ -3,14 +3,14 @@ const isPrisonNotInGuernseyJersey = require('../../../../../app/services/auto-ap
 
 const validAutoApprovalData = {
   Prisoner: {
-    NameOfPrison: 'hewell'
-  }
+    NameOfPrison: 'hewell',
+  },
 }
 
 const invalidAutoApprovalData = {
   Prisoner: {
-    NameOfPrison: guernseyJerseyPrisonsEnum.LES_NICOLLES.value
-  }
+    NameOfPrison: guernseyJerseyPrisonsEnum.LES_NICOLLES.value,
+  },
 }
 
 describe('services/auto-approval/checks/is-prison-not-in-guernsey-jersey', function () {

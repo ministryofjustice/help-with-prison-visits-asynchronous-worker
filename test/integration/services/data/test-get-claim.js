@@ -6,17 +6,15 @@ let claimId
 
 describe('services/data/get-claim', function () {
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
-      .then(function (ids) {
-        claimId = ids.claimId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE).then(function (ids) {
+      claimId = ids.claimId
+    })
   })
 
   it('should get the claim', function () {
-    return getClaim('IntSchema', claimId)
-      .then(function (claim) {
-        expect(claim.Reference).toBe(REFERENCE)
-      })
+    return getClaim('IntSchema', claimId).then(function (claim) {
+      expect(claim.Reference).toBe(REFERENCE)
+    })
   })
 
   afterAll(function () {

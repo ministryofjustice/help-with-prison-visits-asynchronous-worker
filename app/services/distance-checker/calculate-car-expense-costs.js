@@ -16,75 +16,80 @@ module.exports = function (reference, eligibilityId, claimId) {
     return Promise.resolve()
   }
 
-  return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
-    .then(function (claimData) {
-      const carExpenses = getUncalculatedCarExpenses(claimData)
+  return getAllClaimData('IntSchema', reference, eligibilityId, claimId).then(function (claimData) {
+    const carExpenses = getUncalculatedCarExpenses(claimData)
 
-      if (carExpenses.length > 0) {
-        const promises = []
+    if (carExpenses.length > 0) {
+      const promises = []
 
-        carExpenses.forEach(function (carExpense) {
-          promises.push(calculateCarExpenseCost(carExpense, claimData))
-        })
+      carExpenses.forEach(function (carExpense) {
+        promises.push(calculateCarExpenseCost(carExpense, claimData))
+      })
 
-        return Promise.all(promises)
-      } else {
-        return Promise.resolve()
-      }
-    })
+      return Promise.all(promises)
+    }
+    return Promise.resolve()
+  })
 }
 
-function calculateCarExpenseCost (carExpense, claimData) {
-  const fromPostCode = carExpense.FromPostCode ? carExpense.FromPostCode : claimData.Visitor ? claimData.Visitor.PostCode : null
-  let toPostCode = carExpense.ToPostCode ? carExpense.ToPostCode : claimData.Prisoner ? getPrisonPostCode(claimData.Prisoner.NameOfPrison) : null
+function calculateCarExpenseCost(carExpense, claimData) {
+  const visitorPostCode = claimData.Visitor ? claimData.Visitor.PostCode : null
+  const fromPostCode = carExpense.FromPostCode ? carExpense.FromPostCode : visitorPostCode
+  const claimPrisoner = claimData.Prisoner ? getPrisonPostCode(claimData.Prisoner.NameOfPrison) : null
+  let toPostCode = carExpense.ToPostCode ? carExpense.ToPostCode : claimPrisoner
 
   if (claimData.Prisoner && carExpense.To !== claimData.Prisoner.NameOfPrison && !carExpense.ToPostCode) {
     toPostCode = null
   }
 
   if (fromPostCode && toPostCode) {
-    return getDistanceInMilesAndCost(fromPostCode, toPostCode)
-      .then(function (result) {
-        let cost = result.cost
-        const distanceInMiles = result.distanceInMiles
+    return getDistanceInMilesAndCost(fromPostCode, toPostCode).then(function (result) {
+      let { cost } = result
+      const { distanceInMiles } = result
 
-        if (distanceInMiles > parseFloat(config.DISTANCE_CALCULATION_MAX_MILES)) {
-          cost = 0.0
-        }
+      if (distanceInMiles > parseFloat(config.DISTANCE_CALCULATION_MAX_MILES)) {
+        cost = 0.0
+      }
 
-        return updateExpenseForDistanceCalculation(carExpense.ClaimExpenseId, fromPostCode, toPostCode, distanceInMiles, cost)
-      })
-  } else {
-    return Promise.resolve()
+      return updateExpenseForDistanceCalculation(
+        carExpense.ClaimExpenseId,
+        fromPostCode,
+        toPostCode,
+        distanceInMiles,
+        cost,
+      )
+    })
   }
+  return Promise.resolve()
 }
 
-function getUncalculatedCarExpenses (claimData) {
-  return claimData.ClaimExpenses ? claimData.ClaimExpenses.filter(function (expense) { return expense.ExpenseType === 'car' && expense.Cost === 0 }) : []
+function getUncalculatedCarExpenses(claimData) {
+  return claimData.ClaimExpenses
+    ? claimData.ClaimExpenses.filter(function (expense) {
+        return expense.ExpenseType === 'car' && expense.Cost === 0
+      })
+    : []
 }
 
-function getPrisonPostCode (nameOfPrison) {
+function getPrisonPostCode(nameOfPrison) {
   const prison = enumHelper.getKeyByValue(prisonsEnum, nameOfPrison)
   return prison ? prison.postcode : null
 }
 
-function getDistanceInMilesAndCost (visitorPostCode, prisonPostCode) {
-  return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode)
-    .then(function (distanceInKm) {
-      let cost = 0.0
-      let distanceInMiles = null
+function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode) {
+  return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(function (distanceInKm) {
+    let cost = 0.0
+    let distanceInMiles = null
 
-      if (distanceInKm) {
-        distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
-        return getAutoApprovalConfig()
-          .then(function (config) {
-            const costPerMile = parseFloat(config.CostPerMile)
-            cost = Number(Math.round(distanceInMiles * costPerMile + 'e2') + 'e-2') // accurate 2 decimal place rounding
+    if (distanceInKm) {
+      distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
+      return getAutoApprovalConfig().then(function (autoApprovalConfig) {
+        const costPerMile = parseFloat(autoApprovalConfig.CostPerMile)
+        cost = Number(`${Math.round(`${distanceInMiles * costPerMile}e2`)}e-2`) // accurate 2 decimal place rounding
 
-            return { cost, distanceInMiles }
-          })
-      } else {
         return { cost, distanceInMiles }
-      }
-    })
+      })
+    }
+    return { cost, distanceInMiles }
+  })
 }

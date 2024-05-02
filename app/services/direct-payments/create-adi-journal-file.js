@@ -1,9 +1,10 @@
 const XlsxPopulate = require('xlsx-populate')
+const path = require('path')
 const config = require('../../../config')
 const log = require('../log')
 const dateFormatter = require('../date-formatter')
-const path = require('path')
 const { AWSHelper } = require('../aws-helper')
+
 const aws = new AWSHelper()
 
 module.exports = function (totalPayment) {
@@ -23,24 +24,25 @@ module.exports = function (totalPayment) {
       adiJournalSheet.cell(config.ADI_JOURNAL_NAME_CELL).value(journalName)
       adiJournalSheet.cell(config.ADI_JOURNAL_DESCRIPTION_CELL).value(journalName)
       // Modify the workbook
-      return workbook.toFileAsync(fullOutputFilePath)
+      return workbook
+        .toFileAsync(fullOutputFilePath)
         .then(async function () {
-          return await aws.upload(filename, fullOutputFilePath)
+          return aws.upload(filename, fullOutputFilePath)
         })
         .catch(function (error) {
           log.error('An error occurred while writing the ADI journal to', fullOutputFilePath)
           log.error(error)
-          throw (error)
+          throw error
         })
     })
     .catch(function (error) {
       log.error('An error occurred while reading the ADI journal template')
       log.error(error)
-      throw (error)
+      throw error
     })
 }
 
-function getFileName () {
+function getFileName() {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
   return `apvs-adi-journal-${datestamp}.xlsm`
 }

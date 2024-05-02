@@ -5,11 +5,11 @@ const isBenefitExpiryDateInFuture = require('../../../../../app/services/auto-ap
 const autoApprovalData = {
   Claim: {
     Reference: 'ABC123',
-    DateOfJourney: dateFormatter.now().subtract(5, 'days')
+    DateOfJourney: dateFormatter.now().subtract(5, 'days'),
   },
   Visitor: {
-    BenefitExpiryDate: dateFormatter.now().subtract(2, 'days')
-  }
+    BenefitExpiryDate: dateFormatter.now().subtract(2, 'days'),
+  },
 }
 
 describe('services/auto-approval/checks/is-benefit-expiry-date-in-future', function () {
@@ -27,7 +27,7 @@ describe('services/auto-approval/checks/is-benefit-expiry-date-in-future', funct
     const checkResult = isBenefitExpiryDateInFuture(autoApprovalData)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      `The visit date is after the benefit expiry date. Claim ref: ABC123, Benefit expiry date: ${moment(autoApprovalData.Visitor.BenefitExpiryDate).format('DD/MM/YYYY')}, Date of journey: ${moment(autoApprovalData.Claim.DateOfJourney).format('DD/MM/YYYY')}`
+      `The visit date is after the benefit expiry date. Claim ref: ABC123, Benefit expiry date: ${moment(autoApprovalData.Visitor.BenefitExpiryDate).format('DD/MM/YYYY')}, Date of journey: ${moment(autoApprovalData.Claim.DateOfJourney).format('DD/MM/YYYY')}`,
     )
   })
 })

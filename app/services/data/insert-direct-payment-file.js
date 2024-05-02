@@ -8,7 +8,7 @@ module.exports = function (filePath, fileType) {
     FileType: fileType,
     DateCreated: dateFormatter.now().toDate(),
     Filepath: filePath,
-    IsEnabled: true
+    IsEnabled: true,
   }
 
   return db('IntSchema.DirectPaymentFile').insert(fileMetadata)

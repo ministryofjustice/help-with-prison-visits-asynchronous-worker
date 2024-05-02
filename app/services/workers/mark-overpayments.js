@@ -7,13 +7,12 @@ const log = require('../log')
 const markOverpayments = function () {
   log.info('Mark overpayments')
   const date = dateFormatter.now().subtract(config.MARK_AS_OVERPAYMENT_DAYS, 'd').toDate()
-  return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'APPROVED')
-    .then(function (claims) {
-      return updateAllAdvanceClaimThatAreOverpaid(claims)
-    })
+  return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'APPROVED').then(function (claims) {
+    return updateAllAdvanceClaimThatAreOverpaid(claims)
+  })
 }
 
-function updateAllAdvanceClaimThatAreOverpaid (claims) {
+function updateAllAdvanceClaimThatAreOverpaid(claims) {
   const promises = []
 
   claims.forEach(function (claim) {
@@ -23,10 +22,10 @@ function updateAllAdvanceClaimThatAreOverpaid (claims) {
   return Promise.all(promises)
 }
 
-function updateIndividualStatusToOverpaid (claim) {
+function updateIndividualStatusToOverpaid(claim) {
   return updateOverpaymentStatus(claim.ClaimId, claim.Reference, claim.Amount, config.MARK_AS_OVERPAYMENT_DAYS)
 }
 
 module.exports = {
-  markOverpayments
+  markOverpayments,
 }

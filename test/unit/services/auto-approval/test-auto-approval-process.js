@@ -47,7 +47,7 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
       MaxNumberOfClaimsPerMonth: 3,
       RulesDisabled: null,
       IsEnabled: true,
-      NumberOfConsecutiveAutoApprovals: 4
+      NumberOfConsecutiveAutoApprovals: 4,
     }
 
     mockAutoApprovalDataConstructor.mockReturnValue(validAutoApprovalData)
@@ -65,14 +65,20 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     })
 
     jest.mock('../../../../config', () => ({ AUTO_APPROVAL_ENABLED: 'true' }))
-    jest.mock('../../../../app/services/auto-approval/auto-approval-data-constructor', () => mockAutoApprovalDataConstructor)
+    jest.mock(
+      '../../../../app/services/auto-approval/auto-approval-data-constructor',
+      () => mockAutoApprovalDataConstructor,
+    )
     jest.mock('../../../../app/services/data/get-claims-pending-payment', () => mockGetClaimsPendingPayment)
     jest.mock('../../../../app/services/data/get-data-for-auto-approval-check', () => mockGetDataForAutoApprovalCheck)
     jest.mock('../../../../app/services/data/get-auto-approval-config', () => mockGetAutoApprovalConfig)
     jest.mock('../../../../app/services/data/auto-approve-claim', () => mockAutoApproveClaim)
     jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
     jest.mock('../../../../app/services/data/insert-task', () => mockInsertTask)
-    jest.mock('../../../../app/services/data/get-last-set-number-of-claims-status', () => mockGetLastSetNumberOfClaimsStatus)
+    jest.mock(
+      '../../../../app/services/data/get-last-set-number-of-claims-status',
+      () => mockGetLastSetNumberOfClaimsStatus,
+    )
     jest.mock('../../../../app/services/data/insert-auto-approve-claim', () => mockInsertAutoApproveClaim)
 
     autoApprovalRulesEnum.forEach(function (check) {
@@ -90,65 +96,64 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
   it('should not execute auto approval process if AutoApprovalEnabled is set to false', function () {
     mockGetAutoApprovalConfig.mockResolvedValue({ AutoApprovalEnabled: false })
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result).toBe(null) //eslint-disable-line
-        expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
-        expect(mockGetDataForAutoApprovalCheck).not.toHaveBeenCalled()
-        expect(mockAutoApproveClaim).not.toHaveBeenCalled()
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result).toBe(null)
+      expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+      expect(mockGetDataForAutoApprovalCheck).not.toHaveBeenCalled()
+      expect(mockAutoApproveClaim).not.toHaveBeenCalled()
+    })
   })
 
   it('should return claimApproved false for FIRST_TIME claim', function () {
     const firstTimeData = { Claim: { ClaimType: claimTypeEnum.FIRST_TIME } }
     mockGetDataForAutoApprovalCheck.mockResolvedValue(firstTimeData)
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+    })
   })
 
   it('should return claimApproved false for REPEAT_NEW_ELIGIBILITY claim', function () {
     const firstTimeData = { Claim: { ClaimType: claimTypeEnum.REPEAT_NEW_ELIGIBILITY } }
     mockGetDataForAutoApprovalCheck.mockResolvedValue(firstTimeData)
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+    })
   })
 
   it('should return claimApproved false for claims with status not equal to NEW', function () {
     const pendingClaimData = { Claim: { Status: statusEnum.PENDING } }
     mockGetDataForAutoApprovalCheck.mockResolvedValue(pendingClaimData)
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+    })
   })
 
   it('should return claimApproved true for NEW claims and those that are less than number of consecutive auto approvals', function () {
     mockGetDataForAutoApprovalCheck.mockResolvedValue(validAutoApprovalData)
 
     const expectedResult = true
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toEqual(expectedResult)
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toEqual(expectedResult)
+    })
   })
 
   it('should return claimApproved false for NEW claims and those that exceed consecutive auto approvals limit', function () {
     const newClaimData = validAutoApprovalData
     newClaimData.Claim = { Status: statusEnum.NEW }
     mockGetDataForAutoApprovalCheck.mockResolvedValue(newClaimData)
-    mockGetLastSetNumberOfClaimsStatus.mockResolvedValue([{ Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }, { Status: statusEnum.AUTOAPPROVED }])
+    mockGetLastSetNumberOfClaimsStatus.mockResolvedValue([
+      { Status: statusEnum.AUTOAPPROVED },
+      { Status: statusEnum.AUTOAPPROVED },
+      { Status: statusEnum.AUTOAPPROVED },
+      { Status: statusEnum.AUTOAPPROVED },
+    ])
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+    })
   })
 
   it('should return claimApproved false for Advance claim', function () {
@@ -156,21 +161,71 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
     advanceClaimData.Claim = {
       ClaimType: claimTypeEnum.REPEAT_CLAIM,
       Status: statusEnum.NEW,
-      IsAdvanceClaim: true
+      IsAdvanceClaim: true,
     }
     mockAutoApprovalDependencies['is-visit-in-past'].mockReturnValue(invalidCheckResult)
     mockGetDataForAutoApprovalCheck.mockResolvedValue(advanceClaimData)
 
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-      })
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+    })
   })
 
   it('should call all relevant functions to retrieve auto approval data and perform checks', function () {
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(true) //eslint-disable-line
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(true)
+      expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
+      const now = dateFormatter.now().toDate()
+      const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
+      if (isInOfficeHours) {
+        expect(mockAutoApproveClaim).toHaveBeenCalledTimes(1)
+      } else {
+        expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
+      }
+      const keys = Object.keys(mockAutoApprovalDependencies)
+      for (let i = 0; i < keys.length; i += 1) {
+        const key = keys[i]
+        // skip check for getDataForAutoApproval, this is done above
+        if (key.indexOf('/checks/') >= 0) {
+          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalled()
+        }
+      }
+    })
+  })
+
+  it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
+    const inmockAutoApprovalDependencies = mockAutoApprovalDependencies
+    const keys = Object.keys(inmockAutoApprovalDependencies)
+
+    for (let i = 0; i < keys.length; i += 1) {
+      const key = keys[i]
+      // Ignore mocked data functions and only set some auto approval checks to true
+      if (!(key.indexOf('data') > -1 || i % 2 === 0)) {
+        inmockAutoApprovalDependencies[key].mockReturnValue(invalidCheckResult)
+      }
+    }
+
+    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+      expect(result.claimApproved).toBe(false)
+      expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
+      expect(mockInsertClaimEvent).toHaveBeenCalledTimes(1)
+      const mockAADepKeys = Object.keys(mockAutoApprovalDependencies)
+      for (let i = 0; i < mockAADepKeys.length; i += 1) {
+        const key = mockAADepKeys[i]
+        // skip check for getDataForAutoApproval, this is done above
+        if (key.indexOf('/checks/') >= 0) {
+          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalledTimes(1)
+        }
+      }
+    })
+  })
+
+  autoApprovalRulesEnum.forEach(function (check) {
+    it(`should not perform ${check} check when it is disabled`, function () {
+      validAutoApprovalConfig.RulesDisabled = [`${check}`]
+      mockGetAutoApprovalConfig.mockResolvedValue(validAutoApprovalConfig)
+      return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function (result) {
+        expect(result.claimApproved).toBe(true)
         expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
         const now = dateFormatter.now().toDate()
         const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
@@ -179,62 +234,8 @@ describe('services/auto-approval/checks/auto-approval-process', function () {
         } else {
           expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
         }
-        const keys = Object.keys(mockAutoApprovalDependencies)
-        for (let i = 0; i < keys.length; i++) {
-          const key = keys[i]
-          // skip check for getDataForAutoApproval, this is done above
-          if (key.indexOf('/checks/') < 0) continue
-          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalled()
-        }
+        expect(mockAutoApprovalDependencies[check]).not.toHaveBeenCalled()
       })
-  })
-
-  it('should call all relevant functions to retrieve auto approval data and perform checks for invalid claim', function () {
-    const inmockAutoApprovalDependencies = mockAutoApprovalDependencies
-    const keys = Object.keys(inmockAutoApprovalDependencies)
-
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      // Ignore mocked data functions and only set some auto approval checks to true
-      if (key.indexOf('data') > -1 || i % 2 === 0) {
-        continue
-      } else {
-        inmockAutoApprovalDependencies[key].mockReturnValue(invalidCheckResult)
-      }
-    }
-
-    return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-      .then(function (result) {
-        expect(result.claimApproved).toBe(false) //eslint-disable-line
-        expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
-        expect(mockInsertClaimEvent).toHaveBeenCalledTimes(1)
-        const keys = Object.keys(mockAutoApprovalDependencies)
-        for (let i = 0; i < keys.length; i++) {
-          const key = keys[i]
-          // skip check for getDataForAutoApproval, this is done above
-          if (key.indexOf('/checks/') < 0) continue
-          expect(mockAutoApprovalDependencies[key]).toHaveBeenCalledTimes(1)
-        }
-      })
-  })
-
-  autoApprovalRulesEnum.forEach(function (check) {
-    it(`should not perform ${check} check when it is disabled`, function () {
-      validAutoApprovalConfig.RulesDisabled = [`${check}`]
-      mockGetAutoApprovalConfig.mockResolvedValue(validAutoApprovalConfig)
-      return autoApprovalProcess(REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
-        .then(function (result) {
-          expect(result.claimApproved).toBe(true) //eslint-disable-line
-          expect(mockGetDataForAutoApprovalCheck).toHaveBeenCalledTimes(1)
-          const now = dateFormatter.now().toDate()
-          const isInOfficeHours = now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17
-          if (isInOfficeHours) {
-            expect(mockAutoApproveClaim).toHaveBeenCalledTimes(1)
-          } else {
-            expect(mockInsertAutoApproveClaim).toHaveBeenCalledTimes(1)
-          }
-          expect(mockAutoApprovalDependencies[check]).not.toHaveBeenCalled()
-        })
     })
   })
 })

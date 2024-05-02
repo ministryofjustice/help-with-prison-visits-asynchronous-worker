@@ -6,7 +6,7 @@ let mockMoveClaimDataToArchiveDatabase
 
 jest.mock(
   '../../../../app/services/archiving/move-claim-data-to-archive-database',
-  () => mockMoveClaimDataToArchiveDatabase
+  () => mockMoveClaimDataToArchiveDatabase,
 )
 
 describe('services/workers/archive-claim', function () {
@@ -20,7 +20,7 @@ describe('services/workers/archive-claim', function () {
     mockMoveClaimDataToArchiveDatabase.mockResolvedValue(CLAIM_DATA)
 
     return archiveClaim.execute({ claimId: CLAIM_ID }).then(function () {
-      expect(mockMoveClaimDataToArchiveDatabase).toHaveBeenCalledWith(CLAIM_ID) //eslint-disable-line
+      expect(mockMoveClaimDataToArchiveDatabase).toHaveBeenCalledWith(CLAIM_ID)
     })
   })
 })

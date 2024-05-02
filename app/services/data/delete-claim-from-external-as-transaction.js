@@ -5,9 +5,10 @@ const deleteClaimFromExternal = require('./delete-claim-from-external')
 module.exports = function (eligibilityId, claimId) {
   const db = getDatabaseConnector()
 
-  return db.transaction(function (trx) {
-    return deleteClaimFromExternal(eligibilityId, claimId, trx)
-  })
+  return db
+    .transaction(function (trx) {
+      return deleteClaimFromExternal(eligibilityId, claimId, trx)
+    })
     .then(function () {
       log.info(`Claim with ClaimId: ${claimId} removed from external`)
     })

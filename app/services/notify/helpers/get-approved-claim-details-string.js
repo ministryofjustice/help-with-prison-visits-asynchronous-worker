@@ -2,23 +2,23 @@ const EXPENSE_TYPE = require('../../../constants/expense-type-enum')
 const EXPENSE_STATUS = require('../../../constants/claim-expense-status-enum')
 const DEDUCTION_TYPE = require('../../../constants/deduction-type-enum')
 const enumHelper = require('../../../constants/helpers/enum-helper')
+
 const newLine = '\r\n'
 
 module.exports = function (claimExpenses, claimDeductions) {
   const paymentBreakdownString = buildPaymentBreakdown(claimExpenses)
   const deductionBreakdownString = buildDeductionBreakdown(claimDeductions)
 
-  return paymentBreakdownString +
-    deductionBreakdownString
+  return paymentBreakdownString + deductionBreakdownString
 }
 
-function getClaimHeader (claimExpense) {
+function getClaimHeader(claimExpense) {
   let claimHeader = ''
   const claimType = EXPENSE_TYPE[claimExpense.ExpenseType]
 
   if (claimType) {
     if (claimType.isJourney) {
-      claimHeader = `${claimType.displayValue} - ${claimExpense.From} to ${claimExpense.To} ${(claimExpense.IsReturn ? ' - Return' : '')}`
+      claimHeader = `${claimType.displayValue} - ${claimExpense.From} to ${claimExpense.To} ${claimExpense.IsReturn ? ' - Return' : ''}`
     } else {
       claimHeader = claimType.displayValue
     }
@@ -29,7 +29,7 @@ function getClaimHeader (claimExpense) {
   return claimHeader
 }
 
-function buildPaymentBreakdown (claimExpenses) {
+function buildPaymentBreakdown(claimExpenses) {
   const result = []
 
   // Append "Your claim details" to top of string if there are any claims expenses to show
@@ -46,7 +46,7 @@ function buildPaymentBreakdown (claimExpenses) {
     result.push(claimHeader)
     if (claimExpense.Status !== EXPENSE_STATUS.MANUALLY_PROCESSED) {
       result.push(`Claimed: £${claimExpense.Cost.toFixed(2)}`)
-      result.push(`Approved: £${(claimExpense.ApprovedCost ? claimExpense.ApprovedCost.toFixed(2) : (0).toFixed(2))}`)
+      result.push(`Approved: £${claimExpense.ApprovedCost ? claimExpense.ApprovedCost.toFixed(2) : (0).toFixed(2)}`)
     }
     result.push(newLine)
   })
@@ -55,7 +55,7 @@ function buildPaymentBreakdown (claimExpenses) {
   return result.join(newLine)
 }
 
-function buildDeductionBreakdown (claimDeductions) {
+function buildDeductionBreakdown(claimDeductions) {
   const result = []
 
   if (claimDeductions.length > 0) {

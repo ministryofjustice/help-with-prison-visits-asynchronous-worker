@@ -7,17 +7,15 @@ let claimId
 
 describe('services/data/get-first-name-by-claimId', function () {
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, 'NEW')
-      .then(function (claimData) {
-        claimId = claimData.claimId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, 'NEW').then(function (claimData) {
+      claimId = claimData.claimId
+    })
   })
 
   it('should get the firstname when given the claim id', function () {
-    return getFirstNameByClaimId('IntSchema', claimId)
-      .then(function (firstName) {
-        expect(firstName).toBe('Joe')
-      })
+    return getFirstNameByClaimId('IntSchema', claimId).then(function (firstName) {
+      expect(firstName).toBe('Joe')
+    })
   })
 
   afterAll(function () {

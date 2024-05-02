@@ -12,7 +12,7 @@ module.exports = function (autoApprovalData) {
   let allRequiredDocumentsUploaded = true
 
   if (autoApprovalData.ClaimDocument) {
-    for (let i = 0; i < autoApprovalData.ClaimDocument.length; i++) {
+    for (let i = 0; i < autoApprovalData.ClaimDocument.length; i += 1) {
       const claimDocument = autoApprovalData.ClaimDocument[i]
 
       if (claimDocument.DocumentType === VISIT_CONFIRMATION_DOC_TYPE) {

@@ -4,20 +4,19 @@ const getAllClaimsOlderThanDate = require('../data/get-all-claims-older-than-dat
 const insertTask = require('../data/insert-task')
 const tasksEnum = require('../../constants/tasks-enum')
 
-module.exports.execute = function (task) {
-  const archiveClaimsAfterDays = parseInt(config.ARCHIVE_CLAIMS_AFTER_DAYS)
+module.exports.execute = function () {
+  const archiveClaimsAfterDays = parseInt(config.ARCHIVE_CLAIMS_AFTER_DAYS, 10)
   const archiveClaimsOlderThan = dateFormatter.now().subtract(archiveClaimsAfterDays, 'days').toDate()
 
-  return getAllClaimsOlderThanDate(archiveClaimsOlderThan)
-    .then(function (claimIdsToArchive) {
-      const insertArchiveClaimTasks = []
+  return getAllClaimsOlderThanDate(archiveClaimsOlderThan).then(function (claimIdsToArchive) {
+    const insertArchiveClaimTasks = []
 
-      if (claimIdsToArchive) {
-        claimIdsToArchive.forEach(function (result) {
-          insertArchiveClaimTasks.push(insertTask(null, null, result.ClaimId, tasksEnum.ARCHIVE_CLAIM))
-        })
-      }
+    if (claimIdsToArchive) {
+      claimIdsToArchive.forEach(function (result) {
+        insertArchiveClaimTasks.push(insertTask(null, null, result.ClaimId, tasksEnum.ARCHIVE_CLAIM))
+      })
+    }
 
-      return Promise.all(insertArchiveClaimTasks)
-    })
+    return Promise.all(insertArchiveClaimTasks)
+  })
 }

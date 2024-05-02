@@ -11,12 +11,14 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
   beforeAll(function (done) {
     const db = getDatabaseConnector()
 
-    db('ExtSchema.Task').insert([
-      testHelper.getTaskObject(taskType, '1'),
-      testHelper.getTaskObject(taskType, '2'),
-      testHelper.getTaskObject(taskType, '3'),
-      testHelper.getTaskObject(taskType, '4')
-    ]).returning('TaskId')
+    db('ExtSchema.Task')
+      .insert([
+        testHelper.getTaskObject(taskType, '1'),
+        testHelper.getTaskObject(taskType, '2'),
+        testHelper.getTaskObject(taskType, '3'),
+        testHelper.getTaskObject(taskType, '4'),
+      ])
+      .returning('TaskId')
       .then(function (taskIds) {
         ids = taskIds.map(task => task.TaskId)
         done()
@@ -50,8 +52,11 @@ describe('services/data/get-pending-tasks-and-mark-inprogress', function () {
     // Clean up
     const db = getDatabaseConnector()
 
-    db('ExtSchema.Task').whereIn('TaskId', ids).del().then(function () {
-      done()
-    })
+    db('ExtSchema.Task')
+      .whereIn('TaskId', ids)
+      .del()
+      .then(function () {
+        done()
+      })
   })
 })

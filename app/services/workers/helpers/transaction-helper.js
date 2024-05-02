@@ -5,7 +5,10 @@ const log = require('../../log')
 module.exports = function (eligibilityId, claimId) {
   const db = getDatabaseConnector()
 
-  return db.transaction(function (trx) { return deleteClaimFromExternal(eligibilityId, claimId, trx) })
+  return db
+    .transaction(function (trx) {
+      return deleteClaimFromExternal(eligibilityId, claimId, trx)
+    })
     .then(function () {
       log.info(`Bank Details for Claim with ClaimId: ${claimId} copied to internal`)
     })

@@ -9,20 +9,19 @@ describe('services/data/get-topups-pending-payment', function () {
 
   let expectedBankTopups
   let expectedVoucherTopups = [
-    [1971804226, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP']
+    [1971804226, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP'],
   ]
-  function beforeDataCreation () {
-    return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function (ids) {
-        claimId = ids.claimId
-        expectedBankTopups = [
-          [claimId, '001122', '00123456', 'Joe Bloggs', '22.66', 'TOPUP', 'Northern Ireland', 'ROLL-1BE.R']
-        ]
-        expectedVoucherTopups = [
-          [claimId, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP']
-        ]
-        return testHelper.insertTopUp(claimId)
-      })
+  function beforeDataCreation() {
+    return testHelper.insertClaimEligibilityData('IntSchema', reference).then(function (ids) {
+      claimId = ids.claimId
+      expectedBankTopups = [
+        [claimId, '001122', '00123456', 'Joe Bloggs', '22.66', 'TOPUP', 'Northern Ireland', 'ROLL-1BE.R'],
+      ]
+      expectedVoucherTopups = [
+        [claimId, '22.66', 'Joe', 'Bloggs', '1', 'Town', 'County', 'Northern Ireland', 'AA123AA', 'TOPUP'],
+      ]
+      return testHelper.insertTopUp(claimId)
+    })
   }
 
   describe('Direct Bank payment', function () {
@@ -31,17 +30,15 @@ describe('services/data/get-topups-pending-payment', function () {
     })
 
     it('should retrieve only topups with a PaymentStatus of PENDING and a PaymentDate of NULL', function () {
-      return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value)
-        .then(function (results) {
-          expect(results).toEqual(expectedBankTopups)
-        })
+      return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value).then(function (results) {
+        expect(results).toEqual(expectedBankTopups)
+      })
     })
 
     afterAll(function () {
-      return testHelper.deleteTopUp(claimId)
-        .then(function () {
-          return testHelper.deleteAll(reference, 'IntSchema')
-        })
+      return testHelper.deleteTopUp(claimId).then(function () {
+        return testHelper.deleteAll(reference, 'IntSchema')
+      })
     })
   })
 
@@ -51,30 +48,24 @@ describe('services/data/get-topups-pending-payment', function () {
 
       return beforeDataCreation()
         .then(function () {
-          return db('IntSchema.Claim')
-            .where('ClaimId', claimId)
-            .update('PaymentMethod', paymentMethods.PAYOUT.value)
+          return db('IntSchema.Claim').where('ClaimId', claimId).update('PaymentMethod', paymentMethods.PAYOUT.value)
         })
         .then(function () {
-          return db('IntSchema.ClaimBankDetail')
-            .where('ClaimId', claimId)
-            .del()
+          return db('IntSchema.ClaimBankDetail').where('ClaimId', claimId).del()
         })
     })
     it('should retrieve only APPROVED claim records with payment status of NULL', function () {
-      return getTopUpsPendingPayment(paymentMethods.PAYOUT.value)
-        .then(function (results) {
-          const result = results.pop()
-          results.push(result.slice(0, result.length - 1))
-          expect(results).toEqual(expectedVoucherTopups)
-        })
+      return getTopUpsPendingPayment(paymentMethods.PAYOUT.value).then(function (results) {
+        const result = results.pop()
+        results.push(result.slice(0, result.length - 1))
+        expect(results).toEqual(expectedVoucherTopups)
+      })
     })
 
     afterAll(function () {
-      return testHelper.deleteTopUp(claimId)
-        .then(function () {
-          return testHelper.deleteAll(reference, 'IntSchema')
-        })
+      return testHelper.deleteTopUp(claimId).then(function () {
+        return testHelper.deleteAll(reference, 'IntSchema')
+      })
     })
   })
 })

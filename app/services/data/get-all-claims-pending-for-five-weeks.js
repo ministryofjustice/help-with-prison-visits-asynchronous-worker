@@ -8,9 +8,17 @@ module.exports = function (reminderCutoffDate) {
     .join('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .where('Claim.LastUpdated', '<', reminderCutoffDate)
     .where(function () {
-      this.where('IntSchema.Claim.ReminderSent', false)
-        .orWhereNull('IntSchema.Claim.ReminderSent')
+      this.where('IntSchema.Claim.ReminderSent', false).orWhereNull('IntSchema.Claim.ReminderSent')
     })
-    .whereIn('Claim.Status', [claimStatusEnum.PENDING, claimStatusEnum.REQUEST_INFORMATION, claimStatusEnum.REQUEST_INFO_PAYMENT])
-    .select('IntSchema.Claim.EligibilityId', 'IntSchema.Claim.Reference', 'IntSchema.Claim.ClaimId', 'IntSchema.Visitor.EmailAddress')
+    .whereIn('Claim.Status', [
+      claimStatusEnum.PENDING,
+      claimStatusEnum.REQUEST_INFORMATION,
+      claimStatusEnum.REQUEST_INFO_PAYMENT,
+    ])
+    .select(
+      'IntSchema.Claim.EligibilityId',
+      'IntSchema.Claim.Reference',
+      'IntSchema.Claim.ClaimId',
+      'IntSchema.Visitor.EmailAddress',
+    )
 }

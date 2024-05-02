@@ -10,33 +10,40 @@ const claimId = '1234'
 
 describe('services/data/insert-task', function () {
   it('should create Task with Reference, ClaimId, Status and TaskType', function () {
-    return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK)
-      .then(function () {
-        const db = getDatabaseConnector()
+    return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK).then(function () {
+      const db = getDatabaseConnector()
 
-        return db.table('IntSchema.Task')
-          .where({ Reference: reference, EligibilityId: eligibilityId, ClaimId: claimId, Task: tasksEnum.DWP_CHECK })
-          .first()
-          .then(function (result) {
-            expect(result.Status).toBe(statusEnum.PENDING)
-            expect(result.DateCreated).not.toBeNull() //eslint-disable-line
-          })
-      })
+      return db
+        .table('IntSchema.Task')
+        .where({ Reference: reference, EligibilityId: eligibilityId, ClaimId: claimId, Task: tasksEnum.DWP_CHECK })
+        .first()
+        .then(function (result) {
+          expect(result.Status).toBe(statusEnum.PENDING)
+          expect(result.DateCreated).not.toBeNull()
+        })
+    })
   })
 
   it('should set the AdditionalData field when an AdditionalData parameter is supplied', function () {
     const emailAddress = 'donotsend@apvs.com'
-    return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, emailAddress)
-      .then(function () {
+    return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, emailAddress).then(
+      function () {
         const db = getDatabaseConnector()
 
-        return db.table('IntSchema.Task')
-          .where({ Task: tasksEnum.ACCEPT_CLAIM_NOTIFICATION, Status: statusEnum.PENDING, Reference: reference, ClaimId: claimId })
+        return db
+          .table('IntSchema.Task')
+          .where({
+            Task: tasksEnum.ACCEPT_CLAIM_NOTIFICATION,
+            Status: statusEnum.PENDING,
+            Reference: reference,
+            ClaimId: claimId,
+          })
           .first()
           .then(function (result) {
             expect(result.AdditionalData).toBe(emailAddress)
           })
-      })
+      },
+    )
   })
 
   afterAll(function () {

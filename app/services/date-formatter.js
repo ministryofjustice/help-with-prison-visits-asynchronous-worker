@@ -1,4 +1,5 @@
 const moment = require('moment')
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 const INVALID_DATE_ERROR = 'Invalid date'
 
@@ -15,7 +16,7 @@ exports.now = function () {
 }
 
 exports.build = function (day, month, year) {
-  month = month - 1
+  month -= 1
   const date = moment([year, month, day])
   return applyDST(date)
 }
@@ -40,25 +41,25 @@ exports.buildFromDateString = function (date) {
   return this.build(day, month, year)
 }
 
-function applyDST (date) {
+function applyDST(date) {
   if (date.isDST()) {
     date = date.add(1, 'hour')
   }
   return date
 }
 
-function isUndefined (date) {
+function isUndefined(date) {
   return typeof date === 'undefined'
 }
 
-function isNull (date) {
+function isNull(date) {
   return date === null
 }
 
-function isDate (date) {
+function isDate(date) {
   return date instanceof moment
 }
 
-function isValidDate (date) {
+function isValidDate(date) {
   return date.isValid()
 }

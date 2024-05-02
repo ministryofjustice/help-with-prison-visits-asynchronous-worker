@@ -12,19 +12,17 @@ describe('services/data/get-advance-claims-total-expense-approved-cost-before-da
   beforeAll(function () {
     const data = testHelper.getClaimData(REFERENCE)
     amount = data.ClaimExpenses[0].ApprovedCost + data.ClaimExpenses[1].ApprovedCost
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, 'TESTING')
-      .then(function (ids) {
-        claimId = ids.claimId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE, 'TESTING').then(function (ids) {
+      claimId = ids.claimId
+    })
   })
 
   it('should get all advance claims before specifed date with status', function () {
-    return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'TESTING')
-      .then(function (claims) {
-        expect(claims[0].ClaimId).toBe(claimId)
-        expect(claims[0].Reference).toBe(REFERENCE)
-        expect(claims[0].Amount).toBe(amount)
-      })
+    return getAdvanceClaimsTotalExpenseApprovedCostBeforeDate(date, 'TESTING').then(function (claims) {
+      expect(claims[0].ClaimId).toBe(claimId)
+      expect(claims[0].Reference).toBe(REFERENCE)
+      expect(claims[0].Amount).toBe(amount)
+    })
   })
 
   afterAll(function () {

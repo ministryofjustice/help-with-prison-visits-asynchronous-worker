@@ -7,12 +7,11 @@ module.exports = function (autoApprovalData) {
   let matchedCount = 0
   autoApprovalData.prisonNumbers.forEach(function (number) {
     if (number === autoApprovalData.Prisoner.PrisonNumber) {
-      matchedCount++
+      matchedCount += 1
     }
   })
   if (matchedCount > 1) {
     return new AutoApprovalCheckResult(CHECK_NAME, false, FAILURE_MESSAGE)
-  } else {
-    return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
+  return new AutoApprovalCheckResult(CHECK_NAME, true, '')
 }

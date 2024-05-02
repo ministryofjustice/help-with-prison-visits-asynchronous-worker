@@ -8,8 +8,8 @@ const enumHelper = require('../../constants/helpers/enum-helper')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 
 module.exports.execute = function (task) {
-  const claimId = task.claimId
-  const reference = task.reference
+  const { claimId } = task
+  const { reference } = task
   let claimExpenseData
   let claimantData
 
@@ -60,7 +60,7 @@ module.exports.execute = function (task) {
     })
 }
 
-function getTotalApprovedAmount (claimExpenses, claimDeductions) {
+function getTotalApprovedAmount(claimExpenses, claimDeductions) {
   let totalApprovedAmount = 0
 
   claimExpenses.forEach(function (claimExpense) {
@@ -74,7 +74,7 @@ function getTotalApprovedAmount (claimExpenses, claimDeductions) {
   return `£${totalApprovedAmount.toFixed(2)}`
 }
 
-function formatCaseworkerNote (caseworkerNote) {
+function formatCaseworkerNote(caseworkerNote) {
   if (caseworkerNote) {
     const result = []
     const newLine = '\r\n'
@@ -86,17 +86,16 @@ function formatCaseworkerNote (caseworkerNote) {
     result.push(newLine)
 
     return result.join(newLine)
-  } else {
-    return ''
   }
+  return ''
 }
 
-function standardPersonalisationElements (firstName, reference, town, prison, caseworkerNote) {
+function standardPersonalisationElements(firstName, reference, town, prison, caseworkerNote) {
   return {
     first_name: firstName,
     reference,
     start_town: town,
     prison,
-    caseworker_note: formatCaseworkerNote(caseworkerNote)
+    caseworker_note: formatCaseworkerNote(caseworkerNote),
   }
 }

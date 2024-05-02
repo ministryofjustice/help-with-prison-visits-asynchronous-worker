@@ -9,27 +9,29 @@ describe('services/data/update-visitor-with-dwp-benefit-checker-result', functio
   let visitorId
 
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function () {
-        const db = getDatabaseConnector()
+    return testHelper.insertClaimEligibilityData('IntSchema', reference).then(function () {
+      const db = getDatabaseConnector()
 
-        return db('IntSchema.Visitor').where('Reference', reference).first('VisitorId')
-          .then(function (visitor) {
-            visitorId = visitor.VisitorId
-          })
-      })
+      return db('IntSchema.Visitor')
+        .where('Reference', reference)
+        .first('VisitorId')
+        .then(function (visitor) {
+          visitorId = visitor.VisitorId
+        })
+    })
   })
 
   it('should update internal Visitor with DWP benefit checker result ', function () {
-    return updateVisitorWithDwpBenefitCheckerResult(visitorId, dwpBenefitCheckerResult, null)
-      .then(function () {
-        const db = getDatabaseConnector()
+    return updateVisitorWithDwpBenefitCheckerResult(visitorId, dwpBenefitCheckerResult, null).then(function () {
+      const db = getDatabaseConnector()
 
-        return db('IntSchema.Visitor').where('Reference', reference).first('DWPBenefitCheckerResult')
-          .then(function (visitor) {
-            expect(visitor.DWPBenefitCheckerResult).toBe(dwpBenefitCheckerResult)
-          })
-      })
+      return db('IntSchema.Visitor')
+        .where('Reference', reference)
+        .first('DWPBenefitCheckerResult')
+        .then(function (visitor) {
+          expect(visitor.DWPBenefitCheckerResult).toBe(dwpBenefitCheckerResult)
+        })
+    })
   })
 
   afterAll(function () {

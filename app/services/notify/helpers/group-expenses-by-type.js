@@ -3,8 +3,8 @@ module.exports = function (claimExpenses) {
     return {}
   }
 
-  const result = { }
-  for (let i = 0; i < claimExpenses.length; i++) {
+  const result = {}
+  for (let i = 0; i < claimExpenses.length; i += 1) {
     const claimExpense = claimExpenses[i]
     const list = result[claimExpense.ExpenseType]
 

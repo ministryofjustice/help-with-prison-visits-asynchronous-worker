@@ -9,19 +9,17 @@ let prisonNumber
 
 describe('services/data/reference-number-recovery', function () {
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
-      .then(function () {
-        const claimData = testHelper.getClaimData(REFERENCE)
-        email = claimData.Visitor.EmailAddress
-        prisonNumber = claimData.Prisoner.PrisonNumber
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE).then(function () {
+      const claimData = testHelper.getClaimData(REFERENCE)
+      email = claimData.Visitor.EmailAddress
+      prisonNumber = claimData.Prisoner.PrisonNumber
+    })
   })
 
   it('should return all first time claim data', function () {
-    return referenceNumberRecovery(email, prisonNumber)
-      .then(function (result) {
-        expect(result.Reference).toBe(REFERENCE)
-      })
+    return referenceNumberRecovery(email, prisonNumber).then(function (result) {
+      expect(result.Reference).toBe(REFERENCE)
+    })
   })
 
   afterAll(function () {

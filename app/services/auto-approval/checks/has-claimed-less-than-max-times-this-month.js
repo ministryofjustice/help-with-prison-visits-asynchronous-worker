@@ -13,30 +13,37 @@ module.exports = function (autoApprovalData) {
   const firstDayOfCurrentMonth = dateFormatter.now().startOf('month').toDate()
   const firstDayOfNextMonth = dateFormatter.now().startOf('month').add('1', 'months').toDate()
 
-  const numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(autoApprovalData.previousClaims, autoApprovalData.Claim, firstDayOfCurrentMonth, firstDayOfNextMonth)
+  const numberOfClaimsThisMonth = getCountOfApprovedClaimsSubmittedSinceDate(
+    autoApprovalData.previousClaims,
+    autoApprovalData.Claim,
+    firstDayOfCurrentMonth,
+    firstDayOfNextMonth,
+  )
   const checkPassed = numberOfClaimsThisMonth <= autoApprovalData.maxNumberOfClaimsPerMonth
   const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Maximum no of claims per month: ${autoApprovalData.maxNumberOfClaimsPerMonth}, No. of claims this month: ${numberOfClaimsThisMonth}`
   return new AutoApprovalCheckResult(CHECK_NAME, checkPassed, checkPassed ? '' : FAILURE_MESSAGE + ADDITIONAL_INFO)
 }
 
-function getCountOfApprovedClaimsSubmittedSinceDate (previousClaims, currentClaim, date, cutOffDate) {
+function getCountOfApprovedClaimsSubmittedSinceDate(previousClaims, currentClaim, date, cutOffDate) {
   let count = 0
 
   if (currentClaim.DateOfJourney >= date && currentClaim.DateOfJourney <= cutOffDate) {
-    count++
+    count += 1
   }
 
   const claims = previousClaims.filter(function (claim) {
-    return claim.Status === claimStatusEnum.APPROVED ||
+    return (
+      claim.Status === claimStatusEnum.APPROVED ||
       claim.Status === claimStatusEnum.AUTOAPPROVED ||
       claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED
+    )
   })
 
-  for (let i = 0; i < claims.length; i++) {
+  for (let i = 0; i < claims.length; i += 1) {
     const claim = claims[i]
 
     if (claim.DateSubmitted >= date) {
-      count++
+      count += 1
     }
   }
 

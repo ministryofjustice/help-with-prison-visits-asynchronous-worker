@@ -3,7 +3,9 @@ const tasksEnum = require('../../../app/constants/tasks-enum')
 const sendAcceptedClaimNotification = { name: 'sendAcceptedClaimNotification' }
 const sendRejectedClaimNotification = { name: 'sendRejectedClaimNotification' }
 const sendRequestInformationClaimNotification = { name: 'sendRequestInformationClaimNotification' }
-const sendRequestInformationResponseSubmittedNotification = { name: 'sendRequestInformationResponseSubmittedNotification' }
+const sendRequestInformationResponseSubmittedNotification = {
+  name: 'sendRequestInformationResponseSubmittedNotification',
+}
 const sendAdvanceClaimEvidenceReminderNotification = { name: 'sendAdvanceClaimEvidenceReminderNotification' }
 const sendUpdatedContactDetailsClaimNotification = { name: 'sendUpdatedContactDetailsClaimNotification' }
 const sendClaimNotification = { name: 'sendClaimNotification' }
@@ -21,34 +23,28 @@ const referenceRecovery = { name: 'referenceRecovery' }
 const generateDirectPayments = { name: 'generateDirectPayments' }
 const sendMalwareAlert = { name: 'sendMalwareAlert' }
 
-jest.mock(
-  '../../../app/services/workers/send-accepted-claim-notification',
-  () => sendAcceptedClaimNotification
-)
+jest.mock('../../../app/services/workers/send-accepted-claim-notification', () => sendAcceptedClaimNotification)
 
-jest.mock(
-  '../../../app/services/workers/send-rejected-claim-notification',
-  () => sendRejectedClaimNotification
-)
+jest.mock('../../../app/services/workers/send-rejected-claim-notification', () => sendRejectedClaimNotification)
 
 jest.mock(
   '../../../app/services/workers/send-request-information-claim-notification',
-  () => sendRequestInformationClaimNotification
+  () => sendRequestInformationClaimNotification,
 )
 
 jest.mock(
   '../../../app/services/workers/send-request-information-response-submitted-notification',
-  () => sendRequestInformationResponseSubmittedNotification
+  () => sendRequestInformationResponseSubmittedNotification,
 )
 
 jest.mock(
   '../../../app/services/workers/send-advance-claim-evidence-reminder-notification',
-  () => sendAdvanceClaimEvidenceReminderNotification
+  () => sendAdvanceClaimEvidenceReminderNotification,
 )
 
 jest.mock(
   '../../../app/services/workers/send-updated-contact-details-claim-notification',
-  () => sendUpdatedContactDetailsClaimNotification
+  () => sendUpdatedContactDetailsClaimNotification,
 )
 
 jest.mock('../../../app/services/workers/send-claim-notification', () => sendClaimNotification)
@@ -58,7 +54,7 @@ jest.mock('../../../app/services/workers/dwp-check', () => dwpCheck)
 
 jest.mock(
   '../../../app/services/workers/send-all-advance-claim-reminders-for-day',
-  () => sendAllAdvanceClaimRemindersForDay
+  () => sendAllAdvanceClaimRemindersForDay,
 )
 
 jest.mock('../../../app/services/workers/cleanup-old-payment-files', () => cleanupOldPaymentFiles)

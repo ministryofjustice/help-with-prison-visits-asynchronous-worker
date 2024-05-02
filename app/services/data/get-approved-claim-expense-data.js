@@ -15,12 +15,12 @@ module.exports = function (claimId) {
     .then(function (visitorData) {
       return {
         claimantData: visitorData,
-        claimExpenseData: claimExpenses
+        claimExpenseData: claimExpenses,
       }
     })
 }
 
-function getClaimantData (claimId) {
+function getClaimantData(claimId) {
   let visitor
   const db = getDatabaseConnector()
 
@@ -34,32 +34,19 @@ function getClaimantData (claimId) {
       visitor = visitorData
     })
     .then(function () {
-      return db('IntSchema.ClaimBankDetail')
-        .where('ClaimId', claimId)
-        .first()
+      return db('IntSchema.ClaimBankDetail').where('ClaimId', claimId).first()
     })
     .then(function (bankDetails) {
-      const accountNumberLastFourDigits = (bankDetails && bankDetails.AccountNumber
-        ? bankDetails.AccountNumber.substr(bankDetails.AccountNumber.length - 4)
-        : '')
-      const visitorFirstName = (visitor && visitor.FirstName
-        ? visitor.FirstName
-        : '')
-      const paymentMethod = (visitor && visitor.PaymentMethod
-        ? visitor.PaymentMethod
-        : '')
-      const caseworkerNote = (visitor && visitor.Note
-        ? visitor.Note
-        : '')
-      const town = (visitor && visitor.Town
-        ? visitor.Town
-        : '')
-      const prison = (visitor && visitor.NameOfPrison
-        ? visitor.NameOfPrison
-        : '')
-      const isAdvanceClaim = (visitor && visitor.IsAdvanceClaim
-        ? visitor.IsAdvanceClaim
-        : '')
+      const accountNumberLastFourDigits =
+        bankDetails && bankDetails.AccountNumber
+          ? bankDetails.AccountNumber.substr(bankDetails.AccountNumber.length - 4)
+          : ''
+      const visitorFirstName = visitor && visitor.FirstName ? visitor.FirstName : ''
+      const paymentMethod = visitor && visitor.PaymentMethod ? visitor.PaymentMethod : ''
+      const caseworkerNote = visitor && visitor.Note ? visitor.Note : ''
+      const town = visitor && visitor.Town ? visitor.Town : ''
+      const prison = visitor && visitor.NameOfPrison ? visitor.NameOfPrison : ''
+      const isAdvanceClaim = visitor && visitor.IsAdvanceClaim ? visitor.IsAdvanceClaim : ''
 
       return {
         VisitorFirstName: visitorFirstName,
@@ -68,7 +55,7 @@ function getClaimantData (claimId) {
         CaseworkerNote: caseworkerNote,
         Town: town,
         Prison: prison,
-        IsAdvanceClaim: isAdvanceClaim
+        IsAdvanceClaim: isAdvanceClaim,
       }
     })
 }

@@ -14,17 +14,19 @@ describe('services/workers/mark-overpayments', function () {
     mockUpdateOverpaymentStatus = jest.fn().mockResolvedValue()
 
     jest.mock('../../../../config', () => mockConfig)
-    jest.mock('../../../../app/services/data/get-advance-claims-total-expense-approved-cost-before-date', () => mockGetAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount)
+    jest.mock(
+      '../../../../app/services/data/get-advance-claims-total-expense-approved-cost-before-date',
+      () => mockGetAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount,
+    )
     jest.mock('../../../../app/services/data/update-overpayment-status', () => mockUpdateOverpaymentStatus)
 
     markOverpayments = require('../../../../app/services/workers/mark-overpayments')
   })
 
   it('find all claims that are should be overpaid, then adds a task to mark them', function () {
-    return markOverpayments.markOverpayments()
-      .then(function () {
-        expect(mockGetAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockUpdateOverpaymentStatus).toHaveBeenCalledTimes(2) //eslint-disable-line
-      })
+    return markOverpayments.markOverpayments().then(function () {
+      expect(mockGetAdvanceClaimsOverSpecifiedDateAndClaimExpenseAmount).toHaveBeenCalledTimes(1)
+      expect(mockUpdateOverpaymentStatus).toHaveBeenCalledTimes(2)
+    })
   })
 })

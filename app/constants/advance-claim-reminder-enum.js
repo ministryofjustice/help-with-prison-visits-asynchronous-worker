@@ -1,4 +1,4 @@
 module.exports = {
   FIRST: 'firstReminder',
-  SECOND: 'secondReminder'
+  SECOND: 'secondReminder',
 }

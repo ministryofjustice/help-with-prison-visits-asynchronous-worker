@@ -6,10 +6,11 @@ const APPROXIMATE_EXPECTED_DISTANCE = 230 // Return journey cost
 
 describe('services/distance-checker/call-distance-api-for-postcodes', function () {
   it('should call the distance API and return a distance in kilometers', function () {
-    return callDistanceApiForPostcodes(FROM_POSTCODE, TO_POSTCODE)
-      .then(function (distanceInKm) {
-        // check that the distance returned is between 230 and 240 as this changes frequently
-        expect(distanceInKm >= APPROXIMATE_EXPECTED_DISTANCE && distanceInKm <= APPROXIMATE_EXPECTED_DISTANCE + 10).toBe(true)
-      })
+    return callDistanceApiForPostcodes(FROM_POSTCODE, TO_POSTCODE).then(function (distanceInKm) {
+      // check that the distance returned is between 230 and 240 as this changes frequently
+      expect(distanceInKm >= APPROXIMATE_EXPECTED_DISTANCE && distanceInKm <= APPROXIMATE_EXPECTED_DISTANCE + 10).toBe(
+        true,
+      )
+    })
   })
 })

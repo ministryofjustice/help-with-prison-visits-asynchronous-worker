@@ -20,12 +20,12 @@ describe('services/cleanup-old-data/delete-old-files', function () {
 
     const helper = function () {
       return {
-        delete: mockDeleteFunction
+        delete: mockDeleteFunction,
       }
     }
 
     mockAWS = {
-      AWSHelper: helper
+      AWSHelper: helper,
     }
 
     deleteOldFiles = require('../../../../app/services/cleanup-old-data/delete-old-files')
@@ -33,26 +33,23 @@ describe('services/cleanup-old-data/delete-old-files', function () {
 
   it('should call to delete a file based on filepath', function () {
     mockGetClaimDocuments.mockResolvedValue(CLAIM_DOCUMENT_FILEPATH)
-    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
-      .then(function () {
-        expect(mockGetClaimDocuments).toHaveBeenCalledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID) //eslint-disable-line
-        expect(mockDeleteFunction).toHaveBeenCalled() //eslint-disable-line
-      })
+    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE).then(function () {
+      expect(mockGetClaimDocuments).toHaveBeenCalledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
+      expect(mockDeleteFunction).toHaveBeenCalled()
+    })
   })
 
   it('should copy eligibility directory to archive when archiving eligibility', function () {
     mockGetClaimDocuments.mockResolvedValue(CLAIM_DOCUMENT_NO_FILEPATH)
-    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
-      .then(function () {
-        expect(mockDeleteFunction).not.toHaveBeenCalled() //eslint-disable-line
-      })
+    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE).then(function () {
+      expect(mockDeleteFunction).not.toHaveBeenCalled()
+    })
   })
 
   it('should not call to delete a file for no claim data', function () {
     mockGetClaimDocuments.mockResolvedValue(CLAIM_DOCUMENT_NO_DATA)
-    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE)
-      .then(function () {
-        expect(mockDeleteFunction).not.toHaveBeenCalled() //eslint-disable-line
-      })
+    return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE).then(function () {
+      expect(mockDeleteFunction).not.toHaveBeenCalled()
+    })
   })
 })
