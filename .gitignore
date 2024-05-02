@@ -59,3 +59,6 @@ helm_deploy/help-with-prison-visits-asynchronous-worker/Chart.lock
 
 #jest
 test_results
+
+# Optional eslint cache
+.eslintcache
