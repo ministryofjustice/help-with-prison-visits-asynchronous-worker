@@ -20,11 +20,13 @@ describe('services/data/copy-claim-data-to-internal', function () {
     it('should copy the first time claim data to internal and set status to new', function () {
       const db = getDatabaseConnector()
 
-      return db.transaction(function (trx) {
-        return copyClaimDataToInternal(firstTimeClaimData, 'first-time', trx)
-      })
+      return db
+        .transaction(function (trx) {
+          return copyClaimDataToInternal(firstTimeClaimData, 'first-time', trx)
+        })
         .then(function () {
-          return db('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
+          return db('IntSchema.Eligibility')
+            .where('IntSchema.Eligibility.Reference', reference)
             .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
             .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
             .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
@@ -40,7 +42,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
               expect(results[0].PrisonNumber).toBe(firstTimeClaimData.Prisoner.PrisonNumber)
             })
             .then(function () {
-              return db('IntSchema.ClaimChild').where('IntSchema.ClaimChild.Reference', reference)
+              return db('IntSchema.ClaimChild')
+                .where('IntSchema.ClaimChild.Reference', reference)
                 .select()
                 .then(function (results) {
                   // should have two children
@@ -48,7 +51,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
                 })
             })
             .then(function () {
-              return db('IntSchema.ClaimExpense').where('IntSchema.ClaimExpense.Reference', reference)
+              return db('IntSchema.ClaimExpense')
+                .where('IntSchema.ClaimExpense.Reference', reference)
                 .select()
                 .then(function (results) {
                   // should have two expenses
@@ -58,7 +62,8 @@ describe('services/data/copy-claim-data-to-internal', function () {
                 })
             })
             .then(function () {
-              return db('IntSchema.ClaimDocument').where('IntSchema.ClaimDocument.Reference', reference)
+              return db('IntSchema.ClaimDocument')
+                .where('IntSchema.ClaimDocument.Reference', reference)
                 .select()
                 .then(function (results) {
                   // should have two documents
@@ -73,11 +78,13 @@ describe('services/data/copy-claim-data-to-internal', function () {
       firstTimeClaimData.ClaimDocument[1].DocumentStatus = 'upload-later'
       const db = getDatabaseConnector()
 
-      return db.transaction(function (trx) {
-        return copyClaimDataToInternal(firstTimeClaimData, null, trx)
-      })
+      return db
+        .transaction(function (trx) {
+          return copyClaimDataToInternal(firstTimeClaimData, null, trx)
+        })
         .then(function () {
-          return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+          return db('IntSchema.Claim')
+            .where('IntSchema.Claim.Reference', reference)
             .select('Claim.Status')
             .then(function (results) {
               // Claim.Status should be PENDING
@@ -103,11 +110,13 @@ describe('services/data/copy-claim-data-to-internal', function () {
     it('should copy repeat claim data without external schema eligibility', function () {
       const db = getDatabaseConnector()
 
-      return db.transaction(function (trx) {
-        return copyClaimDataToInternal(repeatClaimData, null, trx)
-      })
+      return db
+        .transaction(function (trx) {
+          return copyClaimDataToInternal(repeatClaimData, null, trx)
+        })
         .then(function () {
-          return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+          return db('IntSchema.Claim')
+            .where('IntSchema.Claim.Reference', reference)
             .join('IntSchema.ClaimChild', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimChild.ClaimId')
             .join('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
             .join('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')

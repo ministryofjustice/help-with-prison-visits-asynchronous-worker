@@ -1,8 +1,11 @@
 module.exports = function (eligibilityId, claimId, trx) {
-  return trx('ExtSchema.ClaimBankDetail').where('ClaimId', claimId).del()
+  return trx('ExtSchema.ClaimBankDetail')
+    .where('ClaimId', claimId)
+    .del()
     .then(function () {
       return trx('ExtSchema.ClaimDocument')
-        .where('ClaimId', claimId).del()
+        .where('ClaimId', claimId)
+        .del()
         .orWhere({ ClaimId: null, EligibilityId: eligibilityId })
     })
     .then(function () {

@@ -13,7 +13,7 @@ module.exports = function (claimData, autoApprovalData) {
     ClaimDocument: claimData.ClaimDocument,
     ClaimBankDetail: claimData.ClaimBankDetail,
     previousClaims: autoApprovalData.previousClaims,
-    latestManuallyApprovedClaim: autoApprovalData.latestManuallyApprovedClaim
+    latestManuallyApprovedClaim: autoApprovalData.latestManuallyApprovedClaim,
   }
 
   return result

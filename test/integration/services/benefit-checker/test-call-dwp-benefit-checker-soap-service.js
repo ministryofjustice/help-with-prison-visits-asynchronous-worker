@@ -9,10 +9,9 @@ describe('services/benefit-checker/call-dwp-benefit-checker-soap-service', funct
   it('should return undetermined for test data', function () {
     const expectedResult = config.DWP_BENEFIT_CHECKER_ENABLED === 'true' ? 'UNDETERMINED' : 'NOT-RUN'
 
-    return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData)
-      .then(function (benefitCheckerResult) {
-        expect(benefitCheckerResult.visitorId).toBe(visitorDwpBenefitCheckerData.visitorId)
-        expect(benefitCheckerResult.result).toBe(expectedResult)
-      })
+    return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData).then(function (benefitCheckerResult) {
+      expect(benefitCheckerResult.visitorId).toBe(visitorDwpBenefitCheckerData.visitorId)
+      expect(benefitCheckerResult.result).toBe(expectedResult)
+    })
   })
 })

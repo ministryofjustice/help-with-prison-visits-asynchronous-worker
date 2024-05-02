@@ -14,31 +14,35 @@ describe('services/data/update-expense-for-distance-calculation', function () {
   let claimExpenseId
 
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
-      .then(function (ids) {
-        claimId = ids.claimId
-        const db = getDatabaseConnector()
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE).then(function (ids) {
+      claimId = ids.claimId
+      const db = getDatabaseConnector()
 
-        return db('IntSchema.ClaimExpense').where('ClaimId', claimId).first('ClaimExpenseId')
-          .then(function (result) {
-            claimExpenseId = result.ClaimExpenseId
-          })
-      })
+      return db('IntSchema.ClaimExpense')
+        .where('ClaimId', claimId)
+        .first('ClaimExpenseId')
+        .then(function (result) {
+          claimExpenseId = result.ClaimExpenseId
+        })
+    })
   })
 
   it('should update the ClaimExpense postcode, distance and cost columns', function () {
-    return updateExpenseForDistanceCalculation(claimExpenseId, FROM_POSTCODE, TO_POSTCODE, DISTANCE, COST)
-      .then(function () {
+    return updateExpenseForDistanceCalculation(claimExpenseId, FROM_POSTCODE, TO_POSTCODE, DISTANCE, COST).then(
+      function () {
         const db = getDatabaseConnector()
 
-        return db('IntSchema.ClaimExpense').where('ClaimExpenseId', claimExpenseId).first()
+        return db('IntSchema.ClaimExpense')
+          .where('ClaimExpenseId', claimExpenseId)
+          .first()
           .then(function (claimExpense) {
             expect(claimExpense.FromPostCode).toBe(FROM_POSTCODE)
             expect(claimExpense.ToPostCode).toBe(TO_POSTCODE)
             expect(claimExpense.Distance).toBe(DISTANCE)
             expect(claimExpense.Cost).toBe(COST)
           })
-      })
+      },
+    )
   })
 
   afterAll(function () {

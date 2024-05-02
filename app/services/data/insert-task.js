@@ -10,7 +10,7 @@ module.exports = function (reference, eligibilityId, claimId, taskType, addition
     ClaimId: claimId,
     AdditionalData: additionalData,
     DateCreated: dateFormatter.now().toDate(),
-    Status: statusEnum.PENDING
+    Status: statusEnum.PENDING,
   }
   const db = getDatabaseConnector()
 

@@ -15,7 +15,7 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     jest.mock('../../../../app/services/data/get-claim', () => mockGetClaim)
     jest.mock(
       '../../../../app/services/data/get-number-of-claims-for-eligibility',
-      () => mockGetNumberOfClaimsForEligibility
+      () => mockGetNumberOfClaimsForEligibility,
     )
     jest.mock('../../../../app/services/data/get-all-claim-data', () => mockGetAllClaimData)
     jest.mock('../../../../app/services/data/copy-claim-data-to-archive', () => mockCopyClaimDataToArchive)
@@ -36,12 +36,12 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     mockDeleteClaimFromInternal.mockResolvedValue()
 
     return moveClaimDataToArchiveDatabase(CLAIM_ID).then(function (archivedClaimData) {
-      expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
-      expect(mockGetNumberOfClaimsForEligibility).toHaveBeenCalledWith('IntSchema', ELIGIBILITY_ID) //eslint-disable-line
-      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID, true) //eslint-disable-line
-      expect(mockCopyClaimDataToArchive).toHaveBeenCalledWith(CLAIM_DATA) //eslint-disable-line
-      expect(mockDeleteClaimFromInternal).toHaveBeenCalledWith(ELIGIBILITY_ID, CLAIM_ID, true) //eslint-disable-line
-      expect(archivedClaimData.DeleteEligibility).toBe(true) //eslint-disable-line
+      expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID)
+      expect(mockGetNumberOfClaimsForEligibility).toHaveBeenCalledWith('IntSchema', ELIGIBILITY_ID)
+      expect(mockGetAllClaimData).toHaveBeenCalledWith('IntSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID, true)
+      expect(mockCopyClaimDataToArchive).toHaveBeenCalledWith(CLAIM_DATA)
+      expect(mockDeleteClaimFromInternal).toHaveBeenCalledWith(ELIGIBILITY_ID, CLAIM_ID, true)
+      expect(archivedClaimData.DeleteEligibility).toBe(true)
     })
   })
 
@@ -53,8 +53,8 @@ describe('services/archiving/move-claim-data-to-archive-database', function () {
     mockDeleteClaimFromInternal.mockResolvedValue()
 
     return moveClaimDataToArchiveDatabase(CLAIM_ID).then(function (archivedClaimData) {
-      expect(mockDeleteClaimFromInternal).toHaveBeenCalledWith(ELIGIBILITY_ID, CLAIM_ID, false) //eslint-disable-line
-      expect(archivedClaimData.DeleteEligibility).toBe(false) //eslint-disable-line
+      expect(mockDeleteClaimFromInternal).toHaveBeenCalledWith(ELIGIBILITY_ID, CLAIM_ID, false)
+      expect(archivedClaimData.DeleteEligibility).toBe(false)
     })
   })
 })

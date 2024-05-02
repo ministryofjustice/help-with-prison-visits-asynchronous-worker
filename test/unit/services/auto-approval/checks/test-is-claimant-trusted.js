@@ -2,14 +2,14 @@ const isClaimantTrusted = require('../../../../../app/services/auto-approval/che
 
 const autoApprovalDataTrusted = {
   Eligibility: {
-    IsTrusted: true
-  }
+    IsTrusted: true,
+  },
 }
 
 const autoApprovalDataUntrusted = {
   Eligibility: {
-    IsTrusted: false
-  }
+    IsTrusted: false,
+  },
 }
 
 describe('services/auto-approval/checks/is-claimant-trusted', function () {

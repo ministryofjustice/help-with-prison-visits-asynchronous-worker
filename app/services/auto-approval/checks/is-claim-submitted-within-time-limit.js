@@ -9,7 +9,10 @@ module.exports = function (autoApprovalData) {
   const claimSubmissionDateMoment = moment(autoApprovalData.Claim.DateSubmitted)
   let claimSubmissionCutOffDate
   if (autoApprovalData.latestManuallyApprovedClaim) {
-    claimSubmissionCutOffDate = moment(autoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(autoApprovalData.maxDaysAfterAPVUVisit, 'days')
+    claimSubmissionCutOffDate = moment(autoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(
+      autoApprovalData.maxDaysAfterAPVUVisit,
+      'days',
+    )
   } else {
     return new AutoApprovalCheckResult(CHECK_NAME, false, 'There is no manually approved claim for this eligibility')
   }

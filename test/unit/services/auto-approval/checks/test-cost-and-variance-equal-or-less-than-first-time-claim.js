@@ -1,32 +1,32 @@
 const autoApprovalData = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   latestManuallyApprovedClaim: {
     claimExpenses: [
       {
         ExpenseType: 'plane',
-        ApprovedCost: 100
+        ApprovedCost: 100,
       },
       {
         ExpenseType: 'bus',
-        ApprovedCost: 10
+        ApprovedCost: 10,
       },
       {
         ExpenseType: 'bus',
-        ApprovedCost: 15
+        ApprovedCost: 15,
       },
       {
         ExpenseType: 'train',
-        ApprovedCost: 20
+        ApprovedCost: 20,
       },
       {
         ExpenseType: 'light refreshment',
-        ApprovedCost: 5
-      }
-    ]
+        ApprovedCost: 5,
+      },
+    ],
   },
-  costVariancePercentage: '-10'
+  costVariancePercentage: '-10',
 }
 
 const costAndVarianceEqualOrLessThanFirstTimeClaim = require('../../../../../app/services/auto-approval/checks/cost-and-variance-equal-or-less-than-first-time-claim')
@@ -36,20 +36,20 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
     autoApprovalData.ClaimExpenses = [
       {
         ExpenseType: 'plane',
-        Cost: 100
+        Cost: 100,
       },
       {
         ExpenseType: 'bus',
-        Cost: 23
+        Cost: 23,
       },
       {
         ExpenseType: 'train',
-        Cost: 22
+        Cost: 22,
       },
       {
         ExpenseType: 'light refreshment',
-        Cost: 5
-      }
+        Cost: 5,
+      },
     ]
 
     const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
@@ -60,26 +60,26 @@ describe('services/auto-approval/checks/cost-and-variance-equal-or-less-than-fir
     autoApprovalData.ClaimExpenses = [
       {
         ExpenseType: 'plane',
-        Cost: 115
+        Cost: 115,
       },
       {
         ExpenseType: 'bus',
-        Cost: 23
+        Cost: 23,
       },
       {
         ExpenseType: 'train',
-        Cost: 22
+        Cost: 22,
       },
       {
         ExpenseType: 'light refreshment',
-        Cost: 5
-      }
+        Cost: 5,
+      },
     ]
 
     const checkResult = costAndVarianceEqualOrLessThanFirstTimeClaim(autoApprovalData)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      'Claim expense costs are outside of the accepted variance from the last manually approved claim. Claim ref: ABC123, Current expense type total: 115, Upper threshold: 110, Lower threshold: 90'
+      'Claim expense costs are outside of the accepted variance from the last manually approved claim. Claim ref: ABC123, Current expense type total: 115, Upper threshold: 110, Lower threshold: 90',
     )
   })
 })

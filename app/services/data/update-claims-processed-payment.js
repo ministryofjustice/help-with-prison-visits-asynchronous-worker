@@ -8,6 +8,6 @@ module.exports = function (claimId, paymentAmount, paymentDate) {
     .update({
       PaymentStatus: 'PROCESSED',
       PaymentAmount: Number(paymentAmount).toFixed(2),
-      PaymentDate: paymentDate
+      PaymentDate: paymentDate,
     })
 }

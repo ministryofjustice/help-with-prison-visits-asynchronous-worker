@@ -1,4 +1,5 @@
 const dateFormatter = require('../../../../app/services/date-formatter')
+
 const CLAIM_ID_1 = 1
 const CLAIM_ID_2 = 2
 const tenDaysAgo = dateFormatter.now().subtract(10, 'day')
@@ -28,7 +29,7 @@ describe('services/workers/archive-old-claims', () => {
     mockInsertTask.mockReturnValue(Promise.resolve())
 
     return archiveOldClaims.execute({}).then(() => {
-      expect(mockGetAllClaimsOlderThanDate).toHaveBeenCalledTimes(1) //eslint-disable-line
+      expect(mockGetAllClaimsOlderThanDate).toHaveBeenCalledTimes(1)
       expect(mockGetAllClaimsOlderThanDate.mock.calls[0][0].getTime()).toBeGreaterThanOrEqual(tenDaysAgoMinus5mins)
       expect(mockGetAllClaimsOlderThanDate.mock.calls[0][0].getTime()).toBeLessThanOrEqual(tenDaysAgoPlus5mins)
     })
@@ -39,7 +40,7 @@ describe('services/workers/archive-old-claims', () => {
     mockInsertTask.mockReturnValue(Promise.resolve())
 
     return archiveOldClaims.execute({}).then(() => {
-      expect(mockInsertTask).toHaveBeenCalledTimes(2) //eslint-disable-line
+      expect(mockInsertTask).toHaveBeenCalledTimes(2)
     })
   })
 })

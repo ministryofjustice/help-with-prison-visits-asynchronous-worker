@@ -1,4 +1,5 @@
 const config = require('../../../../config')
+
 const EMAIL_ADDRESS = 'test@test.com'
 const REFERENCE = '1234567'
 const CLAIM_ID = 1234
@@ -15,20 +16,21 @@ const sendClaimNotification = require('../../../../app/services/workers/send-cla
 
 describe('services/send-claim-notification', function () {
   it('should call send-notification with correct details', function () {
-    return sendClaimNotification.execute({
-      reference: REFERENCE,
-      claimId: CLAIM_ID,
-      eligibilityId: ELIGIBILITY_ID,
-      additionalData: EMAIL_ADDRESS
-    })
+    return sendClaimNotification
+      .execute({
+        reference: REFERENCE,
+        claimId: CLAIM_ID,
+        eligibilityId: ELIGIBILITY_ID,
+        additionalData: EMAIL_ADDRESS,
+      })
       .then(function () {
-        expect(mockGetFirstNameByClaimId).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
-        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockGetFirstNameByClaimId).toHaveBeenCalledWith('IntSchema', CLAIM_ID)
+        expect(mockSendNotification).toHaveBeenCalled()
         expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_SUBMIT_CLAIM_EMAIL_TEMPLATE_ID)
         expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
         expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
         expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
-        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull()
       })
   })
 })

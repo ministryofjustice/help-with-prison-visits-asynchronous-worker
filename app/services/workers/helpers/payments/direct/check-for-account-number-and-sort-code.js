@@ -1,4 +1,4 @@
-module.exports = function checkForAccountNumberAndSortCode (paymentData) {
+module.exports = function checkForAccountNumberAndSortCode(paymentData) {
   let missingData = false
   paymentData.forEach(function (data) {
     // Checks Account Number and Sort Code

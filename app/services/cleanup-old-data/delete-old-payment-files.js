@@ -1,5 +1,6 @@
 const { AWSHelper } = require('../aws-helper')
-const log = require('../../services/log')
+const log = require('../log')
+
 const aws = new AWSHelper()
 
 module.exports = function (oldPaymentFiles) {

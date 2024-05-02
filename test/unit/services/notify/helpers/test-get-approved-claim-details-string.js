@@ -2,52 +2,60 @@ const getApprovedClaimDetailsString = require('../../../../../app/services/notif
 const deductionTypeEnum = require('../../../../../app/constants/deduction-type-enum')
 
 describe('notify/helpers/get-approved-claim-details-string', function () {
-  const claimExpense1 = [{
-    ClaimExpenseId: 793150379,
-    EligibilityId: 793150379,
-    Reference: 'DWPVISI',
-    ClaimId: 793150379,
-    ExpenseType: 'accommodation',
-    Cost: 0,
-    TravelTime: null,
-    From: 'London',
-    To: 'Hewell',
-    IsReturn: false,
-    DurationOfTravel: null,
-    TicketType: null,
-    TicketOwner: null,
-    IsEnabled: true,
-    ApprovedCost: 0,
-    Note: null,
-    Status: 'REJECTED'
-  }]
-  const claimExpense2 = [{
-    ClaimExpenseId: 793149603,
-    EligibilityId: 793149602,
-    Reference: 'DWPVISI',
-    ClaimId: 793149602,
-    ExpenseType: 'bus',
-    Cost: 30,
-    TravelTime: null,
-    From: 'Euston',
-    To: 'Birmingham New Street',
-    IsReturn: false,
-    DurationOfTravel: null,
-    TicketType: null,
-    TicketOwner: 'you',
-    IsEnabled: true,
-    ApprovedCost: 20,
-    Note: null,
-    Status: 'APPROVED'
-  }]
-  const claimDeduction1 = [{
-    DeductionType: deductionTypeEnum.HC3_DEDUCTION.value,
-    Amount: 5
-  }]
-  const claimDeduction2 = [{
-    DeductionType: deductionTypeEnum.OVERPAYMENT.value,
-    Amount: 10
-  }]
+  const claimExpense1 = [
+    {
+      ClaimExpenseId: 793150379,
+      EligibilityId: 793150379,
+      Reference: 'DWPVISI',
+      ClaimId: 793150379,
+      ExpenseType: 'accommodation',
+      Cost: 0,
+      TravelTime: null,
+      From: 'London',
+      To: 'Hewell',
+      IsReturn: false,
+      DurationOfTravel: null,
+      TicketType: null,
+      TicketOwner: null,
+      IsEnabled: true,
+      ApprovedCost: 0,
+      Note: null,
+      Status: 'REJECTED',
+    },
+  ]
+  const claimExpense2 = [
+    {
+      ClaimExpenseId: 793149603,
+      EligibilityId: 793149602,
+      Reference: 'DWPVISI',
+      ClaimId: 793149602,
+      ExpenseType: 'bus',
+      Cost: 30,
+      TravelTime: null,
+      From: 'Euston',
+      To: 'Birmingham New Street',
+      IsReturn: false,
+      DurationOfTravel: null,
+      TicketType: null,
+      TicketOwner: 'you',
+      IsEnabled: true,
+      ApprovedCost: 20,
+      Note: null,
+      Status: 'APPROVED',
+    },
+  ]
+  const claimDeduction1 = [
+    {
+      DeductionType: deductionTypeEnum.HC3_DEDUCTION.value,
+      Amount: 5,
+    },
+  ]
+  const claimDeduction2 = [
+    {
+      DeductionType: deductionTypeEnum.OVERPAYMENT.value,
+      Amount: 10,
+    },
+  ]
 
   it('should contain journey info if claim expense type is a journey type', function () {
     const claimDetails = getApprovedClaimDetailsString(claimExpense2, [])

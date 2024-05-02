@@ -2,6 +2,7 @@ const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const hasClaimedLessThanMaxTimesThisMonth = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-month')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
+
 const initialClaimId = 800000000
 const MAX_NUMBER_OF_CLAIMS_PER_MONTH = '4'
 
@@ -13,7 +14,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      'This claimant has claimed more than the maximum number of times this month. Claim ref: ABC123, Maximum no of claims per month: 4, No. of claims this month: 5'
+      'This claimant has claimed more than the maximum number of times this month. Claim ref: ABC123, Maximum no of claims per month: 4, No. of claims this month: 5',
     )
   })
 
@@ -35,7 +36,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
 
   it('should return true if the number of claims made for the current month is zero', function () {
     const autoApprovalData = {
-      previousClaims: []
+      previousClaims: [],
     }
     const checkResult = hasClaimedLessThanMaxTimesThisMonth(autoApprovalData)
     expect(checkResult.result).toBe(true)
@@ -52,27 +53,26 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-mon
   })
 })
 
-function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) {
+function generateAutoApprovalDataWithPreviousClaims(numberOfClaims, startDate) {
   const firstOfCurrentMonth = dateFormatter.now().startOf('month')
   const now = dateFormatter.now()
   const result = {
-
     Claim: {
       Reference: 'ABC123',
-      DateOfJourney: firstOfCurrentMonth.clone().toDate()
+      DateOfJourney: firstOfCurrentMonth.clone().toDate(),
     },
     previousClaims: [],
-    maxNumberOfClaimsPerMonth: MAX_NUMBER_OF_CLAIMS_PER_MONTH
+    maxNumberOfClaimsPerMonth: MAX_NUMBER_OF_CLAIMS_PER_MONTH,
   }
 
   const durationSinceStartDate = now.diff(startDate, 'days')
   const daysBetweenClaims = Math.floor(durationSinceStartDate / numberOfClaims)
 
-  for (let i = 0; i < numberOfClaims - 1; i++) {
+  for (let i = 0; i < numberOfClaims - 1; i += 1) {
     const claim = {
       ClaimId: initialClaimId + i,
-      DateSubmitted: startDate.add((daysBetweenClaims), 'days').toDate(),
-      Status: claimStatusEnum.APPROVED
+      DateSubmitted: startDate.add(daysBetweenClaims, 'days').toDate(),
+      Status: claimStatusEnum.APPROVED,
     }
 
     result.previousClaims.push(claim)

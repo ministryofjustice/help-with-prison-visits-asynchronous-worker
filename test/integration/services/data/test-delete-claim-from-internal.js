@@ -10,11 +10,10 @@ let eligibilityId
 
 describe('services/data/delete-claim-from-internal', function () {
   beforeEach(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
-      .then(function (ids) {
-        claimId = ids.claimId
-        eligibilityId = ids.eligibilityId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE).then(function (ids) {
+      claimId = ids.claimId
+      eligibilityId = ids.eligibilityId
+    })
   })
 
   it('should delete claim and eligibility details', function () {

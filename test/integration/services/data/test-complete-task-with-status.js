@@ -23,14 +23,18 @@ describe('services/data/complete-task-with-status', function () {
     return completeTaskWithStatus('ExtSchema', id, newStatus).then(function () {
       const db = getDatabaseConnector()
 
-      return db.first().table('ExtSchema.Task').where('TaskId', id).then(function (result) {
-        const currentDate = dateFormatter.now()
-        const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-        const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
-        expect(result.Status).toBe(newStatus)
-        expect(result.DateProcessed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
-        expect(result.DateProcessed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
-      })
+      return db
+        .first()
+        .table('ExtSchema.Task')
+        .where('TaskId', id)
+        .then(function (result) {
+          const currentDate = dateFormatter.now()
+          const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+          const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+          expect(result.Status).toBe(newStatus)
+          expect(result.DateProcessed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
+          expect(result.DateProcessed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+        })
     })
   })
 

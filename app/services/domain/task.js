@@ -1,5 +1,16 @@
 class Task {
-  constructor (taskId, task, reference, eligibilityId, claimId, additionalData, dateCreated, dateProcessed, schema, status) {
+  constructor(
+    taskId,
+    task,
+    reference,
+    eligibilityId,
+    claimId,
+    additionalData,
+    dateCreated,
+    dateProcessed,
+    schema,
+    status,
+  ) {
     this.taskId = taskId
     this.task = task
     this.reference = reference

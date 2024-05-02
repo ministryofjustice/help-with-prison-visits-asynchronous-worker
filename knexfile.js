@@ -1,4 +1,5 @@
 const config = require('./config')
+
 const longTimeout = 90000
 const retryTimeout = 10000
 
@@ -14,16 +15,16 @@ module.exports = {
       connectionTimeout: longTimeout,
       options: {
         encrypt: false,
-        enableArithAbort: true
-      }
+        enableArithAbort: true,
+      },
     },
     pool: {
       min: 2,
       max: 100,
       createRetryIntervalMillis: retryTimeout,
-      createTimeoutMillis: longTimeout
-    }
-    //, debug: true // uncomment to debug
+      createTimeoutMillis: longTimeout,
+    },
+    // , debug: true // uncomment to debug
   },
   archive: {
     client: 'mssql',
@@ -36,16 +37,16 @@ module.exports = {
       connectionTimeout: longTimeout,
       options: {
         encrypt: false,
-        enableArithAbort: true
-      }
+        enableArithAbort: true,
+      },
     },
     pool: {
       min: 2,
       max: 10,
       createRetryIntervalMillis: retryTimeout,
-      createTimeoutMillis: longTimeout
-    }
-    //, debug: true // uncomment to debug
+      createTimeoutMillis: longTimeout,
+    },
+    // , debug: true // uncomment to debug
   },
   testing: {
     client: 'mssql',
@@ -56,10 +57,9 @@ module.exports = {
       database: config.TESTING_DATABASE,
       options: {
         encrypt: false,
-        enableArithAbort: true
-      }
-    }
+        enableArithAbort: true,
+      },
+    },
     // , debug: true // uncomment to debug
-  }
-
+  },
 }

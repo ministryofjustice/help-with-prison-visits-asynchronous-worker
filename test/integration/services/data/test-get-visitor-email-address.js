@@ -8,17 +8,15 @@ describe('services/data/get-visitor-email-address', function () {
   const claimData = testHelper.getClaimData(reference)
 
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function (ids) {
-        eligibilityId = ids.eligibilityId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', reference).then(function (ids) {
+      eligibilityId = ids.eligibilityId
+    })
   })
 
   it('should return visitor email address', function () {
-    return getVisitorEmailAddress('IntSchema', reference, eligibilityId)
-      .then(function (emailAddress) {
-        expect(emailAddress).toBe(claimData.Visitor.EmailAddress)
-      })
+    return getVisitorEmailAddress('IntSchema', reference, eligibilityId).then(function (emailAddress) {
+      expect(emailAddress).toBe(claimData.Visitor.EmailAddress)
+    })
   })
 
   afterAll(function () {

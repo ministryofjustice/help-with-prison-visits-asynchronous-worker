@@ -1,15 +1,36 @@
-const { getDatabaseConnector } = require('../../databaseConnector')
 const _ = require('lodash')
+const { getDatabaseConnector } = require('../../databaseConnector')
 const paymentMethods = require('../../constants/payment-method-enum')
 
-const directBankColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.ClaimBankDetail.SortCode', 'IntSchema.ClaimBankDetail.AccountNumber',
-  'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Claim.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.Visitor.Country', 'IntSchema.ClaimBankDetail.NameOnAccount',
-  'IntSchema.ClaimBankDetail.RollNumber', 'IntSchema.TopUp.TopUpId']
+const directBankColumns = [
+  'IntSchema.Claim.ClaimId',
+  'IntSchema.ClaimBankDetail.SortCode',
+  'IntSchema.ClaimBankDetail.AccountNumber',
+  'IntSchema.Visitor.FirstName',
+  'IntSchema.Visitor.LastName',
+  'IntSchema.Claim.Reference',
+  'IntSchema.Claim.DateOfJourney',
+  'IntSchema.Visitor.Country',
+  'IntSchema.ClaimBankDetail.NameOnAccount',
+  'IntSchema.ClaimBankDetail.RollNumber',
+  'IntSchema.TopUp.TopUpId',
+]
 
-const payoutColumns = ['IntSchema.Claim.ClaimId', 'IntSchema.Visitor.FirstName', 'IntSchema.Visitor.LastName', 'IntSchema.Visitor.HouseNumberAndStreet',
-  'IntSchema.Visitor.Town', 'IntSchema.Visitor.County', 'IntSchema.Visitor.Country', 'IntSchema.Visitor.PostCode', 'IntSchema.Visitor.Reference', 'IntSchema.Claim.DateOfJourney', 'IntSchema.TopUp.TopUpId']
+const payoutColumns = [
+  'IntSchema.Claim.ClaimId',
+  'IntSchema.Visitor.FirstName',
+  'IntSchema.Visitor.LastName',
+  'IntSchema.Visitor.HouseNumberAndStreet',
+  'IntSchema.Visitor.Town',
+  'IntSchema.Visitor.County',
+  'IntSchema.Visitor.Country',
+  'IntSchema.Visitor.PostCode',
+  'IntSchema.Visitor.Reference',
+  'IntSchema.Claim.DateOfJourney',
+  'IntSchema.TopUp.TopUpId',
+]
 
-function directPaymentsReturn (results) {
+function directPaymentsReturn(results) {
   return _.map(results, record => {
     return [
       record.ClaimId,
@@ -19,12 +40,12 @@ function directPaymentsReturn (results) {
       record.PaymentAmount.toFixed(2),
       record.Reference,
       record.Country,
-      record.RollNumber
+      record.RollNumber,
     ]
   })
 }
 
-function payoutPaymentsReturn (results) {
+function payoutPaymentsReturn(results) {
   return _.map(results, record => {
     return [
       record.ClaimId,
@@ -37,7 +58,7 @@ function payoutPaymentsReturn (results) {
       record.Country,
       record.PostCode,
       record.Reference,
-      record.DateOfJourney
+      record.DateOfJourney,
     ]
   })
 }
@@ -59,8 +80,7 @@ module.exports = function (paymentMethod) {
     .then(function (topups) {
       if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
         return directPaymentsReturn(topups)
-      } else {
-        return payoutPaymentsReturn(topups)
       }
+      return payoutPaymentsReturn(topups)
     })
 }

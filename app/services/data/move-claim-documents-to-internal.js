@@ -9,62 +9,71 @@ module.exports = function (reference, eligibilityId, claimId) {
   let claimDocuments
 
   return getUpdatedClaimDocumentsFromExternal(reference, eligibilityId, claimId)
-    .then(function (documents) { claimDocuments = documents })
-    .then(function () { return disableOldClaimDocumentsInInternal(reference, eligibilityId, claimId, claimDocuments) })
-    .then(function () { return copyClaimDocumentsToInternal(claimDocuments) })
-    .then(function () { return deleteClaimDocumentsFromExternal(reference, eligibilityId, claimId) })
-    .then(function () { return claimDocuments })
+    .then(function (documents) {
+      claimDocuments = documents
+    })
+    .then(function () {
+      return disableOldClaimDocumentsInInternal(reference, eligibilityId, claimId, claimDocuments)
+    })
+    .then(function () {
+      return copyClaimDocumentsToInternal(claimDocuments)
+    })
+    .then(function () {
+      return deleteClaimDocumentsFromExternal(reference, eligibilityId)
+    })
+    .then(function () {
+      return claimDocuments
+    })
     .catch(function (error) {
       log.error(error)
     })
 }
 
-function getUpdatedClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
+function getUpdatedClaimDocumentsFromExternal(reference, eligibilityId, claimId) {
   log.info('getUpdatedClaimDocumentsFromExternal / getClaimDocuments')
   return getClaimDocuments('ExtSchema', reference, eligibilityId, claimId)
 }
 
-function disableOldClaimDocumentsInInternal (reference, eligibilityId, claimId, claimDocuments) {
+function disableOldClaimDocumentsInInternal(reference, eligibilityId, claimId, claimDocuments) {
   log.info('disableOldClaimDocumentsInInternal / getClaimDocuments')
-  return getClaimDocuments('IntSchema', reference, eligibilityId, claimId)
-    .then(function (internalDocuments) {
-      const oldDocumentsToDisable = matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, claimDocuments)
-      const promises = []
+  return getClaimDocuments('IntSchema', reference, eligibilityId, claimId).then(function (internalDocuments) {
+    const oldDocumentsToDisable = matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, claimDocuments)
+    const promises = []
 
-      oldDocumentsToDisable.forEach(function (oldDocumentToDisable) {
-        promises.push(disableClaimDocument('IntSchema', oldDocumentToDisable.ClaimDocumentId))
-        promises.push(insertClaimEventReplacedDocument(reference, eligibilityId, claimId, oldDocumentToDisable))
-      })
-
-      return Promise.all(promises)
+    oldDocumentsToDisable.forEach(function (oldDocumentToDisable) {
+      promises.push(disableClaimDocument('IntSchema', oldDocumentToDisable.ClaimDocumentId))
+      promises.push(insertClaimEventReplacedDocument(reference, eligibilityId, claimId, oldDocumentToDisable))
     })
+
+    return Promise.all(promises)
+  })
 }
 
-function copyClaimDocumentsToInternal (claimDocuments) {
+function copyClaimDocumentsToInternal(claimDocuments) {
   log.info('copyClaimDocumentsToInternal')
   const db = getDatabaseConnector()
 
   return db('IntSchema.ClaimDocument').insert(claimDocuments)
 }
 
-function deleteClaimDocumentsFromExternal (reference, eligibilityId, claimId) {
+function deleteClaimDocumentsFromExternal(reference, eligibilityId) {
   log.info('deleteClaimDocumentsFromExternals')
   const db = getDatabaseConnector()
 
-  return db('ExtSchema.ClaimDocument')
-    .where({ Reference: reference, EligibilityId: eligibilityId }).del()
+  return db('ExtSchema.ClaimDocument').where({ Reference: reference, EligibilityId: eligibilityId }).del()
 }
 
-function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updatedDocuments) {
+function matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, updatedDocuments) {
   const oldDocuments = []
   internalDocuments.forEach(function (internalDocument) {
     const matchingNewDocuments = updatedDocuments.filter(function (newDocument) {
-      if (internalDocument.DocumentType === newDocument.DocumentType &&
-        internalDocument.ClaimExpenseId === newDocument.ClaimExpenseId) {
+      if (
+        internalDocument.DocumentType === newDocument.DocumentType &&
+        internalDocument.ClaimExpenseId === newDocument.ClaimExpenseId
+      ) {
         return true
-      } else {
-        return false
       }
+      return false
     })
     if (matchingNewDocuments && matchingNewDocuments.length > 0) {
       oldDocuments.push(internalDocument)
@@ -74,12 +83,20 @@ function matchOldInternalDocumentsToUpdatedDocuments (internalDocuments, updated
   return oldDocuments
 }
 
-function insertClaimEventReplacedDocument (reference, eligibilityId, claimId, oldDocumentToDisable) {
+function insertClaimEventReplacedDocument(reference, eligibilityId, claimId, oldDocumentToDisable) {
   if (oldDocumentToDisable.DocumentStatus === 'uploaded') {
     const note = `Replaced previous document ${oldDocumentToDisable.DocumentType}`
     log.info('insertClaimEventReplacedDocument / insertClaimEvent')
-    return insertClaimEvent(reference, eligibilityId, claimId, oldDocumentToDisable.ClaimDocumentId, claimEventEnum.REPLACED_PREVIOUS_DOCUMENT.value, null, note, true)
-  } else {
-    return Promise.resolve()
+    return insertClaimEvent(
+      reference,
+      eligibilityId,
+      claimId,
+      oldDocumentToDisable.ClaimDocumentId,
+      claimEventEnum.REPLACED_PREVIOUS_DOCUMENT.value,
+      null,
+      note,
+      true,
+    )
   }
+  return Promise.resolve()
 }

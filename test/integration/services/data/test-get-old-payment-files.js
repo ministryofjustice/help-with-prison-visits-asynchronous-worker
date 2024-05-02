@@ -16,14 +16,14 @@ describe('services/data/get-old-payment-files', function () {
           FileType: 'TEST_FILE',
           DateCreated: OLD_FILE_DATE.toDate(),
           Filepath: 'test-file-path/testfile1.csv',
-          IsEnabled: 'true'
+          IsEnabled: 'true',
         },
         {
           FileType: 'TEST_FILE',
           DateCreated: OLD_FILE_DATE.toDate(),
           Filepath: 'test-file-path/testfile2.csv',
-          IsEnabled: 'true'
-        }
+          IsEnabled: 'true',
+        },
       ])
       .returning('PaymentFileId')
       .then(function (insertedIds) {
@@ -32,21 +32,19 @@ describe('services/data/get-old-payment-files', function () {
   })
 
   it('should retrieve inserted payment files', function () {
-    return getOldPaymentFiles()
-      .then(function (results) {
-        // Find files that were inserted
-        const testFiles = results.filter(function (result) {
-          return paymentFileIds.indexOf(result.PaymentFileId) !== -1
-        })
-
-        expect(testFiles.length).toBe(2)
+    return getOldPaymentFiles().then(function (results) {
+      // Find files that were inserted
+      const testFiles = results.filter(function (result) {
+        return paymentFileIds.indexOf(result.PaymentFileId) !== -1
       })
+
+      expect(testFiles.length).toBe(2)
+    })
   })
 
   afterAll(function () {
     const db = getDatabaseConnector()
 
-    return db('IntSchema.DirectPaymentFile')
-      .whereIn('PaymentFileId', paymentFileIds).del()
+    return db('IntSchema.DirectPaymentFile').whereIn('PaymentFileId', paymentFileIds).del()
   })
 })

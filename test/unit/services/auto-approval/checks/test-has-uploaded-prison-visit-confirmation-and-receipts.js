@@ -2,71 +2,71 @@ const hasUploadedPrisonVisitConfirmationAndReceipts = require('../../../../../ap
 
 const withVisitConfirmation = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
-      DocumentStatus: null
+      DocumentStatus: null,
     },
     {
       ClaimDocumentId: 2,
       DocumentType: 'RECEIPT',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
     },
     {
       ClaimDocumentId: 3,
       DocumentType: 'VISIT-CONFIRMATION',
-      DocumentStatus: 'uploaded'
-    }
-  ]
+      DocumentStatus: 'uploaded',
+    },
+  ],
 }
 
 const withoutVisitConfirmation = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
     },
     {
       ClaimDocumentId: 2,
       DocumentType: 'RECEIPT',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
     },
     {
       ClaimDocumentId: 3,
       DocumentType: 'RECEIPT',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
     },
     {
       ClaimDocumentId: 4,
       DocumentType: 'VISIT-CONFIRMATION',
-      DocumentStatus: null
-    }
-  ]
+      DocumentStatus: null,
+    },
+  ],
 }
 
 const validAutoApprovalData = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   ClaimDocument: [
     {
       ClaimDocumentId: 1,
       DocumentType: 'RECEIPT',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
     },
     {
       ClaimDocumentId: 2,
       DocumentType: 'VISIT-CONFIRMATION',
-      DocumentStatus: 'uploaded'
-    }
-  ]
+      DocumentStatus: 'uploaded',
+    },
+  ],
 }
 
 describe('services/auto-approval/checks/has-uploaded-prison-visit-confirmation', function () {
@@ -79,7 +79,7 @@ describe('services/auto-approval/checks/has-uploaded-prison-visit-confirmation',
     const checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withVisitConfirmation)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      'A prison visit confirmation and/or receipts have not been uploaded. Claim ref: ABC123, Prison visit confirmation uploaded: true, All required documents uploaded: false'
+      'A prison visit confirmation and/or receipts have not been uploaded. Claim ref: ABC123, Prison visit confirmation uploaded: true, All required documents uploaded: false',
     )
   })
 
@@ -87,7 +87,7 @@ describe('services/auto-approval/checks/has-uploaded-prison-visit-confirmation',
     const checkResult = hasUploadedPrisonVisitConfirmationAndReceipts(withoutVisitConfirmation)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      'A prison visit confirmation and/or receipts have not been uploaded. Claim ref: ABC123, Prison visit confirmation uploaded: false, All required documents uploaded: true'
+      'A prison visit confirmation and/or receipts have not been uploaded. Claim ref: ABC123, Prison visit confirmation uploaded: false, All required documents uploaded: true',
     )
   })
 })

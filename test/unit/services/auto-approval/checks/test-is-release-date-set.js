@@ -2,20 +2,20 @@ const isReleaseDateSet = require('../../../../../app/services/auto-approval/chec
 
 const autoApprovalDataReleaseDateSet = {
   Prisoner: {
-    ReleaseDateIsSet: true
-  }
+    ReleaseDateIsSet: true,
+  },
 }
 
 const autoApprovalDataReleaseDateSetFalse = {
   Prisoner: {
-    ReleaseDateIsSet: false
-  }
+    ReleaseDateIsSet: false,
+  },
 }
 
 const autoApprovalDataReleaseDateSetNull = {
   Prisoner: {
-    ReleaseDateIsSet: null
-  }
+    ReleaseDateIsSet: null,
+  },
 }
 
 describe('services/auto-approval/checks/is-visit-in-past', function () {

@@ -7,7 +7,7 @@ module.exports = function (reference, eligibilityId, claimId, visitorEmailAddres
     Reference: reference,
     ClaimId: claimId,
     EmailAddress: visitorEmailAddress,
-    DateAdded: dateFormatter.now().toDate()
+    DateAdded: dateFormatter.now().toDate(),
   }
   const db = getDatabaseConnector()
 

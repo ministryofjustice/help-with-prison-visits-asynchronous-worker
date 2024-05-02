@@ -9,6 +9,6 @@ module.exports = function (claimExpenseId, fromPostCode, toPostCode, distance, c
       FromPostCode: fromPostCode,
       ToPostCode: toPostCode,
       Distance: Number(distance).toFixed(2),
-      Cost: Number(cost).toFixed(2)
+      Cost: Number(cost).toFixed(2),
     })
 }

@@ -4,32 +4,27 @@ const statusEnum = require('../../constants/status-enum')
 
 module.exports = function (claimId) {
   const updates = []
-  return getClaimExpenses(claimId)
-    .then(function (claimExpenses) {
-      claimExpenses.forEach(function (claimExpense) {
-        updates.push(updateClaimExpenseToApproved(claimExpense))
-      })
-
-      return Promise.all(updates)
+  return getClaimExpenses(claimId).then(function (claimExpenses) {
+    claimExpenses.forEach(function (claimExpense) {
+      updates.push(updateClaimExpenseToApproved(claimExpense))
     })
+
+    return Promise.all(updates)
+  })
 }
 
-function getClaimExpenses (claimId) {
+function getClaimExpenses(claimId) {
   const db = getDatabaseConnector()
 
-  return db('IntSchema.ClaimExpense')
-    .where('ClaimId', claimId)
-    .select('ClaimExpenseId', 'Cost')
+  return db('IntSchema.ClaimExpense').where('ClaimId', claimId).select('ClaimExpenseId', 'Cost')
 }
 
-function updateClaimExpenseToApproved (claimExpense) {
+function updateClaimExpenseToApproved(claimExpense) {
   const db = getDatabaseConnector()
   const updatedClaimExpense = {
     Status: statusEnum.APPROVED,
-    ApprovedCost: parseFloat(claimExpense.Cost).toFixed(2)
+    ApprovedCost: parseFloat(claimExpense.Cost).toFixed(2),
   }
 
-  return db('IntSchema.ClaimExpense')
-    .where('ClaimExpenseId', claimExpense.ClaimExpenseId)
-    .update(updatedClaimExpense)
+  return db('IntSchema.ClaimExpense').where('ClaimExpenseId', claimExpense.ClaimExpenseId).update(updatedClaimExpense)
 }

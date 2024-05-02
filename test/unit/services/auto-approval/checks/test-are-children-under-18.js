@@ -5,21 +5,21 @@ const areChildrenUnder18 = require('../../../../../app/services/auto-approval/ch
 
 const autoApprovalDataClaimChildrenOver18 = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   ClaimChildren: [
     {
-      DateOfBirth: dateFormatter.now().subtract(17, 'years').toDate()
+      DateOfBirth: dateFormatter.now().subtract(17, 'years').toDate(),
     },
     {
-      DateOfBirth: dateFormatter.now().subtract(19, 'years').toDate()
-    }
-  ]
+      DateOfBirth: dateFormatter.now().subtract(19, 'years').toDate(),
+    },
+  ],
 }
 
 const autoApprovalDataClaimChildrenUnder18 = {
   Claim: {
-    Reference: 'ABC123'
+    Reference: 'ABC123',
   },
   ClaimChildren: [
     {
@@ -31,7 +31,7 @@ const autoApprovalDataClaimChildrenUnder18 = {
       LastName: 'Bloggs',
       DateOfBirth: dateFormatter.now().subtract(14, 'years').toDate(),
       Relationship: 'prisoners-child',
-      IsEnabled: true
+      IsEnabled: true,
     },
     {
       ClaimChildId: 798118116,
@@ -42,13 +42,13 @@ const autoApprovalDataClaimChildrenUnder18 = {
       LastName: 'Bloggs',
       DateOfBirth: dateFormatter.now().subtract(15, 'years').toDate(),
       Relationship: 'my-child',
-      IsEnabled: true
-    }
-  ]
+      IsEnabled: true,
+    },
+  ],
 }
 
 const childlessAutoApprovalClaimData = {
-  ClaimChildren: []
+  ClaimChildren: [],
 }
 
 describe('services/auto-approval/checks/are-children-under-18', function () {
@@ -56,7 +56,7 @@ describe('services/auto-approval/checks/are-children-under-18', function () {
     const checkResult = areChildrenUnder18(autoApprovalDataClaimChildrenOver18)
     expect(checkResult.result).toBe(false)
     expect(checkResult.failureMessage).toBe(
-      `One or more children to be claimed are over 18 years old. Claim ref: ABC123, Date of birth: ${moment(autoApprovalDataClaimChildrenOver18.ClaimChildren[1].DateOfBirth).format('DD/MM/YYYY')}`
+      `One or more children to be claimed are over 18 years old. Claim ref: ABC123, Date of birth: ${moment(autoApprovalDataClaimChildrenOver18.ClaimChildren[1].DateOfBirth).format('DD/MM/YYYY')}`,
     )
   })
 

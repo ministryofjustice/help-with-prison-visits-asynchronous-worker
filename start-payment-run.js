@@ -7,9 +7,7 @@ const { cleanupOldPaymentFiles } = require('./app/services/workers/cleanup-old-p
 log.info('Running payment generation job')
 
 setTimeout(function () {
-  Promise.all([
-    generateDirectPayments(),
-    cleanupOldPaymentFiles()])
+  Promise.all([generateDirectPayments(), cleanupOldPaymentFiles()])
     .then(function () {
       log.info('Payment generation jobs completed')
       if (appInsights) {

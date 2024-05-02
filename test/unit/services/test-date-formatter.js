@@ -1,5 +1,6 @@
-const dateFormatter = require('../../../app/services/date-formatter')
 const moment = require('moment')
+const dateFormatter = require('../../../app/services/date-formatter')
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 const INVALID_DATE_ERROR = 'Invalid date'
 
@@ -117,12 +118,12 @@ describe('services/date-formatter', function () {
 
     it('should return false if passed null', function () {
       const result = dateFormatter.buildFromDateString(null)
-      expect(result).toBe(false) //eslint-disable-line
+      expect(result).toBe(false)
     })
 
     it('should return false if passed undefined', function () {
       const result = dateFormatter.buildFromDateString(undefined)
-      expect(result).toBe(false) //eslint-disable-line
+      expect(result).toBe(false)
     })
 
     it('should return error if passed a non valid day value (1 - 31)', function () {

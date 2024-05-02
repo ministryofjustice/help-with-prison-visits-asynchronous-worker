@@ -26,9 +26,7 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
     jest.mock('../../../../app/services/data/get-first-name-by-claimId', () => mockGetFirstNameByClaimId)
     jest.mock('../../../../app/services/notify/send-notification', () => mockSendNotification)
 
-    sendRequestInformationClaimNotification = require(
-      '../../../../app/services/workers/send-advance-claim-evidence-reminder-notification'
-    )
+    sendRequestInformationClaimNotification = require('../../../../app/services/workers/send-advance-claim-evidence-reminder-notification')
   })
 
   afterEach(() => {
@@ -36,53 +34,58 @@ describe('services/send-advance-claim-evidence-reminder-notification', function 
   })
 
   it('should call send-notification with correct details for first reminder', function () {
-    return sendRequestInformationClaimNotification.execute({
-      reference: REFERENCE,
-      eligibilityId: ELIGIBILITY_ID,
-      claimId: CLAIM_ID,
-      additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.FIRST}`
-    })
+    return sendRequestInformationClaimNotification
+      .execute({
+        reference: REFERENCE,
+        eligibilityId: ELIGIBILITY_ID,
+        claimId: CLAIM_ID,
+        additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.FIRST}`,
+      })
       .then(function () {
-        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
-        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
+        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID)
+        expect(mockSendNotification).toHaveBeenCalled()
         expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_EVIDENCE_REMINDER_TEMPLATE_ID)
         expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
         expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
         expect(mockSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
-        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull()
         expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 
   it('should call send-notification with correct details for second reminder', function () {
-    return sendRequestInformationClaimNotification.execute({
-      reference: REFERENCE,
-      eligibilityId: ELIGIBILITY_ID,
-      claimId: CLAIM_ID,
-      additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.SECOND}`
-    })
+    return sendRequestInformationClaimNotification
+      .execute({
+        reference: REFERENCE,
+        eligibilityId: ELIGIBILITY_ID,
+        claimId: CLAIM_ID,
+        additionalData: `${EMAIL_ADDRESS}~~${reminderEnum.SECOND}`,
+      })
       .then(function () {
-        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID) //eslint-disable-line
-        expect(mockSendNotification).toHaveBeenCalled() //eslint-disable-line
-        expect(mockSendNotification.mock.calls[0][0]).toBe(config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID)
+        expect(mockGetClaim).toHaveBeenCalledWith('IntSchema', CLAIM_ID)
+        expect(mockSendNotification).toHaveBeenCalled()
+        expect(mockSendNotification.mock.calls[0][0]).toBe(
+          config.NOTIFY_ADVANCE_CLAIM_SECOND_EVIDENCE_REMINDER_TEMPLATE_ID,
+        )
         expect(mockSendNotification.mock.calls[0][1]).toBe(EMAIL_ADDRESS)
         expect(mockSendNotification.mock.calls[0][2].reference).toBe(REFERENCE)
         expect(mockSendNotification.mock.calls[0][2].dateOfJourney).toBe(dateOfJourneyString)
-        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull() //eslint-disable-line
+        expect(mockSendNotification.mock.calls[0][2].requestInfoUrl).not.toBeNull()
         expect(mockSendNotification.mock.calls[0][2].first_name).toBe(FIRST_NAME)
       })
   })
 
   it('should reject the call if an invalid reminder type is sent', function () {
-    return sendRequestInformationClaimNotification.execute({
-      reference: REFERENCE,
-      eligibilityId: ELIGIBILITY_ID,
-      claimId: CLAIM_ID,
-      additionalData: `${EMAIL_ADDRESS}~~NotValid`
-    })
+    return sendRequestInformationClaimNotification
+      .execute({
+        reference: REFERENCE,
+        eligibilityId: ELIGIBILITY_ID,
+        claimId: CLAIM_ID,
+        additionalData: `${EMAIL_ADDRESS}~~NotValid`,
+      })
       .catch(function (error) {
         expect(error.message).toBe('Not valid reminder type')
-        expect(mockSendNotification).not.toHaveBeenCalled() //eslint-disable-line
+        expect(mockSendNotification).not.toHaveBeenCalled()
       })
   })
 })

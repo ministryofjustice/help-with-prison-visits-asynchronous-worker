@@ -1,9 +1,9 @@
 const fileTypes = require('../../../../app/constants/payment-filetype-enum')
 
-const claimPaymentAmount1 = 45.50
+const claimPaymentAmount1 = 45.5
 const claimPaymentAmount2 = 22.22
 const claimPaymentAmount3 = 13.99
-const topUpPaymentAmount1 = 42.50
+const topUpPaymentAmount1 = 42.5
 const topUpPaymentAmount2 = 20.22
 const topUpPaymentAmount3 = 10.99
 const total = '155.42'
@@ -11,12 +11,12 @@ const total = '155.42'
 const claimsPendingPayment = [
   ['999997', '223344', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234'],
   ['999998', '334455', '87654321', 'Ada Lovelace', claimPaymentAmount2.toString(), 'REF4567'],
-  ['999999', '998877', '54321678', 'Grace Hopper', claimPaymentAmount3.toString(), 'REF9876']
+  ['999999', '998877', '54321678', 'Grace Hopper', claimPaymentAmount3.toString(), 'REF9876'],
 ]
 const topUpsPendingPayment = [
   ['123456', '223344', '12345678', 'Alan Turing', topUpPaymentAmount1.toString(), 'REF1234'],
   ['123457', '334455', '87654321', 'Ada Lovelace', topUpPaymentAmount2.toString(), 'REF4567'],
-  ['123458', '998877', '54321678', 'Grace Hopper', topUpPaymentAmount3.toString(), 'REF9876']
+  ['123458', '998877', '54321678', 'Grace Hopper', topUpPaymentAmount3.toString(), 'REF9876'],
 ]
 
 const payments = [
@@ -25,7 +25,7 @@ const payments = [
   ['998877', '54321678', 'Grace Hopper', '13.99', 'REF9876'],
   ['223344', '12345678', 'Alan Turing', '42.5', 'REF1234'],
   ['334455', '87654321', 'Ada Lovelace', '20.22', 'REF4567'],
-  ['998877', '54321678', 'Grace Hopper', '10.99', 'REF9876']
+  ['998877', '54321678', 'Grace Hopper', '10.99', 'REF9876'],
 ]
 
 const claimsMissingData = [['', '', '12345678', 'Alan Turing', claimPaymentAmount1.toString(), 'REF1234']]
@@ -59,11 +59,11 @@ describe('services/workers/generate-direct-payments', function () {
     jest.mock('../../../../app/services/data/get-topups-pending-payment', () => mockGetTopUpsPendingPayment)
     jest.mock(
       '../../../../app/services/workers/helpers/payments/update-all-topups-processed-payment',
-      () => mockUpdateAllTopupsProcessedPayment
+      () => mockUpdateAllTopupsProcessedPayment,
     )
     jest.mock(
       '../../../../app/services/workers/helpers/payments/update-all-claims-processed-payment',
-      () => mockUpdateAllClaimsProcessedPayment
+      () => mockUpdateAllClaimsProcessedPayment,
     )
 
     generateDirectPayments = require('../../../../app/services/workers/generate-direct-payments')
@@ -77,24 +77,26 @@ describe('services/workers/generate-direct-payments', function () {
     mockGetClaimsPendingPayment.mockResolvedValue(claimsPendingPayment)
     mockGetTopUpsPendingPayment.mockResolvedValue(topUpsPendingPayment)
     return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1) //eslint-disable-line
-      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(1, claimsPendingPayment, false) //eslint-disable-line
-      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(2, claimsPendingPayment, true) //eslint-disable-line
-      expect(mockCreateAdiJournalFile).toHaveBeenCalledWith(total) //eslint-disable-line
-      expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testPath, fileTypes.ACCESSPAY_FILE) //eslint-disable-line
-      expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE) //eslint-disable-line
-      expect(mockUpdateAllClaimsProcessedPayment).toHaveBeenCalledWith(['999997', '999998', '999999'], payments, true) //eslint-disable-line
-      expect(mockUpdateAllTopupsProcessedPayment).toHaveBeenCalledWith(['123456', '123457', '123458']) //eslint-disable-line
+      expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1)
+      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(1, claimsPendingPayment, false)
+      expect(mockCreatePaymentFile).toHaveBeenNthCalledWith(2, claimsPendingPayment, true)
+      expect(mockCreateAdiJournalFile).toHaveBeenCalledWith(total)
+      expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testPath, fileTypes.ACCESSPAY_FILE)
+      expect(mockInsertDirectBankPayments).toHaveBeenCalledWith(testAdiPath, fileTypes.ADI_JOURNAL_FILE)
+      expect(mockUpdateAllClaimsProcessedPayment).toHaveBeenCalledWith(['999997', '999998', '999999'], payments, true)
+      expect(mockUpdateAllTopupsProcessedPayment).toHaveBeenCalledWith(['123456', '123457', '123458'])
     })
   })
 
   it('should find no data and not call file generation', function () {
     mockGetClaimsPendingPayment.mockResolvedValue(claimsMissingData)
     mockGetTopUpsPendingPayment.mockResolvedValue(topUpMissingData)
-    return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1) //eslint-disable-line
-      expect(mockCreatePaymentFile).not.toHaveBeenCalledWith(claimsPendingPayment) //eslint-disable-line
-    })
+    return generateDirectPayments
+      .generateDirectPayments()
+      .then(function () {
+        expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1)
+        expect(mockCreatePaymentFile).not.toHaveBeenCalledWith(claimsPendingPayment)
+      })
       .catch(function (error) {
         expect(error.message).toBe('Data is missing')
       })
@@ -103,10 +105,12 @@ describe('services/workers/generate-direct-payments', function () {
   it('should find missing top up data and valid claim data and not call file generation', function () {
     mockGetClaimsPendingPayment.mockResolvedValue(claimsPendingPayment)
     mockGetTopUpsPendingPayment.mockResolvedValue(topUpMissingData)
-    return generateDirectPayments.generateDirectPayments().then(function () {
-      expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1) //eslint-disable-line
-      expect(mockCreatePaymentFile).not.toHaveBeenCalledWith(claimsPendingPayment) //eslint-disable-line
-    })
+    return generateDirectPayments
+      .generateDirectPayments()
+      .then(function () {
+        expect(mockGetClaimsPendingPayment).toHaveBeenCalledTimes(1)
+        expect(mockCreatePaymentFile).not.toHaveBeenCalledWith(claimsPendingPayment)
+      })
       .catch(function (error) {
         expect(error.message).toBe('Data is missing')
       })

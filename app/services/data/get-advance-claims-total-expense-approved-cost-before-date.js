@@ -6,7 +6,11 @@ module.exports = function (date, status) {
 
   return db('IntSchema.Claim')
     .select('IntSchema.Claim.ClaimId', 'IntSchema.Claim.Reference')
-    .where({ 'IntSchema.Claim.IsAdvanceClaim': true, 'IntSchema.Claim.Status': status, 'IntSchema.ClaimExpense.IsEnabled': true })
+    .where({
+      'IntSchema.Claim.IsAdvanceClaim': true,
+      'IntSchema.Claim.Status': status,
+      'IntSchema.ClaimExpense.IsEnabled': true,
+    })
     .andWhere(function () {
       this.where('IntSchema.Claim.IsOverpaid', null).orWhere('IntSchema.Claim.IsOverpaid', false)
     })

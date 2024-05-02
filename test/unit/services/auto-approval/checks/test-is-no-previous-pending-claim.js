@@ -5,30 +5,30 @@ const previousClaimsWithPending = {
   previousClaims: [
     {
       ClaimId: 798118115,
-      Status: statusEnum.PENDING
+      Status: statusEnum.PENDING,
     },
     {
       ClaimId: 798118116,
-      Status: statusEnum.SUBMITTED
-    }
-  ]
+      Status: statusEnum.SUBMITTED,
+    },
+  ],
 }
 
 const previousClaimsNotPending = {
   previousClaims: [
     {
       ClaimId: 798118117,
-      Status: statusEnum.SUBMITTED
+      Status: statusEnum.SUBMITTED,
     },
     {
       ClaimId: 798118118,
-      Status: statusEnum.INPROGRESS
-    }
-  ]
+      Status: statusEnum.INPROGRESS,
+    },
+  ],
 }
 
 const noPreviousClaims = {
-  previousClaims: []
+  previousClaims: [],
 }
 
 describe('services/auto-approval/checks/is-no-previous-pending-claim', function () {

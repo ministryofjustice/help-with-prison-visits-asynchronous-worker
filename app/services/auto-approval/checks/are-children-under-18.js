@@ -10,7 +10,7 @@ module.exports = function (autoApprovalData) {
   const now = dateFormatter.now()
 
   if (autoApprovalData.ClaimChildren && autoApprovalData.ClaimChildren.length > 0) {
-    for (let i = 0; i < autoApprovalData.ClaimChildren.length; i++) {
+    for (let i = 0; i < autoApprovalData.ClaimChildren.length; i += 1) {
       const child = autoApprovalData.ClaimChildren[i]
       const dateOfBirth = moment(child.DateOfBirth)
       const ageInYears = now.diff(dateOfBirth, 'years')

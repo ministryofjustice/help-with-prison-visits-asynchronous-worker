@@ -10,26 +10,25 @@ const accountNumber = '12345678'
 
 describe('services/data/update-bank-details', function () {
   beforeAll(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', reference)
-      .then(function (ids) {
-        claimId = ids.claimId
-        claimBankDetailId = ids.claimBankDetailId
-      })
+    return testHelper.insertClaimEligibilityData('IntSchema', reference).then(function (ids) {
+      claimId = ids.claimId
+      claimBankDetailId = ids.claimBankDetailId
+    })
   })
 
   it('should update bank details with new sortcode and acoount number', function () {
-    return updateBankDetails(claimBankDetailId, reference, claimId, sortcode, accountNumber)
-      .then(function () {
-        const db = getDatabaseConnector()
+    return updateBankDetails(claimBankDetailId, reference, claimId, sortcode, accountNumber).then(function () {
+      const db = getDatabaseConnector()
 
-        return db.table('IntSchema.ClaimBankDetail')
-          .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
-          .first()
-          .then(function (result) {
-            expect(result.SortCode).toBe(sortcode)
-            expect(result.AccountNumber).toBe(accountNumber)
-          })
-      })
+      return db
+        .table('IntSchema.ClaimBankDetail')
+        .where({ ClaimBankDetailId: claimBankDetailId, Reference: reference, ClaimId: claimId })
+        .first()
+        .then(function (result) {
+          expect(result.SortCode).toBe(sortcode)
+          expect(result.AccountNumber).toBe(accountNumber)
+        })
+    })
   })
 
   afterAll(function () {

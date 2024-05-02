@@ -1,9 +1,9 @@
-const log = require('../log')
-const config = require('../../../config')
 const axios = require('axios')
 const util = require('util')
 const parseStringAsync = util.promisify(require('xml2js').parseString)
 const xpath = require('xml2js-xpath')
+const log = require('../log')
+const config = require('../../../config')
 
 // Creating HTTP request rather than using SOAP client as node SOAP clients are unreliable
 module.exports = function (visitorDwpBenefitCheckerData) {
@@ -12,7 +12,7 @@ module.exports = function (visitorDwpBenefitCheckerData) {
   if (config.DWP_BENEFIT_CHECKER_ENABLED !== 'true') {
     return Promise.resolve({
       visitorId: visitorDwpBenefitCheckerData.visitorId,
-      result: 'NOT-RUN'
+      result: 'NOT-RUN',
     })
   }
 
@@ -23,8 +23,8 @@ module.exports = function (visitorDwpBenefitCheckerData) {
     data: getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData),
     headers: {
       'content-type': 'text/xml',
-      SOAPAction: config.DWP_BENEFIT_CHECKER_URL
-    }
+      SOAPAction: config.DWP_BENEFIT_CHECKER_URL,
+    },
   }
 
   return axios(options)
@@ -37,20 +37,21 @@ module.exports = function (visitorDwpBenefitCheckerData) {
             const status = result[0]._.toString().toUpperCase()
             return {
               visitorId: visitorDwpBenefitCheckerData.visitorId,
-              result: status
+              result: status,
             }
-          } else {
-            throw new Error(`Could not parse response: ${responseBody}`)
           }
-        }).catch(function (error) {
+          throw new Error(`Could not parse response: ${responseBody}`)
+        })
+        .catch(function (error) {
           log.error('Error parsing XML', error)
         })
-    }).catch(function (error) {
+    })
+    .catch(function (error) {
       log.error('Error calling Benefit checker', error)
     })
 }
 
-function getSoapBenefitCheckerRequestBody (data) {
+function getSoapBenefitCheckerRequestBody(data) {
   return `<?xml version="1.0" encoding="utf-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <soapenv:Body>

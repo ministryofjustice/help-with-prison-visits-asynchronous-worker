@@ -5,5 +5,10 @@ module.exports = function (claimId, reference, amount, days) {
 
   return db('IntSchema.Claim')
     .where({ ClaimId: claimId, Reference: reference })
-    .update({ IsOverpaid: true, OverpaymentAmount: amount, RemainingOverpaymentAmount: amount, OverpaymentReason: `Evidence not uploaded within ${days} days` })
+    .update({
+      IsOverpaid: true,
+      OverpaymentAmount: amount,
+      RemainingOverpaymentAmount: amount,
+      OverpaymentReason: `Evidence not uploaded within ${days} days`,
+    })
 }

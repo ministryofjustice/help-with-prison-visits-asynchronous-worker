@@ -36,7 +36,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(50, 'days').toDate(),
           IsAdvanceClaim: false,
-          Status: 'APPROVED'
+          Status: 'APPROVED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId,
@@ -46,11 +46,12 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
+          RollNumber: 'ROLL-1BE.R',
+        },
       },
       {
-        Claim: { // Advance claim should not be used for auto-approval
+        Claim: {
+          // Advance claim should not be used for auto-approval
           ClaimId: uniqueId + 1,
           EligibilityId: eligibilityId,
           Reference: REFERENCE,
@@ -59,7 +60,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(70, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(71, 'days').toDate(),
           IsAdvanceClaim: true,
-          Status: 'APPROVED'
+          Status: 'APPROVED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId + 1,
@@ -69,8 +70,8 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
+          RollNumber: 'ROLL-1BE.R',
+        },
       },
       {
         Claim: {
@@ -82,7 +83,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(40, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(30, 'days').toDate(),
           IsAdvanceClaim: false,
-          Status: 'REJECTED'
+          Status: 'REJECTED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId + 2,
@@ -92,8 +93,8 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
+          RollNumber: 'ROLL-1BE.R',
+        },
       },
       {
         Claim: {
@@ -105,7 +106,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(80, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(70, 'days').toDate(),
           IsAdvanceClaim: false,
-          Status: 'REJECTED'
+          Status: 'REJECTED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId + 3,
@@ -115,11 +116,12 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
+          RollNumber: 'ROLL-1BE.R',
+        },
       },
       {
-        Claim: { // This claim should be used for auto-approval time limit check
+        Claim: {
+          // This claim should be used for auto-approval time limit check
           ClaimId: uniqueId + 4,
           EligibilityId: eligibilityId,
           Reference: REFERENCE,
@@ -128,7 +130,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(20, 'days').toDate(),
           IsAdvanceClaim: false,
-          Status: 'APPROVED'
+          Status: 'APPROVED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId + 4,
@@ -138,11 +140,12 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
+          RollNumber: 'ROLL-1BE.R',
+        },
       },
       {
-        Claim: { // Auto-approved claim should not be used for auto-approval
+        Claim: {
+          // Auto-approved claim should not be used for auto-approval
           ClaimId: uniqueId + 5,
           EligibilityId: eligibilityId,
           Reference: REFERENCE,
@@ -151,7 +154,7 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           DateSubmitted: dateFormatter.now().subtract(60, 'days').toDate(),
           DateReviewed: dateFormatter.now().subtract(10, 'days').toDate(),
           IsAdvanceClaim: false,
-          Status: 'AUTO-APPROVED'
+          Status: 'AUTO-APPROVED',
         },
         ClaimBankDetail: {
           ClaimBankDetailId: uniqueId + 5,
@@ -161,9 +164,9 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
           AccountNumber: '00123456',
           SortCode: '001122',
           NameOnAccount: 'Joe Bloggs',
-          RollNumber: 'ROLL-1BE.R'
-        }
-      }
+          RollNumber: 'ROLL-1BE.R',
+        },
+      },
     ]
 
     const createClaims = []
@@ -175,12 +178,11 @@ describe.skip('services/data/get-data-for-auto-approval-check', function () {
   })
 
   it('should return all current and previous claim data associated to the claimant', function () {
-    return getDataForAutoApprovalCheck(REFERENCE, eligibilityId, claimId)
-      .then(function (result) {
-        expect(result.previousClaims).not.toBeNull() //eslint-disable-line
-        expect(result.latestManuallyApprovedClaim).not.toBeNull() //eslint-disable-line
-        expect(result.latestManuallyApprovedClaim.ClaimId).toBe(result.previousClaims[1].ClaimId)
-      })
+    return getDataForAutoApprovalCheck(REFERENCE, eligibilityId, claimId).then(function (result) {
+      expect(result.previousClaims).not.toBeNull()
+      expect(result.latestManuallyApprovedClaim).not.toBeNull()
+      expect(result.latestManuallyApprovedClaim.ClaimId).toBe(result.previousClaims[1].ClaimId)
+    })
   })
 
   afterAll(function () {

@@ -15,21 +15,20 @@ jest.mock('./insert-claim-event', () => insertClaimEvent)
 
 describe('services/data/move-claim-documents-to-internal', function () {
   beforeEach(function () {
-    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE)
-      .then(function (ids) {
-        eligibilityId = ids.eligibilityId
-        claimId = ids.claimId
+    return testHelper.insertClaimEligibilityData('IntSchema', REFERENCE).then(function (ids) {
+      eligibilityId = ids.eligibilityId
+      claimId = ids.claimId
 
-        const claimData = testHelper.getClaimData(REFERENCE)
-        claimData.ClaimDocument[1].IsEnabled = false
+      const claimData = testHelper.getClaimData(REFERENCE)
+      claimData.ClaimDocument[1].IsEnabled = false
 
-        disableClaimDocument = jest.fn().mockResolvedValue()
-        insertClaimEvent = jest.fn().mockResolvedValue()
+      disableClaimDocument = jest.fn().mockResolvedValue()
+      insertClaimEvent = jest.fn().mockResolvedValue()
 
-        moveClaimDocumentsToInternal = require('../../../../app/services/data/move-claim-documents-to-internal')
+      moveClaimDocumentsToInternal = require('../../../../app/services/data/move-claim-documents-to-internal')
 
-        return testHelper.insertClaimDocumentData('ExtSchema', eligibilityId, claimId, claimData.ClaimDocument)
-      })
+      return testHelper.insertClaimDocumentData('ExtSchema', eligibilityId, claimId, claimData.ClaimDocument)
+    })
   })
 
   it('should move claim documents to from external to internal', function () {
@@ -37,7 +36,8 @@ describe('services/data/move-claim-documents-to-internal', function () {
 
     return moveClaimDocumentsToInternal(REFERENCE, eligibilityId, claimId)
       .then(function () {
-        return db('IntSchema.ClaimDocument').where('Reference', REFERENCE)
+        return db('IntSchema.ClaimDocument')
+          .where('Reference', REFERENCE)
           .then(function (claimDocuments) {
             // should have copied claim documents from external to internal
             expect(claimDocuments.length).toBe(3)
@@ -46,7 +46,8 @@ describe('services/data/move-claim-documents-to-internal', function () {
           })
       })
       .then(function () {
-        return db('ExtSchema.ClaimDocument').where('Reference', REFERENCE)
+        return db('ExtSchema.ClaimDocument')
+          .where('Reference', REFERENCE)
           .then(function (claimDocuments) {
             // should have deleted External ClaimDocuments
             expect(claimDocuments.length).toBe(0)
@@ -55,7 +56,8 @@ describe('services/data/move-claim-documents-to-internal', function () {
   })
 
   afterEach(function () {
-    return testHelper.deleteAll(REFERENCE, 'IntSchema')
-      .then(function () { return testHelper.deleteAll(REFERENCE, 'ExtSchema') })
+    return testHelper.deleteAll(REFERENCE, 'IntSchema').then(function () {
+      return testHelper.deleteAll(REFERENCE, 'ExtSchema')
+    })
   })
 })

@@ -22,26 +22,28 @@ describe('services/data/get-number-of-submitted-claims-for-date-range', function
 
     const db = getDatabaseConnector()
 
-    return Promise.all([db('IntSchema.Claim').insert(claim1),
+    return Promise.all([
+      db('IntSchema.Claim').insert(claim1),
       db('IntSchema.Claim').insert(claim2),
-      db('IntSchema.Claim').insert(claim3)])
+      db('IntSchema.Claim').insert(claim3),
+    ])
   })
 
   it('should return number of claims submitted', function () {
-    return getNumberOfSubmittedClaimsForDateRange(START_DATE, END_DATE)
-      .then(function (submittedClaimCount) {
-        expect(submittedClaimCount).toBe(2)
-      })
+    return getNumberOfSubmittedClaimsForDateRange(START_DATE, END_DATE).then(function (submittedClaimCount) {
+      expect(submittedClaimCount).toBe(2)
+    })
   })
 
   it('should return zero when no claims', function () {
     const noClaimsStartDate = new Date('1900-01-01')
     const noClaimsEndDate = new Date('1900-01-01 23:59')
 
-    return getNumberOfSubmittedClaimsForDateRange(noClaimsStartDate, noClaimsEndDate)
-      .then(function (submittedClaimCount) {
+    return getNumberOfSubmittedClaimsForDateRange(noClaimsStartDate, noClaimsEndDate).then(
+      function (submittedClaimCount) {
         expect(submittedClaimCount).toBe(0)
-      })
+      },
+    )
   })
 
   afterAll(function () {

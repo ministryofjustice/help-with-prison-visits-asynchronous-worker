@@ -2,6 +2,7 @@ const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 
 const hasClaimedLessThanMaxTimesThisYear = require('../../../../../app/services/auto-approval/checks/has-claimed-less-than-max-times-this-year')
+
 const initialClaimId = 800000000
 
 const now = dateFormatter.now()
@@ -20,14 +21,9 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
 
     expect(checkResult.result).toBe(false)
-
-    // NOTE: Expectation below commented out because the actual number of claims can be 1 more than that provided to the generate function
-    // if the current claim also falls within the claimable year, the logic that calculates this is buried in the include and not exported. The code
-    // expects a single export so code changes would be required to export this extra logic. The important test is the one above that checks that the result is false
-
-    // expect(checkResult.failureMessage).toBe(
-    //   'This claimant has claimed more than the maximum number of times this year. Claim ref: ABC123, Maximum no of claims per year: 26, No. of claims this year: 27'
-    // )
+    expect(checkResult.failureMessage).toBe(
+      'This claimant has claimed more than the maximum number of times this year. Claim ref: ABC123, Maximum no of claims per year: 26, No. of claims this year: 27',
+    )
   })
 
   it('should return true if the number of claims made for the current year is less than 26', function () {
@@ -39,7 +35,7 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
 
   it('should return true if the number of claims made for the current year is zero', function () {
     const autoApprovalData = {
-      previousClaims: []
+      previousClaims: [],
     }
     const checkResult = hasClaimedLessThanMaxTimesThisYear(autoApprovalData)
     expect(checkResult.result).toBe(true)
@@ -54,25 +50,25 @@ describe('services/auto-approval/checks/has-claimed-less-than-max-times-this-yea
   })
 })
 
-function generateAutoApprovalDataWithPreviousClaims (numberOfClaims, startDate) {
+function generateAutoApprovalDataWithPreviousClaims(numberOfClaims, startDate) {
   const result = {
     Claim: {
       Reference: 'ABC123',
-      DateOfJourney: now.clone().subtract('14', 'days').toDate()
+      DateOfJourney: now.clone().subtract('14', 'days').toDate(),
     },
     previousClaims: [],
-    maxNumberOfClaimsPerYear: '26'
+    maxNumberOfClaimsPerYear: '26',
   }
   const durationSinceStartDate = now.clone().diff(moment(startDate), 'days')
   const daysBetweenClaims = Math.floor(durationSinceStartDate / numberOfClaims)
 
-  for (let i = 0; i < numberOfClaims; i++) {
+  for (let i = 0; i < numberOfClaims; i += 1) {
     const increment = daysBetweenClaims * i
 
     const dateOfJourney = startDate.add(increment, 'days').toDate()
     const claim = {
       ClaimId: initialClaimId + i,
-      DateOfJourney: dateOfJourney
+      DateOfJourney: dateOfJourney,
     }
 
     result.previousClaims.push(claim)

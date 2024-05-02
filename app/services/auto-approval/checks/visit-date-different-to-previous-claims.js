@@ -9,7 +9,7 @@ module.exports = function (autoApprovalData) {
   if (autoApprovalData.previousClaims && autoApprovalData.previousClaims.length > 0) {
     const visitDateMoment = moment(autoApprovalData.Claim.DateOfJourney)
 
-    for (let i = 0; i < autoApprovalData.previousClaims.length; i++) {
+    for (let i = 0; i < autoApprovalData.previousClaims.length; i += 1) {
       const previousClaim = autoApprovalData.previousClaims[i]
       const dateOfJourney = moment(previousClaim.DateOfJourney)
       const ADDITIONAL_INFO = `. Claim ref: ${autoApprovalData.Claim.Reference}, Current claim visit date: ${visitDateMoment.format('DD/MM/YYYY')}, Previous claim visit date: ${dateOfJourney.format('DD/MM/YYYY')}`
