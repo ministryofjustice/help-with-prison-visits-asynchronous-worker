@@ -19,7 +19,7 @@ const CAR_EXPENSE_ALREADY_CALCULATED = {
 }
 
 const CLAIM_DATA_WITH_CAR_EXPENSE = {
-  Visitor: { PostCode: VISITOR_POSTCODE },
+  Visitor: { Country: 'Scotland', PostCode: VISITOR_POSTCODE },
   Prisoner: { NameOfPrison: NAME_OF_PRISON },
   ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE],
 }
@@ -28,7 +28,10 @@ const CLAIM_DATA_WITH_NO_CAR_EXPENSE = {
   Prisoner: { NameOfPrison: NAME_OF_PRISON },
   ClaimExpenses: [BUS_EXPENSE],
 }
-const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED] }
+const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = {
+  ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED],
+  Visitor: { Country: 'England' },
+}
 const CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES = { ClaimExpenses: [CAR_EXPENSE] }
 const CLAIM_DATA_WITH_INCORRECT_PRISON = {
   Visitor: { PostCode: VISITOR_POSTCODE },
@@ -48,7 +51,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     mockCallDistanceApiForPostcodes.mockResolvedValue(10.0)
     mockGetAllClaimData.mockResolvedValue()
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
-    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00' })
+    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00', CostPerMileEngWal: '20.00' })
 
     jest.mock('../../../../config', () => ({
       DISTANCE_CALCULATION_ENABLED: 'true',
