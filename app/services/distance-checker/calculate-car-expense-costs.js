@@ -43,7 +43,7 @@ function calculateCarExpenseCost(carExpense, claimData) {
   }
 
   if (fromPostCode && toPostCode) {
-    return getDistanceInMilesAndCost(fromPostCode, toPostCode).then(function (result) {
+    return getDistanceInMilesAndCost(fromPostCode, toPostCode, claimData.Visitor.Country).then(function (result) {
       let { cost } = result
       const { distanceInMiles } = result
 
@@ -76,7 +76,7 @@ function getPrisonPostCode(nameOfPrison) {
   return prison ? prison.postcode : null
 }
 
-function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode) {
+function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode, country) {
   return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(function (distanceInKm) {
     let cost = 0.0
     let distanceInMiles = null
@@ -84,7 +84,16 @@ function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode) {
     if (distanceInKm) {
       distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
       return getAutoApprovalConfig().then(function (autoApprovalConfig) {
-        const costPerMile = parseFloat(autoApprovalConfig.CostPerMile)
+        let costPerMile = parseFloat(autoApprovalConfig.CostPerMile)
+
+        switch (country) {
+          case 'England':
+          case 'Wales':
+            costPerMile = parseFloat(autoApprovalConfig.CostPerMileEngWal)
+            break
+          default:
+        }
+
         cost = Number(`${Math.round(`${distanceInMiles * costPerMile}e2`)}e-2`) // accurate 2 decimal place rounding
 
         return { cost, distanceInMiles }

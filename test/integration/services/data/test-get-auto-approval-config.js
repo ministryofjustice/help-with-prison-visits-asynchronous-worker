@@ -29,6 +29,7 @@ describe('services/data/get-auto-approval-config', function () {
       expect(result.MaxNumberOfClaimsPerMonth).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH, 10))
       expect(result.RulesDisabled).toBeNull()
       expect(result.CostPerMile).toBe(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE))
+      expect(result.CostPerMileEngWal).toBe(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE_ENGWAL))
       expect(result.NumberOfConsecutiveAutoApprovals).toBe(
         parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS),
       )

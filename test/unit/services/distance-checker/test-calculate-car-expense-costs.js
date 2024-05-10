@@ -18,8 +18,13 @@ const CAR_EXPENSE_ALREADY_CALCULATED = {
   ToPostCode: 'TO111TO',
 }
 
-const CLAIM_DATA_WITH_CAR_EXPENSE = {
-  Visitor: { PostCode: VISITOR_POSTCODE },
+const CLAIM_DATA_WITH_CAR_EXPENSE_SCOTLAND = {
+  Visitor: { Country: 'Scotland', PostCode: VISITOR_POSTCODE },
+  Prisoner: { NameOfPrison: NAME_OF_PRISON },
+  ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE],
+}
+const CLAIM_DATA_WITH_CAR_EXPENSE_ENGWALES = {
+  Visitor: { Country: 'England', PostCode: VISITOR_POSTCODE },
   Prisoner: { NameOfPrison: NAME_OF_PRISON },
   ClaimExpenses: [CAR_EXPENSE, BUS_EXPENSE],
 }
@@ -28,7 +33,10 @@ const CLAIM_DATA_WITH_NO_CAR_EXPENSE = {
   Prisoner: { NameOfPrison: NAME_OF_PRISON },
   ClaimExpenses: [BUS_EXPENSE],
 }
-const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = { ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED] }
+const CLAIM_DATA_WITH_NO_ELIGIBILITY_DATA = {
+  ClaimExpenses: [CAR_EXPENSE_ALREADY_CALCULATED],
+  Visitor: { Country: 'England' },
+}
 const CLAIM_DATA_WITH_NO_ELIGIBILITY_OR_POSTCODES = { ClaimExpenses: [CAR_EXPENSE] }
 const CLAIM_DATA_WITH_INCORRECT_PRISON = {
   Visitor: { PostCode: VISITOR_POSTCODE },
@@ -48,7 +56,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     mockCallDistanceApiForPostcodes.mockResolvedValue(10.0)
     mockGetAllClaimData.mockResolvedValue()
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
-    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00' })
+    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '13.00', CostPerMileEngWal: '20.00' })
 
     jest.mock('../../../../config', () => ({
       DISTANCE_CALCULATION_ENABLED: 'true',
@@ -77,9 +85,11 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
 
     jest.mock('../../../../config', () => ({ DISTANCE_CALCULATION_ENABLED: 'false' }))
 
-    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE).then(function () {
-      expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled()
-    })
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID, CLAIM_DATA_WITH_CAR_EXPENSE_SCOTLAND).then(
+      function () {
+        expect(mockCallDistanceApiForPostcodes).not.toHaveBeenCalled()
+      },
+    )
   })
 
   it('should not call if no car expense', function () {
@@ -90,12 +100,34 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     })
   })
 
-  it('should call distance API and update claim for car expense', function () {
+  it('should call distance API and update claim for car expense (Scotland)', function () {
     const COST = 80.78
     const DISTANCE = 6.21371
     const distanceInKm = 10.0
 
-    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE_SCOTLAND)
+    mockCallDistanceApiForPostcodes.mockResolvedValue(distanceInKm)
+    mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
+
+    return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function () {
+      expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE)
+      expect(mockGetAutoApprovalConfig).toHaveBeenCalled()
+      expect(mockUpdateExpenseForDistanceCalculation).toHaveBeenCalledWith(
+        CAR_EXPENSE_ID,
+        VISITOR_POSTCODE,
+        PRISON_POSTCODE,
+        DISTANCE,
+        COST,
+      )
+    })
+  })
+
+  it('should call distance API and update claim for car expense (England/Wales)', function () {
+    const COST = 124.27
+    const DISTANCE = 6.21371
+    const distanceInKm = 10.0
+
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE_ENGWALES)
     mockCallDistanceApiForPostcodes.mockResolvedValue(distanceInKm)
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
 
@@ -116,7 +148,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     const DISTANCE = 776.71375
     const distanceInKm = 1250
 
-    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE_SCOTLAND)
     mockCallDistanceApiForPostcodes.mockResolvedValue(distanceInKm)
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
 
@@ -166,7 +198,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   })
 
   it('should return distance in miles to be null if no distance in km calculated', function () {
-    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE)
+    mockGetAllClaimData.mockResolvedValue(CLAIM_DATA_WITH_CAR_EXPENSE_SCOTLAND)
     mockCallDistanceApiForPostcodes.mockResolvedValue()
     return calculateCarExpenseCosts(REFERENCE, ELIGIBILITY_ID, CLAIM_ID).then(function () {
       expect(mockCallDistanceApiForPostcodes).toHaveBeenCalledWith(VISITOR_POSTCODE, PRISON_POSTCODE)

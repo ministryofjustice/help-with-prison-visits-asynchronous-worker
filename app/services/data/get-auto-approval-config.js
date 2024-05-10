@@ -14,6 +14,8 @@ module.exports = function () {
         if (rulesDisabled) {
           autoApprovalConfig.RulesDisabled = rulesDisabled.split(',')
         }
+        // HWPV-166: Config not actually editable in database by user so just drop in here
+        autoApprovalConfig.CostPerMileEngWal = getDefaults().CostPerMileEngWal
         return autoApprovalConfig
       }
       return getDefaults()
@@ -30,6 +32,7 @@ function getDefaults() {
     MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH, 10),
     RulesDisabled: null,
     CostPerMile: parseFloat(config.AUTO_APPROVAL_COST_PER_MILE),
+    CostPerMileEngWal: parseFloat(config.AUTO_APPROVAL_COST_PER_MILE_ENGWAL),
     NumberOfConsecutiveAutoApprovals: parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS),
   }
 }
