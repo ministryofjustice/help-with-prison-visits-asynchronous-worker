@@ -41,7 +41,7 @@ describe('services/auto-approval/checks/is-claim-submitted-within-time-limit', f
   //   const checkResult = isClaimSubmittedWithinTimeLimit(invalidAutoApprovalData)
   //   expect(checkResult.result).toBe(false)
   //   expect(checkResult.failureMessage).toBe(
-  //     `Claim was not submitted with the time limit. Claim ref: ABC123, Claim submission date: ${moment(invalidAutoApprovalData.Claim.DateSubmitted).format('DD/MM/YYYY')}, Claim submission cut off date: ${moment(invalidAutoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(invalidAutoApprovalData.maxDaysAfterAPVUVisit, 'days').format('DD/MM/YYYY')}`,
+  //     `Claim was not submitted within the time limit. Claim ref: ABC123, Claim submission date: ${moment(invalidAutoApprovalData.Claim.DateSubmitted).format('DD/MM/YYYY')}, Claim submission cut off date: ${moment(invalidAutoApprovalData.latestManuallyApprovedClaim.DateReviewed).add(invalidAutoApprovalData.maxDaysAfterAPVUVisit, 'days').format('DD/MM/YYYY')}`,
   //   )
   // })
 })
