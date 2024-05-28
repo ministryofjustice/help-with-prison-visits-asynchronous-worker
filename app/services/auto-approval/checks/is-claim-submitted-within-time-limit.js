@@ -2,7 +2,7 @@
 const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result')
 
 const CHECK_NAME = 'is-claim-submitted-within-time-limit'
-// const FAILURE_MESSAGE = 'Claim was not submitted with the time limit'
+// const FAILURE_MESSAGE = 'Claim was not submitted within the time limit'
 
 module.exports = function (_autoApprovalData) {
   return new AutoApprovalCheckResult(CHECK_NAME, true, '')
