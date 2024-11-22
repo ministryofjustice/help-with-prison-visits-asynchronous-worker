@@ -906,18 +906,18 @@ module.exports = {
     postcode: 'G33 2QX',
   },
 
+  BELLA_CENTRE: {
+    value: 'bella-centre',
+    displayName: 'Bella Centre',
+    region: 'SCO',
+    postcode: 'G20 9DR',
+  },
+
   CASTLE_HUNTLY: {
     value: 'castle-huntly',
     displayName: 'Castle Huntly',
     region: 'SCO',
     postcode: 'DD2 5HL',
-  },
-
-  CORNTON_VALE: {
-    value: 'cornton-vale',
-    displayName: 'Cornton Vale',
-    region: 'SCO',
-    postcode: 'FK9 5NU',
   },
 
   DUMFRIES: {
@@ -969,6 +969,13 @@ module.exports = {
     postcode: 'KA1 5AA',
   },
 
+  LILIAS_CENTRE: {
+    value: 'lilias-centre',
+    displayName: 'Lilias Centre',
+    region: 'SCO',
+    postcode: 'G20 9DR',
+  },
+
   LOW_MOSS: {
     value: 'low-moss',
     displayName: 'Low Moss',
@@ -995,6 +1002,13 @@ module.exports = {
     displayName: 'Shotts',
     region: 'SCO',
     postcode: 'ML7 4LE',
+  },
+
+  STIRLING: {
+    value: 'stirling',
+    displayName: 'Stirling',
+    region: 'SCO',
+    postcode: 'FK9 5NU',
   },
 
   // Northern Ireland
