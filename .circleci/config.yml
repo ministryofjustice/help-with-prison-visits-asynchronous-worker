@@ -112,9 +112,6 @@ workflows:
           <<: *feature_branch
           name: deploy_dev_preview
           env: "dev"
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           context: hmpps-common-vars
           requires:
             - request_dev_approval
@@ -127,9 +124,6 @@ workflows:
           <<: *feature_branch
           name: deploy_preprod_preview
           env: "preprod"
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           context: help-with-prison-visits-internal-preprod
           requires:
             - request_preprod_approval_branch
@@ -150,9 +144,6 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           context: help-with-prison-visits-asynchronous-worker-preprod
           requires:
             - request_preprod_approval
@@ -163,9 +154,6 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           slack_notification: true
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
