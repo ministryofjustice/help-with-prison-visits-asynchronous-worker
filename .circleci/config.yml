@@ -28,10 +28,6 @@ parameters:
     type: string
     default: visits-releases
 
-  releases-slack-channel:
-    type: string
-    default: visits-releases
-
   node-version:
     type: string
     default: 22.13-browsers
