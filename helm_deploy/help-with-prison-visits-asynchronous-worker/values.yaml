@@ -2,6 +2,7 @@
 # Values here are the same across all environments
 nameOverride: help-with-prison-visits-asynchronous-worker
 serviceAccountName: help-with-prison-visits-internal
+productId: "DPS081"
 
 image:
   repository: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
