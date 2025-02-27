@@ -561,6 +561,13 @@ module.exports = {
     postcode: 'M60 9AH',
   },
 
+  MILLSIKE: {
+    value: 'millsike',
+    displayName: 'Millsike',
+    region: 'ENG/WAL',
+    postcode: 'YO41 1FZ',
+  },
+
   MOORLAND: {
     value: 'moorland',
     displayName: 'Moorland',
