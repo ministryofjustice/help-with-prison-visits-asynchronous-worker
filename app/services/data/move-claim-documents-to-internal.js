@@ -5,26 +5,26 @@ const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const log = require('../log')
 
-module.exports = function (reference, eligibilityId, claimId) {
+module.exports = (reference, eligibilityId, claimId) => {
   let claimDocuments
 
   return getUpdatedClaimDocumentsFromExternal(reference, eligibilityId, claimId)
-    .then(function (documents) {
+    .then(documents => {
       claimDocuments = documents
     })
-    .then(function () {
+    .then(() => {
       return disableOldClaimDocumentsInInternal(reference, eligibilityId, claimId, claimDocuments)
     })
-    .then(function () {
+    .then(() => {
       return copyClaimDocumentsToInternal(claimDocuments)
     })
-    .then(function () {
+    .then(() => {
       return deleteClaimDocumentsFromExternal(reference, eligibilityId)
     })
-    .then(function () {
+    .then(() => {
       return claimDocuments
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error(error)
     })
 }
@@ -36,11 +36,11 @@ function getUpdatedClaimDocumentsFromExternal(reference, eligibilityId, claimId)
 
 function disableOldClaimDocumentsInInternal(reference, eligibilityId, claimId, claimDocuments) {
   log.info('disableOldClaimDocumentsInInternal / getClaimDocuments')
-  return getClaimDocuments('IntSchema', reference, eligibilityId, claimId).then(function (internalDocuments) {
+  return getClaimDocuments('IntSchema', reference, eligibilityId, claimId).then(internalDocuments => {
     const oldDocumentsToDisable = matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, claimDocuments)
     const promises = []
 
-    oldDocumentsToDisable.forEach(function (oldDocumentToDisable) {
+    oldDocumentsToDisable.forEach(oldDocumentToDisable => {
       promises.push(disableClaimDocument('IntSchema', oldDocumentToDisable.ClaimDocumentId))
       promises.push(insertClaimEventReplacedDocument(reference, eligibilityId, claimId, oldDocumentToDisable))
     })
@@ -65,8 +65,8 @@ function deleteClaimDocumentsFromExternal(reference, eligibilityId) {
 
 function matchOldInternalDocumentsToUpdatedDocuments(internalDocuments, updatedDocuments) {
   const oldDocuments = []
-  internalDocuments.forEach(function (internalDocument) {
-    const matchingNewDocuments = updatedDocuments.filter(function (newDocument) {
+  internalDocuments.forEach(internalDocument => {
+    const matchingNewDocuments = updatedDocuments.filter(newDocument => {
       if (
         internalDocument.DocumentType === newDocument.DocumentType &&
         internalDocument.ClaimExpenseId === newDocument.ClaimExpenseId

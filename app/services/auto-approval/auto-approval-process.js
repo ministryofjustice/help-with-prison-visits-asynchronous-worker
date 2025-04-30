@@ -13,14 +13,14 @@ const dateFormatter = require('../date-formatter')
 
 const autoApprovalChecks = {}
 
-autoApprovalRulesEnum.forEach(function (check) {
+autoApprovalRulesEnum.forEach(check => {
   autoApprovalChecks[check] = require(`./checks/${check}`) // eslint-disable-line import/no-dynamic-require
 })
 
-module.exports = function (reference, eligibilityId, claimId) {
-  return getAutoApprovalConfig().then(function (config) {
+module.exports = (reference, eligibilityId, claimId) => {
+  return getAutoApprovalConfig().then(config => {
     if (config.AutoApprovalEnabled) {
-      return getDataForAutoApprovalChecks(reference, eligibilityId, claimId).then(function (autoApprovalData) {
+      return getDataForAutoApprovalChecks(reference, eligibilityId, claimId).then(autoApprovalData => {
         const result = {
           checks: [],
           claimApproved: true,
@@ -41,7 +41,7 @@ module.exports = function (reference, eligibilityId, claimId) {
           claimId,
           config.NumberOfConsecutiveAutoApprovals,
           forceManualCheck,
-        ).then(function (exceedAutoApprovalLimit) {
+        ).then(exceedAutoApprovalLimit => {
           if (exceedAutoApprovalLimit) {
             result.claimApproved = false
             return insertClaimEvent(
@@ -53,7 +53,7 @@ module.exports = function (reference, eligibilityId, claimId) {
               autoApprovalData.Visitor.EmailAddress,
               'Number of consecutive auto approvals exceeded limit',
               true,
-            ).then(function () {
+            ).then(() => {
               return result
             })
           }
@@ -67,7 +67,7 @@ module.exports = function (reference, eligibilityId, claimId) {
 
             if (now.getDay() < 5 && now.getHours() >= 10 && now.getHours() < 17) {
               return autoApproveClaim(reference, eligibilityId, claimId, autoApprovalData.Visitor.EmailAddress).then(
-                function () {
+                () => {
                   return result
                 },
               )
@@ -77,7 +77,7 @@ module.exports = function (reference, eligibilityId, claimId) {
               eligibilityId,
               claimId,
               autoApprovalData.Visitor.EmailAddress,
-            ).then(function () {
+            ).then(() => {
               return result
             })
           }
@@ -90,7 +90,7 @@ module.exports = function (reference, eligibilityId, claimId) {
             autoApprovalData.Visitor.EmailAddress,
             generateFailureReasonString(result.checks),
             true,
-          ).then(function () {
+          ).then(() => {
             return result
           })
         })
@@ -113,10 +113,10 @@ function failBasedOnPreRequisiteChecks(result, autoApprovalData) {
 }
 
 function exceedConsecutiveAutoApprovalLimit(reference, claimId, numberOfConsecutiveAutoApprovals, forceManualCheck) {
-  return getLastSetNumberOfClaimsStatus(reference, claimId, numberOfConsecutiveAutoApprovals).then(function (claims) {
+  return getLastSetNumberOfClaimsStatus(reference, claimId, numberOfConsecutiveAutoApprovals).then(claims => {
     let numberOfAutoApprovals = 0
     if (forceManualCheck) {
-      claims.forEach(function (claim) {
+      claims.forEach(claim => {
         if (claim.Status === statusEnum.AUTOAPPROVED) {
           numberOfAutoApprovals += 1
         }
@@ -135,7 +135,7 @@ function addAutoApprovalConfigToData(autoApprovalData, config) {
 }
 
 function runEnabledChecks(result, autoApprovalData, disabledRules) {
-  autoApprovalRulesEnum.forEach(function (checkName) {
+  autoApprovalRulesEnum.forEach(checkName => {
     if (disabledRules.indexOf(checkName) === -1) {
       const checkResult = autoApprovalChecks[checkName](autoApprovalData)
       result.checks.push(checkResult)

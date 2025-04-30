@@ -1,5 +1,5 @@
 module.exports = function combinePaymentWithTopups(paymentData, topupData) {
-  topupData.forEach(function (topup) {
+  topupData.forEach(topup => {
     paymentData.push(topup)
   })
   return paymentData

@@ -5,7 +5,7 @@ const guernseyJerseyPrisonsEnum = require('../../../constants/guernsey-jersey-pr
 const CHECK_NAME = 'is-prison-not-in-guernsey-jersey'
 const FAILURE_MESSAGE = 'The prison being visited by this claimant is located in either Guernsey or Jersey'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (autoApprovalData.Prisoner) {
     const prisonName = autoApprovalData.Prisoner.NameOfPrison
 

@@ -1,16 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (
-  reference,
-  eligibilityId,
-  claimId,
-  claimDocumentId,
-  event,
-  additionalData,
-  note,
-  isInternal,
-) {
+module.exports = (reference, eligibilityId, claimId, claimDocumentId, event, additionalData, note, isInternal) => {
   const claimEvent = {
     EligibilityId: eligibilityId,
     Reference: reference,

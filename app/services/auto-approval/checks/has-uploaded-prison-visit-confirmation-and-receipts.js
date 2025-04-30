@@ -6,7 +6,7 @@ const FAILURE_MESSAGE = 'A prison visit confirmation and/or receipts have not be
 const VISIT_CONFIRMATION_DOC_TYPE = 'VISIT-CONFIRMATION'
 const UPLOADED_DOC_STATUS = 'uploaded'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   let checkPassed
   let prisonVisitConfirmationUploaded = false
   let allRequiredDocumentsUploaded = true

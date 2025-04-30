@@ -7,20 +7,20 @@ const prisonsEnum = require('../../constants/prisons-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   const { claimId } = task
   const { reference } = task
   let claimExpenseData
   let claimantData
 
   return getApprovedClaimExpenseData(claimId)
-    .then(function (expenseData) {
+    .then(expenseData => {
       claimExpenseData = expenseData.claimExpenseData
       claimantData = expenseData.claimantData
 
       return getEnabledClaimDeductions(claimId)
     })
-    .then(function (claimDeductions) {
+    .then(claimDeductions => {
       const firstName = claimantData.VisitorFirstName || ''
       const accountLastFourDigits = claimantData.AccountNumberLastFourDigits || ''
       const caseworkerNote = claimantData.CaseworkerNote || ''
@@ -63,11 +63,11 @@ module.exports.execute = function (task) {
 function getTotalApprovedAmount(claimExpenses, claimDeductions) {
   let totalApprovedAmount = 0
 
-  claimExpenses.forEach(function (claimExpense) {
+  claimExpenses.forEach(claimExpense => {
     totalApprovedAmount += claimExpense.ApprovedCost
   })
 
-  claimDeductions.forEach(function (claimDeduction) {
+  claimDeductions.forEach(claimDeduction => {
     totalApprovedAmount -= claimDeduction.Amount
   })
 

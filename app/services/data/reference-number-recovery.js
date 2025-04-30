@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (emailAddress, prisonNumber) {
+module.exports = (emailAddress, prisonNumber) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Visitor')

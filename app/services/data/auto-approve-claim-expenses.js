@@ -2,10 +2,10 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimId) {
+module.exports = claimId => {
   const updates = []
-  return getClaimExpenses(claimId).then(function (claimExpenses) {
-    claimExpenses.forEach(function (claimExpense) {
+  return getClaimExpenses(claimId).then(claimExpenses => {
+    claimExpenses.forEach(claimExpense => {
       updates.push(updateClaimExpenseToApproved(claimExpense))
     })
 

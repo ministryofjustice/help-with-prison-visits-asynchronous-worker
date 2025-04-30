@@ -11,7 +11,7 @@ const { AWSHelper } = require('../aws-helper')
 
 const aws = new AWSHelper()
 
-module.exports = function (payments, isForApvu = false) {
+module.exports = (payments, isForApvu = false) => {
   const filename = getFileName(isForApvu)
   const tempFilePath = path.join(config.FILE_TMP_DIR, filename)
   const data = formatPaymentsToCsvStandard(payments, isForApvu)
@@ -19,8 +19,8 @@ module.exports = function (payments, isForApvu = false) {
   const { length } = payments
   log.info(`Generating direct bank payments file with ${length} payments`)
 
-  return generateCsvString(data).then(function (content) {
-    return writeFile(tempFilePath, content, {}).then(async function () {
+  return generateCsvString(data).then(content => {
+    return writeFile(tempFilePath, content, {}).then(async () => {
       log.info(`Filepath for direct payment file = ${tempFilePath}`)
       return aws.upload(filename, tempFilePath)
     })
@@ -34,7 +34,7 @@ function formatPaymentsToCsvStandard(payments, isForApvu = false) {
   let engTotal = 0
   let walTotal = 0
   let scoTotal = 0
-  payments.forEach(function (payment) {
+  payments.forEach(payment => {
     const cost = parseFloat(payment[3])
     switch (payment[5]) {
       case 'England':

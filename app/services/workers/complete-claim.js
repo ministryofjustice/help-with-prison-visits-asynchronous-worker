@@ -5,7 +5,7 @@ const insertTask = require('../data/insert-task')
 const getVisitorEmailAddress = require('../data/get-visitor-email-address')
 const tasksEnum = require('../../constants/tasks-enum')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   const { reference } = task
   const { eligibilityId } = task
   const { claimId } = task
@@ -13,27 +13,27 @@ module.exports.execute = function (task) {
 
   return (
     getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
-      .then(function (data) {
+      .then(data => {
         claimData = data
       })
-      .then(function () {
+      .then(() => {
         return migrateClaimToInternalAsTransaction(claimData, task.additionalData, eligibilityId, claimId)
       })
-      .then(function () {
+      .then(() => {
         return calculateCarExpenseCosts(reference, eligibilityId, claimId)
       })
       // autoApprovalProcess Removed in APVS0115
-      .then(function () {
+      .then(() => {
         return insertTaskSendClaimNotification(reference, eligibilityId, claimId)
       })
-      .then(function () {
+      .then(() => {
         return insertTask(reference, eligibilityId, claimId, tasksEnum.DWP_CHECK)
       })
   )
 }
 
 function insertTaskSendClaimNotification(reference, eligibilityId, claimId) {
-  return getVisitorEmailAddress('IntSchema', reference, eligibilityId).then(function (emailAddress) {
+  return getVisitorEmailAddress('IntSchema', reference, eligibilityId).then(emailAddress => {
     return insertTask(reference, eligibilityId, claimId, tasksEnum.SEND_CLAIM_NOTIFICATION, emailAddress)
   })
 }

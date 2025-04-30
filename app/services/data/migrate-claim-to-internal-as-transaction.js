@@ -3,19 +3,19 @@ const log = require('../log')
 const copyClaimDataToInternal = require('./copy-claim-data-to-internal')
 const deleteClaimFromExternal = require('./delete-claim-from-external')
 
-module.exports = function (claimData, additionalData, eligibilityId, claimId) {
+module.exports = (claimData, additionalData, eligibilityId, claimId) => {
   const db = getDatabaseConnector()
 
   return db
-    .transaction(function (trx) {
-      return copyClaimDataToInternal(claimData, additionalData, trx).then(function () {
+    .transaction(trx => {
+      return copyClaimDataToInternal(claimData, additionalData, trx).then(() => {
         return deleteClaimFromExternal(eligibilityId, claimId, trx)
       })
     })
-    .then(function () {
+    .then(() => {
       log.info(`Claim with ClaimId: ${claimData.Claim.ClaimId} copied to internal`)
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error(`ERROR copying claim with ClaimId: ${claimData.Claim.ClaimId} to internal`)
       throw error
     })

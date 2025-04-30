@@ -3,9 +3,9 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'prisoner-not-visited-on-this-date'
 const FAILURE_MESSAGE = 'A claim has already been made for this prisoner on this date'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   let matchedCount = 0
-  autoApprovalData.prisonNumbers.forEach(function (number) {
+  autoApprovalData.prisonNumbers.forEach(number => {
     if (number === autoApprovalData.Prisoner.PrisonNumber) {
       matchedCount += 1
     }

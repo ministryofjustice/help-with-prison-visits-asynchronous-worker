@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimId, reference, amount, days) {
+module.exports = (claimId, reference, amount, days) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Claim')

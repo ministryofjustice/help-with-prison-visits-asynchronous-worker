@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimId, now) {
+module.exports = (claimId, now) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Claim').where({ ClaimId: claimId }).update({
