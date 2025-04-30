@@ -1,4 +1,4 @@
-module.exports = function (claimExpenses) {
+module.exports = claimExpenses => {
   if (!claimExpenses || claimExpenses.length === 0) {
     return {}
   }

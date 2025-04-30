@@ -2,7 +2,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const statusEnum = require('../../constants/status-enum')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (reference, eligibilityId, claimId, taskType, additionalData) {
+module.exports = (reference, eligibilityId, claimId, taskType, additionalData) => {
   const task = {
     Task: taskType,
     Reference: reference,

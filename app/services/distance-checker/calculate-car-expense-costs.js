@@ -9,20 +9,20 @@ const enumHelper = require('../../constants/helpers/enum-helper')
 
 const KILOMETERS_TO_MILES = 0.621371
 
-module.exports = function (reference, eligibilityId, claimId) {
+module.exports = (reference, eligibilityId, claimId) => {
   log.info(`calculate-car-expense-costs DISTANCE_CALCULATION_ENABLED: ${config.DISTANCE_CALCULATION_ENABLED}`)
 
   if (config.DISTANCE_CALCULATION_ENABLED !== 'true') {
     return Promise.resolve()
   }
 
-  return getAllClaimData('IntSchema', reference, eligibilityId, claimId).then(function (claimData) {
+  return getAllClaimData('IntSchema', reference, eligibilityId, claimId).then(claimData => {
     const carExpenses = getUncalculatedCarExpenses(claimData)
 
     if (carExpenses.length > 0) {
       const promises = []
 
-      carExpenses.forEach(function (carExpense) {
+      carExpenses.forEach(carExpense => {
         promises.push(calculateCarExpenseCost(carExpense, claimData))
       })
 
@@ -43,7 +43,7 @@ function calculateCarExpenseCost(carExpense, claimData) {
   }
 
   if (fromPostCode && toPostCode) {
-    return getDistanceInMilesAndCost(fromPostCode, toPostCode, claimData.Visitor.Country).then(function (result) {
+    return getDistanceInMilesAndCost(fromPostCode, toPostCode, claimData.Visitor.Country).then(result => {
       let { cost } = result
       const { distanceInMiles } = result
 
@@ -65,7 +65,7 @@ function calculateCarExpenseCost(carExpense, claimData) {
 
 function getUncalculatedCarExpenses(claimData) {
   return claimData.ClaimExpenses
-    ? claimData.ClaimExpenses.filter(function (expense) {
+    ? claimData.ClaimExpenses.filter(expense => {
         return expense.ExpenseType === 'car' && expense.Cost === 0
       })
     : []
@@ -77,13 +77,13 @@ function getPrisonPostCode(nameOfPrison) {
 }
 
 function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode, country) {
-  return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(function (distanceInKm) {
+  return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(distanceInKm => {
     let cost = 0.0
     let distanceInMiles = null
 
     if (distanceInKm) {
       distanceInMiles = distanceInKm * KILOMETERS_TO_MILES
-      return getAutoApprovalConfig().then(function (autoApprovalConfig) {
+      return getAutoApprovalConfig().then(autoApprovalConfig => {
         let costPerMile = parseFloat(autoApprovalConfig.CostPerMile)
 
         switch (country) {

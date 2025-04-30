@@ -1,14 +1,14 @@
 const config = require('../../../config')
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function () {
+module.exports = () => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.AutoApprovalConfig')
     .where('IsEnabled', true)
     .orderBy('DateCreated', 'desc')
     .first()
-    .then(function (autoApprovalConfig) {
+    .then(autoApprovalConfig => {
       if (autoApprovalConfig) {
         const rulesDisabled = autoApprovalConfig.RulesDisabled
         if (rulesDisabled) {

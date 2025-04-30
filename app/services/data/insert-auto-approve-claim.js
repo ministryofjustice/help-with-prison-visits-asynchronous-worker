@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
+module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
   const autoApproval = {
     EligibilityId: eligibilityId,
     Reference: reference,

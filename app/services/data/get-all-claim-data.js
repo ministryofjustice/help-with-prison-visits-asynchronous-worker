@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (schema, reference, eligibilityId, claimId, getDisabledDocuments = false) {
+module.exports = (schema, reference, eligibilityId, claimId, getDisabledDocuments = false) => {
   return Promise.all([
     getEligilibility(schema, reference, eligibilityId),
     getPrisoner(schema, reference, eligibilityId),
@@ -16,7 +16,7 @@ module.exports = function (schema, reference, eligibilityId, claimId, getDisable
     getClaimEscort(schema, claimId),
     getClaimEvents(schema, claimId),
     getClaimDeductions(schema, claimId),
-  ]).then(function (results) {
+  ]).then(results => {
     return {
       Eligibility: results[0],
       Prisoner: results[1],

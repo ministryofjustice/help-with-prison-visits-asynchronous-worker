@@ -5,15 +5,15 @@ const processTasks = require('./app/process-tasks')
 
 log.info('Started worker')
 
-setTimeout(function () {
+setTimeout(() => {
   processTasks()
-    .then(function () {
+    .then(() => {
       log.info('Worker completed processing tasks')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
       }
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('Failed processing tasks', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })

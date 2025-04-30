@@ -3,8 +3,8 @@ const log = require('../log')
 
 const aws = new AWSHelper()
 
-module.exports = function (oldPaymentFiles) {
-  oldPaymentFiles.forEach(async function (paymentFile) {
+module.exports = oldPaymentFiles => {
+  oldPaymentFiles.forEach(async paymentFile => {
     try {
       log.info(`Deleting payment file: ${paymentFile.Filepath}`)
       await aws.delete(paymentFile.Filepath)

@@ -3,20 +3,18 @@ const autoApproveClaim = require('../data/auto-approve-claim')
 const deleteAutoApproveClaim = require('../data/delete-auto-approve-claim')
 const log = require('../log')
 
-const autoApproveClaims = function () {
+const autoApproveClaims = () => {
   log.info('Starting auto approve claims')
   let claimData
 
-  return getAutoApproveClaims().then(function (data) {
+  return getAutoApproveClaims().then(data => {
     claimData = data
     log.info(`Auto approval: ${claimData.length} claims found`)
-    claimData.forEach(function (claim) {
+    claimData.forEach(claim => {
       log.info(`Auto approval: processing ClaimId ${claim.ClaimId}`)
-      return autoApproveClaim(claim.Reference, claim.EligibilityId, claim.ClaimId, claim.EmailAddress).then(
-        function () {
-          return deleteAutoApproveClaim(claim.AutoApprovalId)
-        },
-      )
+      return autoApproveClaim(claim.Reference, claim.EligibilityId, claim.ClaimId, claim.EmailAddress).then(() => {
+        return deleteAutoApproveClaim(claim.AutoApprovalId)
+      })
     })
   })
 }

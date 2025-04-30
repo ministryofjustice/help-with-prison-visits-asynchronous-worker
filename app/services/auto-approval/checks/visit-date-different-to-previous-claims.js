@@ -5,7 +5,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'visit-date-different-to-previous-claims'
 const FAILURE_MESSAGE = 'The date of visit for this claim is the same as the date of visit for a previous claim'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (autoApprovalData.previousClaims && autoApprovalData.previousClaims.length > 0) {
     const visitDateMoment = moment(autoApprovalData.Claim.DateOfJourney)
 

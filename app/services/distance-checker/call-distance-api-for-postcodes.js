@@ -2,12 +2,12 @@ const axios = require('axios')
 const config = require('../../../config')
 const log = require('../log')
 
-module.exports = function (originPostCode, destinationPostCode) {
+module.exports = (originPostCode, destinationPostCode) => {
   const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
 
   return axios
     .get(distanceApiUrl)
-    .then(function (result) {
+    .then(result => {
       let distance = null
 
       if (
@@ -25,7 +25,7 @@ module.exports = function (originPostCode, destinationPostCode) {
 
       return distance
     })
-    .catch(function (error) {
+    .catch(error => {
       // suppress errors as car expense calculation is optional
       log.error({ error }, 'Error calling distance calculation')
       return null

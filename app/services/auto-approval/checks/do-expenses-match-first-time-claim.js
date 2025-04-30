@@ -4,7 +4,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'do-expenses-match-first-time-claim'
 const FAILURE_MESSAGE = "The number or type of expenses for this claim don't match the last manually approved claim"
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.claimExpenses) {
     const groupedFirstTimeClaimExpenses = groupExpensesByType(
       autoApprovalData.latestManuallyApprovedClaim.claimExpenses,

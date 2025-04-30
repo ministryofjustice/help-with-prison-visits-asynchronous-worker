@@ -4,7 +4,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'cost-and-variance-equal-or-less-than-first-time-claim'
 const FAILURE_MESSAGE = 'Claim expense costs are outside of the accepted variance from the last manually approved claim'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (autoApprovalData.latestManuallyApprovedClaim && autoApprovalData.latestManuallyApprovedClaim.claimExpenses) {
     const groupedFirstTimeClaimExpenses = groupExpensesByType(
       autoApprovalData.latestManuallyApprovedClaim.claimExpenses,

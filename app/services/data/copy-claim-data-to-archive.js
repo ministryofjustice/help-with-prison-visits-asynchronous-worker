@@ -1,8 +1,8 @@
 const config = require('../../../knexfile').archive
 const knex = require('knex')(config) // eslint-disable-line import/order
 
-module.exports = function (data) {
-  return copyEligibilityDataIfNotPresent(data).then(function () {
+module.exports = data => {
+  return copyEligibilityDataIfNotPresent(data).then(() => {
     return copyClaimData(data)
   })
 }
@@ -11,11 +11,11 @@ function copyEligibilityDataIfNotPresent(data) {
   return knex('IntSchema.Eligibility')
     .where('EligibilityId', data.Eligibility.EligibilityId)
     .count('EligibilityId as count')
-    .then(function (countResult) {
+    .then(countResult => {
       const eligibilityNotPresent = countResult[0].count === 0
 
       if (eligibilityNotPresent) {
-        return insertInternal('Eligibility', data.Eligibility).then(function () {
+        return insertInternal('Eligibility', data.Eligibility).then(() => {
           return Promise.all([
             insertInternal('Visitor', data.Visitor),
             insertInternal('Prisoner', data.Prisoner),
@@ -33,13 +33,13 @@ function copyClaimData(data) {
   cleanClaimEvents(data.ClaimEvents)
 
   return insertInternal('Claim', data.Claim)
-    .then(function () {
+    .then(() => {
       return insertInternalAll('ClaimExpense', data.ClaimExpenses) // Documents reference ClaimExpenseId
     })
-    .then(function () {
+    .then(() => {
       return insertClaimDocuments(data.ClaimDocument) // Events reference ClaimDocumentId
     })
-    .then(function () {
+    .then(() => {
       return Promise.all([
         insertInternalAll('ClaimEscort', data.ClaimEscorts),
         insertInternalAll('ClaimDeduction', data.ClaimDeductions),
@@ -59,7 +59,7 @@ function insertInternal(table, tableData) {
     return knex(`IntSchema.${table}`)
       .where(`${table}Id`, tableId)
       .count(`${table}Id as count`)
-      .then(function (countResult) {
+      .then(countResult => {
         const dataNotPresent = countResult[0].count === 0
         if (dataNotPresent) {
           return knex(`IntSchema.${table}`).insert(tableData)
@@ -74,7 +74,7 @@ function insertInternalAll(table, tableDataArray) {
   const inserts = []
 
   if (tableDataArray) {
-    tableDataArray.forEach(function (tableData) {
+    tableDataArray.forEach(tableData => {
       inserts.push(insertInternal(table, tableData))
     })
   }
@@ -85,33 +85,33 @@ function insertInternalAll(table, tableDataArray) {
 function insertClaimDocuments(allClaimDocuments) {
   const claimDocumentInserts = []
   const eligibilityDocumentInserts = []
-  const eligibilityDocuments = allClaimDocuments.filter(function (claimDocument) {
+  const eligibilityDocuments = allClaimDocuments.filter(claimDocument => {
     return !claimDocument.ClaimId
   })
-  const claimDocuments = allClaimDocuments.filter(function (claimDocument) {
+  const claimDocuments = allClaimDocuments.filter(claimDocument => {
     return claimDocument.ClaimId
   })
 
   if (claimDocuments) {
-    claimDocuments.forEach(function (claimDocument) {
+    claimDocuments.forEach(claimDocument => {
       claimDocumentInserts.push(insertInternal('ClaimDocument', claimDocument))
     })
   }
 
   if (eligibilityDocuments) {
-    eligibilityDocuments.forEach(function (eligibilityDocument) {
+    eligibilityDocuments.forEach(eligibilityDocument => {
       eligibilityDocumentInserts.push(insertInternal('ClaimDocument', eligibilityDocument))
     })
   }
 
-  return Promise.all(claimDocumentInserts).then(function () {
+  return Promise.all(claimDocumentInserts).then(() => {
     return Promise.all(eligibilityDocumentInserts)
   })
 }
 
 function cleanClaimDeductions(claimDeductions) {
   if (claimDeductions) {
-    claimDeductions.forEach(function (claimDeduction) {
+    claimDeductions.forEach(claimDeduction => {
       delete claimDeduction.ClaimDeductionId
     })
   }
@@ -119,7 +119,7 @@ function cleanClaimDeductions(claimDeductions) {
 
 function cleanClaimEvents(claimEvents) {
   if (claimEvents) {
-    claimEvents.forEach(function (claimEvent) {
+    claimEvents.forEach(claimEvent => {
       delete claimEvent.ClaimEventId
     })
   }

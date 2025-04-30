@@ -6,15 +6,15 @@ const { cleanupOldPaymentFiles } = require('./app/services/workers/cleanup-old-p
 
 log.info('Running payment generation job')
 
-setTimeout(function () {
+setTimeout(() => {
   Promise.all([generateDirectPayments(), cleanupOldPaymentFiles()])
-    .then(function () {
+    .then(() => {
       log.info('Payment generation jobs completed')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
       }
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('Failed payment run', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })

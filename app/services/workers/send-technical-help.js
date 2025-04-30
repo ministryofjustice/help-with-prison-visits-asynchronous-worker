@@ -2,7 +2,7 @@ const axios = require('axios')
 const Config = require('../../../config')
 const log = require('../log')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   if (Config.ZENDESK_ENABLED === 'true') {
     const technicalHelp = task.additionalData.split('~~')
     let subjectText = 'Help With Prison Visits - Help'
@@ -41,7 +41,7 @@ module.exports.execute = function (task) {
       },
     }
 
-    return axios.post(zendeskApiUrl, ticket, { headers }).then(function (response) {
+    return axios.post(zendeskApiUrl, ticket, { headers }).then(response => {
       if (response.status === 201) {
         log.info(`Zendesk ticket ${response.data.ticket.id} has been raised`)
       }
