@@ -56,7 +56,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
     mockCallDistanceApiForPostcodes.mockResolvedValue(10.0)
     mockGetAllClaimData.mockResolvedValue()
     mockUpdateExpenseForDistanceCalculation.mockResolvedValue()
-    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '20.00', CostPerMileEngWal: '20.00' })
+    mockGetAutoApprovalConfig.mockResolvedValue({ CostPerMile: '30.00', CostPerMileEngWal: '20.00' })
 
     jest.mock('../../../../config', () => ({
       DISTANCE_CALCULATION_ENABLED: 'true',
@@ -101,7 +101,7 @@ describe('services/distance-checker/calculate-car-expense-costs', function () {
   })
 
   it('should call distance API and update claim for car expense (Scotland)', function () {
-    const COST = 124.27
+    const COST = 186.41
     const DISTANCE = 6.21371
     const distanceInKm = 10.0
 
