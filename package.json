@@ -85,7 +85,7 @@
     "xml2js-xpath": "^0.13.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
+    "eslint": "^9.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.10.1",
