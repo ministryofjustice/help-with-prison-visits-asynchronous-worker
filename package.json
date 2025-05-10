@@ -87,7 +87,7 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^3.10.1",
     "eslint-plugin-cypress": "^3.6.0",
     "eslint-plugin-import": "^2.31.0",
