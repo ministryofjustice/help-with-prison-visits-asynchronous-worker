@@ -7,7 +7,7 @@ const { AWSHelper } = require('../aws-helper')
 
 const aws = new AWSHelper()
 
-module.exports = function (totalPayment) {
+module.exports = totalPayment => {
   const filename = getFileName()
   const fullOutputFilePath = path.join(config.FILE_TMP_DIR, filename)
 
@@ -26,16 +26,16 @@ module.exports = function (totalPayment) {
       // Modify the workbook
       return workbook
         .toFileAsync(fullOutputFilePath)
-        .then(async function () {
+        .then(async () => {
           return aws.upload(filename, fullOutputFilePath)
         })
-        .catch(function (error) {
+        .catch(error => {
           log.error('An error occurred while writing the ADI journal to', fullOutputFilePath)
           log.error(error)
           throw error
         })
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('An error occurred while reading the ADI journal template')
       log.error(error)
       throw error

@@ -1,13 +1,13 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatusEnum = require('../../constants/claim-status-enum')
 
-module.exports = function (reminderCutoffDate) {
+module.exports = reminderCutoffDate => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Claim')
     .join('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .where('Claim.LastUpdated', '<', reminderCutoffDate)
-    .where(function () {
+    .where(() => {
       this.where('IntSchema.Claim.ReminderSent', false).orWhereNull('IntSchema.Claim.ReminderSent')
     })
     .whereIn('Claim.Status', [

@@ -3,7 +3,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'is-claim-total-under-limit'
 const FAILURE_MESSAGE = 'The total claim value is over the maximum permitted amount'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   let checkPassed
   let claimTotal = 0
 

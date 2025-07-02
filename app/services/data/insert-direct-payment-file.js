@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (filePath, fileType) {
+module.exports = (filePath, fileType) => {
   const db = getDatabaseConnector()
 
   const fileMetadata = {

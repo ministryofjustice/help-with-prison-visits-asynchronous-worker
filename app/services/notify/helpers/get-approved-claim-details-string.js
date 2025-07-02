@@ -5,7 +5,7 @@ const enumHelper = require('../../../constants/helpers/enum-helper')
 
 const newLine = '\r\n'
 
-module.exports = function (claimExpenses, claimDeductions) {
+module.exports = (claimExpenses, claimDeductions) => {
   const paymentBreakdownString = buildPaymentBreakdown(claimExpenses)
   const deductionBreakdownString = buildDeductionBreakdown(claimDeductions)
 
@@ -40,7 +40,7 @@ function buildPaymentBreakdown(claimExpenses) {
     return ''
   }
 
-  claimExpenses.forEach(function (claimExpense) {
+  claimExpenses.forEach(claimExpense => {
     const claimHeader = getClaimHeader(claimExpense)
 
     result.push(claimHeader)
@@ -66,7 +66,7 @@ function buildDeductionBreakdown(claimDeductions) {
     return ''
   }
 
-  claimDeductions.forEach(function (claimDeduction) {
+  claimDeductions.forEach(claimDeduction => {
     const deductionType = enumHelper.getKeyByValue(DEDUCTION_TYPE, claimDeduction.DeductionType)
 
     result.push(`Type: ${deductionType.displayName}`)

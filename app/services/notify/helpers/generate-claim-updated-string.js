@@ -1,4 +1,4 @@
-module.exports = function (updatedDocuments) {
+module.exports = updatedDocuments => {
   const NEWLINE = '<br />'
 
   let message
@@ -6,7 +6,7 @@ module.exports = function (updatedDocuments) {
     message = 'Claimant updated claim:'
 
     message += NEWLINE
-    updatedDocuments.forEach(function (document) {
+    updatedDocuments.forEach(document => {
       message = `${message + NEWLINE} - updated document ${document.DocumentType} with status ${document.DocumentStatus}`
     })
   }

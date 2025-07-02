@@ -10,7 +10,7 @@ const config = require('../../../config')
 const log = require('../log')
 require('../promise-each')
 
-const autoRejectClaims = function () {
+const autoRejectClaims = () => {
   log.info('Auto reject claims')
   const numberOfDaysAfterFinalReminderForRejection = parseInt(
     config.NUMBER_OF_DAYS_AFTER_FINAL_REMINDER_FOR_REJECTION,
@@ -21,8 +21,8 @@ const autoRejectClaims = function () {
     .subtract(numberOfDaysAfterFinalReminderForRejection, 'days')
     .format('YYYY-MM-DD')
 
-  return getAutoRejectClaims(autoRejectClaimsOlderThan).then(function (claimData) {
-    return Promise.each(claimData, function (claim) {
+  return getAutoRejectClaims(autoRejectClaimsOlderThan).then(claimData => {
+    return Promise.each(claimData, claim => {
       return insertClaimEventSystemMessage(
         claim.Reference,
         claim.EligibilityId,
@@ -32,8 +32,8 @@ const autoRejectClaims = function () {
         null,
         'We have not had an update for 6 weeks or more. Rejecting the claim.',
         false,
-      ).then(function () {
-        return updateClaimStatus(claim.ClaimId, statusEnum.REJECTED).then(function () {
+      ).then(() => {
+        return updateClaimStatus(claim.ClaimId, statusEnum.REJECTED).then(() => {
           return insertTask(
             claim.Reference,
             claim.EligibilityId,

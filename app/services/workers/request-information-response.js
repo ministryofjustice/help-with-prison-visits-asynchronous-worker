@@ -14,7 +14,7 @@ const paymentMethodEnum = require('../../constants/payment-method-enum')
 const transactionHelper = require('./helpers/transaction-helper')
 const log = require('../log')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   const { reference } = task
   const { eligibilityId } = task
   const { claimId } = task
@@ -25,21 +25,21 @@ module.exports.execute = function (task) {
   let claimBankDetailId
 
   return moveClaimDocumentsToInternal(reference, eligibilityId, claimId)
-    .then(function (newDocuments) {
+    .then(newDocuments => {
       updatedDocuments = newDocuments
     })
-    .then(function () {
+    .then(() => {
       log.info('getAllClaimData')
       return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
     })
-    .then(function (claimData) {
+    .then(claimData => {
       status = getStatusForUpdatedClaim(claimData)
       originalStatus = claimData.Claim.Status
       if (claimData.Claim.PaymentMethod === paymentMethodEnum.DIRECT_BANK_PAYMENT.value) {
         claimBankDetailId = claimData.ClaimBankDetail.ClaimBankDetailId
       }
     })
-    .then(function () {
+    .then(() => {
       log.info('updateBankDetailsAndRemoveOldFromExternal')
       return updateBankDetailsAndRemoveOldFromExternal(
         reference,
@@ -49,23 +49,23 @@ module.exports.execute = function (task) {
         claimBankDetailId,
       )
     })
-    .then(function () {
+    .then(() => {
       log.info('updateClaimStatus')
       return updateClaimStatus(claimId, status)
     })
-    .then(function () {
+    .then(() => {
       log.info('insertClaimEventForUpdate')
       return insertClaimEventForUpdate(reference, eligibilityId, claimId, updatedDocuments)
     })
-    .then(function () {
+    .then(() => {
       log.info('insertClaimEventForNote')
       return insertClaimEventForNote(reference, eligibilityId, claimId, note)
     })
-    .then(function () {
+    .then(() => {
       log.info('insertTaskRequestInformationResponseSubmittedNotification')
       return insertTaskRequestInformationResponseSubmittedNotification(reference, eligibilityId, claimId)
     })
-    .then(function () {
+    .then(() => {
       log.info('callAutoApprovalIfClaimIsNew')
       return callAutoApprovalIfClaimIsNew(reference, eligibilityId, claimId, status)
     })
@@ -112,10 +112,10 @@ function updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, cla
   if (status === statusEnum.REQUEST_INFO_PAYMENT) {
     let newBankDetails
     return getAllClaimData('ExtSchema', reference, eligibilityId, claimId)
-      .then(function (claimData) {
+      .then(claimData => {
         newBankDetails = claimData.ClaimBankDetail
       })
-      .then(function () {
+      .then(() => {
         return updateBankDetails(
           claimBankDetailId,
           reference,
@@ -126,7 +126,7 @@ function updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, cla
           newBankDetails.RollNumber,
         )
       })
-      .then(function () {
+      .then(() => {
         return insertClaimEvent(
           reference,
           eligibilityId,
@@ -138,7 +138,7 @@ function updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, cla
           true,
         )
       })
-      .then(function () {
+      .then(() => {
         return transactionHelper(eligibilityId, claimId)
       })
   }
@@ -146,7 +146,7 @@ function updateBankDetailsAndRemoveOldFromExternal(reference, eligibilityId, cla
 }
 
 function insertTaskRequestInformationResponseSubmittedNotification(reference, eligibilityId, claimId) {
-  return getVisitorEmailAddress('IntSchema', reference, eligibilityId).then(function (emailAddress) {
+  return getVisitorEmailAddress('IntSchema', reference, eligibilityId).then(emailAddress => {
     return insertTask(
       reference,
       eligibilityId,

@@ -4,37 +4,37 @@ const getAllClaimData = require('./get-all-claim-data')
 const statusEnum = require('../../constants/status-enum')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (reference, eligibilityId, claimId) {
+module.exports = (reference, eligibilityId, claimId) => {
   let claimData
 
   return getAllClaimData('IntSchema', reference, eligibilityId, claimId)
-    .then(function (data) {
+    .then(data => {
       claimData = data
     })
-    .then(function () {
+    .then(() => {
       return getPreviousClaims(claimId, eligibilityId)
     })
-    .then(function (previousClaims) {
+    .then(previousClaims => {
       claimData.previousClaims = previousClaims
     })
-    .then(function () {
+    .then(() => {
       return getLatestManuallyApprovedClaim(claimData.previousClaims)
     })
-    .then(function (latestManuallyApprovedClaim) {
+    .then(latestManuallyApprovedClaim => {
       claimData.latestManuallyApprovedClaim = latestManuallyApprovedClaim
       claimData.latestManualClaim = getLatestManualClaim(claimData.previousClaims)
     })
-    .then(function () {
+    .then(() => {
       const visitDateMoment = moment(claimData.Claim.DateOfJourney)
       const month = visitDateMoment.format('M')
       const day = visitDateMoment.format('D')
       const year = visitDateMoment.format('YYYY')
       return getEligibilityIds(day, month, year)
     })
-    .then(function (eligibilityIds) {
+    .then(eligibilityIds => {
       return getPrisonNumberFromEligibilityId(eligibilityIds)
     })
-    .then(function (prisonNumbers) {
+    .then(prisonNumbers => {
       claimData.prisonNumbers = prisonNumbers
       return claimData
     })
@@ -54,7 +54,7 @@ function getLatestManuallyApprovedClaim(previousClaims) {
     let result = {}
     let latestManuallyApprovedClaim = null
 
-    previousClaims.forEach(function (previousClaim) {
+    previousClaims.forEach(previousClaim => {
       const previousClaimIsApproved =
         previousClaim.DateReviewed && previousClaim.Status === statusEnum.APPROVED && !previousClaim.IsAdvanceClaim
 
@@ -70,7 +70,7 @@ function getLatestManuallyApprovedClaim(previousClaims) {
     result = latestManuallyApprovedClaim
 
     if (latestManuallyApprovedClaim) {
-      return getClaimExpenses(latestManuallyApprovedClaim.ClaimId).then(function (latestManuallyApprovedClaimExpenses) {
+      return getClaimExpenses(latestManuallyApprovedClaim.ClaimId).then(latestManuallyApprovedClaimExpenses => {
         result.claimExpenses = latestManuallyApprovedClaimExpenses
         return result
       })
@@ -85,7 +85,7 @@ function getLatestManualClaim(previousClaims) {
   if (previousClaims.length > 0) {
     let latestManualClaim = null
 
-    previousClaims.forEach(function (previousClaim) {
+    previousClaims.forEach(previousClaim => {
       const previousClaimIsApprovedOrRejected =
         previousClaim.DateReviewed &&
         (previousClaim.Status === statusEnum.APPROVED || previousClaim.Status === 'REJECTED') &&
@@ -115,17 +115,15 @@ function getEligibilityIds(day, month, year) {
   const dateOfJourney = dateFormatter.buildFormatted(day, month, year)
   const db = getDatabaseConnector()
 
-  return db
-    .raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney])
-    .then(function (results) {
-      const eligibilityIds = []
+  return db.raw('SELECT * FROM [IntSchema].[getIdsForVisitorPrisonerCheck] (?)', [dateOfJourney]).then(results => {
+    const eligibilityIds = []
 
-      results.forEach(function (result) {
-        eligibilityIds.push(result.EligibilityId)
-      })
-
-      return eligibilityIds
+    results.forEach(result => {
+      eligibilityIds.push(result.EligibilityId)
     })
+
+    return eligibilityIds
+  })
 }
 
 function getPrisonNumberFromEligibilityId(eligibilityIds) {
@@ -134,10 +132,10 @@ function getPrisonNumberFromEligibilityId(eligibilityIds) {
   return db('IntSchema.Prisoner')
     .whereIn('EligibilityId', eligibilityIds)
     .select('PrisonNumber')
-    .then(function (results) {
+    .then(results => {
       const prisonNumbers = []
 
-      results.forEach(function (result) {
+      results.forEach(result => {
         prisonNumbers.push(result.PrisonNumber)
       })
 

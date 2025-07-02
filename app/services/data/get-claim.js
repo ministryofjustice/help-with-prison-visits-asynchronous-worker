@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (schema, claimId) {
+module.exports = (schema, claimId) => {
   const db = getDatabaseConnector()
 
   return db(`${schema}.Claim`).first().where({ ClaimId: claimId })

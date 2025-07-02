@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (contactDetails, trx) {
+module.exports = (contactDetails, trx) => {
   if (trx) {
     return trx('IntSchema.Visitor')
       .where({ EligibilityId: contactDetails.EligibilityId, Reference: contactDetails.Reference })

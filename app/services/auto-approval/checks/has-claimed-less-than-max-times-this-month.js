@@ -5,7 +5,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'has-claimed-less-than-max-times-this-month'
 const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number of times this month'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (!autoApprovalData.previousClaims || autoApprovalData.previousClaims.length < 1) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }
@@ -31,7 +31,7 @@ function getCountOfApprovedClaimsSubmittedSinceDate(previousClaims, currentClaim
     count += 1
   }
 
-  const claims = previousClaims.filter(function (claim) {
+  const claims = previousClaims.filter(claim => {
     return (
       claim.Status === claimStatusEnum.APPROVED ||
       claim.Status === claimStatusEnum.AUTOAPPROVED ||

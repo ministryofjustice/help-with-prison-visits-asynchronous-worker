@@ -6,7 +6,7 @@ const log = require('../log')
 const config = require('../../../config')
 
 // Creating HTTP request rather than using SOAP client as node SOAP clients are unreliable
-module.exports = function (visitorDwpBenefitCheckerData) {
+module.exports = visitorDwpBenefitCheckerData => {
   log.info(`call-dwp-benefit-checker-soap-service DWP_BENEFIT_CHECKER_ENABLED: ${config.DWP_BENEFIT_CHECKER_ENABLED}`)
 
   if (config.DWP_BENEFIT_CHECKER_ENABLED !== 'true') {
@@ -28,9 +28,9 @@ module.exports = function (visitorDwpBenefitCheckerData) {
   }
 
   return axios(options)
-    .then(function (responseBody) {
+    .then(responseBody => {
       return parseStringAsync(responseBody.data)
-        .then(function (xml) {
+        .then(xml => {
           const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
 
           if (result && result[0] && result[0]._) {
@@ -42,11 +42,11 @@ module.exports = function (visitorDwpBenefitCheckerData) {
           }
           throw new Error(`Could not parse response: ${responseBody}`)
         })
-        .catch(function (error) {
+        .catch(error => {
           log.error('Error parsing XML', error)
         })
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('Error calling Benefit checker', error)
     })
 }

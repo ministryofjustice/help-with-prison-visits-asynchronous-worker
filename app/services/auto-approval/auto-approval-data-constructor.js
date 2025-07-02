@@ -1,4 +1,4 @@
-module.exports = function (claimData, autoApprovalData) {
+module.exports = (claimData, autoApprovalData) => {
   const eligibilityData = claimData.Eligibility ? claimData.Eligibility : autoApprovalData.Eligibility
   const visitorData = claimData.Visitor ? claimData.Visitor : autoApprovalData.Visitor
   const prisonerData = claimData.Prisoner ? claimData.Prisoner : autoApprovalData.Prisoner

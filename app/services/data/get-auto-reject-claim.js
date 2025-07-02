@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatusEnum = require('../../constants/claim-status-enum')
 
-module.exports = function (rejectionCutoffDate) {
+module.exports = rejectionCutoffDate => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Claim')

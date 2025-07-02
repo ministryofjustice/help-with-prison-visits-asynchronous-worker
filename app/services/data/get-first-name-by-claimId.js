@@ -1,13 +1,13 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (schema, claimId) {
+module.exports = (schema, claimId) => {
   const db = getDatabaseConnector()
 
   return db(`${schema}.Visitor`)
     .join(`${schema}.Claim`, 'Visitor.EligibilityId', 'Claim.EligibilityId')
     .where({ ClaimId: claimId })
     .first('FirstName')
-    .then(function (result) {
+    .then(result => {
       return result.FirstName
     })
 }

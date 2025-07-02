@@ -6,7 +6,7 @@ const tasksEnum = require('../../constants/tasks-enum')
 const dateFormatter = require('../date-formatter')
 const log = require('../log')
 
-const sendRequestInformationRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
+const sendRequestInformationRemindersForDay = (dateCreated = dateFormatter.now().toDate()) => {
   log.info('Sending request information reminders')
   const numberOfDaysPendingForFinalReminder = parseInt(config.NUMBER_OF_DAYS_PENDING_FOR_FINAL_REMINDER, 10)
 
@@ -17,7 +17,7 @@ const sendRequestInformationRemindersForDay = function (dateCreated = dateFormat
     .subtract(numberOfDaysPendingForFinalReminder, 'days')
     .format('YYYY-MM-DD')
 
-  return getAllClaimsPendingForFiveWeeks(reminderCutoffDate).then(function (openClaims) {
+  return getAllClaimsPendingForFiveWeeks(reminderCutoffDate).then(openClaims => {
     return sendReminder(openClaims)
   })
 }
@@ -25,7 +25,7 @@ const sendRequestInformationRemindersForDay = function (dateCreated = dateFormat
 function sendReminder(openClaims) {
   const promises = []
 
-  openClaims.forEach(function (claim) {
+  openClaims.forEach(claim => {
     promises.push(insertTaskToSendClaimReminderNotification(claim))
   })
 

@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (date, status) {
+module.exports = (date, status) => {
   // Get all Claims before a certain date or above away with total amount of expenses
   const db = getDatabaseConnector()
 
@@ -11,7 +11,7 @@ module.exports = function (date, status) {
       'IntSchema.Claim.Status': status,
       'IntSchema.ClaimExpense.IsEnabled': true,
     })
-    .andWhere(function () {
+    .andWhere(() => {
       this.where('IntSchema.Claim.IsOverpaid', null).orWhere('IntSchema.Claim.IsOverpaid', false)
     })
     .andWhere('IntSchema.Claim.DateOfJourney', '<=', date)

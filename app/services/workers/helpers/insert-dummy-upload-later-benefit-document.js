@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../../databaseConnector')
 const dateFormatter = require('../../date-formatter')
 
-module.exports = function (claimId, benefit, eligibilityId, reference) {
+module.exports = (claimId, benefit, eligibilityId, reference) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.ClaimDocument').insert({
