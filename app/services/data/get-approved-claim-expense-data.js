@@ -1,18 +1,18 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimId) {
+module.exports = claimId => {
   let claimExpenses
   const db = getDatabaseConnector()
 
   // Get all Claim expenses from database for specified claim id
   return db('IntSchema.ClaimExpense')
     .where('IntSchema.ClaimExpense.ClaimId', claimId)
-    .then(function (claimExpenseData) {
+    .then(claimExpenseData => {
       claimExpenses = claimExpenseData
 
       return getClaimantData(claimId)
     })
-    .then(function (visitorData) {
+    .then(visitorData => {
       return {
         claimantData: visitorData,
         claimExpenseData: claimExpenses,
@@ -30,13 +30,13 @@ function getClaimantData(claimId) {
     .where('IntSchema.Claim.ClaimId', claimId)
     .select('Visitor.FirstName AS FirstName', 'Note', 'PaymentMethod', 'Town', 'NameOfPrison', 'IsAdvanceClaim')
     .first()
-    .then(function (visitorData) {
+    .then(visitorData => {
       visitor = visitorData
     })
-    .then(function () {
+    .then(() => {
       return db('IntSchema.ClaimBankDetail').where('ClaimId', claimId).first()
     })
-    .then(function (bankDetails) {
+    .then(bankDetails => {
       const accountNumberLastFourDigits =
         bankDetails && bankDetails.AccountNumber
           ? bankDetails.AccountNumber.substr(bankDetails.AccountNumber.length - 4)

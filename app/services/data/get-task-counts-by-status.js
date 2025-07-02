@@ -5,14 +5,14 @@ require('../promise-each')
 const INTSCHEMA = 'IntSchema'
 const EXTSCHEMA = 'ExtSchema'
 
-module.exports = function () {
-  const getCountForStatus = function (schema, status) {
+module.exports = () => {
+  const getCountForStatus = (schema, status) => {
     const db = getDatabaseConnector()
 
     return db(`${schema}.Task`)
       .count('Status as count')
       .where('Status', status)
-      .then(function (countResult) {
+      .then(countResult => {
         const { count } = countResult[0]
         return `${schema}-${status}: ${count}`
       })
@@ -29,7 +29,7 @@ module.exports = function () {
       getCountForStatus(EXTSCHEMA, statusEnum.COMPLETE),
       getCountForStatus(EXTSCHEMA, statusEnum.FAILED),
     ],
-    function (result) {
+    result => {
       return result
     },
   )

@@ -4,8 +4,8 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const updateContactDetails = require('./update-contact-details')
 
-module.exports = function (data, additionalData, trx) {
-  return copyEligibilityDataIfPresent(data, trx).then(function () {
+module.exports = (data, additionalData, trx) => {
+  return copyEligibilityDataIfPresent(data, trx).then(() => {
     return copyClaimData(data, additionalData, trx)
   })
 }
@@ -15,19 +15,19 @@ function copyEligibilityDataIfPresent(data, trx) {
     data.Eligibility.Status = statusEnum.NEW
     return trx('IntSchema.Eligibility')
       .insert(data.Eligibility)
-      .then(function () {
+      .then(() => {
         return trx('IntSchema.Visitor').insert(data.Visitor)
       })
-      .then(function () {
+      .then(() => {
         return trx('IntSchema.Prisoner').insert(data.Prisoner)
       })
-      .then(function () {
+      .then(() => {
         if (data.EligibleChild && data.EligibleChild.length > 0) {
           return trx('IntSchema.EligibleChild').insert(data.EligibleChild)
         }
         return Promise.resolve()
       })
-      .then(function () {
+      .then(() => {
         if (data.Benefit) {
           return trx('IntSchema.Benefit').insert(data.Benefit)
         }
@@ -39,7 +39,7 @@ function copyEligibilityDataIfPresent(data, trx) {
 
 function copyClaimData(data, additionalData, trx) {
   data.Claim.Status = statusEnum.NEW
-  data.ClaimDocument.forEach(function (document) {
+  data.ClaimDocument.forEach(document => {
     if (document.DocumentStatus !== 'uploaded') {
       data.Claim.Status = statusEnum.PENDING
     }
@@ -47,14 +47,14 @@ function copyClaimData(data, additionalData, trx) {
 
   return trx('IntSchema.Claim')
     .insert(data.Claim)
-    .then(function () {
+    .then(() => {
       if (data.Claim.PaymentMethod !== paymentMethodEnum.PAYOUT.value) {
         return trx('IntSchema.ClaimBankDetail').insert(data.ClaimBankDetail)
       }
       return Promise.resolve()
     })
-    .then(function () {
-      data.ClaimExpenses.forEach(function (claimExpense) {
+    .then(() => {
+      data.ClaimExpenses.forEach(claimExpense => {
         claimExpense.Cost = parseFloat(claimExpense.Cost).toFixed(2)
       })
       if (data.ClaimExpenses.length > 0) {
@@ -62,25 +62,25 @@ function copyClaimData(data, additionalData, trx) {
       }
       return Promise.resolve()
     })
-    .then(function () {
+    .then(() => {
       if (data.ClaimChildren.length > 0) {
         return trx('IntSchema.ClaimChild').insert(data.ClaimChildren)
       }
       return Promise.resolve()
     })
-    .then(function () {
+    .then(() => {
       if (data.ClaimDocument.length > 0) {
         return trx('IntSchema.ClaimDocument').insert(data.ClaimDocument)
       }
       return Promise.resolve()
     })
-    .then(function () {
+    .then(() => {
       if (data.ClaimEscort && data.ClaimEscort.length > 0) {
         return trx('IntSchema.ClaimEscort').insert(data.ClaimEscort)
       }
       return Promise.resolve()
     })
-    .then(function () {
+    .then(() => {
       return insertClaimEvent(
         data.Claim.Reference,
         data.Claim.EligibilityId,
@@ -93,7 +93,7 @@ function copyClaimData(data, additionalData, trx) {
         trx,
       )
     })
-    .then(function () {
+    .then(() => {
       if (data.EligibilityVisitorUpdateContactDetail) {
         return insertClaimEvent(
           data.Claim.Reference,
@@ -105,7 +105,7 @@ function copyClaimData(data, additionalData, trx) {
           null,
           true,
           trx,
-        ).then(function () {
+        ).then(() => {
           return updateContactDetails(data.EligibilityVisitorUpdateContactDetail, trx)
         })
       }

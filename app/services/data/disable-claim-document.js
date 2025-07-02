@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const log = require('../log')
 
-module.exports = function (schema, claimDocumentId) {
+module.exports = (schema, claimDocumentId) => {
   log.info(`disableClaimDocument (${claimDocumentId})`)
   const db = getDatabaseConnector()
 

@@ -2,7 +2,7 @@ const moment = require('moment')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const statusEnum = require('../../constants/status-enum')
 
-module.exports = function (claimId, status) {
+module.exports = (claimId, status) => {
   const db = getDatabaseConnector()
 
   if (status === statusEnum.PENDING || status === statusEnum.REQUEST_INFORMATION) {

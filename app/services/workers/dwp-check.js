@@ -12,10 +12,10 @@ const autoApprovalProcess = require('../auto-approval/auto-approval-process')
 const dwpCheckResultEnum = require('../../constants/dwp-check-result-enum')
 const insertDummyUploadLaterBenefitDocument = require('./helpers/insert-dummy-upload-later-benefit-document')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   return getVisitorDwpBenefitCheckerData(task.reference, task.eligibilityId, task.claimId).then(
-    function (visitorDwpBenefitCheckerData) {
-      return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData).then(function (benefitCheckerResult) {
+    visitorDwpBenefitCheckerData => {
+      return callDwpBenefitCheckerSoapService(visitorDwpBenefitCheckerData).then(benefitCheckerResult => {
         if (
           benefitCheckerResult.result !== dwpCheckResultEnum.YES &&
           sendDWPFailedEmailEnum[visitorDwpBenefitCheckerData.benefit]
@@ -27,7 +27,7 @@ module.exports.execute = function (task) {
             tasksEnum.DWP_FAILED_NOTIFICATION,
             visitorDwpBenefitCheckerData.email,
           )
-            .then(function () {
+            .then(() => {
               return insertDummyUploadLaterBenefitDocument(
                 task.claimId,
                 visitorDwpBenefitCheckerData.benefit,
@@ -35,7 +35,7 @@ module.exports.execute = function (task) {
                 task.reference,
               )
             })
-            .then(function () {
+            .then(() => {
               return insertClaimEventSystemMessage(
                 task.reference,
                 task.eligibilityId,
@@ -47,14 +47,14 @@ module.exports.execute = function (task) {
                 false,
               )
             })
-            .then(function () {
+            .then(() => {
               return updateVisitorWithDwpBenefitCheckerResult(
                 benefitCheckerResult.visitorId,
                 benefitCheckerResult.result,
                 statusEnum.REQUEST_INFORMATION,
               )
             })
-            .then(function () {
+            .then(() => {
               return updateClaimStatus(task.claimId, statusEnum.REQUEST_INFORMATION)
             })
         }
@@ -62,7 +62,7 @@ module.exports.execute = function (task) {
           benefitCheckerResult.visitorId,
           benefitCheckerResult.result,
           null,
-        ).then(function () {
+        ).then(() => {
           // If this code is reached the benefit checker has either passed or is not required for this particular benefit
           return autoApprovalProcess(task.reference, task.eligibilityId, task.claimId)
         })

@@ -5,15 +5,15 @@ const { autoApproveClaims } = require('./app/services/workers/auto-approve-claim
 
 log.info('Starting auto approval checks')
 
-setTimeout(function () {
+setTimeout(() => {
   autoApproveClaims()
-    .then(function () {
+    .then(() => {
       log.info('Auto approval checks completed')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
       }
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('Failed auto approval checks', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })

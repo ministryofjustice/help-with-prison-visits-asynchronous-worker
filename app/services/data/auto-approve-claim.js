@@ -8,15 +8,15 @@ const tasksEnum = require('../../constants/tasks-enum')
 const statusEnum = require('../../constants/status-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 
-module.exports = function (reference, eligibilityId, claimId, visitorEmailAddress) {
+module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
   return setClaimStatusToAutoApproved(claimId)
-    .then(function () {
+    .then(() => {
       return autoApproveClaimExpenses(claimId)
     })
-    .then(function () {
+    .then(() => {
       return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
     })
-    .then(function () {
+    .then(() => {
       return insertClaimEvent(
         reference,
         eligibilityId,

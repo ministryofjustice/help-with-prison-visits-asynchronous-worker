@@ -52,6 +52,9 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: Run Linter
+          command: npm run lint
+      - run:
           name: Run Unit Tests
           command: npm run test
   # integration_test:

@@ -4,30 +4,30 @@ const getAllClaimData = require('../data/get-all-claim-data')
 const copyClaimDataToArchive = require('../data/copy-claim-data-to-archive')
 const deleteClaimFromInternal = require('../data/delete-claim-from-internal')
 
-module.exports = function (claimId) {
+module.exports = claimId => {
   let eligibilityId
   let reference
   let deleteEligibility
   let claimData
 
   return getClaim('IntSchema', claimId)
-    .then(function (claim) {
+    .then(claim => {
       eligibilityId = claim.EligibilityId
       reference = claim.Reference
       return getNumberOfClaimsForEligibility('IntSchema', eligibilityId)
     })
-    .then(function (numberOfClaims) {
+    .then(numberOfClaims => {
       deleteEligibility = numberOfClaims === 1
       return getAllClaimData('IntSchema', reference, eligibilityId, claimId, true)
     })
-    .then(function (result) {
+    .then(result => {
       claimData = result
       return copyClaimDataToArchive(claimData)
     })
-    .then(function () {
+    .then(() => {
       return deleteClaimFromInternal(eligibilityId, claimId, deleteEligibility)
     })
-    .then(function () {
+    .then(() => {
       claimData.DeleteEligibility = deleteEligibility
       return claimData
     })
