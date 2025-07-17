@@ -5,10 +5,10 @@ const getPendingTasksAndMarkInProgress = require('./services/data/get-pending-ta
 const completeTaskWithStatus = require('./services/data/complete-task-with-status')
 const getWorkerForTask = require('./services/get-worker-for-task')
 
-module.exports = function () {
+module.exports = () => {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
 
-  return processTasksForSchema('ExtSchema', batchSize).then(function () {
+  return processTasksForSchema('ExtSchema', batchSize).then(() => {
     return processTasksForSchema('IntSchema', batchSize)
   })
 }
@@ -16,7 +16,7 @@ module.exports = function () {
 function processTasksForSchema(schema, batchSize) {
   log.info(`Processing tasks for ${schema}`)
 
-  return getPendingTasksAndMarkInProgress(schema, batchSize).then(function (tasks) {
+  return getPendingTasksAndMarkInProgress(schema, batchSize).then(tasks => {
     log.info(`Found ${tasks.length} ${schema} tasks`)
     if (tasks.length === 0) {
       return Promise.resolve()
@@ -43,11 +43,11 @@ function executeWorkerForTask(schema, worker, task) {
 
   return worker
     .execute(task)
-    .then(function () {
+    .then(() => {
       log.info(`Completed running task: ${schema}-${task.taskId}-${task.task}`)
       return completeTaskWithStatus(schema, task.taskId, statusEnum.COMPLETE)
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error(`Failed running task: ${schema}-${task.taskId}-${task.task}`)
       log.error(error)
       return completeTaskWithStatus(schema, task.taskId, statusEnum.FAILED)

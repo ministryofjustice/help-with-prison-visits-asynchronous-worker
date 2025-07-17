@@ -6,7 +6,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'has-claimed-less-than-max-times-this-year'
 const FAILURE_MESSAGE = 'This claimant has claimed more than the maximum number of times this year'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   if (!autoApprovalData.previousClaims || autoApprovalData.previousClaims.length < 1) {
     return new AutoApprovalCheckResult(CHECK_NAME, true, '')
   }

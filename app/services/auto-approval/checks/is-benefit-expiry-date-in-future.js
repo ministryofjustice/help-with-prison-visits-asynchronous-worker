@@ -5,7 +5,7 @@ const AutoApprovalCheckResult = require('../../domain/auto-approval-check-result
 const CHECK_NAME = 'is-benefit-expiry-date-in-future'
 const FAILURE_MESSAGE = 'The visit date is after the benefit expiry date'
 
-module.exports = function (autoApprovalData) {
+module.exports = autoApprovalData => {
   let benefitExpiryDate = null
   if (autoApprovalData.Visitor.BenefitExpiryDate) {
     benefitExpiryDate = moment(autoApprovalData.Visitor.BenefitExpiryDate)

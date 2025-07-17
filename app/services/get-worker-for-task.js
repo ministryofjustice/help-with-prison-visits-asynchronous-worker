@@ -18,7 +18,7 @@ const dwpFailedNotification = require('./workers/send-claim-additional-informati
 const sendRequestInformationReminderNotification = require('./workers/send-request-information-reminder-notification')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
-module.exports = function (taskType) {
+module.exports = taskType => {
   switch (taskType) {
     // From internal app
     case tasksEnum.ACCEPT_CLAIM_NOTIFICATION:

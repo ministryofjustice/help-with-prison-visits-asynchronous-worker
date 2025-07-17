@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (eligibilityId, claimId, deleteEligibility) {
+module.exports = (eligibilityId, claimId, deleteEligibility) => {
   return Promise.all([
     deleteInternal('ClaimEscort', 'ClaimId', claimId),
     deleteInternal('ClaimDeduction', 'ClaimId', claimId),
@@ -8,16 +8,16 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
     deleteInternal('ClaimChild', 'ClaimId', claimId),
     deleteInternal('ClaimBankDetail', 'ClaimId', claimId),
   ])
-    .then(function () {
+    .then(() => {
       return deleteInternal('ClaimDocument', 'ClaimId', claimId) // Events reference ClaimDocumentId
     })
-    .then(function () {
+    .then(() => {
       return deleteInternal('ClaimExpense', 'ClaimId', claimId) // Documents reference ClaimExpenseId
     })
-    .then(function () {
+    .then(() => {
       return deleteInternal('Claim', 'ClaimId', claimId)
     })
-    .then(function () {
+    .then(() => {
       if (deleteEligibility) {
         return Promise.all([
           deleteInternal('ClaimDocument', 'EligibilityId', eligibilityId),
@@ -25,7 +25,7 @@ module.exports = function (eligibilityId, claimId, deleteEligibility) {
           deleteInternal('Prisoner', 'EligibilityId', eligibilityId),
           deleteInternal('EligibleChild', 'EligibilityId', eligibilityId),
           deleteInternal('Benefit', 'EligibilityId', eligibilityId),
-        ]).then(function () {
+        ]).then(() => {
           return deleteInternal('Eligibility', 'EligibilityId', eligibilityId)
         })
       }

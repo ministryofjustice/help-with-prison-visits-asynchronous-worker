@@ -1,7 +1,7 @@
 const moment = require('moment')
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (reference, eligibilityId, claimId) {
+module.exports = (reference, eligibilityId, claimId) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.Eligibility')
@@ -25,7 +25,7 @@ module.exports = function (reference, eligibilityId, claimId) {
       'IntSchema.Benefit.NationalInsuranceNumber',
       'IntSchema.Benefit.DateOfBirth',
     )
-    .then(function (result) {
+    .then(result => {
       if (result.BenefitOwner === 'no') {
         return {
           visitorId: result.VisitorId,

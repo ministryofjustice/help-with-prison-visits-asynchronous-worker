@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../app/databaseConnector')
 const dateFormatter = require('../app/services/date-formatter')
 
-module.exports.getTaskObject = function (taskType, additionalData, taskStatus) {
+module.exports.getTaskObject = (taskType, additionalData, taskStatus) => {
   const reference = '1234567'
   const eligibilityId = '1234'
   const claimId = 123
@@ -27,43 +27,43 @@ function deleteByReference(schemaTable, reference) {
   return db(schemaTable).where('Reference', reference).del()
 }
 
-module.exports.deleteAll = function (reference, schema) {
+module.exports.deleteAll = (reference, schema) => {
   return deleteByReference(`${schema}.Task`, reference)
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.ClaimBankDetail`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.ClaimDocument`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.ClaimExpense`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.ClaimChild`, reference)
     })
-    .then(function () {
+    .then(() => {
       if (schema === 'ExtSchema') {
         return deleteByReference(`${schema}.EligibilityVisitorUpdateContactDetail`, reference)
       }
-      return deleteByReference(`${schema}.ClaimEvent`, reference).then(function () {
+      return deleteByReference(`${schema}.ClaimEvent`, reference).then(() => {
         return deleteByReference(`${schema}.ClaimDeduction`, reference)
       })
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.Claim`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.Visitor`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.Prisoner`, reference)
     })
-    .then(function () {
+    .then(() => {
       return deleteByReference(`${schema}.Eligibility`, reference)
     })
 }
 
-module.exports.insertClaimEligibilityData = function (schema, reference, status, randomIds) {
+module.exports.insertClaimEligibilityData = (schema, reference, status, randomIds) => {
   const db = getDatabaseConnector()
 
   const data = this.getClaimData(reference, randomIds)
@@ -83,32 +83,32 @@ module.exports.insertClaimEligibilityData = function (schema, reference, status,
   return db(`${schema}.Eligibility`)
     .insert(data.Eligibility)
     .returning('EligibilityId')
-    .then(function (insertedIds) {
+    .then(insertedIds => {
       newEligibilityId = insertedIds[0].EligibilityId
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         delete data.Visitor.VisitorId
         data.Visitor.EligibilityId = newEligibilityId
       }
       return db(`${schema}.Visitor`).insert(data.Visitor)
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         delete data.Prisoner.PrisonerId
         data.Prisoner.EligibilityId = newEligibilityId
       }
       return db(`${schema}.Prisoner`).insert(data.Prisoner)
     })
-    .then(function () {
+    .then(() => {
       return insertClaimData(schema, reference, newEligibilityId, data)
     })
-    .then(function (newClaimId) {
+    .then(newClaimId => {
       return { eligibilityId: newEligibilityId, claimId: newClaimId, claimBankDetailId: newClaimBankDetailId }
     })
 }
 
-module.exports.insertClaimData = function (schema, reference, newEligibilityId, data) {
+module.exports.insertClaimData = (schema, reference, newEligibilityId, data) => {
   let newClaimId
   const isExtSchema = schema === 'ExtSchema'
   const db = getDatabaseConnector()
@@ -121,7 +121,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
   return db(`${schema}.Claim`)
     .insert(data.Claim)
     .returning('ClaimId')
-    .then(function (insertedClaimIds) {
+    .then(insertedClaimIds => {
       newClaimId = insertedClaimIds[0].ClaimId
 
       if (isExtSchema) {
@@ -132,7 +132,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
 
       return db(`${schema}.ClaimBankDetail`).insert(data.ClaimBankDetail)
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         delete data.EligibilityVisitorUpdateContactDetail.EligibilityVisitorUpdateContactDetailId
         data.EligibilityVisitorUpdateContactDetail.EligibilityId = newEligibilityId
@@ -141,7 +141,7 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
 
       return Promise.resolve(null)
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         delete data.ClaimExpenses[0].ClaimExpenseId
         delete data.ClaimExpenses[1].ClaimExpenseId
@@ -154,10 +154,10 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       }
       return db(`${schema}.ClaimExpense`).insert(data.ClaimExpenses)
     })
-    .then(function () {
+    .then(() => {
       return insertClaimDocuments(schema, newEligibilityId, newClaimId, data.ClaimDocument)
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         delete data.ClaimChildren[0].ClaimChildId
         delete data.ClaimChildren[1].ClaimChildId
@@ -168,21 +168,21 @@ module.exports.insertClaimData = function (schema, reference, newEligibilityId, 
       }
       return db(`${schema}.ClaimChild`).insert(data.ClaimChildren)
     })
-    .then(function () {
+    .then(() => {
       if (isExtSchema) {
         return Promise.resolve(null)
       }
 
       return db(`${schema}.ClaimDeduction`).insert(data.ClaimDeduction)
     })
-    .then(function () {
+    .then(() => {
       return newClaimId
     })
 }
 
 module.exports.insertClaimDocumentData = insertClaimDocuments
 
-module.exports.getClaimData = function (reference, randomIds) {
+module.exports.getClaimData = (reference, randomIds) => {
   // Add random number to ID when generating muliple with same reference number
   const randomAddition = randomIds ? Math.floor(Math.random() * 10000 + 1) : 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
@@ -357,7 +357,7 @@ module.exports.getClaimData = function (reference, randomIds) {
   }
 }
 
-module.exports.claimMigrationData = function (reference) {
+module.exports.claimMigrationData = reference => {
   let eligibilityId = 0
   let claimId = 0
   let claimExpenseId = 0
@@ -428,7 +428,7 @@ module.exports.claimMigrationData = function (reference) {
   return db('ExtSchema.Eligibility')
     .insert(eligibility)
     .returning('EligibilityId')
-    .then(function (id) {
+    .then(id => {
       eligibilityId = id[0].EligibilityId
       eligibility.EligibilityId = eligibilityId
       prisoner.EligibilityId = eligibilityId
@@ -438,28 +438,28 @@ module.exports.claimMigrationData = function (reference) {
       claimDocument.EligibilityId = eligibilityId
       return db('ExtSchema.Prisoner').insert(prisoner).returning('PrisonerId')
     })
-    .then(function (prisonerId) {
+    .then(prisonerId => {
       prisoner.PrisonerId = prisonerId[0].PrisonerId
       return db('ExtSchema.Visitor').insert(visitor).returning('VisitorId')
     })
-    .then(function (VisitorId) {
+    .then(VisitorId => {
       visitor.VisitorId = VisitorId[0].VisitorId
       return db('ExtSchema.Claim').insert(claim).returning('ClaimId')
     })
-    .then(function (id) {
+    .then(id => {
       claimId = id[0].ClaimId
       claim.ClaimId = claimId
       claimExpense.ClaimId = claimId
       claimDocument.ClaimId = claimId
       return db('ExtSchema.ClaimExpense').insert(claimExpense).returning('ClaimExpenseId')
     })
-    .then(function (id) {
+    .then(id => {
       claimExpenseId = id[0].ClaimExpenseId
       claimExpense.ClaimExpenseId = claimExpenseId
       claimDocument.ClaimExpenseId = claimExpenseId
       return db('ExtSchema.ClaimDocument').insert(claimDocument).returning('ClaimDocumentId')
     })
-    .then(function (ClaimDocumentId) {
+    .then(ClaimDocumentId => {
       claimDocument.ClaimDocumentId = ClaimDocumentId[0].ClaimDocumentId
       return {
         Eligibility: eligibility,
@@ -476,7 +476,7 @@ module.exports.claimMigrationData = function (reference) {
     })
 }
 
-module.exports.orphanedClaimDocument = function (eligibilityId, claimId, reference) {
+module.exports.orphanedClaimDocument = (eligibilityId, claimId, reference) => {
   const claimDocument = {
     EligibilityId: eligibilityId,
     Reference: reference,
@@ -493,7 +493,7 @@ module.exports.orphanedClaimDocument = function (eligibilityId, claimId, referen
   return db('ExtSchema.ClaimDocument')
     .insert(claimDocument)
     .returning('ClaimDocumentId')
-    .then(function (ClaimDocumentId) {
+    .then(ClaimDocumentId => {
       claimDocument.ClaimDocumentId = ClaimDocumentId[0].ClaimDocumentId
       return {
         ClaimDocument: [claimDocument],
@@ -501,7 +501,7 @@ module.exports.orphanedClaimDocument = function (eligibilityId, claimId, referen
     })
 }
 
-module.exports.getAutoApprovalData = function (reference) {
+module.exports.getAutoApprovalData = reference => {
   const uniqueId = Math.floor(Date.now() / 100) - 15000000000
   const claimId1 = uniqueId + 1
   const claimId2 = claimId1 + 1
@@ -684,7 +684,7 @@ function insertClaimDocuments(schema, eligibilityId, claimId, data) {
   return db(`${schema}.ClaimDocument`).insert(data)
 }
 
-module.exports.insertTopUp = function (claimId) {
+module.exports.insertTopUp = claimId => {
   const topUp = {
     ClaimId: claimId,
     PaymentStatus: 'PENDING',
@@ -698,7 +698,7 @@ module.exports.insertTopUp = function (claimId) {
   return db('IntSchema.TopUp').insert(topUp).returning('TopUpId')
 }
 
-module.exports.deleteTopUp = function (claimId) {
+module.exports.deleteTopUp = claimId => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.TopUp').where('ClaimId', claimId).del()

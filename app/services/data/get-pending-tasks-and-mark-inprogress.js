@@ -3,7 +3,7 @@ const statusEnum = require('../../constants/status-enum')
 const Task = require('../domain/task')
 const log = require('../log')
 
-module.exports = function (schema, batchSize) {
+module.exports = (schema, batchSize) => {
   const db = getDatabaseConnector()
 
   return db
@@ -12,7 +12,7 @@ module.exports = function (schema, batchSize) {
     .where('Status', statusEnum.PENDING)
     .orderBy('DateCreated', 'asc')
     .limit(batchSize)
-    .then(function (results) {
+    .then(results => {
       const tasks = []
       const ids = []
       if (results) {
@@ -43,16 +43,16 @@ module.exports = function (schema, batchSize) {
       return db(`${schema}.Task`)
         .whereIn('TaskId', ids)
         .update('Status', statusEnum.INPROGRESS)
-        .then(function () {
+        .then(() => {
           log.info(`Pending tasks status updated for ${schema}`)
           return tasks
         })
-        .catch(function (error) {
+        .catch(error => {
           log.error(error)
           return []
         })
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error(error)
       return []
     })

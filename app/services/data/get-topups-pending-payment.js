@@ -63,7 +63,7 @@ function payoutPaymentsReturn(results) {
   })
 }
 
-module.exports = function (paymentMethod) {
+module.exports = paymentMethod => {
   const selectColumns = paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value ? directBankColumns : payoutColumns
   const db = getDatabaseConnector()
 
@@ -77,7 +77,7 @@ module.exports = function (paymentMethod) {
     .where('IntSchema.Claim.PaymentMethod', paymentMethod)
     .whereNull('IntSchema.TopUp.PaymentDate')
     .groupBy(selectColumns)
-    .then(function (topups) {
+    .then(topups => {
       if (paymentMethod === paymentMethods.DIRECT_BANK_PAYMENT.value) {
         return directPaymentsReturn(topups)
       }

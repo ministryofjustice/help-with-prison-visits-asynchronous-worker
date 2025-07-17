@@ -34,7 +34,7 @@ class AWSHelper {
       Body: '',
     }
 
-    const fileStream = fs.createReadStream(source).on('error', function (error) {
+    const fileStream = fs.createReadStream(source).on('error', error => {
       log.error(`Error occurred reading from file ${source}`, error)
       throw new Error(error)
     })
@@ -72,6 +72,4 @@ class AWSHelper {
   }
 }
 
-module.exports = {
-  AWSHelper,
-}
+module.exports = AWSHelper

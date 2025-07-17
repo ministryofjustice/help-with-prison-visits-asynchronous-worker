@@ -7,7 +7,7 @@ const reminderEnum = require('../../constants/advance-claim-reminder-enum')
 const dateFormatter = require('../date-formatter')
 const log = require('../log')
 
-const sendAllAdvanceClaimRemindersForDay = function (dateCreated = dateFormatter.now().toDate()) {
+const sendAllAdvanceClaimRemindersForDay = (dateCreated = dateFormatter.now().toDate()) => {
   log.info('Sending advance claim reminders')
   const numberOfDaysAfterDateOfJourneyForReminder = parseInt(
     config.NUMBER_OF_DAYS_AFTER_DATE_OF_JOURNEY_FOR_ADVANCE_REMINDER,
@@ -38,23 +38,19 @@ const sendAllAdvanceClaimRemindersForDay = function (dateCreated = dateFormatter
     .toDate()
 
   return Promise.all([
-    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(startDateFirst, endDateFirst).then(
-      function (openAdvanceClaims) {
-        return insertTasksToSendAdvanceClaimEvidenceReminderNotification(openAdvanceClaims, reminderEnum.FIRST)
-      },
-    ),
-    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(startDateSecond, endDateSecond).then(
-      function (openAdvanceClaims) {
-        return insertTasksToSendAdvanceClaimEvidenceReminderNotification(openAdvanceClaims, reminderEnum.SECOND)
-      },
-    ),
+    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(startDateFirst, endDateFirst).then(openAdvanceClaims => {
+      return insertTasksToSendAdvanceClaimEvidenceReminderNotification(openAdvanceClaims, reminderEnum.FIRST)
+    }),
+    getAllOpenAdvanceClaimsForDateOfJourneyRangeWithEmail(startDateSecond, endDateSecond).then(openAdvanceClaims => {
+      return insertTasksToSendAdvanceClaimEvidenceReminderNotification(openAdvanceClaims, reminderEnum.SECOND)
+    }),
   ])
 }
 
 function insertTasksToSendAdvanceClaimEvidenceReminderNotification(openAdvanceClaims, reminder) {
   const promises = []
 
-  openAdvanceClaims.forEach(function (claim) {
+  openAdvanceClaims.forEach(claim => {
     promises.push(insertTaskToSendAdvanceClaimEvidenceReminderNotification(claim, reminder))
   })
 

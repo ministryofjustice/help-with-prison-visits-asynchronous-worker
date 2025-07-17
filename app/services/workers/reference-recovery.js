@@ -2,12 +2,12 @@ const config = require('../../../config')
 const sendNotification = require('../notify/send-notification')
 const referenceNumberRecovery = require('../data/reference-number-recovery')
 
-module.exports.execute = function (task) {
+module.exports.execute = task => {
   const recoveryRequest = task.additionalData.split('~~')
   const emailAddress = recoveryRequest[0]
   const prisonNumber = recoveryRequest[1]
 
-  return referenceNumberRecovery(emailAddress, prisonNumber).then(function (data) {
+  return referenceNumberRecovery(emailAddress, prisonNumber).then(data => {
     if (data) {
       const registeredUrl = `${config.EXTERNAL_SERVICE_URL}${config.EXTERNAL_PATH_ALREADY_REGISTERED}`
       const personalisation = { reference: data.Reference, firstname: data.FirstName, registeredUrl }

@@ -13,7 +13,7 @@ const { autoRejectClaims } = require('./app/services/workers/auto-reject-claims'
 
 log.info('Starting daily tasks')
 
-setTimeout(function () {
+setTimeout(() => {
   Promise.all([
     sendAllAdvanceClaimRemindersForDay(),
     sendRequestInformationRemindersForDay(),
@@ -21,13 +21,13 @@ setTimeout(function () {
     cleanupOldData(),
     autoRejectClaims(),
   ])
-    .then(function () {
+    .then(() => {
       log.info('Daily tasks completed')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
       }
     })
-    .catch(function (error) {
+    .catch(error => {
       log.error('Failed daily tasks run', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })

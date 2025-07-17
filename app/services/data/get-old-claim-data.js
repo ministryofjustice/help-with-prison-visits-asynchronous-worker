@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (dateThreshold) {
+module.exports = dateThreshold => {
   const db = getDatabaseConnector()
 
   return db('ExtSchema.Claim')

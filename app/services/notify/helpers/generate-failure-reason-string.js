@@ -1,8 +1,8 @@
-module.exports = function (checks) {
+module.exports = checks => {
   const result = []
   const newLine = '<br />'
 
-  checks.forEach(function (check) {
+  checks.forEach(check => {
     if (!check.result) {
       result.push(`* ${check.failureMessage}`)
     }

@@ -14,19 +14,19 @@ const removeClaimIdsFromPaymentData = require('./helpers/payments/direct/remove-
 const checkForAccountNumberAndSortCode = require('./helpers/payments/direct/check-for-account-number-and-sort-code')
 const getTotalFromPaymentData = require('./helpers/payments/direct/get-total-from-payment-data')
 
-const generateDirectPayments = function () {
+const generateDirectPayments = () => {
   log.info('Starting generate direct payments')
   let claimIds
   let topUpClaimIds
   let total
 
-  return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value).then(function (paymentData) {
+  return getClaimsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value).then(paymentData => {
     log.info('Processing direct payments claims pending')
     const claimIdIndex = 0
     if (paymentData.length > 0) {
       claimIds = getClaimIdsFromPaymentData(paymentData, claimIdIndex)
     }
-    return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value).then(function (topupData) {
+    return getTopUpsPendingPayment(paymentMethods.DIRECT_BANK_PAYMENT.value).then(topupData => {
       if (topupData.length > 0) {
         topUpClaimIds = getClaimIdsFromPaymentData(topupData, claimIdIndex)
       }
@@ -43,31 +43,31 @@ const generateDirectPayments = function () {
 
         log.info('Creating APVS payment file')
         return createPaymentFile(paymentData, false)
-          .then(function (apvsPaymentFilename) {
+          .then(apvsPaymentFilename => {
             log.info('Inserting APVS payment file url into database')
             return insertDirectPaymentFile(apvsPaymentFilename, fileTypes.ACCESSPAY_FILE)
           })
-          .then(function () {
+          .then(() => {
             log.info('Creating APVU payment file')
             return createPaymentFile(paymentData, true)
           })
-          .then(function (apvuPaymentFilename) {
+          .then(apvuPaymentFilename => {
             log.info('Inserting APVU payment file url into database')
             return insertDirectPaymentFile(apvuPaymentFilename, fileTypes.APVU_ACCESSPAY_FILE)
           })
-          .then(function () {
+          .then(() => {
             log.info('Creating Adi Journal file')
             return createAdiJournalFile(total)
           })
-          .then(function (adiJournalFileName) {
+          .then(adiJournalFileName => {
             log.info('Inserting Adi Journal file url into database')
             return insertDirectPaymentFile(adiJournalFileName, fileTypes.ADI_JOURNAL_FILE)
           })
-          .then(function () {
+          .then(() => {
             log.info('Setting all claims as payment processed')
             return updateAllClaimsProcessedPayment(claimIds, paymentData, true)
           })
-          .then(function () {
+          .then(() => {
             log.info('Setting all topups as payment processed')
             return updateAllTopupsProcessedPayment(topUpClaimIds)
           })
