@@ -6,11 +6,9 @@ const CLAIM_DOCUMENT_NO_FILEPATH = [{}]
 const CLAIM_DOCUMENT_NO_DATA = []
 
 let mockGetClaimDocuments
-let mockAWS
 let deleteOldFiles
 let mockDeleteFunction
 
-jest.mock('../../../../app/services/aws-helper', () => mockAWS)
 jest.mock('../../../../app/services/data/get-claim-documents', () => mockGetClaimDocuments)
 
 describe('services/cleanup-old-data/delete-old-files', () => {
@@ -18,21 +16,18 @@ describe('services/cleanup-old-data/delete-old-files', () => {
     mockGetClaimDocuments = jest.fn()
     mockDeleteFunction = jest.fn()
 
-    const helper = () => {
-      return {
+    jest.mock('../../../../app/services/aws-helper', () => {
+      return jest.fn().mockImplementation(() => ({
         delete: mockDeleteFunction,
-      }
-    }
-
-    mockAWS = {
-      AWSHelper: helper,
-    }
+      }))
+    })
 
     deleteOldFiles = require('../../../../app/services/cleanup-old-data/delete-old-files')
   })
 
   it('should call to delete a file based on filepath', () => {
     mockGetClaimDocuments.mockResolvedValue(CLAIM_DOCUMENT_FILEPATH)
+
     return deleteOldFiles(ELIGIBILITY_ID, CLAIM_ID, REFERENCE).then(() => {
       expect(mockGetClaimDocuments).toHaveBeenCalledWith('ExtSchema', REFERENCE, ELIGIBILITY_ID, CLAIM_ID)
       expect(mockDeleteFunction).toHaveBeenCalled()

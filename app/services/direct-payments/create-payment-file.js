@@ -7,7 +7,7 @@ const path = require('path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
-const { AWSHelper } = require('../aws-helper')
+const AWSHelper = require('../aws-helper')
 
 const aws = new AWSHelper()
 

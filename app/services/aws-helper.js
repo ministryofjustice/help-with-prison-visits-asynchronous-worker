@@ -72,6 +72,4 @@ class AWSHelper {
   }
 }
 
-module.exports = {
-  AWSHelper,
-}
+module.exports = AWSHelper

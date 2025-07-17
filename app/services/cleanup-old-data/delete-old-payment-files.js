@@ -1,4 +1,4 @@
-const { AWSHelper } = require('../aws-helper')
+const AWSHelper = require('../aws-helper')
 const log = require('../log')
 
 const aws = new AWSHelper()
