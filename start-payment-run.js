@@ -12,15 +12,16 @@ setTimeout(() => {
       log.info('Payment generation jobs completed')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
+      } else {
+        process.exit()
       }
     })
     .catch(error => {
       log.error('Failed payment run', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })
+      } else {
+        process.exit(1)
       }
-    })
-    .finally(() => {
-      process.exit()
     })
 }, 5000)

@@ -25,15 +25,16 @@ setTimeout(() => {
       log.info('Daily tasks completed')
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit() })
+      } else {
+        process.exit()
       }
     })
     .catch(error => {
       log.error('Failed daily tasks run', error)
       if (appInsights) {
         appInsights.flush({ callback: () => process.exit(1) })
+      } else {
+        process.exit(1)
       }
-    })
-    .finally(() => {
-      process.exit()
     })
 }, 5000)
