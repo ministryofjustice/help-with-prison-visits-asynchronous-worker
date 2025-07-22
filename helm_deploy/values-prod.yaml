@@ -4,7 +4,7 @@ replicaCount: 2
 
 env:
   APVS_AUTO_APPROVAL_ENABLED: "true"
-  APVS_DWP_BENEFIT_CHECKER_ENABLED: "true"
+  APVS_DWP_BENEFIT_CHECKER_ENABLED: "false"
   APVS_DWP_BENEFIT_CHECKER_URL: "https://benefitchecker.legalservices.gov.uk/lsx/lsc-services/benefitChecker"
   APVS_ZENDESK_ENABLED: "true"
   APVS_ZENDESK_API_URL: "https://ministryofjustice.zendesk.com"
