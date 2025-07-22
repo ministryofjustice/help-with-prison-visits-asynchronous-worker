@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const _ = require('lodash')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatuses = require('../../constants/claim-status-enum')
@@ -117,7 +118,7 @@ module.exports = paymentMethod => {
     .leftJoin('IntSchema.ClaimBankDetail', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimBankDetail.ClaimId')
     .innerJoin('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .innerJoin('IntSchema.ClaimExpense', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.ClaimExpense.ClaimId')
-    .where(() => {
+    .where(function () {
       this.whereIn('IntSchema.Claim.Status', [claimStatuses.APPROVED, claimStatuses.AUTOAPPROVED]).orWhereNotNull(
         'IntSchema.Claim.DateApproved',
       )

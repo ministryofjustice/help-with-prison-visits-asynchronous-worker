@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = (date, status) => {
@@ -11,7 +12,7 @@ module.exports = (date, status) => {
       'IntSchema.Claim.Status': status,
       'IntSchema.ClaimExpense.IsEnabled': true,
     })
-    .andWhere(() => {
+    .andWhere(function () {
       this.where('IntSchema.Claim.IsOverpaid', null).orWhere('IntSchema.Claim.IsOverpaid', false)
     })
     .andWhere('IntSchema.Claim.DateOfJourney', '<=', date)
