@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatusEnum = require('../../constants/claim-status-enum')
 
@@ -7,7 +8,7 @@ module.exports = reminderCutoffDate => {
   return db('IntSchema.Claim')
     .join('IntSchema.Visitor', 'IntSchema.Claim.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
     .where('Claim.LastUpdated', '<', reminderCutoffDate)
-    .where(() => {
+    .where(function () {
       this.where('IntSchema.Claim.ReminderSent', false).orWhereNull('IntSchema.Claim.ReminderSent')
     })
     .whereIn('Claim.Status', [
