@@ -1,10 +1,7 @@
 require('dotenv').config()
 
 module.exports = {
-  LOGGING_PATH: process.env.LOGGING_PATH,
-  LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
-  LOGSTASH_HOST: process.env.LOGSTASH_HOST,
-  LOGSTASH_PORT: process.env.LOGSTASH_PORT,
+  PRODUCTION: process.env.NODE_ENV === 'production',
   FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/app/tmp',
 
   // URL and paths
