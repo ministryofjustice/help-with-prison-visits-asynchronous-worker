@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ quiet: true })
 const appInsights = require('./app/azure-appinsights')
 const log = require('./app/services/log')
 const processTasks = require('./app/process-tasks')

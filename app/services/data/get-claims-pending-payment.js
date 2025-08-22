@@ -1,5 +1,4 @@
 /* eslint-disable func-names */
-const _ = require('lodash')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatuses = require('../../constants/claim-status-enum')
 const claimExpenseStatuses = require('../../constants/claim-expense-status-enum')
@@ -69,7 +68,7 @@ function subtractManuallyProcessedExpenseCosts(manuallyProcessedExpenseCostsPerC
 }
 
 function directPaymentsReturn(results) {
-  return _.map(results, record => {
+  return results.map(record => {
     return [
       record.ClaimId,
       record.SortCode,
@@ -84,7 +83,7 @@ function directPaymentsReturn(results) {
 }
 
 function payoutPaymentsReturn(results) {
-  return _.map(results, record => {
+  return results.map(record => {
     return [
       record.ClaimId,
       record.PaymentAmount.toFixed(2),

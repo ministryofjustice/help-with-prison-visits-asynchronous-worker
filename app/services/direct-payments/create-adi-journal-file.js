@@ -1,5 +1,5 @@
 const XlsxPopulate = require('xlsx-populate')
-const path = require('path')
+const path = require('node:path')
 const config = require('../../../config')
 const log = require('../log')
 const dateFormatter = require('../date-formatter')
