@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const paymentMethods = require('../../constants/payment-method-enum')
 
@@ -31,7 +30,7 @@ const payoutColumns = [
 ]
 
 function directPaymentsReturn(results) {
-  return _.map(results, record => {
+  return results.map(record => {
     return [
       record.ClaimId,
       record.SortCode,
@@ -46,7 +45,7 @@ function directPaymentsReturn(results) {
 }
 
 function payoutPaymentsReturn(results) {
-  return _.map(results, record => {
+  return results.map(record => {
     return [
       record.ClaimId,
       record.PaymentAmount.toFixed(2),

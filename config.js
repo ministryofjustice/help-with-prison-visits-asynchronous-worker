@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ quiet: true })
 
 module.exports = {
   PRODUCTION: process.env.NODE_ENV === 'production',
