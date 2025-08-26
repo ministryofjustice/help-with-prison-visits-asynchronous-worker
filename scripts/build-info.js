@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 
 const fs = require('fs')
-const { dirname } = require('path')
+const { dirname } = require('node:path')
 const { mkdirp } = require('mkdirp')
 
 function writeFile(path, contents, callback) {

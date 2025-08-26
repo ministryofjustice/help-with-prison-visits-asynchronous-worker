@@ -3,7 +3,7 @@ const { stringify } = require('csv-stringify')
 
 const generateCsvString = util.promisify(stringify)
 const writeFile = util.promisify(require('fs').writeFile)
-const path = require('path')
+const path = require('node:path')
 const dateFormatter = require('../date-formatter')
 const config = require('../../../config')
 const log = require('../log')
