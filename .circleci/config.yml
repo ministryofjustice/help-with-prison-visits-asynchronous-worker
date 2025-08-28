@@ -165,40 +165,39 @@ workflows:
           requires:
             - request_prod_approval
 
-  security:
-    triggers:
-      - schedule:
-          cron: "11 5 * * 1-5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/npm_security_audit:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/veracode_pipeline_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
-  security-weekly:
-    triggers:
-      - schedule:
-          cron: "50 6 * * 1"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
-
+  # security:
+  #   triggers:
+  #     - schedule:
+  #         cron: "11 5 * * 1-5"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
+  #   jobs:
+  #     - hmpps/npm_security_audit:
+  #         slack_channel: << pipeline.parameters.alerts-slack-channel >>
+  #         context:
+  #           - hmpps-common-vars
+  #     - hmpps/trivy_latest_scan:
+  #         slack_channel: << pipeline.parameters.alerts-slack-channel >>
+  #         context:
+  #           - hmpps-common-vars
+  #     - hmpps/veracode_pipeline_scan:
+  #         slack_channel: << pipeline.parameters.alerts-slack-channel >>
+  #         context:
+  #           - veracode-credentials
+  #           - hmpps-common-vars
+  # security-weekly:
+  #   triggers:
+  #     - schedule:
+  #         cron: "50 6 * * 1"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
+  #   jobs:
+  #     - hmpps/veracode_policy_scan:
+  #         slack_channel: << pipeline.parameters.alerts-slack-channel >>
+  #         context:
+  #           - veracode-credentials
+  #           - hmpps-common-vars
