@@ -11,6 +11,7 @@
     "npm": "^10"
   },
   "scripts": {
+    "build": "exit 0",
     "record-build-info": "node scripts/record-build-info",
     "start-worker-tasks": "node start-worker-tasks.js",
     "start-daily-tasks": "node start-daily-tasks.js",
