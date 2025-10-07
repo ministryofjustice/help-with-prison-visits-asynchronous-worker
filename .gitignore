@@ -62,3 +62,4 @@ test_results
 
 # Optional eslint cache
 .eslintcache
+dist
