@@ -5,7 +5,7 @@ serviceAccountName: help-with-prison-visits-internal
 productId: "DPS081"
 
 image:
-  repository: quay.io/hmpps/help-with-prison-visits-asynchronous-worker
+  repository: ghcr.io/ministryofjustice/help-with-prison-visits-asynchronous-worker
   tag: app_version    # override at deployment time
   port: 3999
 
