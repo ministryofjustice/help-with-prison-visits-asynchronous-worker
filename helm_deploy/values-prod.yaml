@@ -12,6 +12,7 @@ env:
   APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits.service.gov.uk'
   APVS_ARCHIVE_CLAIMS_AFTER_DAYS: '700'
   APVS_PAYOUT_FILENAME_PREFIX: 'DF_SANTANDERNOMS086_LETTER_'
+  ENVIRONMENT_NAME: prod
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits
