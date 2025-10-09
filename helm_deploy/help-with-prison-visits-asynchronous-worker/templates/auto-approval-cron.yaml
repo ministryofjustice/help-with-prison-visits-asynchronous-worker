@@ -18,7 +18,7 @@ spec:
           serviceAccountName: help-with-prison-visits-internal
           containers:
           - name: hwpv-auto-approval
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            image: "{{ .Values.image.repository }}:{{ .Values.version }}"
             args:
             - node
             - start-daily-auto-approval-check
