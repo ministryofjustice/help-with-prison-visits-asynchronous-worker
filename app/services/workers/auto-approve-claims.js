@@ -13,6 +13,7 @@ const autoApproveClaims = () => {
     claimData.forEach(claim => {
       log.info(`Auto approval: processing ClaimId ${claim.ClaimId}`)
       return autoApproveClaim(claim.Reference, claim.EligibilityId, claim.ClaimId, claim.EmailAddress).then(() => {
+        log.info(`Auto approval: deleting AutoApprovalId ${claim.AutoApprovalId}`)
         return deleteAutoApproveClaim(claim.AutoApprovalId)
       })
     })

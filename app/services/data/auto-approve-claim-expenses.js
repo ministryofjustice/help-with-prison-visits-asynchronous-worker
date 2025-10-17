@@ -1,11 +1,15 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
+const log = require('../log')
 
 const statusEnum = require('../../constants/status-enum')
 
 module.exports = claimId => {
   const updates = []
+  log.info(`Auto approval: Get claim expenses ${claimId}`)
+
   return getClaimExpenses(claimId).then(claimExpenses => {
     claimExpenses.forEach(claimExpense => {
+      log.info(`Auto approval: Update claim expense ${claimExpense.ClaimExpenseId} for claim ${claimId}`)
       updates.push(updateClaimExpenseToApproved(claimExpense))
     })
 
