@@ -13,7 +13,7 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
   log.info(`Auto approval: Setting claim status to auto approved ${claimId}`)
   return setClaimStatusToAutoApproved(claimId)
     .then(() => {
-      log.info(`Auto approval: Setting claim status to auto approved ${claimId}`)
+      log.info(`Auto approval: auto approve claim expenses ${claimId}`)
       return autoApproveClaimExpenses(claimId)
     })
     .then(() => {
