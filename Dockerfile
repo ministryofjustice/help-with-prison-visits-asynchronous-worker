@@ -1,24 +1,29 @@
-FROM node:24-bookworm-slim AS base
-
-ARG BUILD_NUMBER=1_0_0
-ARG GIT_REF=not-available
+FROM node:24-alpine AS base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
+
+RUN apk --update-cache upgrade --available \
+        && apk --no-cache add tzdata \
+        && rm -rf /var/cache/apk/*
 
 ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --gid 2000
+        adduser --uid 2000 --system appuser --ingroup appgroup
 
 WORKDIR /app
 
-ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
+ARG BUILD_NUMBER
+ARG GIT_REF
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
+# Cache breaking and ensure required build / git args defined
+RUN test -n "$BUILD_NUMBER" || (echo "BUILD_NUMBER not set" && false)
+RUN test -n "$GIT_REF" || (echo "GIT_REF not set" && false)
+
+# Define env variables for runtime health / info
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
 
 # Stage: build assets
 FROM base AS build
@@ -26,7 +31,7 @@ FROM base AS build
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
-RUN apt-get update
+ENV NODE_ENV='production'
 
 COPY . .
 
