@@ -31,6 +31,8 @@ FROM base AS build
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
+COPY package*.json ./
+RUN npm run setup
 ENV NODE_ENV='production'
 
 COPY . .
