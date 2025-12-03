@@ -12,7 +12,6 @@
   },
   "scripts": {
     "build": "./build",
-    "record-build-info": "node scripts/record-build-info",
     "start-worker-tasks": "node start-worker-tasks.js",
     "start-daily-tasks": "node start-daily-tasks.js",
     "start-payment-run": "node start-payment-run.js",
