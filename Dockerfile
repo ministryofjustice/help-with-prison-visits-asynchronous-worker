@@ -35,8 +35,9 @@ ENV NODE_ENV='production'
 
 COPY . .
 
-RUN npm run setup \
-    export BUILD_NUMBER=${BUILD_NUMBER} && \
+RUN npm run setup
+
+RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
 
