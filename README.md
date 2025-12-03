@@ -8,7 +8,7 @@ This allows the External/Internal web applications to offload long running or er
 
 ## Requirements
 
-* Node 12 (Including NPM) - If running locally
+* Node 24 (Including NPM) - If running locally
 * Docker (optional)
 
 ## Run
@@ -22,7 +22,7 @@ As with the internal and external apps, `dotenv` is used to allow local running,
 Install dependencies and run
 
 ```
-npm install
+npm run setup
 npm run start-worker-tasks  # start worker to process regularly performed tasks
 npm run start-daily-tasks   # start script to run daily tasks
 npm run start-payment-run   # start script to run payment tasks
