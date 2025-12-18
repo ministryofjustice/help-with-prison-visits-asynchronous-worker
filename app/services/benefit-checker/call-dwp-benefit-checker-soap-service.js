@@ -29,12 +29,15 @@ module.exports = visitorDwpBenefitCheckerData => {
 
   return axios(options)
     .then(responseBody => {
+      log.info('RESPONSE')
+      log.info(responseBody)
       return parseStringAsync(responseBody.data)
         .then(xml => {
           const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
 
           if (result && result[0] && result[0]._) {
             const status = result[0]._.toString().toUpperCase()
+            log.info(`STATUS: ${status}`)
             return {
               visitorId: visitorDwpBenefitCheckerData.visitorId,
               result: status,
