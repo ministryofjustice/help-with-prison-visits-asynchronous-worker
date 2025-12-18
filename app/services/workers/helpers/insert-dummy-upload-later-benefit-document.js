@@ -5,7 +5,7 @@ module.exports = (claimId, benefit, eligibilityId, reference) => {
   const db = getDatabaseConnector()
 
   return db('IntSchema.ClaimDocument').insert({
-    ClaimDocumentId: Math.floor(Date.now() / 100) - 15000000000 + 2, // taken from internal-claim-document.helper.js on external web
+    ClaimDocumentId: Math.floor(Math.random() * 4294967295), // Unsigned INT max value
     ClaimId: claimId,
     EligibilityId: eligibilityId,
     Reference: reference,
