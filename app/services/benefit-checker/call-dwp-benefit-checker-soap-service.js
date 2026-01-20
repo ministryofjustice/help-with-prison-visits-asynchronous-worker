@@ -47,7 +47,7 @@ module.exports = visitorDwpBenefitCheckerData => {
         })
     })
     .catch(error => {
-      log.error('Error calling Benefit checker', error)
+      log.error('Error calling Benefit checker', error.data)
     })
 }
 
