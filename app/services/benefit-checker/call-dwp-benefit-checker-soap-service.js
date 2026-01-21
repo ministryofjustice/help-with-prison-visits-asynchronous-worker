@@ -16,11 +16,13 @@ module.exports = visitorDwpBenefitCheckerData => {
     })
   }
 
+  const soapBody = getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData)
+
   const options = {
     method: 'POST',
     url: config.DWP_BENEFIT_CHECKER_URL,
     rejectUnauthorized: false, // Would require injecting valid certificate subject to change
-    data: getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData),
+    data: soapBody,
     headers: {
       'content-type': 'text/xml',
       SOAPAction: config.DWP_BENEFIT_CHECKER_URL,
@@ -48,6 +50,7 @@ module.exports = visitorDwpBenefitCheckerData => {
     })
     .catch(error => {
       log.error('Error calling Benefit checker', error.response.data)
+      log.error(soapBody)
     })
 }
 
