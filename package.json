@@ -28,7 +28,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.984.0",
     "applicationinsights": "^2.9.8",
-    "axios": "^1.13.4",
+    "axios": "^1.13.5",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "csv-stringify": "^6.6.0",
