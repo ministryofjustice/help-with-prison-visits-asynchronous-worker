@@ -1,5 +1,3 @@
-require('dotenv').config({ quiet: true })
-
 module.exports = {
   PRODUCTION: process.env.NODE_ENV === 'production',
   FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/app/tmp',
