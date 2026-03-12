@@ -1,47 +1,37 @@
-FROM node:24-alpine AS base
-
-LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
-
-RUN apk --update-cache upgrade --available \
-        && apk --no-cache add tzdata \
-        && rm -rf /var/cache/apk/*
-
-ENV TZ=Europe/London
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
-
-RUN addgroup --gid 2000 --system appgroup && \
-        adduser --uid 2000 --system appuser --ingroup appgroup
-
-WORKDIR /app
+# Stage: base image
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS base
 
 ARG BUILD_NUMBER
 ARG GIT_REF
+ARG GIT_BRANCH
 
 # Cache breaking and ensure required build / git args defined
 RUN test -n "$BUILD_NUMBER" || (echo "BUILD_NUMBER not set" && false)
 RUN test -n "$GIT_REF" || (echo "GIT_REF not set" && false)
+RUN test -n "$GIT_BRANCH" || (echo "GIT_BRANCH not set" && false)
 
 # Define env variables for runtime health / info
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 ENV GIT_REF=${GIT_REF}
+ENV GIT_BRANCH=${GIT_BRANCH}
 
 # Stage: build assets
 FROM base AS build
 
-ARG BUILD_NUMBER=1_0_0
-ARG GIT_REF=not-available
+ARG BUILD_NUMBER
+ARG GIT_REF
+ARG GIT_BRANCH
 
-COPY package*.json ./
-RUN npm run setup
+COPY package*.json .allowed-scripts.mjs ./
+RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
 ENV NODE_ENV='production'
 
 COPY . .
 
-RUN npm prune --no-audit --omit=dev
+RUN npm prune --no-audit --no-fund --omit=dev
 
 FROM base
 
-# RUN mkdir /app && chown appuser:appgroup /app
 RUN mkdir /app/logs && chown appuser:appgroup /app/logs
 RUN mkdir /app/data && chown appuser:appgroup /app/data
 RUN mkdir /app/tmp && chown appuser:appgroup /app/tmp
@@ -66,4 +56,5 @@ COPY --from=build --chown=appuser:appgroup \
 ENV PORT=3999
 
 EXPOSE 3999
+ENV NODE_ENV='production'
 USER 2000
