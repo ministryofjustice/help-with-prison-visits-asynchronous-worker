@@ -1,6 +1,8 @@
 # Help with Prison Visits (HwPV) Asynchronous Worker
 
-[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/help-with-prison-visits-asynchronous-worker/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/help-with-prison-visits-asynchronous-worker)
+[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker) 
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 The asynchronous worker is a separate node application which runs a set of jobs as k8s [CronJobs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/), checking for tasks added to the database by the [External](https://github.com/ministryofjustice/help-with-prison-visits-external) and [Internal](https://github.com/ministryofjustice/help-with-prison-visits-external) node apps to process.
 
