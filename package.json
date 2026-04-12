@@ -26,13 +26,13 @@
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1018.0",
+    "@aws-sdk/client-s3": "^3.1027.0",
     "applicationinsights": "^2.9.8",
     "axios": "^1.13.6",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "csv-stringify": "^6.7.0",
-    "knex": "^3.2.6",
+    "knex": "^3.2.9",
     "moment": "^2.30.1",
     "notifications-node-client": "8.3.2",
     "tedious": "^19.2.1",
@@ -44,7 +44,7 @@
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "jest": "^30.3.0",
-    "jest-html-reporter": "^4.3.0",
+    "jest-html-reporter": "^4.4.0",
     "jest-junit": "^16.0.0"
   }
 }
