@@ -26,7 +26,7 @@
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1032.0",
+    "@aws-sdk/client-s3": "^3.1035.0",
     "applicationinsights": "^2.9.8",
     "axios": "^1.15.0",
     "bunyan": "^1.8.15",
@@ -46,5 +46,9 @@
     "jest": "^30.3.0",
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^16.0.0"
+  },
+  "overrides": {
+    "fast-xml-parser": "^5.7.1",
+    "uuid": "^14.0.0"
   }
 }
