@@ -16,9 +16,15 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
       log.info(`Auto approval: auto approve claim expenses ${claimId}`)
       return autoApproveClaimExpenses(claimId)
     })
+    .catch(error => {
+      log.error(`autoApproveClaimExpenses failed: ${error.message}`)
+    })
     .then(() => {
       log.info(`Auto approval: Insert accept claim notification task ${claimId}`)
       return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
+    })
+    .catch(error => {
+      log.error(`insertTask failed: ${error.message}`)
     })
     .then(() => {
       log.info(`Auto approval: Inserting a claim event ${claimId}`)
@@ -32,6 +38,9 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
         'Passed all auto approval checks',
         true,
       )
+    })
+    .catch(error => {
+      log.error(`insertClaimEvent failed: ${error.message}`)
     })
 }
 
