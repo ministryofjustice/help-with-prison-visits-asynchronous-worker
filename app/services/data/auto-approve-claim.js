@@ -46,11 +46,17 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
 
 function setClaimStatusToAutoApproved(claimId) {
   const db = getDatabaseConnector()
+  log.info(`setClaimStatusToAutoApproved for ${claimId}`)
 
-  return db('IntSchema.Claim').where('ClaimId', claimId).update({
-    Status: statusEnum.AUTOAPPROVED,
-    VisitConfirmationCheck: statusEnum.APPROVED,
-    DateReviewed: dateFormatter.now().toDate(),
-    DateApproved: dateFormatter.now().toDate(),
-  })
+  return db('IntSchema.Claim')
+    .where('ClaimId', claimId)
+    .update({
+      Status: statusEnum.AUTOAPPROVED,
+      VisitConfirmationCheck: statusEnum.APPROVED,
+      DateReviewed: dateFormatter.now().toDate(),
+      DateApproved: dateFormatter.now().toDate(),
+    })
+    .catch(error => {
+      log.error(`setClaimStatusToAutoApproved failed: ${error.message}`)
+    })
 }

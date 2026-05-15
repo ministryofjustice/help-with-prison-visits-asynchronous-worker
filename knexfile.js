@@ -24,7 +24,7 @@ module.exports = {
       createRetryIntervalMillis: retryTimeout,
       createTimeoutMillis: longTimeout,
     },
-    // , debug: true // uncomment to debug
+    // debug: true,
   },
   archive: {
     client: 'mssql',
@@ -46,7 +46,7 @@ module.exports = {
       createRetryIntervalMillis: retryTimeout,
       createTimeoutMillis: longTimeout,
     },
-    // , debug: true // uncomment to debug
+    // debug: true,
   },
   testing: {
     client: 'mssql',
@@ -60,6 +60,6 @@ module.exports = {
         enableArithAbort: true,
       },
     },
-    // , debug: true // uncomment to debug
+    // debug: true,
   },
 }
