@@ -11,6 +11,7 @@ module.exports = () => {
       'IntSchema.AutoApproval.Reference',
       'IntSchema.AutoApproval.ClaimId',
       'IntSchema.AutoApproval.EmailAddress',
+      'IntSchema.Claim.Status',
     )
     .leftJoin('IntSchema.Claim', 'IntSchema.Claim.ClaimId', '=', 'IntSchema.AutoApproval.ClaimId')
     .whereNotIn('IntSchema.Claim.Status', [statusEnum.APPROVED, statusEnum.AUTOAPPROVED, statusEnum.REJECTED])
