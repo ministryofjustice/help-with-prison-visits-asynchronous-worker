@@ -16,9 +16,15 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
       log.info(`Auto approval: auto approve claim expenses ${claimId}`)
       return autoApproveClaimExpenses(claimId)
     })
+    .catch(error => {
+      log.error(`autoApproveClaimExpenses failed: ${error.message}`)
+    })
     .then(() => {
       log.info(`Auto approval: Insert accept claim notification task ${claimId}`)
       return insertTask(reference, eligibilityId, claimId, tasksEnum.ACCEPT_CLAIM_NOTIFICATION, visitorEmailAddress)
+    })
+    .catch(error => {
+      log.error(`insertTask failed: ${error.message}`)
     })
     .then(() => {
       log.info(`Auto approval: Inserting a claim event ${claimId}`)
@@ -33,15 +39,24 @@ module.exports = (reference, eligibilityId, claimId, visitorEmailAddress) => {
         true,
       )
     })
+    .catch(error => {
+      log.error(`insertClaimEvent failed: ${error.message}`)
+    })
 }
 
 function setClaimStatusToAutoApproved(claimId) {
   const db = getDatabaseConnector()
+  log.info(`setClaimStatusToAutoApproved for ${claimId}`)
 
-  return db('IntSchema.Claim').where('ClaimId', claimId).update({
-    Status: statusEnum.AUTOAPPROVED,
-    VisitConfirmationCheck: statusEnum.APPROVED,
-    DateReviewed: dateFormatter.now().toDate(),
-    DateApproved: dateFormatter.now().toDate(),
-  })
+  return db('IntSchema.Claim')
+    .where('ClaimId', claimId)
+    .update({
+      Status: statusEnum.AUTOAPPROVED,
+      VisitConfirmationCheck: statusEnum.APPROVED,
+      DateReviewed: dateFormatter.now().toDate(),
+      DateApproved: dateFormatter.now().toDate(),
+    })
+    .catch(error => {
+      log.error(`setClaimStatusToAutoApproved failed: ${error.message}`)
+    })
 }

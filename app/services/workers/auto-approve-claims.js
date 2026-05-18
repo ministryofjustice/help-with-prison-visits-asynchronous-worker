@@ -10,13 +10,15 @@ const autoApproveClaims = () => {
   return getAutoApproveClaims().then(data => {
     claimData = data
     log.info(`Auto approval: ${claimData.length} claims found`)
-    claimData.forEach(claim => {
-      log.info(`Auto approval: processing ClaimId ${claim.ClaimId}`)
+    const promises = claimData.map(claim => {
+      log.info(`Auto approval: processing ClaimId ${claim.ClaimId} with status of ${claim.Status}`)
       return autoApproveClaim(claim.Reference, claim.EligibilityId, claim.ClaimId, claim.EmailAddress).then(() => {
         log.info(`Auto approval: deleting AutoApprovalId ${claim.AutoApprovalId}`)
         return deleteAutoApproveClaim(claim.AutoApprovalId)
       })
     })
+
+    return Promise.all(promises)
   })
 }
 
