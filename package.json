@@ -23,7 +23,8 @@
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --fix",
-    "setup": "npm ci && hmpps-npm-script-run-allowlist"
+    "setup": "npm ci && hmpps-npm-script-run-allowlist",
+    "prepare": "hmpps-precommit-hooks-prepare"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1109.0",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
+    "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "jest": "^30.4.2",
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^17.0.0"
