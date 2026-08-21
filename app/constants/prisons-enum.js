@@ -330,8 +330,8 @@ module.exports = {
     postcode: 'LE18 4TN',
   },
 
-  GRENDON: {
-    value: 'grendon',
+  GRENDON_SPRING_HILL: {
+    value: 'grendon/spring-hill',
     displayName: 'Grendon',
     region: 'ENG/WAL',
     postcode: 'HP18 0TL',
