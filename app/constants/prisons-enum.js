@@ -332,7 +332,7 @@ module.exports = {
 
   GRENDON_SPRING_HILL: {
     value: 'grendon/spring-hill',
-    displayName: 'Grendon/Spring Hill',
+    displayName: 'Grendon',
     region: 'ENG/WAL',
     postcode: 'HP18 0TL',
   },
@@ -715,6 +715,13 @@ module.exports = {
     postcode: 'GU23 7LJ',
   },
 
+  SPRING_HILL: {
+    value: 'spring-hill',
+    displayName: 'Spring Hill',
+    region: 'ENG/WAL',
+    postcode: 'HP18 0TL',
+  },
+
   STAFFORD: {
     value: 'stafford',
     displayName: 'Stafford',
@@ -925,6 +932,13 @@ module.exports = {
     displayName: 'Castle Huntly',
     region: 'SCO',
     postcode: 'DD2 5HL',
+  },
+
+  CORNTON_VALE: {
+    value: 'cornton-vale',
+    displayName: 'Cornton Vale',
+    region: 'SCO',
+    postcode: 'FK9 5NU',
   },
 
   DUMFRIES: {
