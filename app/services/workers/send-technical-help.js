@@ -1,4 +1,3 @@
-const axios = require('axios')
 const Config = require('../../../config')
 const log = require('../log')
 
@@ -41,11 +40,17 @@ module.exports.execute = task => {
       },
     }
 
-    return axios.post(zendeskApiUrl, ticket, { headers }).then(response => {
-      if (response.status === 201) {
-        log.info(`Zendesk ticket ${response.data.ticket.id} has been raised`)
-      }
+    return fetch(zendeskApiUrl, {
+      method: 'POST',
+      body: ticket,
+      headers,
     })
+      .then(response => response.json())
+      .then(response => {
+        if (response.status === 201) {
+          log.info(`Zendesk ticket ${response.data.ticket.id} has been raised`)
+        }
+      })
   }
   log.info(`Zendesk not enabled. No ticket created for task ID ${task.taskId}.`)
   return Promise.resolve()

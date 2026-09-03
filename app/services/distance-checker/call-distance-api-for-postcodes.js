@@ -1,12 +1,11 @@
-const axios = require('axios')
 const config = require('../../../config')
 const log = require('../log')
 
 module.exports = (originPostCode, destinationPostCode) => {
   const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
 
-  return axios
-    .get(distanceApiUrl)
+  return fetch(distanceApiUrl)
+    .then(result => result.json())
     .then(result => {
       let distance = null
 
