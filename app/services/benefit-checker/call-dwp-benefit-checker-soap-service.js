@@ -28,10 +28,9 @@ module.exports = visitorDwpBenefitCheckerData => {
       rejectUnauthorized: false,
     },
   })
+    .then(response => response.text())
     .then(responseBody => {
-      const responseBodyText = responseBody.text()
-      console.log(responseBodyText) // eslint-disable-line no-console
-      return parseStringAsync(responseBodyText)
+      return parseStringAsync(responseBody)
         .then(xml => {
           const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
 
