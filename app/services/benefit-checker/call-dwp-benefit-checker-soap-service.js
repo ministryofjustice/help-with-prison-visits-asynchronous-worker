@@ -30,6 +30,7 @@ module.exports = visitorDwpBenefitCheckerData => {
   })
     .then(response => response.text())
     .then(responseBody => {
+      console.log(responseBody) // eslint-disable-line no-console
       return parseStringAsync(responseBody)
         .then(xml => {
           const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
