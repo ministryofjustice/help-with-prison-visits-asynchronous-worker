@@ -29,7 +29,7 @@ module.exports = visitorDwpBenefitCheckerData => {
     },
   })
     .then(responseBody => {
-      return parseStringAsync(responseBody.data)
+      return parseStringAsync(responseBody.text())
         .then(xml => {
           const result = xpath.find(xml, '//ns2:benefitCheckerStatus')
 
