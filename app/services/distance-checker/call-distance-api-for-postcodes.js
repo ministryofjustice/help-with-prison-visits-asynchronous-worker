@@ -7,7 +7,6 @@ module.exports = (originPostCode, destinationPostCode) => {
   return fetch(distanceApiUrl)
     .then(result => result.json())
     .then(result => {
-      console.log(result) // eslint-disable-line no-console
       let distance = null
 
       if (
