@@ -16,7 +16,6 @@ const sendAllAdvanceClaimRemindersForDay = { name: 'sendAllAdvanceClaimReminders
 const cleanupOldPaymentFiles = { name: 'cleanupOldPaymentFiles' }
 const markOverpayments = { name: 'markOverpayments' }
 const cleanupOldData = { name: 'cleanupOldData' }
-const sendTechnicalHelp = { name: 'sendTechnicalHelp' }
 const archiveOldClaims = { name: 'archiveOldClaims' }
 const archiveClaim = { name: 'archiveClaim' }
 const referenceRecovery = { name: 'referenceRecovery' }
@@ -60,7 +59,6 @@ jest.mock(
 jest.mock('../../../app/services/workers/cleanup-old-payment-files', () => cleanupOldPaymentFiles)
 jest.mock('../../../app/services/workers/mark-overpayments', () => markOverpayments)
 jest.mock('../../../app/services/workers/cleanup-old-data', () => cleanupOldData)
-jest.mock('../../../app/services/workers/send-technical-help', () => sendTechnicalHelp)
 jest.mock('../../../app/services/workers/archive-old-claims', () => archiveOldClaims)
 jest.mock('../../../app/services/workers/archive-claim', () => archiveClaim)
 jest.mock('../../../app/services/workers/reference-recovery', () => referenceRecovery)
@@ -118,11 +116,6 @@ describe('services/getWorkerForTask', () => {
   it('should return dwp-check', () => {
     const worker = getWorkerForTask(tasksEnum.DWP_CHECK)
     expect(worker.name).toBe('dwpCheck')
-  })
-
-  it('should return send-technical-help', () => {
-    const worker = getWorkerForTask(tasksEnum.TECHNICAL_HELP_SUBMITTED)
-    expect(worker.name).toBe('sendTechnicalHelp')
   })
 
   it('should return archive-old-claims', () => {
