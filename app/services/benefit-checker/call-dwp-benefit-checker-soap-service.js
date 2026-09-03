@@ -1,4 +1,3 @@
-const axios = require('axios')
 const util = require('util')
 const parseStringAsync = util.promisify(require('xml2js').parseString)
 const xpath = require('xml2js-xpath')
@@ -18,18 +17,17 @@ module.exports = visitorDwpBenefitCheckerData => {
 
   const soapBody = getSoapBenefitCheckerRequestBody(visitorDwpBenefitCheckerData)
 
-  const options = {
+  return fetch(config.DWP_BENEFIT_CHECKER_URL, {
     method: 'POST',
-    url: config.DWP_BENEFIT_CHECKER_URL,
-    rejectUnauthorized: false, // Would require injecting valid certificate subject to change
-    data: soapBody,
+    body: soapBody,
     headers: {
       'content-type': 'text/xml',
       SOAPAction: config.DWP_BENEFIT_CHECKER_URL,
     },
-  }
-
-  return axios(options)
+    tls: {
+      rejectUnauthorized: false,
+    },
+  })
     .then(responseBody => {
       return parseStringAsync(responseBody.data)
         .then(xml => {
