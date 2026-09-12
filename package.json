@@ -47,7 +47,7 @@
     "jest": "^30.5.1",
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^17.0.0",
-    "lint-staged": "17.4.1"
+    "lint-staged": "17.5.0"
   },
   "overrides": {
     "@opentelemetry/core": "2.11.0",
