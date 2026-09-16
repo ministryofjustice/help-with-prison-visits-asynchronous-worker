@@ -33,7 +33,7 @@
     "bunyan-format": "^0.2.1",
     "csv-stringify": "^6.8.3",
     "knex": "^3.3.0",
-    "moment": "^2.30.1",
+    "moment": "^2.31.0",
     "notifications-node-client": "8.4.0",
     "tedious": "^20.0.0",
     "xlsx-populate": "^1.21.0",
@@ -45,9 +45,9 @@
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "jest": "^30.5.1",
-    "jest-html-reporter": "^4.4.0",
+    "jest-html-reporter": "^4.4.2",
     "jest-junit": "^17.0.0",
-    "lint-staged": "17.4.1"
+    "lint-staged": "17.5.1"
   },
   "overrides": {
     "@opentelemetry/core": "2.11.0",
