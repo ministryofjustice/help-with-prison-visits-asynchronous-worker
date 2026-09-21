@@ -8,6 +8,19 @@ module.exports = (originPostCode, destinationPostCode) => {
     .then(result => result.json())
     .then(result => {
       let distance = null
+      const apiStatus = result && result.data ? result.data.status : null
+
+      if (apiStatus !== 'OK') {
+        log.error(
+          {
+            originPostCode,
+            destinationPostCode,
+            apiStatus,
+            apiErrorMessage: result && result.data ? result.data.error_message : null,
+          },
+          'Distance calculation API returned an unsuccessful response',
+        )
+      }
 
       if (
         result &&
@@ -26,7 +39,18 @@ module.exports = (originPostCode, destinationPostCode) => {
     })
     .catch(error => {
       // suppress errors as car expense calculation is optional
-      log.error({ error }, 'Error calling distance calculation')
+      log.error(
+        {
+          originPostCode,
+          destinationPostCode,
+          errorMessage: error.message,
+          errorCode: error.code,
+          httpStatus: error.response ? error.response.status : null,
+          apiStatus: error.response && error.response.data ? error.response.data.status : null,
+          apiErrorMessage: error.response && error.response.data ? error.response.data.error_message : null,
+        },
+        'Error calling distance calculation',
+      )
       return null
     })
 }
