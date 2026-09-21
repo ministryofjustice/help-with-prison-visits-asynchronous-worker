@@ -77,7 +77,13 @@ function getPrisonPostCode(nameOfPrison) {
 }
 
 function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode, country) {
+  log.info(
+    `Calling distance API with visitorPostCode: '${visitorPostCode}', prisonPostCode: '${prisonPostCode}' and country: '${country}'`,
+  )
+
   return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(distanceInKm => {
+    log.info(`Distance API returned distanceInKm: ${distanceInKm}`)
+
     let cost = 0.0
     let distanceInMiles = null
 
