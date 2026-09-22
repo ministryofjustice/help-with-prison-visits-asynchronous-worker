@@ -5,34 +5,59 @@ module.exports = (originPostCode, destinationPostCode) => {
   const distanceApiUrl = `${config.DISTANCE_CALCULATION_DIRECTIONS_API_URL}?origin=${originPostCode}&destination=${destinationPostCode}&key=${config.DISTANCE_CALCULATION_DIRECTIONS_API_KEY}`
 
   return fetch(distanceApiUrl)
-    .then(result => result.json())
-    .then(result => {
-      let distance = null
-      const apiStatus = result && result.data ? result.data.status : null
+    .then(response => {
+      return response
+        .json()
+        .then(result => ({ response, result }))
+        .catch(error => {
+          log.error(
+            {
+              originPostCode,
+              destinationPostCode,
+              httpStatus: response.status,
+              httpStatusText: response.statusText,
+              errorName: error.name,
+              errorMessage: error.message,
+            },
+            'Error parsing distance calculation API response',
+          )
+          return null
+        })
+    })
+    .then(apiResponse => {
+      if (!apiResponse) {
+        return null
+      }
 
-      if (apiStatus !== 'OK') {
+      const { response, result } = apiResponse
+      let distance = null
+      const apiStatus = result ? result.status : null
+
+      if (!response.ok || apiStatus !== 'OK') {
         log.error(
           {
             originPostCode,
             destinationPostCode,
+            httpStatus: response.status,
+            httpStatusText: response.statusText,
             apiStatus,
-            apiErrorMessage: result && result.data ? result.data.error_message : null,
+            apiErrorMessage: result ? result.error_message : null,
           },
           'Distance calculation API returned an unsuccessful response',
         )
+        return null
       }
 
       if (
         result &&
-        result.data &&
-        result.data.routes &&
-        result.data.routes[0] &&
-        result.data.routes[0].legs &&
-        result.data.routes[0].legs[0] &&
-        result.data.routes[0].legs[0].distance &&
-        result.data.routes[0].legs[0].distance.value
+        result.routes &&
+        result.routes[0] &&
+        result.routes[0].legs &&
+        result.routes[0].legs[0] &&
+        result.routes[0].legs[0].distance &&
+        result.routes[0].legs[0].distance.value
       ) {
-        distance = (result.data.routes[0].legs[0].distance.value / 1000.0) * 2 // distance is in metres and add return journey
+        distance = (result.routes[0].legs[0].distance.value / 1000.0) * 2 // distance is in metres and add return journey
       }
 
       return distance
@@ -43,11 +68,9 @@ module.exports = (originPostCode, destinationPostCode) => {
         {
           originPostCode,
           destinationPostCode,
+          errorName: error.name,
           errorMessage: error.message,
-          errorCode: error.code,
-          httpStatus: error.response ? error.response.status : null,
-          apiStatus: error.response && error.response.data ? error.response.data.status : null,
-          apiErrorMessage: error.response && error.response.data ? error.response.data.error_message : null,
+          errorCode: error.cause && error.cause.code ? error.cause.code : error.code,
         },
         'Error calling distance calculation',
       )
