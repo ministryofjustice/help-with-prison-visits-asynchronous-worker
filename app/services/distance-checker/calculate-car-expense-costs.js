@@ -10,7 +10,9 @@ const enumHelper = require('../../constants/helpers/enum-helper')
 const KILOMETERS_TO_MILES = 0.621371
 
 module.exports = (reference, eligibilityId, claimId) => {
-  log.info(`calculate-car-expense-costs DISTANCE_CALCULATION_ENABLED: ${config.DISTANCE_CALCULATION_ENABLED}`)
+  log.info(
+    `calculate-car-expense-costs (claim ${claimId}) DISTANCE_CALCULATION_ENABLED: ${config.DISTANCE_CALCULATION_ENABLED}`,
+  )
 
   if (config.DISTANCE_CALCULATION_ENABLED !== 'true') {
     return Promise.resolve()
@@ -77,10 +79,6 @@ function getPrisonPostCode(nameOfPrison) {
 }
 
 function getDistanceInMilesAndCost(visitorPostCode, prisonPostCode, country) {
-  log.info(
-    `Calling distance API with visitorPostCode: '${visitorPostCode}', prisonPostCode: '${prisonPostCode}' and country: '${country}'`,
-  )
-
   return callDistanceApiForPostcodes(visitorPostCode, prisonPostCode).then(distanceInKm => {
     log.info(`Distance API returned distanceInKm: ${distanceInKm}`)
 
