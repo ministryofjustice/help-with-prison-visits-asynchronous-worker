@@ -8,6 +8,3 @@ env:
   APVS_DWP_BENEFIT_CHECKER_URL: "https://laa-benefitchecker-uat.apps.live.cloud-platform.service.justice.gov.uk/lsx/lsc-services/benefitChecker"
   APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-preprod.hmpps.service.justice.gov.uk'
   ENVIRONMENT_NAME: preprod
-
-generic-prometheus-alerts:
-  alertSeverity: help-with-prison-visits-devtest
