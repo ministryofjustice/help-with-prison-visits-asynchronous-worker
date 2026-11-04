@@ -10,7 +10,7 @@ This allows the External/Internal web applications to offload long running or er
 
 ## Requirements
 
-* Node 24 (Including NPM) - If running locally
+* Node 26 (Including NPM 12) - If running locally
 * Docker (optional)
 
 ## Run
