@@ -1,7 +1,7 @@
 # Help with Prison Visits (HwPV) Asynchronous Worker
 
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/help-with-prison-visits-asynchronous-worker/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/help-with-prison-visits-asynchronous-worker)
-[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker) 
+[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-asynchronous-worker)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 The asynchronous worker is a separate node application which runs a set of jobs as k8s [CronJobs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/), checking for tasks added to the database by the [External](https://github.com/ministryofjustice/help-with-prison-visits-external) and [Internal](https://github.com/ministryofjustice/help-with-prison-visits-external) node apps to process.
@@ -10,7 +10,7 @@ This allows the External/Internal web applications to offload long running or er
 
 ## Requirements
 
-* Node 24 (Including NPM) - If running locally
+* Node 26 (Including NPM 12) - If running locally
 * Docker (optional)
 
 ## Run
@@ -24,7 +24,7 @@ As with the internal and external apps, node's `--env-file=.env` is used to allo
 Install dependencies and run
 
 ```
-npm run setup
+npm ci
 npm run start-worker-tasks  # start worker to process regularly performed tasks
 npm run start-daily-tasks   # start script to run daily tasks
 npm run start-payment-run   # start script to run payment tasks
