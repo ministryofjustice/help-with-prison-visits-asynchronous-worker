@@ -4,7 +4,7 @@ ARG GIT_REF
 ARG GIT_BRANCH
 
 # Stage: build assets
-FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS build
+FROM ghcr.io/ministryofjustice/hmpps-node:26-alpine AS build
 
 ARG BUILD_NUMBER
 ARG GIT_REF
@@ -15,8 +15,9 @@ RUN test -n "$BUILD_NUMBER" || (echo "BUILD_NUMBER not set" && false)
 RUN test -n "$GIT_REF" || (echo "GIT_REF not set" && false)
 RUN test -n "$GIT_BRANCH" || (echo "GIT_BRANCH not set" && false)
 
-COPY package*.json .allowed-scripts.mjs .npmrc ./
-RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
+RUN npm install -g npm@12
+COPY package*.json .npmrc ./
+RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm ci
 ENV NODE_ENV='production'
 
 COPY . .
@@ -24,7 +25,7 @@ COPY . .
 RUN npm prune --no-audit --no-fund --omit=dev
 
 # Stage: copy production assets and dependencies
-FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine-runtime
+FROM ghcr.io/ministryofjustice/hmpps-node:26-alpine-runtime
 
 ARG BUILD_NUMBER
 ARG GIT_REF
