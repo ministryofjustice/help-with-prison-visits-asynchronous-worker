@@ -20,6 +20,8 @@ COPY package*.json .npmrc ./
 RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm ci
 ENV NODE_ENV='production'
 
+ADD --chown=appuser:appgroup https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem ./
+
 COPY . .
 
 RUN npm prune --no-audit --no-fund --omit=dev
@@ -44,6 +46,7 @@ COPY --from=build --chown=appuser:appgroup \
         /app/start-payment-run.js \
         /app/start-daily-tasks.js \
         /app/start-daily-auto-approval-check.js \
+        /app/global-bundle.pem \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
